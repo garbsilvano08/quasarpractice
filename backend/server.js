@@ -17,11 +17,11 @@ app.use('/api/account/login', loginUser);
 app.use('/api/account/users', getUsers);
 app.use('/api/wallet/register', registerWallet);
 
-app.listen({port: 4000}, (err) => {
+app.listen({port: 4001}, (err) => {
     if(err) {
         console.log(err);
         process.exit(1);
     }else {
-        console.log('Server is up and running on port 4000...');
+        console.log('Server is up and running on port 4001...');
     }
 });

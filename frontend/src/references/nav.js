@@ -1,39 +1,60 @@
 module.exports =
 [
     {
-        key: 'what',
-        label: 'Introduction',
-        icon: 'fa fa-question',
-        route: 'landing',
+        key: 'dashboard',
+        label: 'Dashboard',
+        icon: 'fa fa-house-user',
+        route: 'dashboard',
     },
     {
-        key: 'authenticator',
-        label: 'Authenticator',
-        icon: 'fa fa-key',
-        route: 'authentication',
+        key: 'daily',
+        label: 'Daily Logs',
+        icon: 'fa fa-calendar-day',
+        route: 'daily',
     },
     {
         key: 'landing',
-        label: 'Landing Page',
-        icon: 'fa fa-home',
+        label: 'Company Management',
+        icon: 'fa fa-building',
         sub:
         [
-            { label: 'Login & Logout', route: 'landing_login' },
-            { label: 'Registration', route: 'landing_registration'  },
-            { label: 'Forgot Password', route: 'landing_forgot_password'  },
-            { label: 'Contact Us Form', route: 'landing_contact_us'  },
+            { label: 'Add New Company', route: 'landing_login' },
+            { label: 'Active Companies', route: 'landing_login' },
+            { label: 'Inactive Companies', route: 'landing_login' },
         ]
     },
     {
-        key: 'sample',
-        label: 'Sample Another',
-        icon: 'fa fa-heart',
+        key: 'users',
+        label: 'User Management',
+        icon: 'fa fa-users',
         sub:
         [
-            { label: 'Login & Logout', route: 'landing_login' },
-            { label: 'Registration', route: 'landing_registration'  },
-            { label: 'Forgot Password', route: 'landing_forgot_password'  },
-            { label: 'Contact Us Form', route: 'landing_contact_us'  },
+            { label: 'Add New User', route: 'landing_login' },
+            { label: 'Active Users', route: 'landing_login' },
+            { label: 'Archived Users', route: 'landing_login' },
+        ]
+    },
+    {
+        key: 'daily',
+        label: 'Device Management',
+        icon: 'fa fa-tablet-alt',
+        route: 'daily',
+    },
+    {
+        key: 'daily',
+        label: 'Blacklist Management',
+        icon: 'fa fa-user-shield',
+        route: 'daily',
+    },
+    {
+        key: 'reports',
+        label: 'Reports',
+        icon: 'fa fa-chart-line',
+        sub:
+        [
+            { label: 'Foot Traffic', route: 'landing_login' },
+            { label: 'Visitor Purpose', route: 'landing_login' },
+            { label: 'Employee/Visitor Overview', route: 'landing_login' },
         ]
     },
 ]

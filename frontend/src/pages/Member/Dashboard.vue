@@ -1,6 +1,6 @@
 <template>
    <div>
-       ERROR PAGE
+       Dashboard
    </div>
 </template>
 

@@ -5,7 +5,7 @@
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
                 <q-toolbar-title>
-                    Uniq Builder Documentation
+                    VCOP Healthcloud
                 </q-toolbar-title>
 
                 <div><b>v1.0</b></div>
@@ -38,12 +38,12 @@
 </template>
 <script>
 import EssentialLink    from 'components/EssentialLink.vue'
-import Layout           from './MainLayout.scss'
+import Layout           from './MemberLayout.scss'
 import navigation       from '../references/nav'
 
 export default
 {
-    name: 'MainLayout',
+    name: 'MemberLayout',
     components: {
         EssentialLink
     },
