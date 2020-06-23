@@ -15,9 +15,16 @@ try {
         DB_AUTH_SOURCE  :   process.env.DB_AUTH_SOURCE
     };
 
-    // const connection_url = `mongodb://${connection_info.DB_USER}:${connection_info.DB_PASS}@${connection_info.DB_HOST}:${connection_info.DB_PORT}/${connection_info.DB_NAME}?authSource=${connection_info.DB_AUTH_SOURCE}`;
+    let connection_url;
 
-    const connection_url = `mongodb+srv://${connection_info.DB_USER}:${connection_info.DB_PASS}@${connection_info.DB_HOST}/${connection_info.DB_NAME}?retryWrites=true&w=majority`;
+    if(connection_info.DB_HOST == 'localhost')
+    {
+        connection_url = `mongodb://localhost:27017}/${connection_info.DB_NAME}?retryWrites=true&w=majority`;
+    }
+    else
+    {
+        connection_url = `mongodb+srv://${connection_info.DB_USER}:${connection_info.DB_PASS}@${connection_info.DB_HOST}/${connection_info.DB_NAME}?retryWrites=true&w=majority`;
+    }
 
     const connection = MONGOOSE.createConnection(connection_url, {
             useNewUrlParser: true,

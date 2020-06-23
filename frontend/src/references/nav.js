@@ -57,4 +57,10 @@ module.exports =
             { label: 'Employee/Visitor Overview', route: 'landing_login' },
         ]
     },
+    {
+        key: 'logout',
+        label: 'Logout',
+        icon: 'logout',
+        route: 'logout',
+    },
 ]
