@@ -18,12 +18,12 @@ class MDB_USERS extends MODEL
     async findByEmail(email)
     {
         const userRes = await this.collection.findOne({ email: email });
-        return userRes;
+        return userRes ? userRes.toJSON() : null;
     }
     async findByEmailPassword(email, password)
     {
         const userRes = await this.collection.findOne({ email: email });
-        return userRes;
+        return userRes ? userRes.toJSON() : null;
     }
 }
 

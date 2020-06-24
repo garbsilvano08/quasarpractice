@@ -18,9 +18,21 @@ module.exports = class AccountClass
      */
     async authenticate(email, password)
     {
-        let res = await this.mdb_user.findByEmailPassword(email, password);
+        let res             = {};
+        let check_account   = await this.mdb_user.findByEmailPassword(email, password);
 
-        return null;
+        if(check_account)
+        {
+            res.status = "success";
+            res.data = check_account;
+        }
+        else
+        {
+            res.status = "error";
+            res.message = "The account you are trying to find doesn't exist.";
+        }
+
+        return res;
     }
 
     /**

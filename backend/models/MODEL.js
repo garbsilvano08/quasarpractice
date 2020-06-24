@@ -7,15 +7,17 @@ module.exports = class MODEL {
         this.collection     = MONGOOSE.con.model(collection, schema, collection);
     }
 
-    async doc (id) {
-
-        try {
-            const collection     = this.collection;
-            const res       = await collection.findById(id);
+    async doc (id)
+    {
+        try 
+        {
+            const collection    = this.collection;
+            const res           = await collection.findById(id).toJSON();
 
             return res;
-        } catch (error) {
-            console.log(error);
+        }
+        catch (error)
+        {
             return error;
         }
     }

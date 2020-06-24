@@ -1,4 +1,7 @@
-const AccountClass = require('../classess/AccountClass');
+const AccountClass  = require('../classess/AccountClass');
+const jwt           = require('jsonwebtoken');
+const bcrypt        = require('bcryptjs');
+const dotenv        = require('dotenv').config();
 
 module.exports =
 {
@@ -7,10 +10,14 @@ module.exports =
         let email       = req.body.email;
         let password    = req.body.password;
         let response    = await new AccountClass().authenticate(email, password);
+        let token_mixer = process.env.TOKEN_MIXER;
 
-        if(response)
+        if(response.status == "success")
         {
-            res.json(response).status(200);
+            response.data.token = jwt.sign(response.data, token_mixer ? token_mixer : 'water123');
+            delete response.data.password;
+
+            res.json(response.data).status(200);
         }
         else
         {
@@ -27,8 +34,6 @@ module.exports =
         };
 
         let response = await new AccountClass().create(account_information);
-
-        console.log(response);
         
         setTimeout(async () => { res.send(true); }, 1000);
     },

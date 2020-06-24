@@ -14,7 +14,7 @@ const routes = [
         component: () => import('layouts/MemberLayout.vue'),
         children:
         [
-            { name: 'dashboard', path: '', component: () => import('pages/Member/Dashboard.vue') },
+            { name: 'member_dashboard', path: '', component: () => import('pages/Member/Dashboard.vue') },
         ]
     },
 

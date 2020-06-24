@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import { postLoginUser } from '../../references/url';
-import { postCreateAdmin } from '../../references/url';
+import { postLoginUser }                    from '../../references/url';
+import { postCreateAdmin }                  from '../../references/url';
 
 export default
 {
@@ -37,7 +37,7 @@ export default
     ({
         form_data:
         {
-            email: '',
+            email: 'guillermotabligan@gmail.com',
             password: '',
         },
     }),
@@ -59,14 +59,19 @@ export default
         async submitLogin()
         {
             this.$q.loading.show();
+
             await this.$axios.post(postLoginUser, this.form_data).then((res) =>
             {
+                this.$store.commit('user/updateUser', res.data)
+                localStorage.setItem("auth", JSON.stringify(res.data));
+                
+                this.$router.push({ name: 'member_dashboard' });
                 this.$q.loading.hide();
             }).catch((e) =>
             {
                 this.$q.dialog({ title: `Invalid Login`, message: e.response.data.message });
                 this.$q.loading.hide();
-            }); 
+            });
         }
     },
 }

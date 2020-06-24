@@ -55,6 +55,7 @@ export default
 	}),
     mounted()
     {
+        console.log(this.user_info);
         this.navigation = navigation;
     },
     methods:
