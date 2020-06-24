@@ -2,16 +2,16 @@ const MONGOOSE  = require('../config/mongo');
 
 module.exports = class MODEL {
     constructor(collection, schema) {
-        this.collection = collection;
-        this.schema     = schema
-        this.Model      = MONGOOSE.con.model(collection, schema, collection);
+        this.collection     = collection;
+        this.schema         = schema
+        this.collection     = MONGOOSE.con.model(collection, schema, collection);
     }
 
     async doc (id) {
 
         try {
-            const Model     = this.Model;
-            const res       = await Model.findById(id);
+            const collection     = this.collection;
+            const res       = await collection.findById(id);
 
             return res;
         } catch (error) {
@@ -22,8 +22,8 @@ module.exports = class MODEL {
 
     async docs () {
         try {
-            const Model     = this.Model;
-            const res       = await Model.find();
+            const collection     = this.collection;
+            const res       = await collection.find();
 
             return res;
         } catch (error) {
@@ -32,11 +32,11 @@ module.exports = class MODEL {
         }
     }
 
-    async add(options = {}) {
+    async add(data = {}) {
         try {
-            const Model     = this.Model;
+            const collection     = this.collection;
             // sets object to insert
-            const modelObj  = new Model(options);
+            const modelObj  = new collection(data);
 
             // confirms the insertion
             const modelRes  = await modelObj.save();
@@ -51,9 +51,9 @@ module.exports = class MODEL {
 
     async update(_id, options = {}) {
         try {
-            const Model     = this.Model;
+            const collection     = this.collection;
             
-            const modelRes  = await Model.findByIdAndUpdate({_id}, options, {new: true});
+            const modelRes  = await collection.findByIdAndUpdate({_id}, options, {new: true});
 
             return modelRes;
         } catch (error) {

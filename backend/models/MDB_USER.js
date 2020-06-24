@@ -2,39 +2,28 @@ const MONGOOSE  = require('../config/mongo');
 const MODEL     = require('./MODEL');
 const Schema    = MONGOOSE.Schema;
 
-const schema    = new Schema({
-    fullname : {
-        type:       String,
-        required:   true
-    },
-    username: {
-        type:       String,
-        required:   true
-    },
-    password: {
-        type:       String,
-        required:   true
-    },
+const schema    = new Schema(
+{
+    full_name:      { type: String, required:   true },
+    email:          { type: String, required:   true },
+    password:       { type: String, required:   true },
 });
 
 class MDB_USERS extends MODEL
 {
     constructor ()
     {
-        super('users',schema);
+        super('users', schema);
     }
-    
-    async find({username, password})
+    async findByEmail(email)
     {
-        const UserDetailsModel  = this.Model;
-        const userRes           = await UserDetailsModel.findOne({username});
+        const userRes = await this.collection.findOne({ email: email });
         return userRes;
-
-        //if(userRes === null) { return ('No user found!'); return userRes; };
-        //const passRes = await UserDetailsModel.findOne({password});
-        //if(passRes === null) { return ('Invalid username/password'); return passRes; };
-        //let token = jwt.sign(userRes.toJSON(), 'lexicon', {expiresIn: '1h'})
-        //return ('Welcome, ' + token);
+    }
+    async findByEmailPassword(email, password)
+    {
+        const userRes = await this.collection.findOne({ email: email });
+        return userRes;
     }
 }
 

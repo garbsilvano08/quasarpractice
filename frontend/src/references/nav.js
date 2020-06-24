@@ -7,6 +7,12 @@ module.exports =
         route: 'dashboard',
     },
     {
+        key: 'front',
+        label: 'Front Desk',
+        icon: 'fa fa-torii-gate',
+        route: 'daily',
+    },
+    {
         key: 'daily',
         label: 'Daily Logs',
         icon: 'fa fa-calendar-day',
@@ -55,6 +61,7 @@ module.exports =
             { label: 'Foot Traffic', route: 'landing_login' },
             { label: 'Visitor Purpose', route: 'landing_login' },
             { label: 'Employee/Visitor Overview', route: 'landing_login' },
+            { label: 'Fever Monitoring', route: 'landing_login' },
         ]
     },
     {
