@@ -6,7 +6,7 @@ const routes = [
         component: () => import('layouts/FrontLayout.vue'),
         children:
         [
-            { name: 'login', path: '', component: () => import('pages/Front/Login.vue') },
+            { name: 'front_login', path: '', component: () => import('pages/Front/Login.vue') },
         ]
     },
     {
@@ -15,6 +15,7 @@ const routes = [
         children:
         [
             { name: 'member_dashboard', path: '', component: () => import('pages/Member/Dashboard.vue') },
+            { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },
         ]
     },
 

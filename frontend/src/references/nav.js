@@ -1,10 +1,10 @@
 module.exports =
 [
     {
-        key: 'dashboard',
+        key: 'member_dashboard',
         label: 'Dashboard',
         icon: 'fa fa-house-user',
-        route: 'dashboard',
+        route: 'member_dashboard',
     },
     {
         key: 'front',
@@ -65,9 +65,9 @@ module.exports =
         ]
     },
     {
-        key: 'logout',
+        key: 'member_logout',
         label: 'Logout',
         icon: 'logout',
-        route: 'logout',
+        route: 'member_logout',
     },
 ]

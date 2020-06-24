@@ -55,7 +55,11 @@ export default
 	}),
     mounted()
     {
-        console.log(this.user_info);
+        if(!this.$user_info)
+        {
+            this.$router.push({ name: 'front_login' });
+        }
+
         this.navigation = navigation;
     },
     methods:

@@ -5,5 +5,5 @@ exports.postCreateAdmin  = 'front/create_admin';
 //admin
 
 
-//users
-
+//member
+exports.postUserList     = 'member/user/list';
