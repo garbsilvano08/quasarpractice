@@ -47,31 +47,23 @@ export default
         async createAdmin()
         {
             this.$q.loading.show();
-
-            await this.$axios.post(postCreateAdmin).then((res) =>
-            {
-                this.$q.loading.hide();
-            }).catch((e) =>
-            {
-                this.$q.loading.hide();
-            });
+            await this.$_post(postCreateAdmin);
+            this.$q.loading.hide();
         },
         async submitLogin()
         {
             this.$q.loading.show();
 
-            await this.$axios.post(postLoginUser, this.form_data).then((res) =>
+            let res = await this.$_post(postLoginUser, this.form_data);
+
+            if(res)
             {
                 this.$store.commit('user/updateUser', res.data)
                 localStorage.setItem("auth", JSON.stringify(res.data));
-                
                 this.$router.push({ name: 'member_dashboard' });
-                this.$q.loading.hide();
-            }).catch((e) =>
-            {
-                this.$q.dialog({ title: `Invalid Login`, message: e.response.data.message });
-                this.$q.loading.hide();
-            });
+            }
+
+            this.$q.loading.hide();
         }
     },
 }

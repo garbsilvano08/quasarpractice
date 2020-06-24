@@ -19,14 +19,9 @@ export default
     },
     created()
     {
-        if(localStorage.getItem("auth"))
-        {
-            this.$store.commit('user/updateUser', JSON.parse(localStorage.getItem("auth")));
-        }
     },
     mounted()
     {
-
     },
     methods:
     {
@@ -50,7 +45,6 @@ export default
                 {
                     this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
                 }
-                
             });
 
             return res;
