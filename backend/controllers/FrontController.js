@@ -21,7 +21,7 @@ module.exports =
         }
         else
         {
-            setTimeout(async () => { res.status(400).send({ message: `The account you entered doesn't exist.`}) }, 1000);
+            res.status(400).send({ message: `The account you entered doesn't exist.`});
         }
     },
     async createAdmin(req, res)
