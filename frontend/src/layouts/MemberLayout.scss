@@ -1,55 +1,107 @@
+* {
+    font-family: 'Open Sans', sans-serif;
+}
+
 body {
     background-color: #fcfcfc;
 }
 
-.main {
-    .nav-title {
-        padding: 5px 10px;
-        background-color: #f4f4f4;
-        border-bottom: 1px solid #e5e5e5;
-        font-weight: 500;
-        color: #333;
-    }
-    .nav-list {
-        background-color: #fff;
+.q-header {
+    .q-toolbar {
+        background-color: #00b050 !important;
+        height: 60px;
+        padding: 0px 20px;
 
+        .q-img {
+            object-fit: contain;
+            width: 120px;
+            margin-left: 20px;
+            margin-right: auto;
+        }
+
+        .btn-nofitication {
+            position: relative;
+            margin-left: auto;
+
+            .notification-indicator {
+                background-color: #ff0000;
+                width: 22px;
+                height: 15px;
+                text-align: center;
+                border-radius: 30px;
+                font-size: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: 3px;
+                right: -10px;
+            }
+        }
+
+        .user-dropdown {
+            margin-left: 10px;
+
+            .q-img {
+                object-fit: cover;
+                width: 40px;
+                height: 40px;
+                border-radius: 100%;
+            }
+
+            .q-btn-dropdown {
+                .q-btn__wrapper {
+                    padding: 0px !important;
+                }
+            }
+        }
+    }
+}
+
+.main {
+    // .nav-title {
+    //     padding: 20px 15px;
+    //     font-weight: 700;
+    //     color: #4a5d52;
+    // }
+
+    .nav-list {
         .nav {
             font-weight: 500;
             font-size: 14px;
 
-            i {
-                color: $primary;
-                font-size: 18px;
-            }
+            // .q-icon {
+            //     color: #00b050;
+            //     font-size: 18px;
+            // }
 
-            .nav-sub {
-                border-top: 1px solid #eee;
-                overflow: auto;
-                background-color: #fafafa;
+            // .nav-sub {
+            //     border-top: 1px solid #eee;
+            //     overflow: auto;
+            //     background-color: #fafafa;
 
-                .nav-item { 
-                    
-                    font-weight: normal;
-                    padding: 5px;
-                    cursor: pointer;
-                    margin-right: 10px;
-                    margin-top: 10px;
-                    margin-bottom: 10px;
-                    padding: 5px;
-                    margin-left: 0;
-                    padding-left: 72px;
-                    border-top-right-radius: 5px;
-                    border-bottom-right-radius: 5px;
-                    
-                    &:hover {
-                        background-color: #f1f2ef;
-                    }
-                    &.active {
-                        background-color: #f1f2ef;
-                        color: $primary;
-                    }
-                }
-            }
+            //     .nav-item {
+
+            //         font-weight: normal;
+            //         cursor: pointer;
+            //         margin-right: 10px;
+            //         margin-top: 10px;
+            //         margin-bottom: 10px;
+            //         padding: 5px;
+            //         margin-left: 0;
+            //         padding-left: 72px;
+            //         border-top-right-radius: 5px;
+            //         border-bottom-right-radius: 5px;
+
+            //         &:hover {
+            //             background-color: #00b050;
+            //         }
+            //         &.active {
+            //             background-color: #f1f2ef;
+            //             color: #00b050 !important;
+            //         }
+            //     }
+            // }
         }
     }
 }
@@ -64,9 +116,9 @@ body {
     border-radius: 5px;
     padding: 20px 40px;
     color: #333;
-    margin-bottom: 40px; 
+    margin-bottom: 40px;
 
-    
+
     .component {
 
         border: 1px dashed #eee;
