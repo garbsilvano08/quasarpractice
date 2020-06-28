@@ -10,7 +10,7 @@ module.exports =
         key: 'front',
         label: 'Front Desk',
         icon: 'fa fa-torii-gate',
-        route: 'daily',
+        route: 'front_desk',
     },
     {
         key: 'daily',
