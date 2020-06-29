@@ -3,7 +3,7 @@ module.exports =
     {
         key: 'member_dashboard',
         label: 'Dashboard',
-        icon: 'fa fa-house-user',
+        icon: 'mdi-chart-bar',
         route: 'member_dashboard',
     },
     {
@@ -22,42 +22,26 @@ module.exports =
         key: 'daily',
         label: 'Daily Logs',
         icon: 'mdi-face-recognition',
-        route: 'daily',
-    },
-    {
-        key: 'all-users',
-        label: 'All Users',
-        icon: 'mdi-account-group',
-        route: '',
-    },
-    {
-        key: 'account',
-        label: 'Account',
-        icon: 'mdi-cog',
-        route: '',
-    },
-    {
-        key: 'daily',
-        label: 'Device Management',
-        icon: 'fa fa-tablet-alt',
-        route: 'daily',
-    },
-    {
-        key: 'daily',
-        label: 'Blacklist Management',
-        icon: 'fa fa-user-shield',
-        route: 'daily',
-    },
-    {
-        key: 'reports',
-        label: 'Reports',
-        icon: 'fa fa-chart-line',
         sub:
         [
-            { label: 'Foot Traffic', route: 'landing_login' },
-            { label: 'Visitor Purpose', route: 'landing_login' },
-            { label: 'Employee/Visitor Overview', route: 'landing_login' },
-            { label: 'Fever Monitoring', route: 'landing_login' },
+            { label: 'Staff', route: '' },
+            { label: 'Visitors', route: '' },
+            { label: 'Fever Detected', route: '' },
+            { label: 'Blacklist', route: '' },
+            { label: 'Person of Interest', route: '' },
+        ]
+    },
+    {
+        key: 'account-directory',
+        label: 'Account Directory',
+        icon: 'mdi-account-group',
+        sub:
+        [
+            { label: 'Staff', route: '' },
+            { label: 'Visitors', route: '' },
+            { label: 'Fever Detected', route: '' },
+            { label: 'Blacklist', route: '' },
+            { label: 'Person of Interest', route: '' },
         ]
     },
     {

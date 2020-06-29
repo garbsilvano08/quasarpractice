@@ -2,7 +2,7 @@
    <div class="dashboard">
       <div class="dashboard__header">
          <div class="dashboard__header-title">DASHBOARD OVERVIEW</div>
-         <q-btn flat dense no-caps label="Export" class="btn-export">
+         <q-btn flat dense no-caps label="Export" class="btn-export btn-outline">
             <q-icon name="mdi-export"></q-icon>
          </q-btn>
       </div>
@@ -231,7 +231,7 @@
                   </div>
                </div>
                <div class="visitor-logs__btn">
-                  <q-btn flat dense no-caps label="See All"></q-btn>
+                  <q-btn flat dense no-caps class="btn-primary" label="See All"></q-btn>
                </div>
             </div>
          </div>
