@@ -6,7 +6,7 @@ const routes = [
         component: () => import('layouts/FrontLayout.vue'),
         children:
         [
-            { name: 'login', path: '', component: () => import('pages/Front/Login/Login.vue') },
+            { name: 'front_login', path: '', component: () => import('pages/Front/Login.vue') },
         ]
     },
     {
@@ -14,8 +14,8 @@ const routes = [
         component: () => import('layouts/MemberLayout.vue'),
         children:
         [
-            { name: 'dashboard', path: '', component: () => import('pages/Member/Dashboard/Dashboard.vue') },
-            { name: 'frontdesk', path: '/frontdesk', component: () => import('pages/Member/Frontdesk/Frontdesk.vue') },
+            { name: 'member_dashboard', path: '', component: () => import('pages/Member/Dashboard/Dashboard.vue') },
+            { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },
         ]
     },
 

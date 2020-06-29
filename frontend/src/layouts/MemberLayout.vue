@@ -70,6 +70,11 @@ export default
 	}),
     mounted()
     {
+        if(!this.$user_info)
+        {
+            this.$router.push({ name: 'front_login' });
+        }
+
         this.navigation = navigation;
     },
     methods:

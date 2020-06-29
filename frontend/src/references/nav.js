@@ -1,10 +1,16 @@
 module.exports =
 [
     {
-        key: 'dashboard',
+        key: 'member_dashboard',
         label: 'Dashboard',
-        icon: 'mdi-monitor',
-        route: 'dashboard',
+        icon: 'fa fa-house-user',
+        route: 'member_dashboard',
+    },
+    {
+        key: 'front',
+        label: 'Front Desk',
+        icon: 'fa fa-torii-gate',
+        route: 'daily',
     },
     {
         key: 'daily',
@@ -25,10 +31,34 @@ module.exports =
         route: '',
     },
     {
-        key: 'devices',
-        label: 'Devices',
-        icon: 'mdi-cellphone-iphone',
-        route: '',
+        key: 'daily',
+        label: 'Device Management',
+        icon: 'fa fa-tablet-alt',
+        route: 'daily',
+    },
+    {
+        key: 'daily',
+        label: 'Blacklist Management',
+        icon: 'fa fa-user-shield',
+        route: 'daily',
+    },
+    {
+        key: 'reports',
+        label: 'Reports',
+        icon: 'fa fa-chart-line',
+        sub:
+        [
+            { label: 'Foot Traffic', route: 'landing_login' },
+            { label: 'Visitor Purpose', route: 'landing_login' },
+            { label: 'Employee/Visitor Overview', route: 'landing_login' },
+            { label: 'Fever Monitoring', route: 'landing_login' },
+        ]
+    },
+    {
+        key: 'member_logout',
+        label: 'Logout',
+        icon: 'logout',
+        route: 'member_logout',
     },
     // {
     //     key: 'landing',
