@@ -2,7 +2,7 @@ const jwt           = require('jsonwebtoken');
 
 module.exports = (req, res, next) =>
 {
-    let token       = req.body.Authorization;
+    let token       = req.headers.authorization;
     let token_mixer = process.env.TOKEN_MIXER;
 
     jwt.verify(token, token_mixer ? token_mixer : 'water123', function(err, decoded)
