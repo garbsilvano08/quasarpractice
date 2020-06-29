@@ -55,8 +55,7 @@ export default
         },
         async $_post_file(url, data = {})
         {
-            
-            console.log(this.$token)
+            console.log(data)
             let res = null;
 
             if(this.$token)

@@ -59,12 +59,9 @@ export default
             const formData = new FormData();
             formData.append('yinyang.png', blob);
 
-            // console.log(res.data);
-            
-
             let data = { formData:formData }
-            console.log(data)
-            let res = await this.$_post_file(postUserList, data);
+            // console.log(data)
+            let res = await this.$_post_file(postAddPerson, data);
             
         },
         testing(){
