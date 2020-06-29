@@ -14,10 +14,12 @@ app.post('/api/front/login',            front_controller.login);
 app.post('/api/front/create_admin',     front_controller.createAdmin);
 app.post('/api/front/register',         front_controller.register);
 
+
 const member_controller     = require('./controllers/MemberController');
 const member_only           = require('./middleware/MemberOnly');
 
 app.post('/api/member/user/list', member_only, member_controller.userList);
+app.post('/api/member/add/person', member_only, member_controller.addPerson);
 
 app.listen({port: 4001}, (err) =>
 {

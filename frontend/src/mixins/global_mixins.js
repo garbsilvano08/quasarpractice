@@ -34,7 +34,41 @@ export default
                 data.Authorization = this.$token;
             }
 
-            await this.$axios.post(url, data).then((r) => { res = r; }).catch((e) =>
+            await this.$axios.post(url, data,{
+                headers: {
+                'Authorization': this.$token,
+                }
+            }).then((r) => { res = r; }).catch((e) =>
+            {
+                if(e.response.status === 500)
+                {
+                    this.$q.dialog({ title: `You have been logged-out`, message: e.response.data.message });
+                    this.$router.push({ name: 'front_login' });
+                }
+                else
+                {
+                    this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
+                }
+            });
+
+            return res;
+        },
+        async $_post_file(url, data = {})
+        {
+            console.log(data)
+            let res = null;
+
+            if(this.$token)
+            {
+                data.Authorization = this.$token;
+            }
+
+            await this.$axios.post(url, data,{
+                headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': this.$token,
+                }
+            }).then((r) => { res = r; }).catch((e) =>
             {
                 if(e.response.status === 500)
                 {

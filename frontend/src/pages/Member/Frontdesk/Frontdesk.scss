@@ -1,8 +1,10 @@
 .frontdesk {
     padding: 50px;
+
     .frontdesk__header {
         display: flex;
         align-items: center;
+        margin-bottom: 30px;
 
         .frontdesk__header-title {
             font-size: 16px;
@@ -13,12 +15,101 @@
         .frontdesk__header-btn {
             margin-left: auto;
 
-            .btn-discard {
+            .btn-outline {
+                margin-right: 10px;
+            }
+        }
+    }
 
+    .frontdesk__container {
+        .frontdesk__content {
+            .frontdesk__content-info {
+                margin-bottom: 20px;
+
+                .frontdesk__content-temperature {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #233b61;
+                }
+
+                .content__select {
+                    margin-bottom: 30px;
+                }
+
+                .content__input {
+                    margin-bottom: 30px;
+                }
+
+                .img-holder__sm {
+                    .img__sm {
+                        width: 150px !important;
+                        height: 150px;
+                    }
+
+                    .btn-upload {
+                        width: 150px !important;
+                    }
+                }
+
+                .frontdesk__content-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    grid-gap: 15px;
+                }
+            }
+        }
+    }
+}
+
+
+// PROFILE LIST DIALOG
+.profile {
+    width: 100%;
+
+    .profile__header {
+        background-color: #3f51b5;
+        padding: 15px 15px 15px 20px;
+        display: flex;
+        align-items: center;
+
+        .profile__header-title {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .q-btn {
+            color: rgba(#ffffff, .6);
+            margin-left: auto;
+        }
+    }
+
+    .profile__body {
+        background-color: #233d62;
+        padding: 30px;
+        display: grid;
+        grid-template-columns: repeat( 5, auto);
+        grid-gap: 15px;
+
+        .profile__info {
+            text-align: center;
+
+            .profile__info-img {
+                width: 100px;
+                height: 100px;
+                border-radius: 4px;
             }
 
-            .btn-save {
+            .img-active {
+                border: solid 3px #3f51b5;
+            }
 
+            .profile__info-details {
+                color: #ffffff;
+                font-size: 12px;
+                font-weight: 500;
+                margin-top: 10px;
+                text-align: center;
             }
         }
     }
