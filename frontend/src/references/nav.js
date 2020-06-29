@@ -7,10 +7,15 @@ module.exports =
         route: 'member_dashboard',
     },
     {
-        key: 'front',
+        key: 'frontdesk',
         label: 'Front Desk',
-        icon: 'fa fa-torii-gate',
-        route: 'daily',
+        icon: 'mdi-monitor-cellphone',
+        sub:
+        [
+            { label: 'Add Visitor', route: 'member_frontdesk_visitor' },
+            { label: 'Add New Staff', route: 'member_frontdesk_staff' },
+            { label: 'Blacklist Management', route: 'member_frontdesk_blacklist' },
+        ]
     },
     {
         key: 'daily',

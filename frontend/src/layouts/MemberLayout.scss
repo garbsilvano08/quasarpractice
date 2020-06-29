@@ -75,33 +75,29 @@ body {
                 font-size: 18px;
             }
 
-            // .nav-sub {
-            //     border-top: 1px solid #eee;
-            //     overflow: auto;
-            //     background-color: #fafafa;
+            .nav-sub {
+                overflow: auto;
+                background-color: #fafafa;
+                font-weight: 500;
+                font-size: 14px;
+                border: none !important;
 
-            //     .nav-item {
+                .nav-item {
+                    font-weight: normal;
+                    cursor: pointer;
+                    margin-left: 0;
+                    padding: 10px 0px 10px 73px;
 
-            //         font-weight: normal;
-            //         cursor: pointer;
-            //         margin-right: 10px;
-            //         margin-top: 10px;
-            //         margin-bottom: 10px;
-            //         padding: 5px;
-            //         margin-left: 0;
-            //         padding-left: 72px;
-            //         border-top-right-radius: 5px;
-            //         border-bottom-right-radius: 5px;
+                    &:hover {
+                        background-color: #e2e2e2;
+                    }
 
-            //         &:hover {
-            //             background-color: #00b050;
-            //         }
-            //         &.active {
-            //             background-color: #f1f2ef;
-            //             color: #00b050 !important;
-            //         }
-            //     }
-            // }
+                    &.active {
+                        background-color: #f1f2ef;
+                        color: #3f51b5 !important;
+                    }
+                }
+            }
         }
     }
 }
