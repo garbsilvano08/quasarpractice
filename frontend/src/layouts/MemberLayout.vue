@@ -27,7 +27,7 @@
             </q-toolbar>
         </q-header>
 
-        <q-drawer v-model="leftDrawerOpen" show-if-above bordered overlay content-class="bg-grey-1">
+        <q-drawer v-model="leftDrawerOpen"  behavior="mobile" show-if-above bordered overlay content-class="bg-grey-1">
 			<!-- <div class="nav-title">MY ACCOUNT</div> -->
 			<q-list class="nav-list">
 				<template v-for="nav of navigation">
