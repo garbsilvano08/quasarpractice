@@ -68,4 +68,11 @@ module.exports = class AccountClass
 
         return res;
     }
+    async addingPersonOnTablet(data){
+        
+        
+
+
+        
+    }
 }

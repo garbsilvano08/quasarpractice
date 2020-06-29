@@ -40,5 +40,5 @@ module.exports =
     async register(req, res)
     {
         res.send("registration");
-    }
+    },
 }
