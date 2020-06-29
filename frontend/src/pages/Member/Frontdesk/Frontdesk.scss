@@ -1,0 +1,62 @@
+.frontdesk {
+    padding: 50px;
+
+    .frontdesk__header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+
+        .frontdesk__header-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #233b61;
+        }
+
+        .frontdesk__header-btn {
+            margin-left: auto;
+
+            .btn-outline {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .frontdesk__container {
+        .frontdesk__content {
+            .frontdesk__content-info {
+                margin-bottom: 20px;
+
+                .frontdesk__content-temperature {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #233b61;
+                }
+
+                .content__select {
+                    margin-bottom: 30px;
+                }
+
+                .content__input {
+                    margin-bottom: 30px;
+                }
+
+                .img-holder__sm {
+                    .img__sm {
+                        width: 150px !important;
+                        height: 150px;
+                    }
+
+                    .btn-upload {
+                        width: 150px !important;
+                    }
+                }
+
+                .frontdesk__content-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    grid-gap: 15px;
+                }
+            }
+        }
+    }
+}
