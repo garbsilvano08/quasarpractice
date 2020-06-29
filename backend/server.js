@@ -19,7 +19,7 @@ const member_controller     = require('./controllers/MemberController');
 const member_only           = require('./middleware/MemberOnly');
 
 app.post('/api/member/user/list', member_only, member_controller.userList);
-app.post('/api/member/add/person', member_only, member_controller.addPerson);
+app.post('/api/member/add/person',  member_only, member_controller.addPerson);
 
 app.listen({port: 4001}, (err) =>
 {

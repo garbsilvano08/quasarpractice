@@ -27,12 +27,7 @@ export default
     {
         async $_post(url, data = {})
         {
-            let res = null;
-
-            if(this.$token)
-            {
-                data.Authorization = this.$token;
-            }
+            let res = null; 
 
             await this.$axios.post(url, data,{
                 headers: {
@@ -55,13 +50,8 @@ export default
         },
         async $_post_file(url, data = {})
         {
-            console.log(data)
+            // console.log(data.entries().next())
             let res = null;
-
-            if(this.$token)
-            {
-                data.Authorization = this.$token;
-            }
 
             await this.$axios.post(url, data,{
                 headers: {
@@ -80,7 +70,7 @@ export default
                     this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
                 }
             });
-
+            console.log(res.data);
             return res;
         },
         $_logout()

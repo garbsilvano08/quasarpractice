@@ -1,4 +1,7 @@
 const MDB_USER = require('../models/MDB_USER');
+const FormData = require('form-data');
+const axios = require('axios');
+const fs = require('fs');
 
 module.exports = class AccountClass
 {
@@ -68,11 +71,8 @@ module.exports = class AccountClass
 
         return res;
     }
-    async addingPersonOnTablet(data){
+    async addingPerson(data){
         
-        
-
-
-        
+        console.log("wew");  
     }
 }
