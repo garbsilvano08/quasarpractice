@@ -3,12 +3,12 @@
 }
 
 body {
-    background-color: #fcfcfc;
+    background-color: #f4f4f4;
 }
 
 .q-header {
     .q-toolbar {
-        background-color: #00b050 !important;
+        background-color: #3f51b5 !important;
         height: 60px;
         padding: 0px 20px;
 
@@ -59,21 +59,21 @@ body {
 }
 
 .main {
-    // .nav-title {
-    //     padding: 20px 15px;
-    //     font-weight: 700;
-    //     color: #4a5d52;
-    // }
+    .nav-title {
+        padding: 20px 15px;
+        font-weight: 700;
+        color: #3f51b5;
+    }
 
     .nav-list {
         .nav {
             font-weight: 500;
             font-size: 14px;
 
-            // .q-icon {
-            //     color: #00b050;
-            //     font-size: 18px;
-            // }
+            .q-icon {
+                color: #3f51b5;
+                font-size: 18px;
+            }
 
             // .nav-sub {
             //     border-top: 1px solid #eee;

@@ -1,0 +1,25 @@
+.frontdesk {
+    padding: 50px;
+    .frontdesk__header {
+        display: flex;
+        align-items: center;
+
+        .frontdesk__header-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #233b61;
+        }
+
+        .frontdesk__header-btn {
+            margin-left: auto;
+
+            .btn-discard {
+
+            }
+
+            .btn-save {
+
+            }
+        }
+    }
+}

@@ -27,8 +27,8 @@
             </q-toolbar>
         </q-header>
 
-        <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-1">
-			<!-- <div class="nav-title">Navigation</div> -->
+        <q-drawer v-model="leftDrawerOpen" show-if-above bordered overlay content-class="bg-grey-1">
+			<!-- <div class="nav-title">MY ACCOUNT</div> -->
 			<q-list class="nav-list">
 				<template v-for="nav of navigation">
 					<q-item class="nav" v-if="!nav.hasOwnProperty('sub')" @click="$router.push({ name: nav.route })" clickable v-ripple :active="$route.name == nav.route">
@@ -37,11 +37,11 @@
 						</q-item-section>
 						<q-item-section>{{ nav.label }}</q-item-section>
 					</q-item>
-					<!-- <q-expansion-item group="sidenav" v-if="nav.hasOwnProperty('sub')" expand-separator class="nav" :icon="nav.icon" :label="nav.label">
+					<q-expansion-item group="sidenav" v-if="nav.hasOwnProperty('sub')" expand-separator class="nav" :icon="nav.icon" :label="nav.label">
 						<q-card class="nav-sub">
 							<div v-for="sub in nav.sub" class="nav-item" :class="$route.name == sub.route ? 'active' : ''" @click="$router.push({ name: sub.route })">{{ sub.label }}</div>
 						</q-card>
-					</q-expansion-item> -->
+					</q-expansion-item>
 				</template>
 			</q-list>
         </q-drawer>

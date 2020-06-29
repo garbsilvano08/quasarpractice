@@ -114,6 +114,20 @@
                </div>
                <q-select v-model="select_date" :options="options" outlined dense></q-select>
             </div>
+            <div class="dashboard__graph-content">
+               <line-chart style="position: relative; height:250px; width:100%"
+                  :data="{
+                     'MON': 250,
+                     'TUES': 150,
+                     'WED': 350,
+                     'THURS': 500,
+                     'FRI': 200,
+                     'SAT': 300,
+                     'SUN': 100,
+                  }"
+               >
+               </line-chart>
+            </div>
          </div>
          <!-- EMPLOYEE/VISITOR OVERVIEW -->
          <div class="dashboard__graph-item">
@@ -122,6 +136,20 @@
                   Employee/Visitor Overview
                </div>
                <q-select v-model="select_date" :options="options" outlined dense></q-select>
+            </div>
+            <div class="dashboard__graph-content">
+               <bar-chart style="position: relative; height:250px; width:100%"
+                  :data="{
+                     'MON': 250,
+                     'TUES': 150,
+                     'WED': 350,
+                     'THURS': 500,
+                     'FRI': 200,
+                     'SAT': 300,
+                     'SUN': 100,
+                  }"
+               >
+               </bar-chart>
             </div>
          </div>
          <!-- VISITORS PURPOSE -->
@@ -132,6 +160,20 @@
                </div>
                <q-select v-model="select_date" :options="options" outlined dense></q-select>
             </div>
+            <div class="dashboard__graph-content">
+               <pie-chart style="position: relative; height:250px; width:100%"
+                  suffix="%"
+                  :data="{
+                     'Official Business': 60,
+                     'Collection & Pickup': 25,
+                     'Delivery': 10,
+                     'Corporate Meeting': 0,
+                     'Client/Customer': 0,
+                     'Guest': 0,
+                  }"
+               >
+               </pie-chart>
+            </div>
          </div>
          <!-- VISITOR LOGS -->
          <div class="dashboard__graph-item">
@@ -141,6 +183,57 @@
                </div>
                <q-select v-model="select_date" :options="options" outlined dense></q-select>
             </div>
+            <div class="dashboard__graph-content">
+               <div class="visitor-logs__list">
+                  <div class="visitor-logs__info">
+                     <q-img src="https://www.thefamouspeople.com/profiles/thumbs/natalie-dormer-1.jpg">
+                     </q-img>
+                     <div class="visitor-logs__info-user">
+                        <div class="visitor-logs__user-name">Natalie Dormer</div>
+                        <div class="visitor-logs__user-temp">36.5 °C</div>
+                     </div>
+                     <div class="visitor-logs__info-visit">
+                        <div class="visitor-logs__visit-datetime">Today 1:00 PM</div>
+                        <div class="visitor-logs__visit-reason">
+                           <span class="badge__official-business"></span>
+                           Official Business</div>
+                     </div>
+                  </div>
+
+                  <div class="visitor-logs__info">
+                     <q-img src="https://images.csmonitor.com/csm/2012/08/sclaflin.jpg?alias=standard_900x600">
+                     </q-img>
+                     <div class="visitor-logs__info-user">
+                        <div class="visitor-logs__user-name">Sam Claflin</div>
+                        <div class="visitor-logs__user-temp">36.5 °C</div>
+                     </div>
+                     <div class="visitor-logs__info-visit">
+                        <div class="visitor-logs__visit-datetime">Today 1:00 PM</div>
+                        <div class="visitor-logs__visit-reason">
+                           <span class="badge__collection"></span>
+                           Collection & Pickup</div>
+                     </div>
+                  </div>
+
+                  <div class="visitor-logs__info">
+                     <q-img src="https://www.famousbirthdays.com/headshots/dean-charles-chapman-4.jpg">
+                     </q-img>
+                     <div class="visitor-logs__info-user">
+                        <div class="visitor-logs__user-name">Dean-Charles Chapman</div>
+                        <div class="visitor-logs__user-temp">36.5 °C</div>
+                     </div>
+                     <div class="visitor-logs__info-visit">
+                        <div class="visitor-logs__visit-datetime">Today 1:00 PM</div>
+                        <div class="visitor-logs__visit-reason">
+                           <span class="badge__delivery"></span>
+                           Delivery</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="visitor-logs__btn">
+                  <q-btn flat dense no-caps label="See All"></q-btn>
+               </div>
+            </div>
          </div>
       </div>
    </div>
@@ -148,6 +241,11 @@
 
 <script>
 import "./Dashboard.scss";
+import Vue from 'vue';
+import Chartkick from 'vue-chartkick';
+import "chart.js"
+
+Vue.use(Chartkick.use(Chart))
 
 export default
 {
@@ -168,6 +266,8 @@ export default
       // ]
    }),
    mounted() { },
-   methods: { },
+   methods: {
+
+   },
 }
 </script>
