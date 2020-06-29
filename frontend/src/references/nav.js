@@ -14,6 +14,7 @@ module.exports =
         [
             { label: 'Add Visitor', route: 'member_frontdesk_visitor' },
             { label: 'Add New Staff', route: 'member_frontdesk_staff' },
+            { label: 'Add Fever Logs', route: 'member_frontdesk_feverlogs' },
             { label: 'Blacklist Management', route: 'member_frontdesk_blacklist' },
         ]
     },

@@ -25,6 +25,17 @@ export default
     },
     methods:
     {
+        async $_get(url, data = {})
+        {
+            let res = null;
+
+            await this.$axios.get(url, data).then((r) => { res = r; }).catch((e) =>
+            {
+                this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
+            });
+
+            return res;
+        },
         async $_post(url, data = {})
         {
             let res = null; 

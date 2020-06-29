@@ -1,7 +1,7 @@
 <template>
     <div class="frontdesk">
         <div class="frontdesk__header">
-            <div class="frontdesk__header-title">ADD STAFF</div>
+            <div class="frontdesk__header-title">ADD FEVER LOGS</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
@@ -15,8 +15,13 @@
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
                             <q-img class="content__img" src="../../../assets/Member/placeholder-img.jpg"></q-img>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="profile_img_dialog = true"></q-btn>
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Browse Face Detection" @click="profile_img_dialog = true"></q-btn>
                         </div>
+                    </div>
+                    <!-- BODY TEMPERATURE -->
+                    <div class="frontdesk__content-info">
+                        <div class="content__title">Body Temperature</div>
+                        <div class="frontdesk__content-temperature">36°C</div>
                     </div>
                     <!-- CHOOSE ID -->
                     <div class="frontdesk__content-info">
