@@ -81,7 +81,7 @@ export default
             // formData.append("webmasterfile", blob);
 
             var request = new XMLHttpRequest();
-            request.open("POST", "http://192.168.254.107:8080/person/findByPage");
+            request.open("POST", "http://192.168.1.177:8080/person/findByPage");
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
                     console.log(request.responseText);

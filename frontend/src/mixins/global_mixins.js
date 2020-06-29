@@ -4,7 +4,6 @@ export default
 {
     data: () =>
     ({
-
     }),
     computed:
     {
@@ -25,6 +24,13 @@ export default
     },
     methods:
     {
+        $_parseTabletResponse(res)
+        {
+            res = res.replace(`data: "`, ``);
+            res = res.substring(0, res.length - 1);
+            res = JSON.parse(res);
+            return res;
+        },
         async $_get(url, data = {})
         {
             let res = null;
