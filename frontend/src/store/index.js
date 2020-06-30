@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import user from './user';
+import sync from './sync';
 
 Vue.use(Vuex)
 
@@ -17,7 +18,7 @@ export default function (/* { ssrContext } */)
 {
     const Store = new Vuex.Store(
     {
-        modules: { user },
+        modules: { user, sync },
         strict: process.env.DEV
     })
 

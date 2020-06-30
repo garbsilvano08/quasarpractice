@@ -23,7 +23,7 @@
     "vue-material-design-icons": "^4.7.1"
   },
   "devDependencies": {
-    "@quasar/app": "^2.0.0",
+    "@quasar/app": "^2.0.1",
     "@quasar/quasar-app-extension-qmarkdown": "^1.0.29"
   },
   "browserslist": [

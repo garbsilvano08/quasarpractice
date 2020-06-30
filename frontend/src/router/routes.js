@@ -19,7 +19,8 @@ const routes = [
             { name: 'member_frontdesk_visitor', path: '/frontdesk/add-visitor', component: () => import('pages/Member/Frontdesk/AddVisitor.vue') },
             { name: 'member_frontdesk_staff', path: '/frontdesk/add-staff', component: () => import('pages/Member/Frontdesk/AddStaff.vue') },
             { name: 'member_frontdesk_feverlogs', path: '/frontdesk/add-fever-logs', component: () => import('pages/Member/Frontdesk/AddFeverLogs.vue') },
-            { name: 'member_frontdesk_blacklist', path: '/frontdesk/blacklist', component: () => import('pages/Member/Frontdesk/Blacklist.vue') },
+            { name: 'member_frontdesk_blacklist', path: '/frontdesk/blacklist', component: () => import('pages/Member/Frontdesk/BlackList.vue') },
+            { name: 'member_synchronization', path: '/synchronization', component: () => import('pages/Member/Synchronization/Synchronization.vue') },
             { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },
         ]
     },

@@ -1,4 +1,53 @@
 const AccountClass  = require('../classess/AccountClass');
+const multer        = require('multer');
+const path          = require('path');
+const MDB_RAW_VISITOR = require('../models/MDB_RAW_VISITOR');
+
+const storage = multer.diskStorage({
+  destination: './uploads/images/',
+  filename: function (req, file, cb) {
+      cb(null, file.originalname + '-' + Date.now() +
+      path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10000000 },
+  fileFilter: function(req, file, cb) {
+      checkFileType(file, cb)
+  }
+}).single('image');
+
+function checkFileType(file, cb) {
+  // Allowed ext
+  const filetypes = /jpeg|jpg|png|gif/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+      return cb(null, true);
+  } else {
+      cb('Error: Images Only!');
+  }
+}
+
+function checkFileType(file, cb) {
+  // Allowed ext
+  const filetypes = /jpeg|jpg|png|gif/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+      return cb(null, true);
+  } else {
+      cb('Error: Images Only!');
+  }
+}
 
 module.exports =
 {
@@ -7,18 +56,34 @@ module.exports =
         res.send("user_list");
     },
     async addPerson(req, res)
+    { 
+      upload(req, res, async (err) => {
+        if (err) {
+            return res.send({
+                status: 'error',
+                message: err.message
+            });
+        } else {
+            if (req.file === undefined) {
+                return res.send({
+                    status: 'error',
+                    message: 'Error: No File Selected!'
+                });
+            } else {
+                return res.send(req.file);
+            }
+        }
+    })
+        // let response = await new AccountClass().addingPerson();
+    },
+    async addVisitor(req, res)
     {
-        console.log(JSON.stringify(req.headers));
-        const form = new formidable.IncomingForm();
-        // Parse `req` and upload all associated files
-        form.parse(req, function(err, fields, files) {
-          if (err) {
-            return res.status(400).json({ error: err.message });
-          }
-          const [firstFileName] = Object.keys(files);
-      
-          res.json({ filename: firstFileName });
+        await new MDB_RAW_VISITOR().add(
+        {
+            personal_information: req.body.personal_information,
+            visitor_purpose: req.body.visitor_purpose
         });
-        
+
+        return res.send(true);
     }
 }

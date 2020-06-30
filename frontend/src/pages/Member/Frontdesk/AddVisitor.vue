@@ -4,7 +4,7 @@
             <div class="frontdesk__header-title">ADD VISITOR</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
-                <q-btn class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
+                <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
             </div>
         </div>
         <div class="frontdesk__container content__grid-6x6">
@@ -15,7 +15,7 @@
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
                             <q-img class="content__img" src="../../../assets/Member/placeholder-img.jpg"></q-img>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Browse Face Detection" @click="profile_img_dialog = true"></q-btn>
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="profile_img_dialog = true"></q-btn>
                         </div>
                     </div>
                     <!-- BODY TEMPERATURE -->
@@ -28,7 +28,7 @@
                         <div class="content__title">Choose ID</div>
                         <div class="content__select">
                             <div class="content__select-label">Identification Card Type</div>
-                            <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
+                            <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
                             <q-img class="content__img img__sm" src="../../../assets/Member/placeholder-img.jpg"></q-img>
@@ -47,58 +47,58 @@
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
                                     <div class="content__select-label">Identification Card Type</div>
-                                    <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
+                                    <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                                 </div>
                                 <div class="content__input">
-                                    <div class="content__input-label">ID Type</div>
-                                    <q-input outlined dense></q-input>
+                                    <div class="content__input-label">ID Number</div>
+                                    <q-input v-model="personal_information.id_number" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Firstname -->
                             <div class="content__input">
                                 <div class="content__input-label">First Name</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="personal_information.first_name" outlined dense></q-input>
                             </div>
                             <!-- Lastname -->
                             <div class="content__input">
                                 <div class="content__input-label">Last Name</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="personal_information.last_name" outlined dense></q-input>
                             </div>
                             <!-- Middlename -->
                             <div class="content__input">
                                 <div class="content__input-label">Middle Name</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="personal_information.middle_name" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
                                     <div class="content__select-label">Gender</div>
-                                    <q-select v-model="select__gender" :options="options_gender" outlined dense></q-select>
+                                    <q-select v-model="personal_information.gender" :options="options_gender" outlined dense></q-select>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Birth Date</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input type="date" v-model="personal_information.birth_date" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->
                             <div class="content__input">
                                 <div class="content__input-label">Nationality</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="personal_information.nationality" outlined dense></q-input>
                             </div>
                             <!-- Home Address -->
                             <div class="content__input">
                                 <div class="content__input-label">Home Address</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="personal_information.home_address" outlined dense></q-input>
                             </div>
                             <!-- Contact -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
                                     <div class="content__input-label">Contact Number</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input v-model="personal_information.contact_number" outlined dense></q-input>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Emergency Contact Number</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input v-model="personal_information.emergency_contact_number" outlined dense></q-input>
                                 </div>
                             </div>
                         </div>
@@ -111,17 +111,17 @@
                             <!-- Purpose of Visit -->
                             <div class="content__select">
                                 <div class="content__select-label">Purpose of Visit</div>
-                                <q-select v-model="select__visit_purpose" :options="options_visit_purpose" outlined dense></q-select>
+                                <q-select v-model="visitor_purpose.purpose_visit" :options="options_visit_purpose" outlined dense></q-select>
                             </div>
                             <!-- Visitor Details -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
                                     <div class="content__input-label">Contact Person</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input v-model="visitor_purpose.contact_person" outlined dense></q-input>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Destination</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input v-model="visitor_purpose.destination" outlined dense></q-input>
                                 </div>
                             </div>
                         </div>
@@ -168,14 +168,17 @@
 
 <script>
 import "./Frontdesk.scss";
+import Model from "../../../models/Model";
 
 export default {
     data:() =>
     ({
         profile_img_dialog: false,
+
         select__id_type: '',
         select__gender: '',
         select__visit_purpose: '',
+        
         options_id: [
             'Drivers License', 'UMID' , 'PhilHealth'
         ],
@@ -184,7 +187,49 @@ export default {
         ],
         options_visit_purpose: [
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
-        ]
-    })
+        ],
+
+        // Submit Data
+        personal_information:
+        {
+            id_type: null,
+            id_number: null,
+            first_name: null,
+            middle_name: null,
+            last_name: null,
+            gender: null,
+            birth_date: null,
+            nationality: null,
+            home_address: null,
+            contact_number: null,
+            emergency_contact_number: null
+        },
+        visitor_purpose:
+        {
+            purpose_visit: null,
+            contact_person: null,
+            destination: null
+        },
+
+        db: new Model()
+    }),
+    methods:
+    {
+        async submit()
+        {
+            await this.db.add(
+            {
+                personal_information: this.personal_information, 
+                visitor_purpose: this.visitor_purpose
+            }, 
+            'visitors');
+
+            this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+        }
+    },
+    async created()
+    {
+        await this.db.initialize();
+    }
 }
 </script>
