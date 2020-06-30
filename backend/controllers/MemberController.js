@@ -81,7 +81,8 @@ module.exports =
         await new MDB_RAW_VISITOR().add(
         {
             personal_information: req.body.personal_information,
-            visitor_purpose: req.body.visitor_purpose
+            visitor_purpose: req.body.visitor_purpose,
+            name: req.body.personal_information.first_name + " " + req.body.personal_information.middle_name + " " + req.body.personal_information.last_name
         });
 
         return res.send(true);
