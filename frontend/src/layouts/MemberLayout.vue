@@ -96,7 +96,6 @@ export default
         await this.db.initialize();
         await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
         await this.checkQueueSync();
-        setInterval(this.checkQueueSync, 1000);
     },
     methods:
     {
@@ -105,10 +104,13 @@ export default
             for (let visitor of this.visitors)
             {
                 this.$store.commit('sync/setVisitorAsSyncing', visitor.id);
+                await this.$_post('member/add/visitor', visitor);
                 await this.sleep();
                 await this.db.delete(visitor.id, "visitors");
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
             }
+
+            setTimeout(this.checkQueueSync, 1000);
         },
         async sleep()
         {

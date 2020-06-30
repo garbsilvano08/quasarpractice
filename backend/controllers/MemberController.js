@@ -1,6 +1,7 @@
 const AccountClass  = require('../classess/AccountClass');
 const multer        = require('multer');
 const path          = require('path');
+const MDB_RAW_VISITOR = require('../models/MDB_RAW_VISITOR');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -74,5 +75,15 @@ module.exports =
         }
     })
         // let response = await new AccountClass().addingPerson();
+    },
+    async addVisitor(req, res)
+    {
+        await new MDB_RAW_VISITOR().add(
+        {
+            personal_information: req.body.personal_information,
+            visitor_purpose: req.body.visitor_purpose
+        });
+
+        return res.send(true);
     }
 }
