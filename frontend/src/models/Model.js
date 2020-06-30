@@ -33,6 +33,7 @@ export default class Model
 
                 // Tables
                 db.createObjectStore("visitors", { autoIncrement: true, keyPath:'id' });
+                db.createObjectStore("lastRequestTime", { autoIncrement: true, keyPath:'id' });
             };
         });
     }

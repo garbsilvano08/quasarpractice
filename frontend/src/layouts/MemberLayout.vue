@@ -80,6 +80,10 @@ export default
         visitors()
         {
             return this.$store.state.sync.visitors;
+        },
+        lastRequestTime()
+        {
+            return this.$store.state.sync.lastRequestTime;
         }
     },
     mounted()
@@ -96,6 +100,9 @@ export default
         await this.db.initialize();
         await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
         await this.checkQueueSync();
+        setInterval(this.checkQueueSync, 1000);
+        setInterval(this.getLog, 60000);
+        // this.getLog();
     },
     methods:
     {
@@ -104,18 +111,52 @@ export default
             for (let visitor of this.visitors)
             {
                 this.$store.commit('sync/setVisitorAsSyncing', visitor.id);
-                await this.$_post('member/add/visitor', visitor);
                 await this.sleep();
                 await this.db.delete(visitor.id, "visitors");
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
             }
-
-            setTimeout(this.checkQueueSync, 1000);
         },
         async sleep()
         {
             return new Promise(resolve => setTimeout(() => resolve(), 1000));
+        },
+        async getLog()
+        {
+            let today= new Date()
+            let timeToday= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+            
+            var formData = new FormData();
+            console.log("Asd")
+            formData.append("pass", "123456");
+            formData.append("startTime", this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime); // number 123456 is immediately converted to a string "123456"
+            formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
+            
+            // HTML file input, chosen by user
+            // formData.append("userfile", fileInputElement.files[0]);
+
+            // JavaScript file-like object
+            // var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
+            // var blob = new Blob([content], { type: "text/xml"});
+            // Access-Control-Allow-Origin: *;
+            // formData.append("webmasterfile", blob);
+
+            var request = new XMLHttpRequest();
+            request.open("POST", "http://192.168.1.177:8080/newFindRecords");
+            request.onreadystatechange = function() {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                    console.log(JSON.parse(request.responseText));
+                }
+            }
+            request.send(formData);
+            await this.db.add(
+            {
+                lastRequestTime: timeToday
+            }, 
+            'lastRequestTime');
+            this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
+            console.log(this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime);
         }
+
     }
 }
 </script>
