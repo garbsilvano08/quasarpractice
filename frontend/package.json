@@ -15,7 +15,9 @@
     "axios": "^0.18.1",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
-    "quasar": "^1.12.8",
+    "quasar": "^1.0.0",
+    "tesseract.js": "^2.1.1",
+    "unirest": "^0.6.0",
     "vue-chartjs": "^3.5.0",
     "vue-chartkick": "^0.6.0",
     "vue-material-design-icons": "^4.7.1"
