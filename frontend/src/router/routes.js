@@ -23,6 +23,9 @@ const routes = [
             { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },
         ]
     },
+    {
+        name: 'front_desk', path: '/front_desk', component: () => import('pages/Member/FrontDesk.vue')
+    },
 
     // Always leave this as last one,
     // but you can also remove it
