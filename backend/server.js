@@ -5,6 +5,9 @@ const bodyParser    = require('body-parser');
 
 app.use(cors());
 
+// Public Folder
+app.use(express.static('./uploads'));
+
 const front_controller = require('./controllers/FrontController');
 
 app.use(express.urlencoded({ extended: true }));

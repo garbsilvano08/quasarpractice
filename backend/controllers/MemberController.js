@@ -3,7 +3,7 @@ const multer        = require('multer');
 const path          = require('path');
 
 const storage = multer.diskStorage({
-  destination: './public/uploads/full/',
+  destination: './uploads/images/',
   filename: function (req, file, cb) {
       cb(null, file.originalname + '-' + Date.now() +
       path.extname(file.originalname));
@@ -69,13 +69,10 @@ module.exports =
                     message: 'Error: No File Selected!'
                 });
             } else {
-                return res.send({
-                    status: 'Success',
-                    message: 'Image Uploaded!'
-                });
+                return res.send(req.file);
             }
         }
     })
-        let response = await new AccountClass().addingPerson();
+        // let response = await new AccountClass().addingPerson();
     }
 }

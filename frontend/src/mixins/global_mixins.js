@@ -81,8 +81,8 @@ export default
                     this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
                 }
             });
-            console.log(res.data);
-            return res;
+            // console.log(res.data);
+            return res.data;
         },
         $_logout()
         {

@@ -73,6 +73,6 @@ module.exports = class AccountClass
     }
     async addingPerson(data){
         
-        console.log("wew");  
+        // console.log("wew");  
     }
 }
