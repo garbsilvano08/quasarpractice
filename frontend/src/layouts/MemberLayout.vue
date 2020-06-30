@@ -6,9 +6,13 @@
 
                 <q-img src="../assets/vcop-logo-white.svg"></q-img>
 
-                <q-btn flat dense rounded icon="mdi-bell" size="13px" :ripple="false" class="btn-nofitication">
-                    <div class="notification-indicator">1</div>
+                <q-btn @click="$router.push('/synchronization')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false" class="btn-nofitication">
+                    <div class="notification-indicator" v-if="visitors.length">{{ visitors.length }}</div>
                 </q-btn>
+
+                <!-- <q-btn flat dense rounded icon="mdi-bell" size="13px" :ripple="false" class="btn-nofitication">
+                    <div class="notification-indicator">1</div>
+                </q-btn> -->
 
                 <div class="user-dropdown">
                     <q-img src="https://i.pinimg.com/236x/56/fa/d0/56fad08b25cfbbe315ffe7666ef3a8c0.jpg"></q-img>
@@ -55,19 +59,29 @@
 import EssentialLink    from 'components/EssentialLink.vue'
 import Layout           from './MemberLayout.scss'
 import navigation       from '../references/nav'
+import Model from "../models/Model";
 
 export default
 {
     name: 'MemberLayout',
-    components: {
+    components: 
+    {
         EssentialLink
     },
 	data: () =>
 	({
 		package_data: { version: '0.0.0' },
 		leftDrawerOpen: false,
-		navigation: [],
-	}),
+        navigation: [],
+        db: new Model()
+    }),
+    computed:
+    {
+        visitors()
+        {
+            return this.$store.state.sync.visitors;
+        }
+    },
     mounted()
     {
         if(!this.$user_info)
@@ -77,8 +91,17 @@ export default
 
         this.navigation = navigation;
     },
+    async created()
+    {
+        await this.db.initialize();
+        await this.getSyncData();
+    },
     methods:
     {
-    },
+        async getSyncData()
+        {
+            this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+        }
+    }
 }
 </script>

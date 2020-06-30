@@ -84,4 +84,20 @@ export default class Model
             store.add(data);
         });
     }
+
+    async delete(id, table)
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let trans = this.db.transaction([table],'readwrite');
+
+            trans.oncomplete = e => 
+            {
+                resolve();
+            };
+        
+            let store = trans.objectStore(table);
+            store.delete(id);
+        });
+    }
 }

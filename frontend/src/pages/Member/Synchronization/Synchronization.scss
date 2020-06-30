@@ -1,0 +1,18 @@
+.synchronization
+{
+    padding: 2rem;
+    &__header
+    {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+    &__body
+    {
+        table 
+        {
+            width: 100%;
+            text-align: left;
+        }
+    }
+}
