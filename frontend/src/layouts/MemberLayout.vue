@@ -94,13 +94,25 @@ export default
     async created()
     {
         await this.db.initialize();
-        await this.getSyncData();
+        await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+        await this.checkQueueSync();
+        setInterval(this.checkQueueSync, 1000);
     },
     methods:
     {
-        async getSyncData()
+        async checkQueueSync()
         {
-            this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+            for (let visitor of this.visitors)
+            {
+                this.$store.commit('sync/setVisitorAsSyncing', visitor.id);
+                await this.sleep();
+                await this.db.delete(visitor.id, "visitors");
+                this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+            }
+        },
+        async sleep()
+        {
+            return new Promise(resolve => setTimeout(() => resolve(), 1000));
         }
     }
 }

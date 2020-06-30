@@ -57,13 +57,18 @@ export default
     data: () => (
     {
         tab: 'info',
-        db: new Model(),
-        visitors: null
+        db: new Model()
     }),
+    computed:
+    {
+        visitors()
+        {
+            return this.$store.state.sync.visitors;
+        }
+    },
     async created()
     {
         await this.db.initialize();
-        this.visitors = await this.db.get("visitors");
     }
 }
 </script>

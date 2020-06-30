@@ -224,7 +224,7 @@ export default {
             }, 
             'visitors');
 
-            console.log(await this.db.get('visitors'));
+            this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
         }
     },
     async created()
