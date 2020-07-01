@@ -14,20 +14,6 @@
                     <div class="notification-indicator">1</div>
                 </q-btn> -->
 
-                <div class="user-dropdown">
-                    <q-img src="https://i.pinimg.com/236x/56/fa/d0/56fad08b25cfbbe315ffe7666ef3a8c0.jpg"></q-img>
-
-                    <q-btn-dropdown :ripple="false" flat>
-                        <q-list>
-                            <q-item clickable v-close-popup>
-                                <q-item-section>
-                                    <q-item-label>Coming Soon!</q-item-label>
-                                </q-item-section>
-                            </q-item>
-                        </q-list>
-                    </q-btn-dropdown>
-                </div>
-
             </q-toolbar>
         </q-header>
 
@@ -64,7 +50,7 @@ import Model from "../models/Model";
 export default
 {
     name: 'MemberLayout',
-    components: 
+    components:
     {
         EssentialLink
     },
@@ -124,13 +110,13 @@ export default
         {
             let today= new Date()
             let timeToday= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
-            
+
             var formData = new FormData();
             console.log("Asd")
             formData.append("pass", "123456");
             formData.append("startTime", this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime); // number 123456 is immediately converted to a string "123456"
             formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
-            
+
             // HTML file input, chosen by user
             // formData.append("userfile", fileInputElement.files[0]);
 
@@ -151,7 +137,7 @@ export default
             await this.db.add(
             {
                 lastRequestTime: timeToday
-            }, 
+            },
             'lastRequestTime');
             this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
             console.log(this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime);

@@ -24,7 +24,7 @@ module.exports =
         icon: 'mdi-face-recognition',
         sub:
         [
-            { label: 'Staff', route: '' },
+            { label: 'Staff', route: 'member_dailylogs_staff' },
             { label: 'Visitors', route: '' },
             { label: 'Fever Detected', route: '' },
             { label: 'Blacklist', route: '' },

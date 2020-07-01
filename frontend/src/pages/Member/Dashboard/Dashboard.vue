@@ -1,7 +1,7 @@
 <template>
    <div class="dashboard">
       <div class="dashboard__header">
-         <div class="dashboard__header-title">DASHBOARD OVERVIEW</div>
+         <div class="header__title">DASHBOARD OVERVIEW</div>
          <q-btn flat dense no-caps label="Export" class="btn-export btn-outline">
             <q-icon name="mdi-export"></q-icon>
          </q-btn>

@@ -1,13 +1,13 @@
 <template>
     <div class="frontdesk">
         <div class="frontdesk__header">
-            <div class="frontdesk__header-title">ADD STAFF</div>
+            <div class="header__title">ADD STAFF</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
             </div>
         </div>
-        <div class="frontdesk__container content__grid-6x6">
+        <div class="frontdesk__container content__grid-2x2">
             <div class="content__grid-left">
                 <div class="frontdesk__content content__box">
                     <!-- FACIAL RECOGNITION -->
@@ -187,7 +187,7 @@ export default {
         'id_class.req'(val)
         {
             console.log(val);
-            
+
         },
         open_camera(val)
         {
@@ -208,7 +208,7 @@ export default {
             if (val)
             {
                 // console.log(val);
-                
+
             }
         }
     },
@@ -244,7 +244,7 @@ export default {
                 context.drawImage(video, 0, 0, 640, 480);
 
             this.image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-            
+
             });
         }
     }
