@@ -15,7 +15,7 @@
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
                             <q-img class="content__img" src="../../../assets/Member/placeholder-img.jpg"></q-img>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="profile_img_dialog = true"></q-btn>
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="openCamera"></q-btn>
                         </div>
                     </div>
                     <!-- CHOOSE ID -->
@@ -26,8 +26,8 @@
                             <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
-                            <q-img class="content__img img__sm" src="../../../assets/Member/placeholder-img.jpg"></q-img>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
+                            <q-img id="canvas" class="content__img img__sm" src="../../../assets/Member/placeholder-img.jpg"></q-img>
+                            <q-btn @click="checkImage()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
                     </div>
                 </div>
@@ -102,6 +102,23 @@
             </div>
         </div>
 
+        <q-dialog v-model="open_camera">
+            <q-card>
+                <q-card-section class="row items-center q-pb-none">
+                <div class="text-h6">Capture Image</div>
+                <q-space />
+                <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+
+                <q-card-section>
+                    <div class="text-center">
+                        <video id="video" width="500" height="500" autoplay></video>
+                        <q-btn icon="camera" @click="takePhoto"  id="snap"></q-btn>
+                    </div>
+                </q-card-section>
+            </q-card>
+        </q-dialog>
+
         <!-- UNUSUAL BODY TEMPERATURE -->
         <q-dialog v-model="profile_img_dialog">
             <q-card style="width: 700px; max-width: 80vw;">
@@ -141,11 +158,16 @@
 <script>
 import "./Frontdesk.scss";
 
+// Classes
+import OpticalReadClass from '../../../classes/OpticalReadClass';
+
 export default {
     data:() =>
     ({
+        id_url : 'https://fleek.geer.solutions/storage/photos/IGlSFD7WWEwqho7XsIw5EVYphvNf8ZR7V6m7biDQ.jpeg',
+        open_camera: false,
         profile_img_dialog: false,
-        select__id_type: '',
+        select__id_type: 'Drivers License',
         select__gender: '',
         select__visit_purpose: '',
         options_id: [
@@ -156,7 +178,75 @@ export default {
         ],
         options_visit_purpose: [
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
-        ]
-    })
+        ],
+        id_class: new OpticalReadClass(),
+        is_done: false
+    }),
+    watch:
+    {
+        'id_class.req'(val)
+        {
+            console.log(val);
+            
+        },
+        open_camera(val)
+        {
+            if (val)
+            {
+                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    // Not adding `{ audio: true }` since we only want video now
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                    //video.src = window.URL.createObjectURL(stream);
+                    video.srcObject = stream;
+                    video.play();
+                });
+                }
+            }
+        },
+        is_done(val)
+        {
+            if (val)
+            {
+                // console.log(val);
+                
+            }
+        }
+    },
+
+    methods:
+    {
+         async checkData(image)
+        {
+
+            this.$q.loading.show();
+            this.is_done = await this.id_class.checkImage(this.id_url)
+            this.$q.loading.hide();
+        },
+         async checkImage(image)
+        {
+            this.$q.loading.show();
+            this.is_done = await this.id_class.ocrUnirest(this.select__id_type,this.id_url)
+            this.$q.loading.hide();
+        },
+
+        openCamera()
+        {
+            this.open_camera = true
+        },
+
+        async takePhoto()
+        {
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+
+            document.getElementById("snap").addEventListener("click", function() {
+                context.drawImage(video, 0, 0, 640, 480);
+
+            this.image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+            
+            });
+        }
+    }
 }
 </script>

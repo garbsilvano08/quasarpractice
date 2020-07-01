@@ -4,7 +4,6 @@ export default
 {
     data: () =>
     ({
-
     }),
     computed:
     {
@@ -25,14 +24,27 @@ export default
     },
     methods:
     {
-        async $_post(url, data = {})
+        $_parseTabletResponse(res)
+        {
+            res = res.replace(`data: "`, ``);
+            res = res.substring(0, res.length - 1);
+            res = JSON.parse(res);
+            return res;
+        },
+        async $_get(url, data = {})
         {
             let res = null;
 
-            if(this.$token)
+            await this.$axios.get(url, data).then((r) => { res = r; }).catch((e) =>
             {
-                data.Authorization = this.$token;
-            }
+                this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
+            });
+
+            return res;
+        },
+        async $_post(url, data = {})
+        {
+            let res = null; 
 
             await this.$axios.post(url, data,{
                 headers: {
@@ -55,13 +67,8 @@ export default
         },
         async $_post_file(url, data = {})
         {
-            console.log(data)
+            // console.log(data.entries().next())
             let res = null;
-
-            if(this.$token)
-            {
-                data.Authorization = this.$token;
-            }
 
             await this.$axios.post(url, data,{
                 headers: {
@@ -80,8 +87,8 @@ export default
                     this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
                 }
             });
-
-            return res;
+            // console.log(res.data);
+            return res.data;
         },
         $_logout()
         {

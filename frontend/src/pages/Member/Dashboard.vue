@@ -1,15 +1,18 @@
 <template>
-   <div>
-       <div class="q-pa-md">Hello! <b>{{ $user_info.full_name }}</b></div>
-       <q-input type="file" v-model="pic"></q-input>
-       <q-btn label="send pic" @click="submit" outlined></q-btn>
-       <q-btn label="test" @click="testing"></q-btn>
-   </div>
+    <div>
+        <div class="q-pa-md">Hello! <b>{{ $user_info.full_name }}</b></div>
+        <q-input type="file" v-model="pic"></q-input>
+        <q-btn label="send pic" @click="submit" outlined></q-btn>
+        <q-btn label="test" @click="testing"></q-btn>   
+        <img style="display:none" id='Img1' src='http://localhost:4001/images/eme.jpg-1593484285090.jpg'>
+        <q-btn label="create" @click="create"></q-btn>   
+        <q-btn label="get Log" @click="getLog"></q-btn>   
+    </div>
 </template>
 
 <script>
 import { postUserList }                         from '../../references/url';
-import { postAddPerson }                  from '../../references/url';
+import { postAddPerson }                        from '../../references/url';
 import axios from 'axios';
 // import {AjaxClient} from 'ajax-client'
 
@@ -21,6 +24,19 @@ function getBase64 (file, callback) {
 
     reader.readAsDataURL(file);
 }
+function toDataURL(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      callback(reader.result);
+    }
+    reader.readAsDataURL(xhr.response);
+  };
+  xhr.open('GET', url);
+  xhr.responseType = 'blob';
+  xhr.send();
+}
 
 export default
 {
@@ -29,6 +45,7 @@ export default
         pic: "",
         img64: "",
         details: {},
+        ip_address: ["192.168.1.177", "192.168.1.162"]
     }),
     mounted()
     {
@@ -44,26 +61,33 @@ export default
         async submit()
         {
                
-            getBase64(this.pic[0],async function(base64Data){
-            // console.log("Base64 of file is", base64Data); // Here you can have your code which uses Base64 for its operation, // file to Base64 by oneshubh
-            // console.log(base64Data);
             
-        });
-        
-        //    let res = await this.$_post(postAddPerson);
-
-           const base64 = 'data:image/png;base64,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';
-        
-            const blob = await fetch(base64).then(res => res.blob());
-
+            // console.log(this.pic[0])
             const formData = new FormData();
-            formData.append('yinyang.png', blob);
+            formData.append('image',this.pic[0]); 
+            // console.log(formData.entries().next())
+            let res = await this.$_post_file(postAddPerson, formData);
+            // console.log(res.filename)    
 
-            let data = { formData:formData }
-            // console.log(data)
-            let res = await this.$_post_file(postAddPerson, data);
-            
+            // console.log(res);
+            // getBase64(res ,async function(base64Data){
+            // console.log(base64Data);
+            // });
+
+            var c = document.createElement('canvas');
+            var img = document.getElementById('Img1');
+            c.height = img.naturalHeight;
+            c.width = img.naturalWidth;
+            var ctx = c.getContext('2d');
+
+            ctx.drawImage(img, 0, 0, c.width, c.height);
+            this.img64 = c.toDataURL();
+            this.img64 = this.img64.replace(/^data:image\/[a-z]+;base64,/, "");
+            // console.log(this.img64)
         },
+
+
+        
         testing(){
             var formData = new FormData();
             console.log("Asd")
@@ -81,14 +105,91 @@ export default
             // formData.append("webmasterfile", blob);
 
             var request = new XMLHttpRequest();
-            request.open("POST", "http://192.168.254.107:8080/person/findByPage");
+            request.open("POST", "http://192.168.1.177:8080/person/findByPage");
+            request.onreadystatechange = function() {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                    console.log(JSON.parse(request.responseText));
+                }
+            }
+            request.send(formData);
+        },
+        create(){
+             var formData = new FormData();
+            let person={
+                imgBase64: this.img64,
+                name: "Eimie S. Enriquez",
+                person_id: "1234",
+                sex: 0,
+                group_id: 20,
+                phone: 123456,
+                email: "",
+                ic_card_no: "",
+                nation: "",
+                native_place: "",
+                birth_day: "",
+                address: "",
+                remarks: "",
+                att_flag: 0,
+                banci_id: "",
+                device_group_ids: "",
+                device_group: 1,
+                type: 1.1,
+                reg_type: 0,
+                vipId:"20004",
+            }
+            formData.append("pass", "123456");
+            formData.append("person", "{'imgBase64': '"+this.img64+"', 'name' : 'Eimie S. Enriquez', 'person_id' : '1234', 'sex' : 0, 'group_id' : 20, 'phone' : 123456, 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '', 'address' : '', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'vipId': '20004'}" );
+        
+            
+            // HTML file input, chosen by user
+            // formData.append("userfile", fileInputElement.files[0]);
+
+            // JavaScript file-like object
+            // var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
+            // var blob = new Blob([content], { type: "text/xml"});
+            // Access-Control-Allow-Origin: *;
+            // formData.append("webmasterfile", blob);
+
+            this.ip_address.forEach((ret) => {
+            var request = new XMLHttpRequest();
+            request.open("POST", "http://"+ret+":8080/person/create");
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
                     console.log(request.responseText);
                 }
             }
             request.send(formData);
-        }      
+            })
+        },
+        async getLog(){
+                
+            var formData = new FormData();
+            console.log("Asd")
+            formData.append("pass", "123456");
+            formData.append("startTime", "2020-06-22 12:00"); // number 123456 is immediately converted to a string "123456"
+            formData.append("endTime", "2020-06-30 12:00"); // number 123456 is immediately converted to a string "123456"
+            
+            // HTML file input, chosen by user
+            // formData.append("userfile", fileInputElement.files[0]);
+
+            // JavaScript file-like object
+            // var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
+            // var blob = new Blob([content], { type: "text/xml"});
+            // Access-Control-Allow-Origin: *;
+            // formData.append("webmasterfile", blob);
+
+            var request = new XMLHttpRequest();
+            request.open("POST", "http://192.168.1.177:8080/newFindRecords");
+            request.onreadystatechange = function() {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                    console.log(JSON.parse(request.responseText));
+                }
+            }
+            request.send(formData);
+
+            
+        }
+
     },
 }
 </script>
