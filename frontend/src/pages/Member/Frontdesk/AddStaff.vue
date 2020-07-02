@@ -99,6 +99,22 @@
                         </div>
                     </div>
                 </div>
+                <!-- EMPLOYMENT INFORMATION -->
+                <div class="frontdesk__content content__box" style="margin-top: 30px;">
+                    <div class="frontdesk__content">
+                        <div class="frontdesk__content-info">
+                            <div class="content__title">Employment Information</div>
+                            <div class="content__select">
+                                <div class="content__select-label">Tag a Company</div>
+                                <q-select v-model="select__company" :options="options_company" outlined dense></q-select>
+                            </div>
+                            <div class="content__input">
+                                <div class="content__input-label">Position</div>
+                                <q-input v-model="position_input" outlined dense></q-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -164,12 +180,14 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 export default {
     data:() =>
     ({
+        position_input: '',
         id_url : 'https://fleek.geer.solutions/storage/photos/btwpJYOnuiHIXVUjFxE4ABZhuViTrifFqb17fkEf.jpeg',
         open_camera: false,
         profile_img_dialog: false,
         select__id_type: 'PIC',
         select__gender: '',
         select__visit_purpose: '',
+        select__company: '',
         options_id: [
             'Drivers License', 'UMID' , 'PhilHealth', 'PIC'
         ],
@@ -178,6 +196,9 @@ export default {
         ],
         options_visit_purpose: [
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
+        ],
+        options_company: [
+            'Super Admin', 'Company', 'Sub Company'
         ],
         id_class: new OpticalReadClass(),
         is_done: false
@@ -231,7 +252,7 @@ export default {
         {
             var canvas = document.getElementById('canvas');
             console.log(canvas, ';l;l;l;');
-            
+
             var context = canvas.getContext('2d');
             var video = document.getElementById('video');
 
