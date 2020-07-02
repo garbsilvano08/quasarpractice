@@ -10,7 +10,7 @@
 .content__box {
     width: 100%;
     padding: 30px;
-    border: solid 1px rgba(#000000, .15);
+    box-shadow: 0 2px 4px 0 rgba(#000, .1);
     background-color: #ffffff;
     border-radius: 2px;
 }
@@ -114,6 +114,23 @@
             font-size: 12px;
             font-weight: 500;
             padding-left: 10px;
+        }
+    }
+}
+
+// TABLE STYLE CSS
+.content__table {
+    table {
+        width: 100%;
+        text-align: left;
+
+        tr {
+            th {
+
+            }
+            td {
+
+            }
         }
     }
 }

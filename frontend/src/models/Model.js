@@ -34,6 +34,7 @@ export default class Model
                 // Tables
                 db.createObjectStore("visitors", { autoIncrement: true, keyPath:'id' });
                 db.createObjectStore("lastRequestTime", { autoIncrement: true, keyPath:'id' });
+                db.createObjectStore("passLogs", { autoIncrement: true, keyPath:'id' });
             };
         });
     }
@@ -83,6 +84,23 @@ export default class Model
 
             let store = trans.objectStore(table);
             store.add(data);
+        });
+    }
+
+    async update(data, table, id){
+        return new Promise((resolve, reject) => 
+        {
+            if (!this.db) reject('call initialize() first');
+
+            let trans = this.db.transaction([table],'readwrite');
+            
+            trans.oncomplete = e => 
+            {
+                resolve();
+            };
+
+            let store = trans.objectStore(table, {keyPath: "id"} );
+            store.put({data, id:id});
         });
     }
 

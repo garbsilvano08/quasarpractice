@@ -7,7 +7,7 @@
                 <q-img src="../assets/vcop-logo-white.svg"></q-img>
 
                 <q-btn @click="$router.push('/synchronization')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false" class="btn-nofitication">
-                    <div class="notification-indicator" v-if="visitors.length">{{ visitors.length }}</div>
+                    <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
                 </q-btn>
 
                 <!-- <q-btn flat dense rounded icon="mdi-bell" size="13px" :ripple="false" class="btn-nofitication">
@@ -70,6 +70,10 @@ export default
         lastRequestTime()
         {
             return this.$store.state.sync.lastRequestTime;
+        },
+        passLogs()
+        {
+            return this.$store.state.sync.passLogs;
         }
     },
     mounted()
@@ -83,66 +87,89 @@ export default
     },
     async created()
     {
+        // Edward
         await this.db.initialize();
         await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+        await this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
         await this.checkQueueSync();
-        setInterval(this.checkQueueSync, 1000);
+
+        // Irish
+        await this.getLog();
         setInterval(this.getLog, 60000);
-        // this.getLog();
     },
     methods:
     {
         async checkQueueSync()
         {
+            // Info
             for (let visitor of this.visitors)
             {
-                this.$store.commit('sync/setVisitorAsSyncing', visitor.id);
-                await this.sleep();
+                await this.$_post('member/add/visitor', visitor);
                 await this.db.delete(visitor.id, "visitors");
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
             }
-        },
-        async sleep()
-        {
-            return new Promise(resolve => setTimeout(() => resolve(), 1000));
+
+            // Logs
+            for (let log of this.passLogs)
+            {
+                await this.$_post('member/add/pass_log', { data: log });
+                await this.db.delete(log.id, "passLogs");
+                this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
+            }
+
+            setTimeout(() => this.checkQueueSync(), 1000);
         },
         async getLog()
         {
             let today= new Date()
             let timeToday= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
-
+            let startTime= "";
             var formData = new FormData();
-            console.log("Asd")
+            if(this.$store.state.sync.lastRequestTime.length<=0){
+                startTime = (today.getFullYear()-1)+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+            }
+            else {
+                startTime = this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime; 
+            }
+
             formData.append("pass", "123456");
-            formData.append("startTime", this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime); // number 123456 is immediately converted to a string "123456"
+            formData.append("startTime", startTime)// number 123456 is immediately converted to a string "123456"
             formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
-
-            // HTML file input, chosen by user
-            // formData.append("userfile", fileInputElement.files[0]);
-
-            // JavaScript file-like object
-            // var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
-            // var blob = new Blob([content], { type: "text/xml"});
-            // Access-Control-Allow-Origin: *;
-            // formData.append("webmasterfile", blob);
-
+            let logs= [];
             var request = new XMLHttpRequest();
             request.open("POST", "http://192.168.1.177:8080/newFindRecords");
-            request.onreadystatechange = function() {
+            request.onreadystatechange = () => {
                 if (request.readyState == XMLHttpRequest.DONE) {
-                    console.log(JSON.parse(request.responseText));
+                    let resp = request.responseText;
+                    // console.log(JSON.parse(resp).data);
+                    // resp = resp.replace(/{"data":"/, "")
+                    // resp = resp.replace(/","result":1,"success":true}/, "")
+                    // console.log(resp);
+                    // console.log(JSON.parse(JSON.parse(resp).data));
+                    // logs = JSON.parse(JSON.parse(resp).data);
+                    this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data));
+                    // this.saveLogIndex(JSON.parse(JSON.parse(resp).data));
                 }
             }
+            // console.log("logia",logs)
             request.send(formData);
+            
             await this.db.add(
             {
                 lastRequestTime: timeToday
             },
             'lastRequestTime');
             this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
-            console.log(this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime);
-        }
+        },
+        async saveLogsIndexDb(dat)
+        {
+            for (let data of dat)
+            {
+                await this.db.add(data, "passLogs");
+            }
 
+            this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
+        }
     }
 }
 </script>

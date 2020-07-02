@@ -98,8 +98,8 @@
                             </div>
                             <!-- Choose Type -->
                             <div class="content__select">
-                                <div class="content__select-label">Choose Type</div>
-                                <q-select v-model="select__type" :options="options_type" outlined dense></q-select>
+                                <div class="content__select-label">Tag a Company</div>
+                                <q-select v-model="select__company" :options="options_company" outlined dense></q-select>
                             </div>
                         </div>
                     </div>
@@ -153,6 +153,7 @@ export default {
         select__id_type: '',
         select__gender: '',
         select__visit_purpose: '',
+        select__company: '',
         options_id: [
             'Drivers License', 'UMID' , 'PhilHealth'
         ],
@@ -161,7 +162,10 @@ export default {
         ],
         options_visit_purpose: [
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
-        ]
+        ],
+        options_company: [
+            'Super Admin', 'Company', 'Sub Company'
+        ],
     })
 }
 </script>

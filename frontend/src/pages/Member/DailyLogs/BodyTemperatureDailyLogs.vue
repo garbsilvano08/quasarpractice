@@ -1,7 +1,7 @@
 <template>
     <div class="daily-logs">
         <div class="daily-logs__header">
-            <div class="header__title">DAILY LOGS</div>
+            <div class="header__title">BODY TEMPERATURE LOGS</div>
             <div class="header__filter">
                 <q-btn class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
@@ -10,13 +10,7 @@
             </div>
         </div>
         <div class="daily-logs__header" style="margin-bottom: 30px !important;">
-            <div class="content__title">STAFF</div>
             <div class="header__filter">
-                <q-input outlined dense placeholder="Search People...">
-                    <template v-slot:append>
-                        <q-icon name="mdi-magnify" />
-                    </template>
-                </q-input>
                 <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select>
             </div>
         </div>
