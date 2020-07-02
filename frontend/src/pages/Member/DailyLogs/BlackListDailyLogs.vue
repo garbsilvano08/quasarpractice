@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="daily-logs__header" style="margin-bottom: 30px !important;">
-            <div class="content__title">STAFF</div>
+            <div class="content__title">BLACKLIST</div>
             <div class="header__filter">
                 <q-input outlined dense placeholder="Search People...">
                     <template v-slot:append>
