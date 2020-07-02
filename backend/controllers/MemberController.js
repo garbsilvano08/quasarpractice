@@ -2,6 +2,7 @@ const AccountClass  = require('../classess/AccountClass');
 const multer        = require('multer');
 const path          = require('path');
 const MDB_RAW_VISITOR = require('../models/MDB_RAW_VISITOR');
+const MDB_RAW_PASS_LOG = require('../models/MDB_RAW_PASS_LOG');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -83,6 +84,15 @@ module.exports =
             personal_information: req.body.personal_information,
             visitor_purpose: req.body.visitor_purpose,
             name: req.body.personal_information.first_name + " " + req.body.personal_information.middle_name + " " + req.body.personal_information.last_name
+        });
+
+        return res.send(true);
+    },
+    async addPassLog(req, res)
+    {
+        await new MDB_RAW_PASS_LOG().add(
+        {
+            data: req.body.data
         });
 
         return res.send(true);
