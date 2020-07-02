@@ -1,0 +1,48 @@
+.content__card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 15px;
+
+    .q-img {
+        height: 60px;
+        width: 60px;
+        border-radius: 100%;
+        border: solid 1px rgba(#000000, .2);
+    }
+
+    .content__info {
+        color: #233b61;
+        line-height: 1.4rem;
+
+        .content__name, .content__temperature {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .content__datetime{
+            font-size: 12px;
+            font-weight: 500;
+
+            span {
+                opacity: .6;
+            }
+        }
+
+        .content__location {
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #464de4;
+            padding: 3px 15px;
+            border-radius: 4px;
+            margin-top: 5px;
+            text-align: center;
+            width: 140px;
+            display           : -webkit-box;
+            text-overflow     : ellipsis;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            word-break: break-all;
+        }
+    }
+}

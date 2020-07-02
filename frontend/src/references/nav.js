@@ -25,10 +25,10 @@ module.exports =
         sub:
         [
             { label: 'Staff', route: 'member_dailylogs_staff' },
-            { label: 'Visitors', route: '' },
-            { label: 'Fever Detected', route: '' },
-            { label: 'Blacklist', route: '' },
-            { label: 'Person of Interest', route: '' },
+            { label: 'Visitors', route: 'member_dailylogs_visitor' },
+            { label: 'Fever Detected', route: 'member_dailylogs_feverdetected' },
+            { label: 'Blacklist', route: 'member_dailylogs_blacklist' },
+            { label: 'Person of Interest', route: 'member_dailylogs_personofinterest' },
         ]
     },
     {
