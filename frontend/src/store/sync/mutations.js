@@ -12,3 +12,7 @@ export function storeLastRequestTime(state, lastRequestTime)
 {
     state.lastRequestTime = lastRequestTime.map(lastRequestTime => Object.assign({}, lastRequestTime, { syncing: false }));
 }
+export function storePassLogs(state, passLogs) 
+{
+    state.passLogs = passLogs.map(passLogs => Object.assign({}, passLogs, { syncing: false }));
+}

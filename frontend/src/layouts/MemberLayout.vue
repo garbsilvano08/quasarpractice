@@ -83,7 +83,8 @@ export default
         },
         lastRequestTime()
         {
-            return this.$store.state.sync.lastRequestTime;
+                return this.$store.state.sync.lastRequestTime;
+            
         }
     },
     mounted()
@@ -99,8 +100,10 @@ export default
     {
         await this.db.initialize();
         await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+        await this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
         await this.checkQueueSync();
         setInterval(this.checkQueueSync, 1000);
+        await this.getLog();
         setInterval(this.getLog, 60000);
         // this.getLog();
     },
@@ -124,39 +127,63 @@ export default
         {
             let today= new Date()
             let timeToday= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
-            
+            let startTime= "";
             var formData = new FormData();
-            console.log("Asd")
+            if(this.$store.state.sync.lastRequestTime.length<=0){
+                startTime = (today.getFullYear()-1)+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+            }
+            else {
+                startTime = this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime; 
+            }
+
             formData.append("pass", "123456");
-            formData.append("startTime", this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime); // number 123456 is immediately converted to a string "123456"
+            formData.append("startTime", startTime)// number 123456 is immediately converted to a string "123456"
             formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
-            
-            // HTML file input, chosen by user
-            // formData.append("userfile", fileInputElement.files[0]);
-
-            // JavaScript file-like object
-            // var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
-            // var blob = new Blob([content], { type: "text/xml"});
-            // Access-Control-Allow-Origin: *;
-            // formData.append("webmasterfile", blob);
-
+            let logs= [];
             var request = new XMLHttpRequest();
             request.open("POST", "http://192.168.1.177:8080/newFindRecords");
-            request.onreadystatechange = function() {
+            request.onreadystatechange = () => {
                 if (request.readyState == XMLHttpRequest.DONE) {
-                    console.log(JSON.parse(request.responseText));
+                    let resp = request.responseText;
+                    // console.log(JSON.parse(resp).data);
+                    // resp = resp.replace(/{"data":"/, "")
+                    // resp = resp.replace(/","result":1,"success":true}/, "")
+                    // console.log(resp);
+                    // console.log(JSON.parse(JSON.parse(resp).data));
+                    // logs = JSON.parse(JSON.parse(resp).data);
+                    this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data));
+                    // this.saveLogIndex(JSON.parse(JSON.parse(resp).data));
                 }
             }
+            // console.log("logia",logs)
             request.send(formData);
+            
             await this.db.add(
             {
                 lastRequestTime: timeToday
             }, 
             'lastRequestTime');
             this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
-            console.log(this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime);
+        },
+        async saveLogsIndexDb(dat){
+            // console.log(dat);
+            if(dat.length>0){
+                let getDb =  await this.db.get('passLogs');
+                if (getDb.length>0){
+                    getDb = getDb[0].data;
+                    // console.log(getDb);
+                    dat.forEach((ret) => {
+                        getDb.push(ret);
+                    })
+                // console.log("may laman", getDb);
+                await this.db.update(getDb,'passLogs', 'passLogs');
+                }else{
+                    // console.log("wala laman", getDb);
+                    await this.db.update(dat,'passLogs', 'passLogs');
+                }   
+            }
+            this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
         }
-
     }
 }
 </script>
