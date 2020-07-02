@@ -289,6 +289,8 @@ export default {
                     if (!this.visitor_purpose[validate]) throw new Error(field + ' is required.');
                 }
 
+                if (this.personal_information.location) this.personal_information.location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.personal_information.location.place_id }).then(res => res.data);
+                console.log(this.personal_information.location_coordinates);
                 await this.db.add(
                 {
                     personal_information: this.personal_information,
