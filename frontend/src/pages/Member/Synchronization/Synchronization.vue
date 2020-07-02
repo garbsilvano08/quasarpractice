@@ -14,7 +14,7 @@
                 narrow-indicator
             >
                 <q-tab name="info" label="User Information (30)" />
-                <q-tab name="logs" label="User Logs (30)" />
+                <q-tab name="logs" :label="'User Logs ('+passLogs.data.length+')'" />
             </q-tabs>
 
             <q-separator />
@@ -39,10 +39,31 @@
                         </tbody>
                     </table>
                 </q-tab-panel>
+
                 <q-tab-panel name="logs">
-                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>temparature</th>    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(log, index) in passLogs.data" :key="index">
+                                <td>{{ log.idCardNum }}</td>
+                                <td>{{ log.name }}</td>
+                                <td>{{ log.tempratrue }}</td>
+                                <!-- <td v-if="visitor.syncing"><q-icon name="mdi-refresh" /> Syncing...</td>
+                                <td v-else>Queue</td> -->
+                            </tr>
+                        </tbody>
+                    </table>
                 </q-tab-panel>
             </q-tab-panels>
+
+
+            
         </div>
     </div>    
 </template>
@@ -64,11 +85,21 @@ export default
         visitors()
         {
             return this.$store.state.sync.visitors;
+        },
+        passLogs()
+        {
+            let logs = this.$store.state.sync.passLogs
+            return logs[0];
         }
     },
     async created()
     {
         await this.db.initialize();
+    },
+    mounted()
+    {
+        console.log("asd");
+        // console.log(this.passLogs[0].data);
     }
 }
 </script>
