@@ -1,13 +1,13 @@
 <template>
     <div class="frontdesk">
         <div class="frontdesk__header">
-            <div class="frontdesk__header-title">ADD FEVER LOGS</div>
+            <div class="header__title">ADD FEVER LOGS</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
             </div>
         </div>
-        <div class="frontdesk__container content__grid-6x6">
+        <div class="frontdesk__container content__grid-2x2">
             <div class="content__grid-left">
                 <div class="frontdesk__content content__box">
                     <!-- FACIAL RECOGNITION -->

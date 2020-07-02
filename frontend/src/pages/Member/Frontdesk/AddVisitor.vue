@@ -1,13 +1,13 @@
 <template>
     <div class="frontdesk">
         <div class="frontdesk__header">
-            <div class="frontdesk__header-title">ADD VISITOR</div>
+            <div class="header__title">ADD VISITOR</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
             </div>
         </div>
-        <div class="frontdesk__container content__grid-6x6">
+        <div class="frontdesk__container content__grid-2x2">
             <div class="content__grid-left">
                 <div class="frontdesk__content content__box">
                     <!-- FACIAL RECOGNITION -->
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="frontdesk__content content__box">
+                <div class="frontdesk__content content__box" style="margin-top: 30px;">
                     <div class="frontdesk__content">
                         <div class="frontdesk__content-info">
                             <div class="content__title">Visitor's Purpose</div>
@@ -178,7 +178,7 @@ export default {
         select__id_type: '',
         select__gender: '',
         select__visit_purpose: '',
-        
+
         options_id: [
             'Drivers License', 'UMID' , 'PhilHealth'
         ],
@@ -219,9 +219,9 @@ export default {
         {
             await this.db.add(
             {
-                personal_information: this.personal_information, 
+                personal_information: this.personal_information,
                 visitor_purpose: this.visitor_purpose
-            }, 
+            },
             'visitors');
 
             this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));

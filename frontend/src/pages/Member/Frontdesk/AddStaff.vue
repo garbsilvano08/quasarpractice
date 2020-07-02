@@ -1,13 +1,13 @@
 <template>
     <div class="frontdesk">
         <div class="frontdesk__header">
-            <div class="frontdesk__header-title">ADD STAFF</div>
+            <div class="header__title">ADD STAFF</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
             </div>
         </div>
-        <div class="frontdesk__container content__grid-6x6">
+        <div class="frontdesk__container content__grid-2x2">
             <div class="content__grid-left">
                 <div class="frontdesk__content content__box">
                     <!-- FACIAL RECOGNITION -->
@@ -26,7 +26,7 @@
                             <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
-                            <q-img id="canvas" class="content__img img__sm" src="../../../assets/Member/placeholder-img.jpg"></q-img>
+                            <q-img id="canvas" class="content__img img__sm" :src="id_url ? id_url : '../../../assets/Member/placeholder-img.jpg'"></q-img>
                             <q-btn @click="checkImage()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
                     </div>
@@ -46,44 +46,44 @@
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">ID Type</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input v-model="id_class.id_info.id_num" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Firstname -->
                             <div class="content__input">
                                 <div class="content__input-label">First Name</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="id_class.id_info.given_name" outlined dense></q-input>
                             </div>
                             <!-- Lastname -->
                             <div class="content__input">
                                 <div class="content__input-label">Last Name</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="id_class.id_info.last_name" outlined dense></q-input>
                             </div>
                             <!-- Middlename -->
                             <div class="content__input">
                                 <div class="content__input-label">Middle Name</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="id_class.id_info.middle_name" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
                                     <div class="content__select-label">Gender</div>
-                                    <q-select v-model="select__gender" :options="options_gender" outlined dense></q-select>
+                                    <q-select v-model="id_class.id_info.gender" :options="options_gender" outlined dense></q-select>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Birth Date</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input v-model="id_class.id_info.birthday" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->
                             <div class="content__input">
                                 <div class="content__input-label">Nationality</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="id_class.id_info.nationality" outlined dense></q-input>
                             </div>
                             <!-- Home Address -->
                             <div class="content__input">
                                 <div class="content__input-label">Home Address</div>
-                                <q-input outlined dense></q-input>
+                                <q-input  v-model="id_class.id_info.address" outlined dense></q-input>
                             </div>
                             <!-- Contact -->
                             <div class="frontdesk__content-grid">
@@ -164,14 +164,14 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 export default {
     data:() =>
     ({
-        id_url : 'https://fleek.geer.solutions/storage/photos/IGlSFD7WWEwqho7XsIw5EVYphvNf8ZR7V6m7biDQ.jpeg',
+        id_url : 'https://fleek.geer.solutions/storage/photos/btwpJYOnuiHIXVUjFxE4ABZhuViTrifFqb17fkEf.jpeg',
         open_camera: false,
         profile_img_dialog: false,
-        select__id_type: 'Drivers License',
+        select__id_type: 'PIC',
         select__gender: '',
         select__visit_purpose: '',
         options_id: [
-            'Drivers License', 'UMID' , 'PhilHealth'
+            'Drivers License', 'UMID' , 'PhilHealth', 'PIC'
         ],
         options_gender: [
             'Male' , 'Female'
@@ -187,7 +187,7 @@ export default {
         'id_class.req'(val)
         {
             console.log(val);
-            
+
         },
         open_camera(val)
         {
@@ -208,20 +208,13 @@ export default {
             if (val)
             {
                 // console.log(val);
-                
+
             }
         }
     },
 
     methods:
     {
-         async checkData(image)
-        {
-
-            this.$q.loading.show();
-            this.is_done = await this.id_class.checkImage(this.id_url)
-            this.$q.loading.hide();
-        },
          async checkImage(image)
         {
             this.$q.loading.show();
@@ -237,6 +230,8 @@ export default {
         async takePhoto()
         {
             var canvas = document.getElementById('canvas');
+            console.log(canvas, ';l;l;l;');
+            
             var context = canvas.getContext('2d');
             var video = document.getElementById('video');
 
@@ -244,7 +239,7 @@ export default {
                 context.drawImage(video, 0, 0, 640, 480);
 
             this.image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-            
+
             });
         }
     }
