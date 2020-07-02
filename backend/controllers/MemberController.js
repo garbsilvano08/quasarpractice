@@ -3,6 +3,8 @@ const multer        = require('multer');
 const path          = require('path');
 const MDB_RAW_VISITOR = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG = require('../models/MDB_RAW_PASS_LOG');
+const Client                    = require("@googlemaps/google-maps-services-js").Client;
+const client                    = new Client({});
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -103,8 +105,6 @@ module.exports =
 
         try
         {
-            await AUTH.member_only(context);
-
             locations = await client.placeQueryAutocomplete(
             {
                 params: 
@@ -116,10 +116,10 @@ module.exports =
         }
         catch(e)
         {
-            HTTPS_ERROR('failed-precondition', e.message);
+            throw new Error(e.message);
         }
             
-        if (locations.data.hasOwnProperty("error_message"))  HTTPS_ERROR('failed-precondition', locations.data.error_message);
+        if (locations.data.hasOwnProperty("error_message")) throw new Error(locations.data.error_message);
         
         return res.send(locations.data.predictions);
     }
