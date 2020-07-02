@@ -26,7 +26,7 @@
                             <tr>
                                 <th>User ID</th>
                                 <th>Name</th>
-                                <th>Status</th>    
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,7 +46,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>temparature</th>    
+                                <th>temparature</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,16 +63,16 @@
             </q-tab-panels>
 
 
-            
+
         </div>
-    </div>    
+    </div>
 </template>
 
 <script>
 import Model from "../../../models/Model";
 import './Synchronization.scss';
 
-export default 
+export default
 {
     name: 'Synchronization',
     data: () => (
