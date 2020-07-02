@@ -2,6 +2,7 @@ const AccountClass  = require('../classess/AccountClass');
 const multer        = require('multer');
 const path          = require('path');
 const MDB_RAW_VISITOR = require('../models/MDB_RAW_VISITOR');
+const MDB_RAW_PASS_LOG = require('../models/MDB_RAW_PASS_LOG');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -86,5 +87,40 @@ module.exports =
         });
 
         return res.send(true);
+    },
+    async addPassLog(req, res)
+    {
+        await new MDB_RAW_PASS_LOG().add(
+        {
+            data: req.body.data
+        });
+
+        return res.send(true);
+    },
+    async getNearbyPlaces(req, res)
+    {
+        let locations = null;
+
+        try
+        {
+            await AUTH.member_only(context);
+
+            locations = await client.placeQueryAutocomplete(
+            {
+                params: 
+                { 
+                    input: req.body.location, 
+                    key: "AIzaSyCgcEQ_l0HwTMhh68eDDqQfiWUSijYqJBc"
+                }
+            })
+        }
+        catch(e)
+        {
+            HTTPS_ERROR('failed-precondition', e.message);
+        }
+            
+        if (locations.data.hasOwnProperty("error_message"))  HTTPS_ERROR('failed-precondition', locations.data.error_message);
+        
+        return res.send(locations.data.predictions);
     }
 }

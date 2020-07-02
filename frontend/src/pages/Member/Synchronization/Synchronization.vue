@@ -1,7 +1,7 @@
 <template>
     <div class="synchronization">
         <div class="synchronization__header">
-            HEALTH CLOUD SYNCHRONIZATION (60)
+            HEALTH CLOUD SYNCHRONIZATION ({{ visitors.length + passLogs.length }})
         </div>
         <div class="synchronization__body">
             <q-tabs
@@ -13,8 +13,8 @@
                 align="justify"
                 narrow-indicator
             >
-                <q-tab name="info" label="User Information (30)" />
-                <q-tab name="logs" :label="'User Logs ('+passLogs.data.length+')'" />
+                <q-tab name="info" :label="'User Information ('+visitors.length+')'" />
+                <q-tab name="logs" :label="'User Logs ('+passLogs.length+')'" />
             </q-tabs>
 
             <q-separator />
@@ -50,7 +50,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(log, index) in passLogs.data" :key="index">
+                            <tr v-for="(log, index) in passLogs" :key="index">
                                 <td>{{ log.idCardNum }}</td>
                                 <td>{{ log.name }}</td>
                                 <td>{{ log.tempratrue }}</td>
@@ -88,8 +88,7 @@ export default
         },
         passLogs()
         {
-            let logs = this.$store.state.sync.passLogs
-            return logs[0];
+            return this.$store.state.sync.passLogs;
         }
     },
     async created()

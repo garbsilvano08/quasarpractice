@@ -7,7 +7,7 @@
                 <q-img src="../assets/vcop-logo-white.svg"></q-img>
 
                 <q-btn @click="$router.push('/synchronization')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false" class="btn-nofitication">
-                    <div class="notification-indicator" v-if="visitors.length">{{ visitors.length }}</div>
+                    <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
                 </q-btn>
 
                 <!-- <q-btn flat dense rounded icon="mdi-bell" size="13px" :ripple="false" class="btn-nofitication">
@@ -69,8 +69,11 @@ export default
         },
         lastRequestTime()
         {
-                return this.$store.state.sync.lastRequestTime;
-            
+            return this.$store.state.sync.lastRequestTime;
+        },
+        passLogs()
+        {
+            return this.$store.state.sync.passLogs;
         }
     },
     mounted()
@@ -84,30 +87,37 @@ export default
     },
     async created()
     {
+        // Edward
         await this.db.initialize();
         await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
         await this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
         await this.checkQueueSync();
-        setInterval(this.checkQueueSync, 1000);
+
+        // Irish
         await this.getLog();
         setInterval(this.getLog, 60000);
-        // this.getLog();
     },
     methods:
     {
         async checkQueueSync()
         {
+            // Info
             for (let visitor of this.visitors)
             {
-                this.$store.commit('sync/setVisitorAsSyncing', visitor.id);
-                await this.sleep();
+                await this.$_post('member/add/visitor', visitor);
                 await this.db.delete(visitor.id, "visitors");
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
             }
-        },
-        async sleep()
-        {
-            return new Promise(resolve => setTimeout(() => resolve(), 1000));
+
+            // Logs
+            for (let log of this.passLogs)
+            {
+                await this.$_post('member/add/pass_log', { data: log });
+                await this.db.delete(log.id, "passLogs");
+                this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
+            }
+
+            setTimeout(() => this.checkQueueSync(), 1000);
         },
         async getLog()
         {
@@ -151,23 +161,13 @@ export default
             'lastRequestTime');
             this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
         },
-        async saveLogsIndexDb(dat){
-            // console.log(dat);
-            if(dat.length>0){
-                let getDb =  await this.db.get('passLogs');
-                if (getDb.length>0){
-                    getDb = getDb[0].data;
-                    // console.log(getDb);
-                    dat.forEach((ret) => {
-                        getDb.push(ret);
-                    })
-                // console.log("may laman", getDb);
-                await this.db.update(getDb,'passLogs', 'passLogs');
-                }else{
-                    // console.log("wala laman", getDb);
-                    await this.db.update(dat,'passLogs', 'passLogs');
-                }   
+        async saveLogsIndexDb(dat)
+        {
+            for (let data of dat)
+            {
+                await this.db.add(data, "passLogs");
             }
+
             this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
         }
     }
