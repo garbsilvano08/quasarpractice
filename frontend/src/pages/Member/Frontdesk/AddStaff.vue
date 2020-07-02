@@ -180,7 +180,8 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 export default {
     data:() =>
     ({
-        id_url : 'https://fleek.geer.solutions/storage/photos/T1VmkucmNHJfG6HbPhBi4gGvOPK8h8H63FPQbYIO.jpeg',
+        position_input: '',
+        id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
         open_camera: false,
         profile_img_dialog: false,
         select__id_type: 'PIC',

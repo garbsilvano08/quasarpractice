@@ -24,9 +24,25 @@ export default class OpticalReadClass
             emergency_num: ''
         }
     }
+    eraseAll()
+    {
+        this.id_info = {
+            address: '',
+            last_name: '',
+            given_name: '',
+            middle_name: '',
+            gender: 'Male',
+            birthday: '',
+            nationality: '',
+            id_num: '',
+            contact_num: '',
+            emergency_num: ''
+        }
+    }
 
     getIDInformation(type, image_text)
     {
+        this.eraseAll()
         switch (type)
         {
             case 'Drivers License':
@@ -63,16 +79,6 @@ export default class OpticalReadClass
                 message: 'Please try again'
             }); 
         }
-        // let person_info = {}
-        // person_info.name = image[5] + "," + " " + image[8] + " " + image[11]
-        // let address = image[14] + " " + image[15] + " " + image[16] + " " + image[17]
-        // person_info.address = address.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')
-        // let other_data = (image[12].replace(/[^a-zA-Z0-9]/g, ' ')).split(" ");
-        // let data = image[10].split(" ")
-        // person_info.birthdate = other_data[7] + "-" + other_data[8] + "-" + other_data[9] 
-        // person_info.gender = other_data[6].startsWith('F') ? 'Female' : 'Male'
-        // person_info.id_num = image[4]
-        // return person_info
     }
 
     getPostalIDInfo(image)
@@ -114,23 +120,22 @@ export default class OpticalReadClass
 
     getDriversLicenseInfo(image)
     {
+        console.log(image);
+        
         if (image.length == 4)
         {
-            this.id_info.last_name = image[0].lines[5].words[0].text
+            this.id_info.last_name = image[0].lines[5].words[0].text.replace(/[^a-zA-Z0-9]/g, ' ')
             for (let index = 1; index < image[0].lines[5].words.length - 1; index++) {
                 this.id_info.given_name = this.id_info.given_name + image[0].lines[5].words[index].text + " "    
             }
             this.id_info.middle_name = image[0].lines[5].words[image[0].lines[5].words.length -1].text
             this.id_info.id_num = ''
             
-            this.id_info.birthday = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[1].text : image[0].lines[10].words[1].text
             this.id_info.gender = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[0].text : image[0].lines[10].words[0].text
             this.id_info.gender = this.id_info.gender.startsWith('M') ? 'Male' : 'Female'
-
-            this.id_info.nationality = image[0].lines[10].words.length == 2 ? image[0].lines[9].words[0].text : image[0].lines[10].words[0].text
-            // let street = image[0].lines[13].words.length == 2 ? image[0].lines[12].words[0] : image[0].lines[12].words[0]
-            // let street = image[0].lines[10].words.length == 2 ? image[0].lines[12].words[0]
-            for (let address = 12; address < image[0].lines.length; address++) {
+            this.id_info.nationality = image[0].lines[10].words.length == 2 ? image[0].lines[9].words[0].text.replace(/[^a-zA-Z]/g, '') : image[0].lines[10].words[0].text.replace(/[^a-zA-Z]/g, '')
+            this.id_info.birthday = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[1].text.replace(/[^/0-9]/g, ' ') : image[0].lines[10].words[1].text.replace(/[^/0-9]/g, ' ')
+            for (let address = 10; address < image[0].lines.length; address++) {
                 if (image[0].lines[address].words.length > 4)
                 {
                     for (let word of image[0].lines[address].words) {
@@ -144,6 +149,7 @@ export default class OpticalReadClass
                     }
                 }
             }
+            
             
             Notify.create({
                 color: 'green',
