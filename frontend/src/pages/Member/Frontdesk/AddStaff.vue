@@ -164,14 +164,14 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 export default {
     data:() =>
     ({
-        id_url : 'https://fleek.geer.solutions/storage/photos/btwpJYOnuiHIXVUjFxE4ABZhuViTrifFqb17fkEf.jpeg',
+        id_url : 'https://fleek.geer.solutions/storage/photos/T1VmkucmNHJfG6HbPhBi4gGvOPK8h8H63FPQbYIO.jpeg',
         open_camera: false,
         profile_img_dialog: false,
         select__id_type: 'PIC',
         select__gender: '',
         select__visit_purpose: '',
         options_id: [
-            'Drivers License', 'UMID' , 'PhilHealth', 'PIC'
+            'Drivers License', 'Postal ID' , 'PIC'
         ],
         options_gender: [
             'Male' , 'Female'
@@ -184,11 +184,6 @@ export default {
     }),
     watch:
     {
-        'id_class.req'(val)
-        {
-            console.log(val);
-
-        },
         open_camera(val)
         {
             if (val)
@@ -215,7 +210,33 @@ export default {
 
     methods:
     {
-         async checkImage(image)
+        testing(){
+            var formData = new FormData();
+            console.log("Asd")
+            formData.append("pass", "123456");
+            formData.append("length", "50"); // number 123456 is immediately converted to a string "123456"
+            formData.append("index", "0"); // number 123456 is immediately converted to a string "123456"
+            
+            // HTML file input, chosen by user
+            // formData.append("userfile", fileInputElement.files[0]);
+
+            // JavaScript file-like object
+            // var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
+            // var blob = new Blob([content], { type: "text/xml"});
+            // Access-Control-Allow-Origin: *;
+            // formData.append("webmasterfile", blob);
+
+            var request = new XMLHttpRequest();
+            request.open("POST", "http://192.168.1.177:8080/person/findByPage");
+            request.onreadystatechange = function() {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                    console.log(JSON.parse(request.responseText));
+                }
+            }
+            request.send(formData);
+        },
+
+        async checkImage(image)
         {
             this.$q.loading.show();
             this.is_done = await this.id_class.ocrUnirest(this.select__id_type,this.id_url)
