@@ -96,5 +96,31 @@ module.exports =
         });
 
         return res.send(true);
+    },
+    async getNearbyPlaces(req, res)
+    {
+        let locations = null;
+
+        try
+        {
+            await AUTH.member_only(context);
+
+            locations = await client.placeQueryAutocomplete(
+            {
+                params: 
+                { 
+                    input: req.body.location, 
+                    key: "AIzaSyCgcEQ_l0HwTMhh68eDDqQfiWUSijYqJBc"
+                }
+            })
+        }
+        catch(e)
+        {
+            HTTPS_ERROR('failed-precondition', e.message);
+        }
+            
+        if (locations.data.hasOwnProperty("error_message"))  HTTPS_ERROR('failed-precondition', locations.data.error_message);
+        
+        return res.send(locations.data.predictions);
     }
 }
