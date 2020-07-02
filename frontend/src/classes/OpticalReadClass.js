@@ -143,7 +143,6 @@ export default class OpticalReadClass
                         }
                     }
                 }
-                // const element = array[index];
             }
             
             Notify.create({
