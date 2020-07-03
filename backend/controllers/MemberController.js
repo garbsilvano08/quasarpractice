@@ -3,6 +3,9 @@ const multer        = require('multer');
 const path          = require('path');
 const MDB_RAW_VISITOR = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG = require('../models/MDB_RAW_PASS_LOG');
+const Client                    = require("@googlemaps/google-maps-services-js").Client;
+const client                    = new Client({});
+const axios = require('axios');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -103,8 +106,6 @@ module.exports =
 
         try
         {
-            await AUTH.member_only(context);
-
             locations = await client.placeQueryAutocomplete(
             {
                 params: 
@@ -116,11 +117,22 @@ module.exports =
         }
         catch(e)
         {
-            HTTPS_ERROR('failed-precondition', e.message);
+            throw new Error(e.message);
         }
             
-        if (locations.data.hasOwnProperty("error_message"))  HTTPS_ERROR('failed-precondition', locations.data.error_message);
+        if (locations.data.hasOwnProperty("error_message")) res.status(400).send(locations.data.error_message);
         
         return res.send(locations.data.predictions);
+    },
+    async getCoordinates(req, res)
+    {
+        let geocode = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?input=bar&placeid=${ req.body.place_id }&key=AIzaSyCgcEQ_l0HwTMhh68eDDqQfiWUSijYqJBc`);
+        if (!geocode.data.result) res.status(400).send("Location doesn't exist.");
+
+        return res.send(
+        { 
+            lat: geocode.data.result.geometry.location.lat,
+            lon: geocode.data.result.geometry.location.lng
+        });
     }
 }

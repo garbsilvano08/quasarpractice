@@ -24,28 +24,39 @@ export default class OpticalReadClass
             emergency_num: ''
         }
     }
+    eraseAll()
+    {
+        this.id_info = {
+            address: '',
+            last_name: '',
+            given_name: '',
+            middle_name: '',
+            gender: 'Male',
+            birthday: '',
+            nationality: '',
+            id_num: '',
+            contact_num: '',
+            emergency_num: ''
+        }
+    }
 
     getIDInformation(type, image_text)
     {
+        this.eraseAll()
         switch (type)
         {
             case 'Drivers License':
                 return this.getDriversLicenseInfo(image_text);
             
-            case 'UMID':
-                return this.getUmidInfo(image_text);
+            case 'Postal ID':
+                return this.getPostalIDInfo(image_text);
             
             case 'PIC':
                 return this.getPICInfo(image_text);
-
-            case 'Philhealth ID':
-                return this.payViaPaypal();
         }
     }
     getPICInfo(image)
     {
-
-        console.log(image, 'kjhkjhjkhjkh');
         if (image.length == 5)
         {
             this.id_info.last_name = image[2].lines.length === 2 ? image[2].lines[0].words[0].text : image[2].lines[1].words[0].text
@@ -55,9 +66,33 @@ export default class OpticalReadClass
             this.id_info.birthday = image.length == 5 ? image[4].lines[0].words[0].text : ''
             this.id_info.gender = 'Male'
             this.id_info.address = ''
-
-            console.log();
             
+            Notify.create({
+                color: 'green',
+                message: 'Successful'
+            }); 
+        }
+        else
+        {
+            Notify.create({
+                color: 'red',
+                message: 'Please try again'
+            }); 
+        }
+    }
+
+    getPostalIDInfo(image)
+    {
+        console.log(image);
+        if (image.length == 5 || image.length == 4)
+        {
+            // this.id_info.last_name = image[0].lines[5].words[0]
+            // this.id_info.given_name = this.id_info.given_name +image[0].lines[5].words[]
+            this.id_info.middle_name = ''
+            this.id_info.id_num = ''
+            this.id_info.birthday = ''
+            this.id_info.gender = 'Male'
+            this.id_info.address = ''
             
             Notify.create({
                 color: 'green',
@@ -83,38 +118,53 @@ export default class OpticalReadClass
         // return person_info
     }
 
-    getUmidInfo(image)
-    {
-
-        console.log(image);
-        
-        // let person_info = {}
-        // person_info.name = image[5] + "," + " " + image[8] + " " + image[11]
-        // let address = image[14] + " " + image[15] + " " + image[16] + " " + image[17]
-        // person_info.address = address.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')
-        // let other_data = (image[12].replace(/[^a-zA-Z0-9]/g, ' ')).split(" ");
-        // let data = image[10].split(" ")
-        // person_info.birthdate = other_data[7] + "-" + other_data[8] + "-" + other_data[9] 
-        // person_info.gender = other_data[6].startsWith('F') ? 'Female' : 'Male'
-        // person_info.id_num = image[4]
-        // return person_info
-    }
-
     getDriversLicenseInfo(image)
     {
-        this.id_info.last_name = image[2].lines[0].words[0].text
-        for (let index = 1; index < image[2].lines[0].words.length - 1; index++) {
-            this.id_info.given_name = this.id_info.given_name + image[2].lines[0].words[index].text + " "
+        console.log(image);
+        
+        if (image.length == 4)
+        {
+            this.id_info.last_name = image[0].lines[5].words[0].text.replace(/[^a-zA-Z0-9]/g, ' ')
+            for (let index = 1; index < image[0].lines[5].words.length - 1; index++) {
+                this.id_info.given_name = this.id_info.given_name + image[0].lines[5].words[index].text + " "    
+            }
+            this.id_info.middle_name = image[0].lines[5].words[image[0].lines[5].words.length -1].text
+            this.id_info.id_num = ''
+            
+            this.id_info.gender = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[0].text : image[0].lines[10].words[0].text
+            this.id_info.gender = this.id_info.gender.startsWith('M') ? 'Male' : 'Female'
+            this.id_info.nationality = image[0].lines[10].words.length == 2 ? image[0].lines[9].words[0].text.replace(/[^a-zA-Z]/g, '') : image[0].lines[10].words[0].text.replace(/[^a-zA-Z]/g, '')
+            this.id_info.birthday = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[1].text.replace(/[^/0-9]/g, ' ') : image[0].lines[10].words[1].text.replace(/[^/0-9]/g, ' ')
+            for (let address = 10; address < image[0].lines.length; address++) {
+                if (image[0].lines[address].words.length > 4)
+                {
+                    for (let word of image[0].lines[address].words) {
+                        this.id_info.address = this.id_info.address + word.text + " "
+                    }
+                    if ((address + 1) <= image[0].lines.length - 1 && image[0].lines[address + 1].words < 3)
+                    {
+                        for (let town of image[0].lines[address + 1].words) {
+                            this.id_info.address = this.id_info.address + town.text + " "
+                        }
+                    }
+                }
+            }
+            
+            
+            Notify.create({
+                color: 'green',
+                message: 'Successful'
+            }); 
         }
-        for (let x = 0; x < image[2].lines[2].words.length; x++) {
-            this.id_info.address = this.id_info.address + image[2].lines[2].words[x].text + " "
-        }
-        this.id_info.last_name = image[2].lines[0].words[0].text
-        this.id_info.middle_name = image[2].lines[0].words[image[2].lines[0].words.length - 1].text
-        this.id_info.gender = image[2].lines[4].words[1].text.startsWith('F') ? 'Female' : 'Male'
-        this.id_info.birthday = image[2].lines[4].words[0].text
-        this.id_info.nationality = image[2].lines[5].words[0].text        
+        else
+        {
+            Notify.create({
+                color: 'red',
+                message: 'Please try again'
+            }); 
+        }  
     }
+    
     async ocrUnirest(type, id_url)
     {
         let headers = {
@@ -128,7 +178,17 @@ export default class OpticalReadClass
             headers: headers
         })
         // this.checkImage(image_data.data.regions)
-        this.getIDInformation(type, image_data.data.regions)
+        try
+        {
+            this.getIDInformation(type, image_data.data.regions)
+        }
+        catch(e)
+        {
+            Notify.create({
+                color: 'red',
+                message: 'Please try again'
+            }); 
+        }
                 
     }
 

@@ -33,7 +33,7 @@
                             <tr v-for="(visitor, index) in visitors" :key="index">
                                 <td>{{ visitor.id }}</td>
                                 <td>{{ visitor.personal_information.first_name }} {{ visitor.personal_information.middle_name }} {{ visitor.personal_information.last_name }}</td>
-                                <td v-if="visitor.syncing"><q-icon name="mdi-refresh" /> Syncing...</td>
+                                <td v-if="index === 0"><q-icon name="mdi-refresh" /> Syncing...</td>
                                 <td v-else>Queue</td>
                             </tr>
                         </tbody>
