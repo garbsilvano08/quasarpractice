@@ -179,7 +179,6 @@ export default
 
                 let getImgRes = await this.$axios.post("http://"+device.ip+":8080/getRecordImg", formData).then(res => res.data);
                let imgPath= await this.savePicsLocal(getImgRes, data.imageName).then( rest => rest);
-                console.log(imgPath);
                 data.image_path = imgPath;
                 data.device_id = device.device_id;
                 await this.db.add(data, "passLogs");
