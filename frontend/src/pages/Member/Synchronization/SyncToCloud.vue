@@ -1,6 +1,6 @@
 <template>
     <div class="synchronization">
-        <div class="header__title">HEALTH CLOUD SYNCHRONIZATION <span>(60)</span></div>
+        <div class="header__title">HEALTH CLOUD SYNCHRONIZATION <span>({{ visitors.length + passLogs.length }})</span></div>
 
         <q-tabs
             v-model="sync_tab"
@@ -11,8 +11,8 @@
             no-caps
             inline-label
         >
-            <q-tab active name="user_info" icon="mdi-card-account-details" label="User Information"></q-tab>
-            <q-tab name="user_logs" icon="mdi-clock" label="User Logs"></q-tab>
+            <q-tab active name="user_info" icon="mdi-card-account-details" :label="'User Information ('+visitors.length+')'"></q-tab>
+            <q-tab name="user_logs" icon="mdi-clock" :label="'User Logs ('+passLogs.length+')'"></q-tab>
         </q-tabs>
         <q-tab-panels v-model="sync_tab" animated>
             <q-tab-panel name="user_info">
@@ -26,20 +26,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="td-active">1A2B3CDE</td>
-                                <td class="td-active">Adda M. Hope</td>
-                                <td class="td-active"><q-icon size="20px" name="mdi-sync"></q-icon> Syncing...</td>
-                            </tr>
-                            <tr>
-                                <td>1A2B3CDE</td>
-                                <td>Adda M. Hope</td>
-                                <td>Queue</td>
-                            </tr>
-                            <tr>
-                                <td>1A2B3CDE</td>
-                                <td>Adda M. Hope</td>
-                                <td>Queue</td>
+                            <tr v-for="(visitor, index) in visitors" :key="index">
+                                <td>{{ visitor.id }}</td>
+                                <td>{{ visitor.personal_information.first_name }} {{ visitor.personal_information.middle_name }} {{ visitor.personal_information.last_name }}</td>
+                                <td v-if="index === 0"><q-icon name="mdi-refresh" /> Syncing...</td>
+                                <td v-else>Queue</td>
                             </tr>
                         </tbody>
                     </table>
@@ -57,23 +48,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="td-active">Adda M. Hope</td>
-                                <td class="td-active">6/24/2020 8:00 AM</td>
-                                <td class="td-active">36.5°C</td>
-                                <td class="td-active"><q-icon size="20px" name="mdi-sync"></q-icon> Syncing...</td>
-                            </tr>
-                            <tr>
-                                <td>Adda M. Hope</td>
-                                <td>6/24/2020 8:00 AM</td>
-                                <td>36.5°C</td>
-                                <td>Queue</td>
-                            </tr>
-                            <tr>
-                                <td>Adda M. Hope</td>
-                                <td>6/24/2020 8:00 AM</td>
-                                <td>36.5°C</td>
-                                <td>Queue</td>
+                            <tr v-for="(log, index) in passLogs" :key="index">
+                                <td>{{ log.name }}</td>
+                                <td>{{ convertToDate(log.currentTime) }}</td>
+                                <td>{{ log.tempratrue }}</td>
+                                <td v-if="index === 0"><q-icon name="mdi-refresh" /> Syncing...</td>
+                                <td v-else>Queue</td>
                             </tr>
                         </tbody>
                     </table>
@@ -85,10 +65,36 @@
 
 <script>
 import './Synchronization.scss';
+import Model from "../../../models/Model";
 
 export default {
     data: () => ({
-        sync_tab: 'user_info'
-    })
+        sync_tab: 'user_info',
+        db: new Model(),
+        d : new Date(0),
+    }),
+    computed:
+    {
+        visitors()
+        {
+            return this.$store.state.sync.visitors;
+        },
+        passLogs()
+        {
+            return this.$store.state.sync.passLogs;
+        }
+    },
+    async created()
+    {
+        await this.db.initialize();
+    },
+    methods:
+    {
+        convertToDate(timestamp){
+            let date = new Date(timestamp);
+            return date.getDate().toString().padStart(2, "0")+'-'+(date.getMonth()+1).toString().padStart(2, "0")+ '-' +date.getFullYear();
+        }
+    }
+
 }
 </script>

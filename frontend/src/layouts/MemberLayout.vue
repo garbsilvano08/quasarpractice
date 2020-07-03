@@ -8,8 +8,8 @@
 
                 <div class="btn-sync__container">
                     <q-btn @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
-                        <!-- <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div> -->
-                        <div class="notification-indicator">100</div>
+                        <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
+                        <!-- <div class="notification-indicator">100</div> -->
                     </q-btn>
 
                     <q-btn @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
