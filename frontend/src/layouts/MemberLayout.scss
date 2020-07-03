@@ -19,39 +19,25 @@ body {
             margin-right: auto;
         }
 
-        .btn-nofitication {
-            position: relative;
-            margin-left: auto;
+        .btn-sync__container {
+            .q-btn {
+                position: relative;
+                margin-left: auto;
+                margin-right: 20px;
 
-            .notification-indicator {
-                background-color: #ff0000;
-                width: 22px;
-                height: 15px;
-                text-align: center;
-                border-radius: 30px;
-                font-size: 10px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: absolute;
-                top: 3px;
-                right: -10px;
-            }
-        }
-
-        .user-dropdown {
-            margin-left: 10px;
-
-            .q-img {
-                object-fit: cover;
-                width: 40px;
-                height: 40px;
-                border-radius: 100%;
-            }
-
-            .q-btn-dropdown {
-                .q-btn__wrapper {
-                    padding: 0px !important;
+                .notification-indicator {
+                    background-color: #ff0000;
+                    width: 22px;
+                    height: 15px;
+                    text-align: center;
+                    border-radius: 30px;
+                    font-size: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: absolute;
+                    top: 3px;
+                    right: -10px;
                 }
             }
         }
@@ -59,8 +45,6 @@ body {
 }
 
 .main {
-    color: #233b61;
-
     .nav-profile {
         padding: 30px;
         display: flex;
@@ -100,6 +84,8 @@ body {
     }
 
     .nav-list {
+        color: #233b61;
+
         .nav {
             font-weight: 500;
             font-size: 14px;
@@ -112,8 +98,6 @@ body {
             .nav-sub {
                 overflow: auto;
                 background-color: #fafafa;
-                font-weight: 500;
-                font-size: 14px;
                 border: none !important;
 
                 .nav-item {

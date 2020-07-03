@@ -18,16 +18,12 @@
                             <q-btn class="btn-upload btn-primary" flat dense no-caps label="Browse Face Detection" @click="profile_img_dialog = true"></q-btn>
                         </div>
                     </div>
-                    <!-- CHOOSE ID -->
+                    <!-- REASON TO BLACKLIST -->
                     <div class="frontdesk__content-info">
-                        <div class="content__title">Choose ID</div>
-                        <div class="content__select">
-                            <div class="content__select-label">Identification Card Type</div>
-                            <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
-                        </div>
-                        <div class="content__img-holder img-holder__sm">
-                            <q-img class="content__img img__sm" src="../../../assets/Member/placeholder-img.jpg"></q-img>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
+                        <div class="content__title">Blacklist Information</div>
+                        <div class="content__input">
+                            <div class="content__input-label">Reason for Blacklisting</div>
+                            <q-input outlined dense type="textarea"></q-input>
                         </div>
                     </div>
                 </div>
@@ -85,7 +81,7 @@
                                 <div class="content__input-label">Home Address</div>
                                 <q-input outlined dense></q-input>
                             </div>
-                            <!-- Contact -->
+                            <!-- Contact Information -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
                                     <div class="content__input-label">Contact Number</div>

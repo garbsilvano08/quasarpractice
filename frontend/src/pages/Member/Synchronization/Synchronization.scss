@@ -1,18 +1,78 @@
 .synchronization
 {
-    padding: 2rem;
-    &__header
-    {
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 15px;
+    padding: 50px;
+
+    .header__title {
+        margin-bottom: 30px;
+
+        span {
+            font-weight: 500 !important;
+        }
     }
-    &__body
-    {
-        table 
-        {
+
+    .q-tabs {
+        border-bottom: solid 1px rgba(#111111, 0.12);
+        background-color: #ffffff;
+
+        .q-tab {
             width: 100%;
-            text-align: left;
+            padding: 10px 0px;
+            color: rgba(#000000, .6);
+
+            .q-tab__label {
+                font-weight: 14px;
+                font-weight: 700 !important;
+            }
+        }
+
+        .q-tab--active {
+            color: #464de4;
+        }
+    }
+
+    .q-tab-panels {
+        box-shadow: 0 2px 4px 0 rgba(#000, .1);
+
+        .q-tab-panel {
+            padding: 30px !important;
+        }
+    }
+
+    .synchronization__content {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding: 60px !important;
+
+        .sync-btn {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #464de4;
+            width: 150px;
+            height: 150px;
+            padding: 15px;
+            border-radius: 10px;
+
+            .q-img {
+                width: 80px;
+            }
+
+            .sync-btn__name {
+                color: #ffffff;
+                font-size: 14px;
+                font-weight: 500;
+                margin-top: 10px;
+            }
+        }
+
+        .synchronization__content-details {
+            color: rgba(#000000, .6);
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 30px;
         }
     }
 }
