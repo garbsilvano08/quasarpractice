@@ -134,5 +134,9 @@ module.exports =
             lat: geocode.data.result.geometry.location.lat,
             lon: geocode.data.result.geometry.location.lng
         });
+    },
+    async getVisitors(req, res)
+    {
+        return res.send(await new MDB_RAW_VISITOR().docs());
     }
 }

@@ -98,7 +98,7 @@
                                     dense
                                     v-model="personal_information.location"
                                     use-input
-                                    input-debounce="200"
+                                    input-debounce="1000"
                                     :options="options_location"
                                     @filter="getNearbyPlaces"
                                     option-value="place_id"
@@ -290,7 +290,7 @@ export default {
                 }
 
                 if (this.personal_information.location) this.personal_information.location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.personal_information.location.place_id }).then(res => res.data);
-                console.log(this.personal_information.location_coordinates);
+
                 await this.db.add(
                 {
                     personal_information: this.personal_information,

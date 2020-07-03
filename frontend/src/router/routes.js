@@ -33,6 +33,8 @@ const routes = [
             { name: 'member_accountdirectory_staff', path: '/accountdirectory/staff', component: () => import('pages/Member/AccountDirectory/StaffAccountDirectory.vue') },
             // SYCHNIZATION ROUTES
             { name: 'member_synchronization', path: '/synchronization', component: () => import('pages/Member/Synchronization/Synchronization.vue') },
+            // HEATMAP
+            { name: 'member_heatmap', path: '/heatmap', component: () => import('pages/Member/Heatmap/Heatmap.vue') },
             { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },
         ]
     },
