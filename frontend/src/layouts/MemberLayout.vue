@@ -8,8 +8,8 @@
 
                 <div class="btn-sync__container">
                     <q-btn @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
-                        <!-- <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div> -->
-                        <div class="notification-indicator">100</div>
+                        <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
+                        <!-- <div class="notification-indicator">100</div> -->
                     </q-btn>
 
                     <q-btn @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
@@ -180,7 +180,6 @@ export default
 
                 let getImgRes = await this.$axios.post("http://"+device.ip+":8080/getRecordImg", formData).then(res => res.data);
                let imgPath= await this.savePicsLocal(getImgRes, data.imageName).then( rest => rest);
-                console.log(imgPath);
                 data.image_path = imgPath;
                 data.device_id = device.device_id;
                 await this.db.add(data, "passLogs");
