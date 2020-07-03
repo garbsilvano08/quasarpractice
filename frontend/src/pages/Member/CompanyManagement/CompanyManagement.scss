@@ -1,0 +1,27 @@
+.company-management {
+    padding: 50px;
+
+    .company-management__header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+
+        .header__filter {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+
+            .q-input {
+                background-color: #ffffff;
+                width: 300px;
+
+                .q-field__native {
+                    color: #233b61 !important;
+                    font-size: 12px;
+                    font-weight: 500;
+                    padding-left: 10px;
+                }
+            }
+        }
+    }
+}

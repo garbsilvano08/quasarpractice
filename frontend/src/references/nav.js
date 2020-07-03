@@ -24,9 +24,9 @@ module.exports =
         icon: 'mdi-account-cog',
         sub:
         [
-            { label: 'Add New Staff', route: 'member_frontdesk_staff' },
-            { label: 'Add Fever Logs', route: 'member_frontdesk_feverlogs' },
-            { label: 'Add Blacklist', route: 'member_frontdesk_blacklist' },
+            { label: '+ Add New Staff', route: 'member_frontdesk_staff' },
+            { label: '+ Add Fever Logs', route: 'member_frontdesk_feverlogs' },
+            { label: '+ Add Blacklist', route: 'member_frontdesk_blacklist' },
         ]
     },
     {
@@ -40,7 +40,6 @@ module.exports =
             { label: 'Body Temp. Logs', route: 'member_dailylogs_bodytemperature' },
             { label: 'Fever Detected', route: 'member_dailylogs_feverdetected' },
             { label: 'Blacklist', route: 'member_dailylogs_blacklist' },
-            { label: 'Person of Interest', route: 'member_dailylogs_personofinterest' },
         ]
     },
     {
@@ -53,7 +52,6 @@ module.exports =
             { label: 'Visitors', route: '' },
             { label: 'Fever Detected', route: '' },
             { label: 'Blacklist', route: '' },
-            { label: 'Person of Interest', route: '' },
         ]
     },
     {
@@ -74,7 +72,7 @@ module.exports =
         sub:
         [
             { label: 'All User', route: '' },
-            { label: 'Add User', route: '' },
+            { label: '+ Add User', route: '' },
         ]
     },
     {
@@ -83,8 +81,8 @@ module.exports =
         icon: 'mdi-briefcase',
         sub:
         [
-            { label: 'All Company', route: '' },
-            { label: 'Add Company', route: '' },
+            { label: 'All Company', route: 'member_allcompany' },
+            { label: '+ Add Company', route: '' },
         ]
     },
     {
@@ -94,7 +92,7 @@ module.exports =
         sub:
         [
             { label: 'All Devices', route: '' },
-            { label: 'Add Device', route: '' },
+            { label: '+ Add Device', route: '' },
         ]
     },
     {

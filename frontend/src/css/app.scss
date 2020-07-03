@@ -30,6 +30,13 @@
     grid-gap: 30px;
 }
 
+// BOX GRID STYLE 2x2 ( 3 GRID )
+.content__grid-3x3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 15px;
+}
+
 // BOX GRID STYLE 4x4 ( 4 GRID )
 .content__grid-4x4 {
     display: grid;
