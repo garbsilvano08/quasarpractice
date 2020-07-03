@@ -35,6 +35,8 @@ const routes = [
             { name: 'member_synchronization', path: '/synchronization', component: () => import('pages/Member/Synchronization/Synchronization.vue') },
             { name: 'member_synctocloud', path: '/synchronization/sync-to-cloud', component: () => import('pages/Member/Synchronization/SyncToCloud.vue') },
             { name: 'member_syncfromcloud', path: '/synchronization/sync-from-cloud', component: () => import('pages/Member/Synchronization/SyncFromCloud.vue') },
+            // HEATMAP
+            { name: 'member_heatmap', path: '/heatmap', component: () => import('pages/Member/Heatmap/Heatmap.vue') },
             { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },
         ]
     },

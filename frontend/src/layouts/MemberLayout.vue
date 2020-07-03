@@ -53,7 +53,9 @@
 import EssentialLink    from 'components/EssentialLink.vue'
 import Layout           from './MemberLayout.scss'
 import navigation       from '../references/nav'
+import { postAddPerson }                        from '../references/url';
 import Model from "../models/Model";
+import { base64StringToBlob } from 'blob-util';
 
 export default
 {
@@ -67,7 +69,8 @@ export default
 		package_data: { version: '0.0.0' },
 		leftDrawerOpen: false,
         navigation: [],
-        db: new Model()
+        db: new Model(),
+        devicelist: [{ip: "192.168.1.177", device_id: "d1"},{ip: "192.168.1.116", device_id: "d2"}],
     }),
     computed:
     {
@@ -145,39 +148,59 @@ export default
             formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
             let logs= [];
             var request = new XMLHttpRequest();
-            request.open("POST", "http://192.168.1.177:8080/newFindRecords");
+
+            this.devicelist.forEach((device) => {
+            var request = new XMLHttpRequest();
+            request.open("POST", "http://"+device.ip+":8080/newFindRecords");
             request.onreadystatechange = () => {
                 if (request.readyState == XMLHttpRequest.DONE) {
                     let resp = request.responseText;
-                    // console.log(JSON.parse(resp).data);
-                    // resp = resp.replace(/{"data":"/, "")
-                    // resp = resp.replace(/","result":1,"success":true}/, "")
-                    // console.log(resp);
-                    // console.log(JSON.parse(JSON.parse(resp).data));
-                    // logs = JSON.parse(JSON.parse(resp).data);
-                    this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data));
-                    // this.saveLogIndex(JSON.parse(JSON.parse(resp).data));
+                    this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
                 }
             }
-            // console.log("logia",logs)
             request.send(formData);
-
-            await this.db.add(
-            {
-                lastRequestTime: timeToday
-            },
-            'lastRequestTime');
-            this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
+            })
+                await this.db.add(
+                {
+                    lastRequestTime: timeToday
+                },
+                'lastRequestTime');
+                this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
+            
         },
-        async saveLogsIndexDb(dat)
+        async saveLogsIndexDb(dat, device)
         {
+            let response="";
+
             for (let data of dat)
             {
+                var formData = new FormData();
+                formData.append("pass", "123456");
+                formData.append("imgName", data.imageName);
+
+                let getImgRes = await this.$axios.post("http://"+device.ip+":8080/getRecordImg", formData).then(res => res.data);
+               let imgPath= await this.savePicsLocal(getImgRes, data.imageName).then( rest => rest);
+                console.log(imgPath);
+                data.image_path = imgPath;
+                data.device_id = device.device_id;
                 await this.db.add(data, "passLogs");
             }
 
             this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
-        }
+        },
+        async savePicsLocal(respImage, imageName)
+        {
+            let blob = "";
+            var formDatatoBackend = new FormData();
+            let contentType = 'image/png';
+            blob = "";
+            blob = base64StringToBlob(respImage.data, contentType);
+            blob.lastModifiedDate = new Date();
+            formDatatoBackend.append('image', blob, imageName);
+            let res = await this.$_post_file(postAddPerson, formDatatoBackend);
+            return res.path;
+        },
+        
     }
 }
 </script>

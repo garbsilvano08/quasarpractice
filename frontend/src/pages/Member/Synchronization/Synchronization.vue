@@ -95,11 +95,6 @@ export default
     {
         await this.db.initialize();
     },
-    mounted()
-    {
-        console.log("asd");
-        // console.log(this.passLogs[0].data);
-    }
 }
 </script>
 

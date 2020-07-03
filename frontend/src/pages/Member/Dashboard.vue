@@ -45,7 +45,7 @@ export default
         pic: "",
         img64: "",
         details: {},
-        ip_address: ["192.168.1.177", "192.168.1.162"]
+        ip_address: ["192.168.1.177", "192.168.1.116"]
     }),
     mounted()
     {
@@ -66,6 +66,7 @@ export default
             const formData = new FormData();
             formData.append('image',this.pic[0]); 
             // console.log(formData.entries().next())
+            console.log(this.pic[0])
             let res = await this.$_post_file(postAddPerson, formData);
             // console.log(res.filename)    
 
@@ -156,6 +157,7 @@ export default
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
                     console.log(request.responseText);
+                    console.log("ulit")
                 }
             }
             request.send(formData);
