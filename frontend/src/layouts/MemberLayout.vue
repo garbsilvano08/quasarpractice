@@ -6,13 +6,14 @@
 
                 <q-img src="../assets/vcop-logo-white.svg"></q-img>
 
-                <q-btn @click="$router.push('/synchronization')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false" class="btn-nofitication">
-                    <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
-                </q-btn>
+                <div class="btn-sync__container">
+                    <q-btn @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
+                        <!-- <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div> -->
+                        <div class="notification-indicator">100</div>
+                    </q-btn>
 
-                <!-- <q-btn flat dense rounded icon="mdi-bell" size="13px" :ripple="false" class="btn-nofitication">
-                    <div class="notification-indicator">1</div>
-                </q-btn> -->
+                    <q-btn @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
+                </div>
 
             </q-toolbar>
         </q-header>

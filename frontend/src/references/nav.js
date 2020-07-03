@@ -2,15 +2,15 @@ module.exports =
 [
     {
         key: 'member_dashboard',
-        label: 'Notification',
-        icon: 'mdi-bell-ring',
-        route: '',
-    },
-    {
-        key: 'member_dashboard',
         label: 'Dashboard',
         icon: 'mdi-chart-bar',
         route: 'member_dashboard',
+    },
+    {
+        key: '',
+        label: 'Notification',
+        icon: 'mdi-bell-ring',
+        route: '',
     },
     {
         key: 'member_frontdesk_visitor',
@@ -26,7 +26,7 @@ module.exports =
         [
             { label: 'Add New Staff', route: 'member_frontdesk_staff' },
             { label: 'Add Fever Logs', route: 'member_frontdesk_feverlogs' },
-            { label: 'Blacklist Management', route: 'member_frontdesk_blacklist' },
+            { label: 'Add Blacklist', route: 'member_frontdesk_blacklist' },
         ]
     },
     {
@@ -57,7 +57,48 @@ module.exports =
         ]
     },
     {
-        key: 'member_frontdesk_visitor',
+        key: '',
+        label: 'Reports',
+        icon: 'mdi-clipboard-text',
+        sub:
+        [
+            { label: 'Fever Logs', route: '' },
+            { label: 'Fever Monitoring', route: '' },
+            { label: 'Fever Heatmap', route: '' },
+        ]
+    },
+    {
+        key: '',
+        label: 'User Management',
+        icon: 'mdi-account-multiple',
+        sub:
+        [
+            { label: 'All User', route: '' },
+            { label: 'Add User', route: '' },
+        ]
+    },
+    {
+        key: '',
+        label: 'Company Management',
+        icon: 'mdi-briefcase',
+        sub:
+        [
+            { label: 'All Company', route: '' },
+            { label: 'Add Company', route: '' },
+        ]
+    },
+    {
+        key: '',
+        label: 'Device Management',
+        icon: 'mdi-cellphone',
+        sub:
+        [
+            { label: 'All Devices', route: '' },
+            { label: 'Add Device', route: '' },
+        ]
+    },
+    {
+        key: '',
         label: 'Security Access',
         icon: 'mdi-security',
         route: '',
@@ -65,7 +106,7 @@ module.exports =
     {
         key: 'member_logout',
         label: 'Logout',
-        icon: 'logout',
+        icon: 'mdi-logout-variant',
         route: 'member_logout',
     },
     // {

@@ -113,23 +113,59 @@
             color: #233b61 !important;
             font-size: 12px;
             font-weight: 500;
-            padding-left: 10px;
+        }
+    }
+
+    .q-textarea {
+        .q-field__native {
+            color: #233b61 !important;
+            font-size: 12px;
+            font-weight: 500;
         }
     }
 }
 
 // TABLE STYLE CSS
 .content__table {
+    overflow-x: auto !important;
+    width: 100%;
+
     table {
         width: 100%;
-        text-align: left;
+        border-collapse: collapse;
+        text-align: center;
 
-        tr {
-            th {
+        thead {
+            tr {
+                background-color: #ffffff;
 
+                th {
+                    color: #233b61;
+                    font-size: 14px;
+                    font-weight: 700;
+                    padding: 10px 15px;
+                }
             }
-            td {
+        }
 
+        tbody {
+            tr {
+                background-color: #ffffff;
+
+                td {
+                    color: rgba(#000000, .6);
+                    font-size: 12px;
+                    font-weight: 500;
+                    padding: 12px 15px;
+                }
+
+                .td-active {
+                    color: #3f51b5;
+                }
+            }
+
+            tr:nth-child(odd) {
+                background-color: #f4f4f4;
             }
         }
     }
