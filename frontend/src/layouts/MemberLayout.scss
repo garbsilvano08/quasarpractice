@@ -59,10 +59,44 @@ body {
 }
 
 .main {
+    color: #233b61;
+
+    .nav-profile {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+
+        .nav-profile__img {
+            margin: auto;
+            width: 80px;
+            height: 80px;
+            border-radius: 100%;
+            border: solid 1px rgba(#000000, .15)
+        }
+
+        .nav-profile__info {
+            margin-top: 15px;
+            .nav-profile__name {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .nav-profile__position {
+                color: #3f51b5;
+                font-size: 12px;
+                font-weight: 700;
+            }
+        }
+    }
+
     .nav-title {
-        padding: 20px 15px;
+        padding-left: 15px;
+        font-size: 12px;
         font-weight: 700;
         color: #3f51b5;
+        margin-bottom: 15px;
     }
 
     .nav-list {

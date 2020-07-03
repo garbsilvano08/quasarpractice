@@ -99,6 +99,22 @@
                         </div>
                     </div>
                 </div>
+                <!-- EMPLOYMENT INFORMATION -->
+                <div class="frontdesk__content content__box" style="margin-top: 30px;">
+                    <div class="frontdesk__content">
+                        <div class="frontdesk__content-info">
+                            <div class="content__title">Employment Information</div>
+                            <div class="content__select">
+                                <div class="content__select-label">Tag a Company</div>
+                                <q-select v-model="select__company" :options="options_company" outlined dense></q-select>
+                            </div>
+                            <div class="content__input">
+                                <div class="content__input-label">Position</div>
+                                <q-input v-model="position_input" outlined dense></q-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -164,14 +180,16 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 export default {
     data:() =>
     ({
-        id_url : 'https://fleek.geer.solutions/storage/photos/btwpJYOnuiHIXVUjFxE4ABZhuViTrifFqb17fkEf.jpeg',
+        position_input: '',
+        id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
         open_camera: false,
         profile_img_dialog: false,
         select__id_type: 'PIC',
         select__gender: '',
         select__visit_purpose: '',
+        select__company: '',
         options_id: [
-            'Drivers License', 'UMID' , 'PhilHealth', 'PIC'
+            'Drivers License', 'Postal ID' , 'PIC'
         ],
         options_gender: [
             'Male' , 'Female'
@@ -179,16 +197,14 @@ export default {
         options_visit_purpose: [
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
         ],
+        options_company: [
+            'Super Admin', 'Company', 'Sub Company'
+        ],
         id_class: new OpticalReadClass(),
         is_done: false
     }),
     watch:
     {
-        'id_class.req'(val)
-        {
-            console.log(val);
-
-        },
         open_camera(val)
         {
             if (val)
@@ -215,7 +231,33 @@ export default {
 
     methods:
     {
-         async checkImage(image)
+        testing(){
+            var formData = new FormData();
+            console.log("Asd")
+            formData.append("pass", "123456");
+            formData.append("length", "50"); // number 123456 is immediately converted to a string "123456"
+            formData.append("index", "0"); // number 123456 is immediately converted to a string "123456"
+            
+            // HTML file input, chosen by user
+            // formData.append("userfile", fileInputElement.files[0]);
+
+            // JavaScript file-like object
+            // var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
+            // var blob = new Blob([content], { type: "text/xml"});
+            // Access-Control-Allow-Origin: *;
+            // formData.append("webmasterfile", blob);
+
+            var request = new XMLHttpRequest();
+            request.open("POST", "http://192.168.1.177:8080/person/findByPage");
+            request.onreadystatechange = function() {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                    console.log(JSON.parse(request.responseText));
+                }
+            }
+            request.send(formData);
+        },
+
+        async checkImage(image)
         {
             this.$q.loading.show();
             this.is_done = await this.id_class.ocrUnirest(this.select__id_type,this.id_url)
@@ -231,7 +273,7 @@ export default {
         {
             var canvas = document.getElementById('canvas');
             console.log(canvas, ';l;l;l;');
-            
+
             var context = canvas.getContext('2d');
             var video = document.getElementById('video');
 

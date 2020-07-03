@@ -2,17 +2,28 @@ module.exports =
 [
     {
         key: 'member_dashboard',
+        label: 'Notification',
+        icon: 'mdi-bell-ring',
+        route: '',
+    },
+    {
+        key: 'member_dashboard',
         label: 'Dashboard',
         icon: 'mdi-chart-bar',
         route: 'member_dashboard',
     },
     {
-        key: 'frontdesk',
-        label: 'Front Desk',
+        key: 'member_frontdesk_visitor',
+        label: 'Frontdesk',
         icon: 'mdi-monitor-cellphone',
+        route: 'member_frontdesk_visitor',
+    },
+    {
+        key: 'personnel_management',
+        label: 'Personnel Management',
+        icon: 'mdi-account-cog',
         sub:
         [
-            { label: 'Add Visitor', route: 'member_frontdesk_visitor' },
             { label: 'Add New Staff', route: 'member_frontdesk_staff' },
             { label: 'Add Fever Logs', route: 'member_frontdesk_feverlogs' },
             { label: 'Blacklist Management', route: 'member_frontdesk_blacklist' },
@@ -26,6 +37,7 @@ module.exports =
         [
             { label: 'Staff', route: 'member_dailylogs_staff' },
             { label: 'Visitors', route: 'member_dailylogs_visitor' },
+            { label: 'Body Temp. Logs', route: 'member_dailylogs_bodytemperature' },
             { label: 'Fever Detected', route: 'member_dailylogs_feverdetected' },
             { label: 'Blacklist', route: 'member_dailylogs_blacklist' },
             { label: 'Person of Interest', route: 'member_dailylogs_personofinterest' },
@@ -37,12 +49,18 @@ module.exports =
         icon: 'mdi-account-group',
         sub:
         [
-            { label: 'Staff', route: '' },
+            { label: 'Staff', route: 'member_accountdirectory_staff' },
             { label: 'Visitors', route: '' },
             { label: 'Fever Detected', route: '' },
             { label: 'Blacklist', route: '' },
             { label: 'Person of Interest', route: '' },
         ]
+    },
+    {
+        key: 'member_frontdesk_visitor',
+        label: 'Security Access',
+        icon: 'mdi-security',
+        route: '',
     },
     {
         key: 'member_logout',

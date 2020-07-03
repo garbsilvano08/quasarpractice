@@ -26,14 +26,14 @@
                             <tr>
                                 <th>User ID</th>
                                 <th>Name</th>
-                                <th>Status</th>    
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(visitor, index) in visitors" :key="index">
                                 <td>{{ visitor.id }}</td>
                                 <td>{{ visitor.personal_information.first_name }} {{ visitor.personal_information.middle_name }} {{ visitor.personal_information.last_name }}</td>
-                                <td v-if="visitor.syncing"><q-icon name="mdi-refresh" /> Syncing...</td>
+                                <td v-if="index === 0"><q-icon name="mdi-refresh" /> Syncing...</td>
                                 <td v-else>Queue</td>
                             </tr>
                         </tbody>
@@ -46,7 +46,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>temparature</th>    
+                                <th>temparature</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,16 +63,16 @@
             </q-tab-panels>
 
 
-            
+
         </div>
-    </div>    
+    </div>
 </template>
 
 <script>
 import Model from "../../../models/Model";
 import './Synchronization.scss';
 
-export default 
+export default
 {
     name: 'Synchronization',
     data: () => (

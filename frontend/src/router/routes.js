@@ -28,8 +28,13 @@ const routes = [
             { name: 'member_dailylogs_feverdetected', path: '/dailylogs/fever-detected', component: () => import('pages/Member/DailyLogs/FeverDetectedDailyLogs.vue') },
             { name: 'member_dailylogs_blacklist', path: '/dailylogs/black-list', component: () => import('pages/Member/DailyLogs/BlackListDailyLogs.vue') },
             { name: 'member_dailylogs_personofinterest', path: '/dailylogs/person-of-interest', component: () => import('pages/Member/DailyLogs/PersonOfInterest.vue') },
+            { name: 'member_dailylogs_bodytemperature', path: '/dailylogs/body-temperature', component: () => import('pages/Member/DailyLogs/BodyTemperatureDailyLogs.vue') },
+            // ACCOUNT DIRECTORY
+            { name: 'member_accountdirectory_staff', path: '/accountdirectory/staff', component: () => import('pages/Member/AccountDirectory/StaffAccountDirectory.vue') },
             // SYCHNIZATION ROUTES
             { name: 'member_synchronization', path: '/synchronization', component: () => import('pages/Member/Synchronization/Synchronization.vue') },
+            // HEATMAP
+            { name: 'member_heatmap', path: '/heatmap', component: () => import('pages/Member/Heatmap/Heatmap.vue') },
             { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },
         ]
     },
