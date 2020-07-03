@@ -2,6 +2,12 @@ module.exports =
 [
     {
         key: 'member_dashboard',
+        label: 'Notification',
+        icon: 'mdi-bell-ring',
+        route: '',
+    },
+    {
+        key: 'member_dashboard',
         label: 'Dashboard',
         icon: 'mdi-chart-bar',
         route: 'member_dashboard',

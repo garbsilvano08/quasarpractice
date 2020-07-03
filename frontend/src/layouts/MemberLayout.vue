@@ -18,7 +18,14 @@
         </q-header>
 
         <q-drawer v-model="leftDrawerOpen"  behavior="mobile" show-if-above bordered overlay content-class="bg-grey-1">
-			<!-- <div class="nav-title">MY ACCOUNT</div> -->
+            <div class="nav-profile">
+                <q-img class="nav-profile__img" src="https://i.pinimg.com/originals/81/63/38/816338c56ba717f875bf612782737165.jpg"></q-img>
+                <div class="nav-profile__info">
+                    <div class="nav-profile__name">Abegail Orille</div>
+                    <div class="nav-profile__position">Receptionist</div>
+                </div>
+            </div>
+			<div class="nav-title">MY ACCOUNT</div>
 			<q-list class="nav-list">
 				<template v-for="nav of navigation">
 					<q-item class="nav" v-if="!nav.hasOwnProperty('sub')" @click="$router.push({ name: nav.route })" clickable v-ripple :active="$route.name == nav.route">
@@ -129,7 +136,7 @@ export default
                 startTime = (today.getFullYear()-1)+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
             }
             else {
-                startTime = this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime; 
+                startTime = this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime;
             }
 
             formData.append("pass", "123456");
@@ -153,7 +160,7 @@ export default
             }
             // console.log("logia",logs)
             request.send(formData);
-            
+
             await this.db.add(
             {
                 lastRequestTime: timeToday
