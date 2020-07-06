@@ -49,9 +49,9 @@ module.exports =
         sub:
         [
             { label: 'Staff', route: 'member_accountdirectory_staff' },
-            { label: 'Visitors', route: '' },
-            { label: 'Fever Detected', route: '' },
-            { label: 'Blacklist', route: '' },
+            { label: 'Visitors', route: 'member_accountdirectory_visitor' },
+            { label: 'Fever Detected', route: 'member_accountdirectory_feverdetected' },
+            { label: 'Blacklist', route: 'member_accountdirectory_blacklist' },
         ]
     },
     {

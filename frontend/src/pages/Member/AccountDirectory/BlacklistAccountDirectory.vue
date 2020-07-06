@@ -1,7 +1,7 @@
 <template>
     <div class="account-directory">
         <div class="account-directory__header">
-            <div class="header__title">ALL STAFF</div>
+            <div class="header__title">BLACKLIST</div>
             <div class="header__filter">
                 <q-input outlined dense placeholder="Search People...">
                     <template v-slot:append>

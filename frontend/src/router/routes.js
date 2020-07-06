@@ -30,6 +30,9 @@ const routes = [
             { name: 'member_dailylogs_bodytemperature', path: '/dailylogs/body-temperature', component: () => import('pages/Member/DailyLogs/BodyTemperatureDailyLogs.vue') },
             // ACCOUNT DIRECTORY ROUTES
             { name: 'member_accountdirectory_staff', path: '/accountdirectory/staff', component: () => import('pages/Member/AccountDirectory/StaffAccountDirectory.vue') },
+            { name: 'member_accountdirectory_visitor', path: '/accountdirectory/visitor', component: () => import('pages/Member/AccountDirectory/VisitorAccountDirectory.vue') },
+            { name: 'member_accountdirectory_feverdetected', path: '/accountdirectory/feverdetected', component: () => import('pages/Member/AccountDirectory/FeverDetectedAccountDirectory.vue') },
+            { name: 'member_accountdirectory_blacklist', path: '/accountdirectory/blacklist', component: () => import('pages/Member/AccountDirectory/BlacklistAccountDirectory.vue') },
             // SYCHNIZATION ROUTES
             { name: 'member_synchronization', path: '/synchronization', component: () => import('pages/Member/Synchronization/Synchronization.vue') },
             { name: 'member_synctocloud', path: '/synchronization/sync-to-cloud', component: () => import('pages/Member/Synchronization/SyncToCloud.vue') },
