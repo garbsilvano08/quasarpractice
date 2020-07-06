@@ -145,6 +145,7 @@ import "./Frontdesk.scss";
 export default {
     data:() =>
     ({
+        reason_blacklist: '',
         profile_img_dialog: false,
         select__id_type: '',
         select__gender: '',
@@ -160,7 +161,7 @@ export default {
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
         ],
         options_company: [
-            'Super Admin', 'Company', 'Sub Company'
+            'Company 1', 'Company 2', 'Company 3'
         ],
     })
 }
