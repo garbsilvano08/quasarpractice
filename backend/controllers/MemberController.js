@@ -5,6 +5,7 @@ const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG  = require('../models/MDB_RAW_PASS_LOG');
 const MDB_ADD_STAFF     = require('../models/MDB_ADD_STAFF');
 const MDB_ADD_BLACKLIST = require('../models/MDB_ADD_BLACKLIST');
+const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
 const Client            = require("@googlemaps/google-maps-services-js").Client;
 const client            = new Client({});
 const axios             = require('axios');
@@ -127,6 +128,15 @@ module.exports =
     {
         return res.send(await new MDB_RAW_VISITOR().docs());
     },
+    async addCompany(req, res)
+    {
+        await new MDB_COMPANIES().add(
+            {
+                company_info: req.body.company_info
+            });
+    
+            return res.send(true);
+    },
 
     async addNewStaff(req, res)
     {
@@ -174,5 +184,13 @@ module.exports =
         });
 
         return res.send(true);
+    },
+    async getCompanies(req, res)
+    {
+        return res.send(await new MDB_COMPANIES().docs());
+    },
+    async deleteCompany(req, res)
+    {
+        await new MDB_COMPANIES().delete(req.body.id);
     }
 }

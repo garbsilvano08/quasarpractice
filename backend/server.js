@@ -30,6 +30,10 @@ app.post('/api/member/add/pass_log',  member_only, member_controller.addPassLog)
 app.post('/api/member/get/nearby_places',  member_only, member_controller.getNearbyPlaces);
 app.post('/api/member/get/coordinates',  member_only, member_controller.getCoordinates);
 app.post('/api/member/get/visitors', member_only, member_controller.getVisitors);
+app.post('/api/member/add/company',  member_only, member_controller.addCompany);
+app.post('/api/member/get/companies',  member_only, member_controller.getCompanies);
+app.post('/api/member/delete/company',  member_only, member_controller.deleteCompany);
+
 
 app.listen({port: 4001}, (err) =>
 {
