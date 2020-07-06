@@ -118,7 +118,7 @@ export default {
                     await this.$_post('member/add/company', { company_info: { company_name: this.input_company_name,  location: this.input_location , company_type:this.company_type, company_logo: res.path, logo_filename: res.filename} });
                     this.input_company_name = "";
                     this.input_location = "";
-                    this.company_type = this.company_type = "";
+                    this.company_type = this.company_type = "public";
                     document.getElementById("uploadImage").value = "";
                     document.getElementById("uploadPreview").src = "/img/placeholder-img.jpg";
                     this.$q.loading.hide();

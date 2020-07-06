@@ -56,7 +56,16 @@ export default {
         },
         async deleteCompany(index)
         {
-            let asd = await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id});
+            this.$q.dialog({
+            title: 'Confirm',
+            message: `Are you sure to delete this company?`,
+            color: 'negative',
+            ok: `Yes, I'm sure`,
+            cancel: true,
+            default: 'cancel'   // <<<<
+            }).onOk(async () =>  await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id} ));
+            
+            // let asd = await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id});
         }
     }
 
