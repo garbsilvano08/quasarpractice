@@ -4,7 +4,7 @@
             <div class="header__title">ADD STAFF</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
-                <q-btn class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
+                <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
             </div>
         </div>
         <div class="frontdesk__container content__grid-2x2">
@@ -46,54 +46,54 @@
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">ID Type</div>
-                                    <q-input v-model="id_class.id_info.id_num" outlined dense></q-input>
+                                    <q-input v-model="staff_class.id_info.id_num" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Firstname -->
                             <div class="content__input">
                                 <div class="content__input-label">First Name</div>
-                                <q-input v-model="id_class.id_info.given_name" outlined dense></q-input>
+                                <q-input v-model="staff_class.id_info.given_name" outlined dense></q-input>
                             </div>
                             <!-- Lastname -->
                             <div class="content__input">
                                 <div class="content__input-label">Last Name</div>
-                                <q-input v-model="id_class.id_info.last_name" outlined dense></q-input>
+                                <q-input v-model="staff_class.id_info.last_name" outlined dense></q-input>
                             </div>
                             <!-- Middlename -->
                             <div class="content__input">
                                 <div class="content__input-label">Middle Name</div>
-                                <q-input v-model="id_class.id_info.middle_name" outlined dense></q-input>
+                                <q-input v-model="staff_class.id_info.middle_name" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
                                     <div class="content__select-label">Gender</div>
-                                    <q-select v-model="id_class.id_info.gender" :options="options_gender" outlined dense></q-select>
+                                    <q-select v-model="staff_class.id_info.gender" :options="options_gender" outlined dense></q-select>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Birth Date</div>
-                                    <q-input v-model="id_class.id_info.birthday" outlined dense></q-input>
+                                    <q-input v-model="staff_class.id_info.birthday" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->
                             <div class="content__input">
                                 <div class="content__input-label">Nationality</div>
-                                <q-input v-model="id_class.id_info.nationality" outlined dense></q-input>
+                                <q-input v-model="staff_class.id_info.nationality" outlined dense></q-input>
                             </div>
                             <!-- Home Address -->
                             <div class="content__input">
                                 <div class="content__input-label">Home Address</div>
-                                <q-input  v-model="id_class.id_info.address" outlined dense></q-input>
+                                <q-input  v-model="staff_class.id_info.address" outlined dense></q-input>
                             </div>
                             <!-- Contact -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
                                     <div class="content__input-label">Contact Number</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input type="number" v-model="staff_class.id_info.contact_num" outlined dense></q-input>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Emergency Contact Number</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input type="number" v-model="staff_class.id_info.emergency_num" outlined dense></q-input>
                                 </div>
                             </div>
                         </div>
@@ -106,11 +106,11 @@
                             <div class="content__title">Employment Information</div>
                             <div class="content__select">
                                 <div class="content__select-label">Tag a Company</div>
-                                <q-select v-model="select__company" :options="options_company" outlined dense></q-select>
+                                <q-select v-model="staff_class.company_details.company_name" :options="options_company" outlined dense></q-select>
                             </div>
                             <div class="content__input">
                                 <div class="content__input-label">Position</div>
-                                <q-input v-model="position_input" outlined dense></q-input>
+                                <q-select v-model="staff_class.company_details.position" :options="options_position" outlined dense></q-select>
                             </div>
                         </div>
                     </div>
@@ -177,6 +177,11 @@ import "./Frontdesk.scss";
 // Classes
 import OpticalReadClass from '../../../classes/OpticalReadClass';
 
+// Refferences
+import position_reference from '../../../references/position';
+
+import { postAddStaff } from '../../../references/url';
+
 export default {
     data:() =>
     ({
@@ -184,13 +189,14 @@ export default {
         id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
         open_camera: false,
         profile_img_dialog: false,
-        select__id_type: 'PIC',
+        select__id_type: 'Drivers License',
         select__gender: '',
         select__visit_purpose: '',
         select__company: '',
         options_id: [
             'Drivers License', 'Postal ID' , 'PIC'
         ],
+        options_position: position_reference,
         options_gender: [
             'Male' , 'Female'
         ],
@@ -198,9 +204,9 @@ export default {
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
         ],
         options_company: [
-            'Super Admin', 'Company', 'Sub Company'
+            'Company 1', 'Company 2', 'Company 3'
         ],
-        id_class: new OpticalReadClass(),
+        staff_class: new OpticalReadClass(),
         is_done: false
     }),
     watch:
@@ -226,14 +232,14 @@ export default {
                 // console.log(val);
 
             }
-        }
+        },
+        
     },
 
     methods:
     {
         testing(){
             var formData = new FormData();
-            console.log("Asd")
             formData.append("pass", "123456");
             formData.append("length", "50"); // number 123456 is immediately converted to a string "123456"
             formData.append("index", "0"); // number 123456 is immediately converted to a string "123456"
@@ -260,7 +266,7 @@ export default {
         async checkImage(image)
         {
             this.$q.loading.show();
-            this.is_done = await this.id_class.ocrUnirest(this.select__id_type,this.id_url)
+            this.is_done = await this.staff_class.ocrUnirest(this.select__id_type,this.id_url)
             this.$q.loading.hide();
         },
 
@@ -272,8 +278,6 @@ export default {
         async takePhoto()
         {
             var canvas = document.getElementById('canvas');
-            console.log(canvas, ';l;l;l;');
-
             var context = canvas.getContext('2d');
             var video = document.getElementById('video');
 
@@ -283,6 +287,17 @@ export default {
             this.image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 
             });
+        },
+        async submit()
+        {
+            let data = {
+                personal_information: this.staff_class.id_info,
+                company_details: this.staff_class.company_details 
+            }
+            
+            this.$q.loading.show();
+            await this.$_post(postAddStaff, data);
+            this.$q.loading.hide();
         }
     }
 }
