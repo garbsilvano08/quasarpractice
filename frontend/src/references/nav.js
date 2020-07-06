@@ -82,7 +82,7 @@ module.exports =
         sub:
         [
             { label: 'All Company', route: 'member_allcompany' },
-            { label: '+ Add Company', route: '' },
+            { label: '+ Add Company', route: 'member_addcompany' },
         ]
     },
     {

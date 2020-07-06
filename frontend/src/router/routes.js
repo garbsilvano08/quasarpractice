@@ -39,6 +39,7 @@ const routes = [
             { name: 'member_syncfromcloud', path: '/synchronization/sync-from-cloud', component: () => import('pages/Member/Synchronization/SyncFromCloud.vue') },
             // COMPANY MANAGEMENT ROUTES
             { name: 'member_allcompany', path: '/companymanagement/all-company', component: () => import('pages/Member/CompanyManagement/AllCompany.vue') },
+            { name: 'member_addcompany', path: '/companymanagement/add-company', component: () => import('pages/Member/CompanyManagement/AddCompany.vue') },
             // HEATMAP
             { name: 'member_heatmap', path: '/heatmap', component: () => import('pages/Member/Heatmap/Heatmap.vue') },
             { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },

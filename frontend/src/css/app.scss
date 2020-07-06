@@ -132,6 +132,22 @@
     }
 }
 
+// RADIO CONTAINER
+.content__radio {
+    .content__radio-title {
+        color: #233b61 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important
+    }
+
+    .content__radio-details {
+        color: rgba(#000000, .6) !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        line-height: 1.3rem !important;
+    }
+}
+
 // TABLE STYLE CSS
 .content__table {
     overflow-x: auto !important;
