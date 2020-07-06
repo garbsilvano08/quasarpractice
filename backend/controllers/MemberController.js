@@ -3,6 +3,7 @@ const multer        = require('multer');
 const path          = require('path');
 const MDB_RAW_VISITOR = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG = require('../models/MDB_RAW_PASS_LOG');
+const MDB_COMPANIES = require('../models/MDB_COMPANIES');
 const Client                    = require("@googlemaps/google-maps-services-js").Client;
 const client                    = new Client({});
 const axios = require('axios');
@@ -124,5 +125,15 @@ module.exports =
     async getVisitors(req, res)
     {
         return res.send(await new MDB_RAW_VISITOR().docs());
+    },
+    async addCompany(req, res)
+    {
+        await new MDB_COMPANIES().add(
+            {
+                company_info: req.body.company_info
+            });
+    
+            return res.send(true);
+        
     }
 }
