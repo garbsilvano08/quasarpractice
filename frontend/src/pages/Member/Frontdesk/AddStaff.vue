@@ -46,54 +46,54 @@
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">ID Type</div>
-                                    <q-input v-model="staff_class.id_info.id_num" outlined dense></q-input>
+                                    <q-input v-model="staff_class.id_num" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Firstname -->
                             <div class="content__input">
                                 <div class="content__input-label">First Name</div>
-                                <q-input v-model="staff_class.id_info.given_name" outlined dense></q-input>
+                                <q-input v-model="staff_class.given_name" outlined dense></q-input>
                             </div>
                             <!-- Lastname -->
                             <div class="content__input">
                                 <div class="content__input-label">Last Name</div>
-                                <q-input v-model="staff_class.id_info.last_name" outlined dense></q-input>
+                                <q-input v-model="staff_class.last_name" outlined dense></q-input>
                             </div>
                             <!-- Middlename -->
                             <div class="content__input">
                                 <div class="content__input-label">Middle Name</div>
-                                <q-input v-model="staff_class.id_info.middle_name" outlined dense></q-input>
+                                <q-input v-model="staff_class.middle_name" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
                                     <div class="content__select-label">Gender</div>
-                                    <q-select v-model="staff_class.id_info.gender" :options="options_gender" outlined dense></q-select>
+                                    <q-select v-model="staff_class.gender" :options="options_gender" outlined dense></q-select>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Birth Date</div>
-                                    <q-input v-model="staff_class.id_info.birthday" outlined dense></q-input>
+                                    <q-input v-model="staff_class.birthday" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->
                             <div class="content__input">
                                 <div class="content__input-label">Nationality</div>
-                                <q-input v-model="staff_class.id_info.nationality" outlined dense></q-input>
+                                <q-input v-model="staff_class.nationality" outlined dense></q-input>
                             </div>
                             <!-- Home Address -->
                             <div class="content__input">
                                 <div class="content__input-label">Home Address</div>
-                                <q-input  v-model="staff_class.id_info.address" outlined dense></q-input>
+                                <q-input  v-model="staff_class.home_address" outlined dense></q-input>
                             </div>
                             <!-- Contact -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
                                     <div class="content__input-label">Contact Number</div>
-                                    <q-input type="number" v-model="staff_class.id_info.contact_num" outlined dense></q-input>
+                                    <q-input type="number" v-model="staff_class.contact_number" outlined dense></q-input>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Emergency Contact Number</div>
-                                    <q-input type="number" v-model="staff_class.id_info.emergency_num" outlined dense></q-input>
+                                    <q-input type="number" v-model="staff_class.emergency_contact" outlined dense></q-input>
                                 </div>
                             </div>
                         </div>
@@ -106,11 +106,11 @@
                             <div class="content__title">Employment Information</div>
                             <div class="content__select">
                                 <div class="content__select-label">Tag a Company</div>
-                                <q-select v-model="staff_class.company_details.company_name" :options="options_company" outlined dense></q-select>
+                                <q-select v-model="staff_class.company_name" :options="options_company" outlined dense></q-select>
                             </div>
                             <div class="content__input">
                                 <div class="content__input-label">Position</div>
-                                <q-select v-model="staff_class.company_details.position" :options="options_position" outlined dense></q-select>
+                                <q-select v-model="staff_class.position" :options="options_position" outlined dense></q-select>
                             </div>
                         </div>
                     </div>
@@ -194,7 +194,7 @@ export default {
         select__visit_purpose: '',
         select__company: '',
         options_id: [
-            'Drivers License', 'Postal ID' , 'PIC'
+            'Drivers License' , 'PIC'
         ],
         options_position: position_reference,
         options_gender: [
@@ -291,8 +291,18 @@ export default {
         async submit()
         {
             let data = {
-                personal_information: this.staff_class.id_info,
-                company_details: this.staff_class.company_details 
+                id_num: this.staff_class.id_num,
+                last_name: this.staff_class.last_name,
+                middle_name: this.staff_class.middle_name,
+                given_name: this.staff_class.given_name,
+                gender: this.staff_class.gender,
+                birthday: this.staff_class.birthday,
+                nationality: this.staff_class.nationality,
+                home_address: this.staff_class.home_address,
+                contact_number: this.staff_class.contact_number,
+                emergency_contact: this.staff_class.emergency_contact,
+                company_name: this.staff_class.company_name,
+                position: this.staff_class.position
             }
             
             this.$q.loading.show();

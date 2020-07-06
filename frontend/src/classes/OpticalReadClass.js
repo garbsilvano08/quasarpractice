@@ -1,7 +1,11 @@
 import Tesseract from 'tesseract.js';
 import axios from 'axios';
 import { Notify } from 'quasar';
-import { postAddStaff } from '../references/url';
+import { postAddBlacklist } from '../references/url';
+
+// Globals
+import methods from "../mixins/global_mixins";
+const globals = methods.methods;
 
 // var unirest = require("unirest");
 // var req = unirest("POST", "https://microsoft-computer-vision3.p.rapidapi.com/ocr");
@@ -10,20 +14,38 @@ export default class OpticalReadClass
 {
     constructor()
     {
+        this.last_name = ''
+        this.middle_name = ''
+        this.given_name = ''
+        this.id_num = ''
+        this.gender = ''
+        this.birthday = ''
+        this.nationality = ''
+        this.home_address = ''
+        this.contact_number = ''
+        this.emergency_contact = ''
+        this.company_name = ''
+
+        // For Adding Staff
+        this.position = '',
+
+        // For Adding Blacklist
+        this.reason_blacklist = ''
+
         this.id_words = []
         this.converted_image = []
-        this.id_info = {
-            address: '',
-            last_name: '',
-            given_name: '',
-            middle_name: '',
-            gender: 'Male',
-            birthday: '',
-            nationality: '',
-            id_num: '',
-            contact_num: '',
-            emergency_num: ''
-        }
+        // this = {
+        //     address: '',
+        //     last_name: '',
+        //     given_name: '',
+        //     middle_name: '',
+        //     gender: 'Male',
+        //     birthday: '',
+        //     nationality: '',
+        //     id_num: '',
+        //     contact_num: '',
+        //     emergency_num: ''
+        // }
         this.company_details = {
             company_name: '',
             position: '',
@@ -31,18 +53,16 @@ export default class OpticalReadClass
     }
     eraseAll()
     {
-        this.id_info = {
-            address: '',
-            last_name: '',
-            given_name: '',
-            middle_name: '',
-            gender: 'Male',
-            birthday: '',
-            nationality: '',
-            id_num: '',
-            contact_num: '',
-            emergency_num: ''
-        }
+        this.address = ''
+        this.last_name = ''
+        this.given_name = ''
+        this.middle_name = ''
+        this.gender = 'Male'
+        this.birthday = ''
+        this.nationality = ''
+        this.id_num = ''
+        this.contact_number = ''
+        this.emergency_number = ''
     }
 
     getIDInformation(type, image_text)
@@ -60,17 +80,18 @@ export default class OpticalReadClass
                 return this.getPICInfo(image_text);
         }
     }
+
     getPICInfo(image)
     {
         if (image.length == 5)
         {
-            this.id_info.last_name = image[2].lines.length === 2 ? image[2].lines[0].words[0].text : image[2].lines[1].words[0].text
-            this.id_info.given_name = image[2].lines.length === 2 ? image[2].lines[1].words[0].text : image[2].lines[1].words[0].text
-            this.id_info.middle_name = image[3].lines[0].words.length > 1 ? image[3].lines[0].words[image[3].lines[0].words.length - 1].text : image[3].lines[0].words[0].text
-            this.id_info.id_num = image[3].lines[1].words.length > 1 ? image[3].lines[1].words[image[3].lines[2].words.length - 1].text : image[3].lines[1].words[0].text
-            this.id_info.birthday = image.length == 5 ? image[4].lines[0].words[0].text : ''
-            this.id_info.gender = 'Male'
-            this.id_info.address = ''
+            this.last_name = image[2].lines.length === 2 ? image[2].lines[0].words[0].text : image[2].lines[1].words[0].text
+            this.given_name = image[2].lines.length === 2 ? image[2].lines[1].words[0].text : image[2].lines[1].words[0].text
+            this.middle_name = image[3].lines[0].words.length > 1 ? image[3].lines[0].words[image[3].lines[0].words.length - 1].text : image[3].lines[0].words[0].text
+            this.id_num = image[3].lines[1].words.length > 1 ? image[3].lines[1].words[image[3].lines[2].words.length - 1].text : image[3].lines[1].words[0].text
+            this.birthday = image.length == 5 ? image[4].lines[0].words[0].text : ''
+            this.gender = 'Male'
+            this.address = ''
             
             Notify.create({
                 color: 'green',
@@ -88,16 +109,13 @@ export default class OpticalReadClass
 
     getPostalIDInfo(image)
     {
-        console.log(image);
         if (image.length == 5 || image.length == 4)
         {
-            // this.id_info.last_name = image[0].lines[5].words[0]
-            // this.id_info.given_name = this.id_info.given_name +image[0].lines[5].words[]
-            this.id_info.middle_name = ''
-            this.id_info.id_num = ''
-            this.id_info.birthday = ''
-            this.id_info.gender = 'Male'
-            this.id_info.address = ''
+            this.middle_name = ''
+            this.id_num = ''
+            this.birthday = ''
+            this.gender = 'Male'
+            this.address = ''
             
             Notify.create({
                 color: 'green',
@@ -111,16 +129,6 @@ export default class OpticalReadClass
                 message: 'Please try again'
             }); 
         }
-        // let person_info = {}
-        // person_info.name = image[5] + "," + " " + image[8] + " " + image[11]
-        // let address = image[14] + " " + image[15] + " " + image[16] + " " + image[17]
-        // person_info.address = address.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')
-        // let other_data = (image[12].replace(/[^a-zA-Z0-9]/g, ' ')).split(" ");
-        // let data = image[10].split(" ")
-        // person_info.birthdate = other_data[7] + "-" + other_data[8] + "-" + other_data[9] 
-        // person_info.gender = other_data[6].startsWith('F') ? 'Female' : 'Male'
-        // person_info.id_num = image[4]
-        // return person_info
     }
 
     getDriversLicenseInfo(image)
@@ -129,27 +137,27 @@ export default class OpticalReadClass
         
         if (image.length == 4)
         {
-            this.id_info.last_name = image[0].lines[5].words[0].text.replace(/[^a-zA-Z0-9]/g, ' ')
+            this.last_name = image[0].lines[5].words[0].text.replace(/[^a-zA-Z0-9]/g, ' ')
             for (let index = 1; index < image[0].lines[5].words.length - 1; index++) {
-                this.id_info.given_name = this.id_info.given_name + image[0].lines[5].words[index].text + (index == image[0].lines[5].words.length - 1 ? " " : '')   
+                this.given_name = this.given_name + image[0].lines[5].words[index].text + (index == image[0].lines[5].words.length - 1 ? " " : '')   
             }
-            this.id_info.middle_name = image[0].lines[5].words[image[0].lines[5].words.length -1].text
-            this.id_info.id_num = ''
+            this.middle_name = image[0].lines[5].words[image[0].lines[5].words.length -1].text
+            this.id_num = ''
             
-            this.id_info.gender = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[0].text : image[0].lines[10].words[0].text
-            this.id_info.gender = this.id_info.gender.startsWith('M') ? 'Male' : 'Female'
-            this.id_info.nationality = image[0].lines[10].words.length == 2 ? image[0].lines[9].words[0].text.replace(/[^a-zA-Z]/g, '') : image[0].lines[10].words[0].text.replace(/[^a-zA-Z]/g, '')
-            this.id_info.birthday = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[1].text.replace(/[^/0-9]/g, ' ') : image[0].lines[10].words[1].text.replace(/[^/0-9]/g, ' ')
+            this.gender = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[0].text : image[0].lines[10].words[0].text
+            this.gender = this.gender.startsWith('M') ? 'Male' : 'Female'
+            this.nationality = image[0].lines[10].words.length == 2 ? image[0].lines[9].words[0].text.replace(/[^a-zA-Z]/g, '') : image[0].lines[10].words[0].text.replace(/[^a-zA-Z]/g, '')
+            this.birthday = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[1].text.replace(/[^/0-9]/g, ' ') : image[0].lines[10].words[1].text.replace(/[^/0-9]/g, ' ')
             for (let address = 10; address < image[0].lines.length; address++) {
                 if (image[0].lines[address].words.length > 4)
                 {
                     for (let word of image[0].lines[address].words) {
-                        this.id_info.address = this.id_info.address + word.text + " "
+                        this.address = this.address + word.text + " "
                     }
                     if ((address + 1) <= image[0].lines.length - 1 && image[0].lines[address + 1].words < 3)
                     {
                         for (let town of image[0].lines[address + 1].words) {
-                            this.id_info.address = this.id_info.address + town.text + " "
+                            this.address = this.address + town.text + " "
                         }
                     }
                 }
@@ -197,13 +205,23 @@ export default class OpticalReadClass
                 
     }
     
-    async submit(token)
+    async submit()
     {
-        console.log(this.$token, 'iyuiuyuiui');
+       let data = {
+            last_name:          this.last_name,
+            middle_name:        this.middle_name,
+            given_name:         this.given_name,
+            gender:             this.gender,
+            birthday:           this.birthday,
+            nationality:        this.nationality,
+            home_address:       this.home_address,
+            contact_number:     this.contact_number,
+            emergency_contact:  this.emergency_contact,
+            company_name:       this.company_name,
+            reason_blacklist:   this.reason_blacklist
+        }
         
-       
-
-        // return res;
+        await globals.$_post(postAddBlacklist, data);
     }
 
     checkImage(image)

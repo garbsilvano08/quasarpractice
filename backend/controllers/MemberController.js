@@ -134,9 +134,18 @@ module.exports =
         {
             await new MDB_ADD_STAFF().add(
             {
-                personal_information: req.body.personal_information,
-                company_details: req.body.company_details,
-                name: req.body.personal_information.given_name + " " + req.body.personal_information.middle_name + " " + req.body.personal_information.last_name
+                id_num: req.body.id_num,
+                last_name: req.body.last_name,
+                middle_name: req.body.middle_name,
+                given_name: req.body.given_name,
+                gender: req.body.gender,
+                birthday: req.body.birthday,
+                nationality: req.body.nationality,
+                home_address: req.body.home_address,
+                contact_number: req.body.contact_number,
+                emergency_contact: req.body.emergency_contact,
+                company_name: req.body.company_name,
+                position: req.body.position
             });
     
             return res.send(true);
@@ -151,9 +160,17 @@ module.exports =
     {
         await new MDB_ADD_BLACKLIST().add(
         {
-            personal_information: req.body.personal_information,
-            company_details: req.body.company_details,
-            name: req.body.personal_information.given_name + " " + req.body.personal_information.middle_name + " " + req.body.personal_information.last_name
+            last_name: req.body.last_name,
+            middle_name: req.body.middle_name,
+            given_name: req.body.given_name,
+            gender: req.body.gender,
+            birthday: req.body.birthday,
+            nationality: req.body.nationality,
+            home_address: req.body.home_address,
+            contact_number: req.body.contact_number,
+            emergency_contact: req.body.emergency_contact,
+            company_name: req.body.company_name,
+            reason_blacklist: req.body.reason_blacklist
         });
 
         return res.send(true);
