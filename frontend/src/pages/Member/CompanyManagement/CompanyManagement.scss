@@ -45,6 +45,17 @@
 
             .company-management__info-content {
                 line-height: 1.3rem;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+
+                .company-management__info-btn {
+                    margin-left: auto;
+
+                    .q-btn {
+                        color: rgba(#000000, .4);
+                    }
+                }
 
                 .company-management__info-name {
                     color: #233b61;
