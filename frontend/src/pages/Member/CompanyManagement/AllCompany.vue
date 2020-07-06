@@ -11,17 +11,17 @@
             </div>
         </div>
         <div class="company-management__container content__grid-3x3">
-            <div class="company-management__content content__card">
+            <div v-for="(company, i) in this.company_list.data" :key="i"  class="company-management__content content__card">
                 <div class="company-management__info-logo">
-                    <img src="https://1.bp.blogspot.com/-3SfIxwKwBHU/WtBgYxhabXI/AAAAAAAADdU/FcfJHnvCNisKZ-zgMbm_pY4U-iqUmRWzwCLcBGAs/s1600/myphone%2Bmya8%2Bdtv.jpg">
+                    <img :src=getImgUrl(company.company_info.logo_filename)>
                 </div>
                 <div class="company-management__info-content">
                     <div class="company-management__info-btn">
-                        <q-btn flat dense rounded :ripple="false" icon="mdi-delete"></q-btn>
+                        <q-btn flat dense rounded :ripple="false" icon="mdi-delete" @click="deleteCompany(i)"></q-btn>
                         <q-btn flat dense rounded :ripple="false" icon="mdi-square-edit-outline"></q-btn>
                     </div>
                     <div class="company-management__info-name">
-                        MySolid Tech & Devices Corp.
+                        {{company.company_info.company_name}}
                     </div>
                     <div class="company-management__info-number">
                         Owned 2 Establishment(s)
@@ -32,90 +32,33 @@
                 </div>
             </div>
 
-            <div class="company-management__content content__card">
-                <div class="company-management__info-logo">
-                    <img src="https://www.smsupermalls.com/data/uploads/2019/02/SM-FB-OG.jpg">
-                </div>
-                <div class="company-management__info-content">
-                    <div class="company-management__info-btn">
-                        <q-btn flat dense rounded :ripple="false" icon="mdi-delete"></q-btn>
-                        <q-btn flat dense rounded :ripple="false" icon="mdi-square-edit-outline"></q-btn>
-                    </div>
-                    <div class="company-management__info-name">
-                        SM Super Malls
-                    </div>
-                    <div class="company-management__info-number">
-                        Owned 3 Establishment(s)
-                    </div>
-                    <div class="company-management__info-people">
-                        5 People Registered Here
-                    </div>
-                </div>
-            </div>
-
-            <div class="company-management__content content__card">
-                <div class="company-management__info-logo">
-                    <img src="https://www.philretailers.com/wp-content/uploads/2015/07/Ayala_Malls_Logo.png">
-                </div>
-                <div class="company-management__info-content">
-                    <div class="company-management__info-btn">
-                        <q-btn flat dense rounded :ripple="false" icon="mdi-delete"></q-btn>
-                        <q-btn flat dense rounded :ripple="false" icon="mdi-square-edit-outline"></q-btn>
-                    </div>
-                    <div class="company-management__info-name">
-                        Ayala Malls
-                    </div>
-                    <div class="company-management__info-number">
-                        Owned 3 Establishment(s)
-                    </div>
-                    <div class="company-management__info-people">
-                        200 People Registered Here
-                    </div>
-                </div>
-            </div>
-
-            <!-- <div class="company-management__content content__card">
-                <div class="company-management__info-logo">
-                    <img src="https://www.smsupermalls.com/data/uploads/2019/02/SM-FB-OG.jpg">
-                </div>
-                <div class="company-management__info-content">
-                    <div class="company-management__info-name">
-                        SM Super Malls
-                    </div>
-                    <div class="company-management__info-number">
-                        Owned 3 Establishment(s)
-                    </div>
-                    <div class="company-management__info-people">
-                        5 People Registered Here
-                    </div>
-                </div>
-            </div>
-
-            <div class="company-management__content content__card">
-                <div class="company-management__info-logo">
-                    <img src="https://www.philretailers.com/wp-content/uploads/2015/07/Ayala_Malls_Logo.png">
-                </div>
-                <div class="company-management__info-content">
-                    <div class="company-management__info-name">
-                        Ayala Malls
-                    </div>
-                    <div class="company-management__info-number">
-                        Owned 3 Establishment(s)
-                    </div>
-                    <div class="company-management__info-people">
-                        200 People Registered Here
-                    </div>
-                </div>
-            </div> -->
-
         </div>
     </div>
 </template>
 
 <script>
 import "./CompanyManagement.scss";
+import { postGetCompanies }                        from '../../../references/url';
+import { postDeleteCompany }                        from '../../../references/url';
 
 export default {
+    data: () =>
+    ({
+        company_list : [],
+    }),
+    async mounted(){
+        this.company_list = await this.$_post(postGetCompanies);
+    },
+    methods:{
+        getImgUrl(path){
+
+            return "http://localhost:4001/images/"+path;
+        },
+        async deleteCompany(index)
+        {
+            let asd = await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id});
+        }
+    }
 
 }
 </script>

@@ -167,5 +167,13 @@ module.exports =
         });
 
         return res.send(true);
+    },
+    async getCompanies(req, res)
+    {
+        return res.send(await new MDB_COMPANIES().docs());
+    },
+    async deleteCompany(req, res)
+    {
+        await new MDB_COMPANIES().delete(req.body.id);
     }
 }

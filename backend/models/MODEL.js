@@ -51,6 +51,21 @@ module.exports = class MODEL {
         }
     }
 
+    async delete(id = {}){
+        try {
+            const collection     = this.collection;
+
+            // confirms the insertion
+            const modelRes  = await collection.deleteOne({ "_id" : id });
+
+            return modelRes;
+            
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    }
+
     async update(_id, options = {}) {
         try {
             const collection     = this.collection;

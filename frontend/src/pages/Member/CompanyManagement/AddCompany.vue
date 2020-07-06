@@ -108,11 +108,14 @@ export default {
                 else if (this.input_location.length <= 2 ){
                     throw new Error("Location is required.");
                 }
+                else if (document.getElementById("uploadImage").files.length <= 0 ){
+                    throw new Error("Logo is required.");
+                }
                 else{
                     const formData = new FormData();
                     formData.append('image',document.getElementById("uploadImage").files[0] ); 
                     let res = await this.$_post_file(postAddPerson, formData);
-                    await this.$_post('member/add/company', { company_info: { company_name: this.input_company_name,  location: this.input_location , company_type:this.company_type, company_logo: res.path} });
+                    await this.$_post('member/add/company', { company_info: { company_name: this.input_company_name,  location: this.input_location , company_type:this.company_type, company_logo: res.path, logo_filename: res.filename} });
                     this.input_company_name = "";
                     this.input_location = "";
                     this.company_type = this.company_type = "";
