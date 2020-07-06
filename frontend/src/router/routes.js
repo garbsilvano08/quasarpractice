@@ -44,6 +44,8 @@ const routes = [
             // HEATMAP
             { name: 'member_heatmap', path: '/heatmap', component: () => import('pages/Member/Heatmap/Heatmap.vue') },
             { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },
+            // PERSONAL INFORMATION
+            { name: 'member_personal-information', path: '/accountdirectory/personal_information', component: () => import('pages/Member/AccountDirectory/PersonalInformation/PersonalInformation.vue') },
         ]
     },
     {

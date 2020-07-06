@@ -3,8 +3,8 @@ const multer            = require('multer');
 const path              = require('path');
 const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG  = require('../models/MDB_RAW_PASS_LOG');
-const MDB_ADD_STAFF     = require('../models/MDB_ADD_STAFF');
-const MDB_ADD_BLACKLIST = require('../models/MDB_ADD_BLACKLIST');
+const MDB_STAFF     = require('../models/MDB_STAFF');
+const MDB_BLACKLIST = require('../models/MDB_BLACKLIST');
 const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
 const Client            = require("@googlemaps/google-maps-services-js").Client;
 const client            = new Client({});
@@ -142,7 +142,7 @@ module.exports =
     {
         try
         {
-            await new MDB_ADD_STAFF().add(
+            await new MDB_STAFF().add(
             {
                 id_num: req.body.id_num,
                 last_name: req.body.last_name,
@@ -168,7 +168,7 @@ module.exports =
 
     async addNewBlacklist(req, res)
     {
-        await new MDB_ADD_BLACKLIST().add(
+        await new MDB_BLACKLIST().add(
         {
             last_name: req.body.last_name,
             middle_name: req.body.middle_name,

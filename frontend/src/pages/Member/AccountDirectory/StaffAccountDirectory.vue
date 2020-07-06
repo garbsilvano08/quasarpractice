@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr @click="checkAccount()" >
                             <td class="td-active">Adda M. Hope</td>
                             <td>F</td>
                             <td>22</td>
@@ -33,7 +33,7 @@
                             <td>6/24/2020 8:00 AM</td>
                             <td class="td-green">36°C</td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td class="td-active">Adda M. Hope</td>
                             <td>F</td>
                             <td>22</td>
@@ -48,7 +48,7 @@
                             <td>111 San Jose del Monte</td>
                             <td>6/24/2020 8:00 AM</td>
                             <td class="td-red">38.2°C</td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -75,6 +75,20 @@ export default {
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
-    })
+    }),
+    methods:
+    {
+        checkAccount()
+        {
+            this.$router.push({
+                name: "member_personal-information",
+            })
+        }
+    },
+    created()
+    {
+        
+    }
+
 }
 </script>
