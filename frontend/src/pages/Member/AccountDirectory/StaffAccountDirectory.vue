@@ -25,30 +25,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr @click="checkAccount()" >
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-green">36°C</td>
+                        <tr v-for="(staff, index) in this.staff_list.data" :key="index">
+                            <td class="td-active" @click="checkAccount(staff)">{{ staff.given_name + " " + staff.middle_name + " " + staff.last_name}}</td>
+                            <td>{{staff.gender}}</td>
+                            <td>{{new Date().getFullYear() - new Date(staff.birthday).getFullYear()}}</td>
+                            <td>{{staff.home_address}}</td>
+                            <td>{{staff.last_scanned ? staff.last_scanned : 'No Logs Yet'}}</td>
+                            <td class="td-green">{{staff.last_temperature ? staff.last_temperature : 'No Temperature Logs Yet'}}</td>
                         </tr>
-                        <!-- <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-green">36°C</td>
-                        </tr>
-                        <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-red">38.2°C</td>
-                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -61,6 +45,9 @@ import "./AccountDirectory.scss";
 
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
+
+// References
+import { postGetStaff } from '../../../references/url';
 
 export default {
     components: {
@@ -75,19 +62,24 @@ export default {
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
+        staff_list: []
     }),
     methods:
     {
-        checkAccount()
+        checkAccount(account_info)
         {
+            account_info.type = 'Staff'
             this.$router.push({
                 name: "member_personal-information",
+                params: {
+                    account_info: account_info
+                }
             })
         }
     },
-    created()
+    async mounted()
     {
-        
+        this.staff_list = await this.$_post(postGetStaff);
     }
 
 }

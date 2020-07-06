@@ -72,7 +72,7 @@
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Birth Date</div>
-                                    <q-input v-model="staff_class.birthday" outlined dense></q-input>
+                                    <q-input type="date" v-model="staff_class.birthday" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->
@@ -302,7 +302,8 @@ export default {
                 contact_number: this.staff_class.contact_number,
                 emergency_contact: this.staff_class.emergency_contact,
                 company_name: this.staff_class.company_name,
-                position: this.staff_class.position
+                position: this.staff_class.position,
+                is_active: true
             }
             
             this.$q.loading.show();

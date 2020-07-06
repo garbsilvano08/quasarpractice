@@ -149,13 +149,15 @@ module.exports =
                 middle_name: req.body.middle_name,
                 given_name: req.body.given_name,
                 gender: req.body.gender,
-                birthday: req.body.birthday,
+                birthday: new Date(req.body.birthday),
                 nationality: req.body.nationality,
                 home_address: req.body.home_address,
                 contact_number: req.body.contact_number,
                 emergency_contact: req.body.emergency_contact,
                 company_name: req.body.company_name,
-                position: req.body.position
+                position: req.body.position,
+                date_created: new Date(),
+                is_active: true
             });
     
             return res.send(true);
@@ -174,13 +176,15 @@ module.exports =
             middle_name: req.body.middle_name,
             given_name: req.body.given_name,
             gender: req.body.gender,
-            birthday: req.body.birthday,
+            birthday: new Date(req.body.birthday),
             nationality: req.body.nationality,
             home_address: req.body.home_address,
             contact_number: req.body.contact_number,
             emergency_contact: req.body.emergency_contact,
             company_name: req.body.company_name,
-            reason_blacklist: req.body.reason_blacklist
+            reason_blacklist: req.body.reason_blacklist,
+            date_blacklisted: new Date(),
+            is_active: true
         });
 
         return res.send(true);
@@ -192,5 +196,21 @@ module.exports =
     async deleteCompany(req, res)
     {
         await new MDB_COMPANIES().delete(req.body.id);
-    }
+    },
+    async getStaffs(req, res)
+    {
+        return res.send(await new MDB_STAFF().docs({is_active: true}));
+    },
+
+    async getBlacklists(req, res)
+    {
+        return res.send(await new MDB_BLACKLIST().docs({is_active: true}));
+    },
+    
+    async removeAccount(req, res)
+    {
+        if (req.body.type == 'Staff') return res.send(await new MDB_STAFF().update(req.body.id, {is_active: false}));
+        else return res.send(await new MDB_BLACKLIST().update(req.body.id, {is_active: false}));
+    },
+    
 }

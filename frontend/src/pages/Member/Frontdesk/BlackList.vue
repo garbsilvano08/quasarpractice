@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Birth Date</div>
-                                    <q-input v-model="blacklist_class.birthday" outlined dense></q-input>
+                                    <q-input type="date" v-model="blacklist_class.birthday" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->

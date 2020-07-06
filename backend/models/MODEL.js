@@ -22,10 +22,10 @@ module.exports = class MODEL {
         }
     }
 
-    async docs () {
+    async docs (data = {}) {
         try {
             const collection     = this.collection;
-            const res       = await collection.find();
+            const res       = await collection.find(data);
 
             return res;
         } catch (error) {
@@ -68,6 +68,8 @@ module.exports = class MODEL {
 
     async update(_id, options = {}) {
         try {
+            console.log(_id);
+            
             const collection     = this.collection;
             
             const modelRes  = await collection.findByIdAndUpdate({_id}, options, {new: true});

@@ -3,7 +3,7 @@
         <div class="personal-info__header">
             <q-btn class="btn-back btn-primary" flat dense no-caps label="Back"></q-btn>
             <div class="personal-info__header-btn">
-                <q-btn class="btn-outline btn-remove" flat dense no-caps label="Remove"></q-btn>
+                <q-btn @click="removeAccount()" class="btn-outline btn-remove" flat dense no-caps label="Remove"></q-btn>
                 <q-btn class="btn-primary btn-edit" flat dense no-caps label="Edit"></q-btn>
             </div>
         </div>
@@ -21,45 +21,45 @@
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">First Name:</div>
-                                <div class="personal-info__item-info">Adda</div>
+                                <div class="personal-info__item-info">{{account_info.given_name}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Last Name:</div>
-                                <div class="personal-info__item-info">Hope</div>
+                                <div class="personal-info__item-info">{{account_info.last_name}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Middle Name:</div>
-                                <div class="personal-info__item-info">Mascardo</div>
+                                <div class="personal-info__item-info">{{account_info.middle_name}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Gender:</div>
-                                <div class="personal-info__item-info">Female</div>
+                                <div class="personal-info__item-info">{{account_info.gender}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Birth Date:</div>
-                                <div class="personal-info__item-info">June 29, 1993</div>
+                                <div class="personal-info__item-info">{{ new Date(account_info.birthday).getFullYear() + "/" + new Date(account_info.birthday).getDay() + "/" +new Date(account_info.birthday).getMonth()}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Age:</div>
-                                <div class="personal-info__item-info">28</div>
+                                <div class="personal-info__item-info">{{new Date().getFullYear() - new Date(account_info.birthday).getFullYear()}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Nationality:</div>
-                                <div class="personal-info__item-info">Filipino</div>
+                                <div class="personal-info__item-info">{{account_info.nationality}}</div>
                             </div>
                         </div>
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Home Address:</div>
-                                <div class="personal-info__item-info">111 San Jose del Monte, Bulacan</div>
+                                <div class="personal-info__item-info">{{account_info.home_address}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Contact Number:</div>
-                                <div class="personal-info__item-info">0935123456</div>
+                                <div class="personal-info__item-info">{{account_info.contact_number}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Emergency Contact Number:</div>
-                                <div class="personal-info__item-info">0935123456</div>
+                                <div class="personal-info__item-info">{{account_info.emergency_contact}}</div>
                             </div>
                         </div>
                     </div>
@@ -76,15 +76,18 @@
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Company Name:</div>
-                                <div class="personal-info__item-info">Green Sun Hotel</div>
+                                <div class="personal-info__item-info">{{account_info.company}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Parent:</div>
                                 <div class="personal-info__item-info">MySolid Technologies & Devices Corp.</div>
                             </div>
                             <div class="personal-info__item">
-                                <div class="personal-info__item-label">Date Registered:</div>
-                                <div class="personal-info__item-info">June 23, 2020</div>
+                                <div class="personal-info__item-label"> {{account_info.date_created ? 'Date Registered:' : 'Date Blaclisted'}}</div>
+                                <div class="personal-info__item-info">{{ 
+                                    account_info.date_created ?
+                                    new Date(account_info.date_created).getFullYear() + "/" + new Date(account_info.date_created).getDay() + "/" +new Date(account_info.date_created).getMonth(): 
+                                    new Date(account_info.date_blacklisted).getFullYear() + "/" + new Date(account_info.date_blacklisted).getDay() + "/" +new Date(account_info.date_blacklisted).getMonth()}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Total Registered:</div>
@@ -105,15 +108,15 @@
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img src="https://philippineslifestyle.com/wp-content/uploads/philippine-drivers-license-480x320.jpg"></q-img>
+                        <q-img :src="account_info.id_img ? account_info.id_img : ''"></q-img>
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">ID Type:</div>
-                                <div class="personal-info__item-info">Driver's License</div>
+                                <div class="personal-info__item-info">{{account_info.id_type ? account_info.id_type : 'N/A'}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">ID Number:</div>
-                                <div class="personal-info__item-info">ABC-12-123456</div>
+                                <div class="personal-info__item-info">{{account_info.id_num ? account_info.id_num : 'N/A'}}</div>
                             </div>
                         </div>
                     </div>
@@ -163,8 +166,29 @@
 
 <script>
 import "./PersonalInformation.scss";
+import { postRemoveAccount } from '../../../../references/url';
 
 export default {
+     data: () => ({
+        account_info: {},
+    }),
+
+    methods:
+    {
+        async removeAccount()
+        {
+            await this.$_post(postRemoveAccount, {id: this.$route.params.account_info._id , type: this.account_info.type});
+            
+            if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory_staff"})
+            else this.$router.push({name: "member_accountdirectory_blacklist"})
+        }
+    },
+
+    async mounted()
+    {
+        this.account_info = this.$route.params.account_info
+        
+    }
 
 }
 </script>

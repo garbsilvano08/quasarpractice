@@ -33,6 +33,10 @@ app.post('/api/member/get/visitors', member_only, member_controller.getVisitors)
 app.post('/api/member/add/company',  member_only, member_controller.addCompany);
 app.post('/api/member/get/companies',  member_only, member_controller.getCompanies);
 app.post('/api/member/delete/company',  member_only, member_controller.deleteCompany);
+app.post('/api/member/get/staff',  member_only, member_controller.getStaffs);
+app.post('/api/member/remove/account',  member_only, member_controller.removeAccount);
+app.post('/api/member/get/blacklist',  member_only, member_controller.getBlacklists);
+
 
 
 app.listen({port: 4001}, (err) =>

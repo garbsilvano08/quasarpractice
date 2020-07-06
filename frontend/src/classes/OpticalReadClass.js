@@ -90,6 +90,11 @@ export default class OpticalReadClass
             this.middle_name = image[3].lines[0].words.length > 1 ? image[3].lines[0].words[image[3].lines[0].words.length - 1].text : image[3].lines[0].words[0].text
             this.id_num = image[3].lines[1].words.length > 1 ? image[3].lines[1].words[image[3].lines[2].words.length - 1].text : image[3].lines[1].words[0].text
             this.birthday = image.length == 5 ? image[4].lines[0].words[0].text : ''
+            if (this.birthday)
+            {
+                this.birthday = this.birthday.split("/")
+                this.birthday = this.birthday[2] + "-" + this.birthday[0] + "-" + this.birthday[1]
+            }
             this.gender = 'Male'
             this.address = ''
             
@@ -148,6 +153,13 @@ export default class OpticalReadClass
             this.gender = this.gender.startsWith('M') ? 'Male' : 'Female'
             this.nationality = image[0].lines[10].words.length == 2 ? image[0].lines[9].words[0].text.replace(/[^a-zA-Z]/g, '') : image[0].lines[10].words[0].text.replace(/[^a-zA-Z]/g, '')
             this.birthday = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[1].text.replace(/[^/0-9]/g, ' ') : image[0].lines[10].words[1].text.replace(/[^/0-9]/g, ' ')
+            
+            if (this.birthday)
+            {
+                this.birthday = this.birthday.split("/")
+                this.birthday = this.birthday[0] + "-" + this.birthday[1] + "-" + this.birthday[2]
+            }
+
             for (let address = 10; address < image[0].lines.length; address++) {
                 if (image[0].lines[address].words.length > 4)
                 {
