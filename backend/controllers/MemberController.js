@@ -1,12 +1,14 @@
-const AccountClass  = require('../classess/AccountClass');
-const multer        = require('multer');
-const path          = require('path');
-const MDB_RAW_VISITOR = require('../models/MDB_RAW_VISITOR');
-const MDB_RAW_PASS_LOG = require('../models/MDB_RAW_PASS_LOG');
-const MDB_COMPANIES = require('../models/MDB_COMPANIES');
-const Client                    = require("@googlemaps/google-maps-services-js").Client;
-const client                    = new Client({});
-const axios = require('axios');
+const AccountClass      = require('../classess/AccountClass');
+const multer            = require('multer');
+const path              = require('path');
+const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
+const MDB_RAW_PASS_LOG  = require('../models/MDB_RAW_PASS_LOG');
+const MDB_ADD_STAFF     = require('../models/MDB_ADD_STAFF');
+const MDB_ADD_BLACKLIST = require('../models/MDB_ADD_BLACKLIST');
+const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
+const Client            = require("@googlemaps/google-maps-services-js").Client;
+const client            = new Client({});
+const axios             = require('axios');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -134,6 +136,36 @@ module.exports =
             });
     
             return res.send(true);
-        
+    },
+
+    async addNewStaff(req, res)
+    {
+        try
+        {
+            await new MDB_ADD_STAFF().add(
+            {
+                personal_information: req.body.personal_information,
+                company_details: req.body.company_details,
+                name: req.body.personal_information.given_name + " " + req.body.personal_information.middle_name + " " + req.body.personal_information.last_name
+            });
+    
+            return res.send(true);
+        }
+        catch(e)
+        {
+
+        }
+    },
+
+    async addNewBlacklist(req, res)
+    {
+        await new MDB_ADD_BLACKLIST().add(
+        {
+            personal_information: req.body.personal_information,
+            company_details: req.body.company_details,
+            name: req.body.personal_information.given_name + " " + req.body.personal_information.middle_name + " " + req.body.personal_information.last_name
+        });
+
+        return res.send(true);
     }
 }

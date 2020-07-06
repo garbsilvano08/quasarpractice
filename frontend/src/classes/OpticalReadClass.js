@@ -1,6 +1,7 @@
 import Tesseract from 'tesseract.js';
 import axios from 'axios';
 import { Notify } from 'quasar';
+import { postAddStaff } from '../references/url';
 
 // var unirest = require("unirest");
 // var req = unirest("POST", "https://microsoft-computer-vision3.p.rapidapi.com/ocr");
@@ -22,6 +23,10 @@ export default class OpticalReadClass
             id_num: '',
             contact_num: '',
             emergency_num: ''
+        }
+        this.company_details = {
+            company_name: '',
+            position: '',
         }
     }
     eraseAll()
@@ -126,7 +131,7 @@ export default class OpticalReadClass
         {
             this.id_info.last_name = image[0].lines[5].words[0].text.replace(/[^a-zA-Z0-9]/g, ' ')
             for (let index = 1; index < image[0].lines[5].words.length - 1; index++) {
-                this.id_info.given_name = this.id_info.given_name + image[0].lines[5].words[index].text + " "    
+                this.id_info.given_name = this.id_info.given_name + image[0].lines[5].words[index].text + (index == image[0].lines[5].words.length - 1 ? " " : '')   
             }
             this.id_info.middle_name = image[0].lines[5].words[image[0].lines[5].words.length -1].text
             this.id_info.id_num = ''
@@ -190,6 +195,15 @@ export default class OpticalReadClass
             }); 
         }
                 
+    }
+    
+    async submit(token)
+    {
+        console.log(this.$token, 'iyuiuyuiui');
+        
+       
+
+        // return res;
     }
 
     checkImage(image)
