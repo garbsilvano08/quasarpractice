@@ -4,7 +4,7 @@
             <div class="header__title">BLACKLIST MANAGEMENT</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
-                <q-btn class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
+                <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
             </div>
         </div>
         <div class="frontdesk__container content__grid-2x2">
@@ -23,7 +23,7 @@
                         <div class="content__title">Blacklist Information</div>
                         <div class="content__input">
                             <div class="content__input-label">Reason for Blacklisting</div>
-                            <q-input outlined dense type="textarea"></q-input>
+                            <q-input v-model="blacklist_class.reason_blacklist" outlined dense type="textarea"></q-input>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                         <div class="frontdesk__content-info">
                             <div class="content__title">Personal Information</div>
                             <!-- ID Information -->
-                            <div class="frontdesk__content-grid">
+                            <!-- <div class="frontdesk__content-grid">
                                 <div class="content__select">
                                     <div class="content__select-label">Identification Card Type</div>
                                     <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
@@ -44,64 +44,82 @@
                                     <div class="content__input-label">ID Type</div>
                                     <q-input outlined dense></q-input>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- Firstname -->
                             <div class="content__input">
                                 <div class="content__input-label">First Name</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="blacklist_class.given_name" outlined dense></q-input>
                             </div>
                             <!-- Lastname -->
                             <div class="content__input">
                                 <div class="content__input-label">Last Name</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="blacklist_class.last_name" outlined dense></q-input>
                             </div>
                             <!-- Middlename -->
                             <div class="content__input">
                                 <div class="content__input-label">Middle Name</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="blacklist_class.middle_name" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
                                     <div class="content__select-label">Gender</div>
-                                    <q-select v-model="select__gender" :options="options_gender" outlined dense></q-select>
+                                    <q-select v-model="blacklist_class.gender" :options="options_gender" outlined dense></q-select>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Birth Date</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input type="date" v-model="blacklist_class.birthday" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->
                             <div class="content__input">
                                 <div class="content__input-label">Nationality</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="blacklist_class.nationality" outlined dense></q-input>
                             </div>
                             <!-- Home Address -->
                             <div class="content__input">
                                 <div class="content__input-label">Home Address</div>
-                                <q-input outlined dense></q-input>
+                                <q-input v-model="blacklist_class.home_address" outlined dense></q-input>
                             </div>
                             <!-- Contact Information -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
                                     <div class="content__input-label">Contact Number</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input v-model="blacklist_class.contact_number" outlined dense></q-input>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Emergency Contact Number</div>
-                                    <q-input outlined dense></q-input>
+                                    <q-input v-model="blacklist_class.emergency_contact" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Choose Type -->
                             <div class="content__select">
                                 <div class="content__select-label">Tag a Company</div>
-                                <q-select v-model="select__company" :options="options_company" outlined dense></q-select>
+                                <q-select v-model="blacklist_class.company_name" :options="options_company" outlined dense></q-select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <q-dialog v-model="open_camera">
+            <q-card>
+                <q-card-section class="row items-center q-pb-none">
+                <div class="text-h6">Capture Image</div>
+                <q-space />
+                <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+
+                <q-card-section>
+                    <div class="text-center">
+                        <video id="video" width="500" height="500" autoplay></video>
+                        <q-btn icon="camera"  id="snap"></q-btn>
+                    </div>
+                </q-card-section>
+            </q-card>
+        </q-dialog>
+
 
         <!-- UNUSUAL BODY TEMPERATURE -->
         <q-dialog v-model="profile_img_dialog">
@@ -142,9 +160,15 @@
 <script>
 import "./Frontdesk.scss";
 
+// Classes
+import OpticalReadClass from '../../../classes/OpticalReadClass';
+
+import { postAddBlacklist } from '../../../references/url';
+
 export default {
     data:() =>
     ({
+        open_camera: false,
         reason_blacklist: '',
         profile_img_dialog: false,
         select__id_type: '',
@@ -163,6 +187,38 @@ export default {
         options_company: [
             'Company 1', 'Company 2', 'Company 3'
         ],
-    })
+        blacklist_class: new OpticalReadClass()
+    }),
+
+    methods:
+    {
+        async submit()
+        {
+            let data = {
+                last_name: this.blacklist_class.last_name,
+                middle_name: this.blacklist_class.middle_name,
+                given_name: this.blacklist_class.given_name,
+                gender: this.blacklist_class.gender,
+                birthday: this.blacklist_class.birthday,
+                nationality: this.blacklist_class.nationality,
+                home_address: this.blacklist_class.home_address,
+                contact_number: this.blacklist_class.contact_number,
+                emergency_contact: this.blacklist_class.emergency_contact,
+                company_name: this.blacklist_class.company_name,
+                reason_blacklist: this.blacklist_class.reason_blacklist
+            }
+            
+            this.$q.loading.show();
+            try
+            {
+                await this.$_post(postAddBlacklist, data);
+            }
+            catch(e)
+            {
+                this.$q.dialog({ title: `Something's not quite right`, message: e.message });
+            }
+            this.$q.loading.hide();
+        }
+    }
 }
 </script>

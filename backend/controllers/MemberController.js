@@ -3,8 +3,9 @@ const multer            = require('multer');
 const path              = require('path');
 const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG  = require('../models/MDB_RAW_PASS_LOG');
-const MDB_ADD_STAFF     = require('../models/MDB_ADD_STAFF');
-const MDB_ADD_BLACKLIST = require('../models/MDB_ADD_BLACKLIST');
+const MDB_STAFF     = require('../models/MDB_STAFF');
+const MDB_BLACKLIST = require('../models/MDB_BLACKLIST');
+const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
 const Client            = require("@googlemaps/google-maps-services-js").Client;
 const client            = new Client({});
 const axios             = require('axios');
@@ -19,13 +20,16 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 10000000 },
-  fileFilter: function(req, file, cb) {
-      checkFileType(file, cb)
-  }
+const upload = multer(
+{
+    storage: storage,
+    limits: { fileSize: 10000000 },
+    fileFilter: function(req, file, cb)
+    {
+        checkFileType(file, cb)
+    }
 }).single('image');
+
 
 function checkFileType(file, cb) {
   // Allowed ext
@@ -49,22 +53,23 @@ module.exports =
     },
     async addPerson(req, res)
     { 
-      upload(req, res, async (err) => {
-        if (err) {
-            return res.send({
-                status: 'error',
-                message: err.message
-            });
-        } else {
-            if (req.file === undefined) {
+        upload(req, res, async (err) =>
+        {
+            if (err) {
                 return res.send({
                     status: 'error',
-                    message: 'Error: No File Selected!'
+                    message: err.message
                 });
             } else {
-                return res.send(req.file);
+                if (req.file === undefined) {
+                    return res.send({
+                        status: 'error',
+                        message: 'Error: No File Selected!'
+                    });
+                } else {
+                    return res.send(req.file);
+                }
             }
-        }
     })
         // let response = await new AccountClass().addingPerson();
     },
@@ -127,16 +132,36 @@ module.exports =
     {
         return res.send(await new MDB_RAW_VISITOR().docs());
     },
+    async addCompany(req, res)
+    {
+        await new MDB_COMPANIES().add(
+            {
+                company_info: req.body.company_info
+            });
+    
+            return res.send(true);
+    },
 
     async addNewStaff(req, res)
     {
         try
         {
-            await new MDB_ADD_STAFF().add(
+            await new MDB_STAFF().add(
             {
-                personal_information: req.body.personal_information,
-                company_details: req.body.company_details,
-                name: req.body.personal_information.given_name + " " + req.body.personal_information.middle_name + " " + req.body.personal_information.last_name
+                id_num: req.body.id_num,
+                last_name: req.body.last_name,
+                middle_name: req.body.middle_name,
+                given_name: req.body.given_name,
+                gender: req.body.gender,
+                birthday: new Date(req.body.birthday),
+                nationality: req.body.nationality,
+                home_address: req.body.home_address,
+                contact_number: req.body.contact_number,
+                emergency_contact: req.body.emergency_contact,
+                company_name: req.body.company_name,
+                position: req.body.position,
+                date_created: new Date(),
+                is_active: true
             });
     
             return res.send(true);
@@ -149,13 +174,47 @@ module.exports =
 
     async addNewBlacklist(req, res)
     {
-        await new MDB_ADD_BLACKLIST().add(
+        await new MDB_BLACKLIST().add(
         {
-            personal_information: req.body.personal_information,
-            company_details: req.body.company_details,
-            name: req.body.personal_information.given_name + " " + req.body.personal_information.middle_name + " " + req.body.personal_information.last_name
+            last_name: req.body.last_name,
+            middle_name: req.body.middle_name,
+            given_name: req.body.given_name,
+            gender: req.body.gender,
+            birthday: new Date(req.body.birthday),
+            nationality: req.body.nationality,
+            home_address: req.body.home_address,
+            contact_number: req.body.contact_number,
+            emergency_contact: req.body.emergency_contact,
+            company_name: req.body.company_name,
+            reason_blacklist: req.body.reason_blacklist,
+            date_blacklisted: new Date(),
+            is_active: true
         });
 
         return res.send(true);
-    }
+    },
+    async getCompanies(req, res)
+    {
+        return res.send(await new MDB_COMPANIES().docs());
+    },
+    async deleteCompany(req, res)
+    {
+        await new MDB_COMPANIES().delete(req.body.id);
+    },
+    async getStaffs(req, res)
+    {
+        return res.send(await new MDB_STAFF().docs({is_active: true}));
+    },
+
+    async getBlacklists(req, res)
+    {
+        return res.send(await new MDB_BLACKLIST().docs({is_active: true}));
+    },
+    
+    async removeAccount(req, res)
+    {
+        if (req.body.type == 'Staff') return res.send(await new MDB_STAFF().update(req.body.id, {is_active: false}));
+        else return res.send(await new MDB_BLACKLIST().update(req.body.id, {is_active: false}));
+    },
+    
 }
