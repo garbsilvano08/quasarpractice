@@ -214,7 +214,7 @@ module.exports =
     async removeAccount(req, res)
     {
         if (req.body.type == 'Staff') return res.send(await new MDB_STAFF().update(req.body.id, {is_active: false}));
-        else return res.send(await new MDB_BLACKLIST().update(req.body.id, {is_active: false}));
+        else if (req.body.type == 'Blacklist') return res.send(await new MDB_BLACKLIST().update(req.body.id, {is_active: false}));
     },
     
 }

@@ -18,6 +18,7 @@ export default class OpticalReadClass
         this.middle_name = ''
         this.given_name = ''
         this.id_num = ''
+        this.id_type = 'Drivers License'
         this.gender = ''
         this.birthday = ''
         this.nationality = ''
@@ -25,31 +26,21 @@ export default class OpticalReadClass
         this.contact_number = ''
         this.emergency_contact = ''
         this.company_name = ''
+        
+        // For Visitor
+        this.purpose_visit = ''
+        this.contact_person = ''
+        this.destination = ''
 
         // For Adding Staff
         this.position = '',
 
         // For Adding Blacklist
         this.reason_blacklist = ''
+        this.company_details = {}
 
         this.id_words = []
         this.converted_image = []
-        // this = {
-        //     address: '',
-        //     last_name: '',
-        //     given_name: '',
-        //     middle_name: '',
-        //     gender: 'Male',
-        //     birthday: '',
-        //     nationality: '',
-        //     id_num: '',
-        //     contact_num: '',
-        //     emergency_num: ''
-        // }
-        this.company_details = {
-            company_name: '',
-            position: '',
-        }
     }
     eraseAll()
     {
@@ -63,6 +54,14 @@ export default class OpticalReadClass
         this.id_num = ''
         this.contact_number = ''
         this.emergency_number = ''
+        this.company_name = ''
+        this.home_address = ''
+
+        // For Adding Staff
+        this.position = '',
+
+        // For Adding Blacklist
+        this.reason_blacklist = ''
     }
 
     getIDInformation(type, image_text)
@@ -149,8 +148,8 @@ export default class OpticalReadClass
             this.middle_name = image[0].lines[5].words[image[0].lines[5].words.length -1].text
             this.id_num = ''
             
-            this.gender = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[0].text : image[0].lines[10].words[0].text
-            this.gender = this.gender.startsWith('M') ? 'Male' : 'Female'
+            this.gender = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[0].text : 'Male'
+            this.gender = image[0].lines[10].words.length == 2 ? image[0].lines[10].words[0].text : 'Male'
             this.nationality = image[0].lines[10].words.length == 2 ? image[0].lines[9].words[0].text.replace(/[^a-zA-Z]/g, '') : image[0].lines[10].words[0].text.replace(/[^a-zA-Z]/g, '')
             this.birthday = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[1].text.replace(/[^/0-9]/g, ' ') : image[0].lines[10].words[1].text.replace(/[^/0-9]/g, ' ')
             
@@ -242,7 +241,7 @@ export default class OpticalReadClass
             color: 'red',
             message: ';lkjlkjhkhkjgjtiyjbjk'
         }); 
-        console.log(image, 'image');
+        
         for (let data of image) {
             for (let line of data.lines) {
                 for (let word of line.words) {

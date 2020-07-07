@@ -172,6 +172,7 @@
 </template>
 
 <script>
+import { Notify } from 'quasar';
 import "./Frontdesk.scss";
 
 // Classes
@@ -180,13 +181,14 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 // Refferences
 import position_reference from '../../../references/position';
 
-import { postAddStaff } from '../../../references/url';
+import { postAddStaff , postGetCompanies, postAddPerson} from '../../../references/url';
 
 export default {
     data:() =>
     ({
         position_input: '',
         id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
+        img: '',
         open_camera: false,
         profile_img_dialog: false,
         select__id_type: 'Drivers License',
@@ -203,11 +205,10 @@ export default {
         options_visit_purpose: [
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
         ],
-        options_company: [
-            'Company 1', 'Company 2', 'Company 3'
-        ],
+        options_company: [],
         staff_class: new OpticalReadClass(),
-        is_done: false
+        is_done: false,
+        company_list: [],
     }),
     watch:
     {
@@ -307,8 +308,30 @@ export default {
             }
             
             this.$q.loading.show();
-            await this.$_post(postAddStaff, data);
+            try
+            {
+                await this.$_post(postAddStaff, data);
+                this.staff_class.eraseAll()
+                Notify.create({
+                    color: 'green',
+                    message: 'Successfully added Staff'
+                }); 
+            }
+            catch(e)
+            {
+                Notify.create({
+                    color: 'red',
+                    message: 'Try again'
+                }); 
+            }
             this.$q.loading.hide();
+        }
+    },
+    async mounted()
+    {
+        this.company_list = await this.$_post(postGetCompanies);
+        for (let company of this.company_list.data) {
+            this.options_company.push(company.company_info.company_name)
         }
     }
 }

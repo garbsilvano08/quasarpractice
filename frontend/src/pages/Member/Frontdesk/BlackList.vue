@@ -158,6 +158,7 @@
 </template>
 
 <script>
+import { Notify } from 'quasar';
 import "./Frontdesk.scss";
 
 // Classes
@@ -212,10 +213,18 @@ export default {
             try
             {
                 await this.$_post(postAddBlacklist, data);
+                this.blacklist_class.eraseAll()
+                Notify.create({
+                    color: 'green',
+                    message: 'Successfully added blacklist'
+                }); 
             }
             catch(e)
             {
-                this.$q.dialog({ title: `Something's not quite right`, message: e.message });
+                Notify.create({
+                    color: 'red',
+                    message: 'Try again'
+                }); 
             }
             this.$q.loading.hide();
         }

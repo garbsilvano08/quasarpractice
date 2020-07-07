@@ -61,9 +61,6 @@
                     </table>
                 </q-tab-panel>
             </q-tab-panels>
-
-
-
         </div>
     </div>
 </template>

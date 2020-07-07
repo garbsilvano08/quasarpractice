@@ -41,6 +41,8 @@ const routes = [
             // COMPANY MANAGEMENT ROUTES
             { name: 'member_allcompany', path: '/companymanagement/all-company', component: () => import('pages/Member/CompanyManagement/AllCompany.vue') },
             { name: 'member_addcompany', path: '/companymanagement/add-company', component: () => import('pages/Member/CompanyManagement/AddCompany.vue') },
+            //NOTIFICATION
+            { name: 'member_notification', path: '/notification', component: () => import('pages/Member/Notification/Notification.vue') },
             // HEATMAP
             { name: 'member_heatmap', path: '/heatmap', component: () => import('pages/Member/Heatmap/Heatmap.vue') },
             { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },
