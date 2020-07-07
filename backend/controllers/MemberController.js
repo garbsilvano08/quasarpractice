@@ -20,13 +20,16 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 10000000 },
-  fileFilter: function(req, file, cb) {
-      checkFileType(file, cb)
-  }
+const upload = multer(
+{
+    storage: storage,
+    limits: { fileSize: 10000000 },
+    fileFilter: function(req, file, cb)
+    {
+        checkFileType(file, cb)
+    }
 }).single('image');
+
 
 function checkFileType(file, cb) {
   // Allowed ext
@@ -50,22 +53,23 @@ module.exports =
     },
     async addPerson(req, res)
     { 
-      upload(req, res, async (err) => {
-        if (err) {
-            return res.send({
-                status: 'error',
-                message: err.message
-            });
-        } else {
-            if (req.file === undefined) {
+        upload(req, res, async (err) =>
+        {
+            if (err) {
                 return res.send({
                     status: 'error',
-                    message: 'Error: No File Selected!'
+                    message: err.message
                 });
             } else {
-                return res.send(req.file);
+                if (req.file === undefined) {
+                    return res.send({
+                        status: 'error',
+                        message: 'Error: No File Selected!'
+                    });
+                } else {
+                    return res.send(req.file);
+                }
             }
-        }
     })
         // let response = await new AccountClass().addingPerson();
     },

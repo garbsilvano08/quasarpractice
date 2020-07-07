@@ -68,6 +68,7 @@ export default
             // console.log(formData.entries().next())
             console.log(this.pic[0])
             let res = await this.$_post_file(postAddPerson, formData);
+            console.log(res);
             // console.log(res.filename)    
 
             // console.log(res);
