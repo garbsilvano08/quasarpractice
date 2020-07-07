@@ -18,7 +18,7 @@
                 <div class="company-management__info-content">
                     <div class="company-management__info-btn">
                         <q-btn flat dense rounded :ripple="false" icon="mdi-delete" @click="deleteCompany(i)"></q-btn>
-                        <q-btn flat dense rounded :ripple="false" icon="mdi-square-edit-outline"></q-btn>
+                        <q-btn flat dense rounded :ripple="false" icon="mdi-square-edit-outline" @click="editCompany(i)"></q-btn>
                     </div>
                     <div class="company-management__info-name">
                         {{company.company_info.company_name}}
@@ -33,18 +33,24 @@
             </div>
 
         </div>
+    <q-dialog full-width full-height v-model="is_edit_company_dialog_open">
+        <edit-company :company_info="pasData"></edit-company>
+    </q-dialog>
     </div>
 </template>
 
 <script>
 import "./CompanyManagement.scss";
-import { postGetCompanies }                        from '../../../references/url';
+import { postGetCompanies }                         from '../../../references/url';
 import { postDeleteCompany }                        from '../../../references/url';
-
+import EditCompany                                  from './Dialogs/EditCompany';
 export default {
+    components: { EditCompany },
     data: () =>
     ({
         company_list : [],
+        is_edit_company_dialog_open: false,
+        pasData: {},
     }),
     async mounted(){
         this.company_list = await this.$_post(postGetCompanies);
@@ -63,9 +69,21 @@ export default {
             ok: `Yes, I'm sure`,
             cancel: true,
             default: 'cancel'   // <<<<
-            }).onOk(async () =>  await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id} ));
+            }).onOk(async () =>{
+              await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id} )
+              this.company_list.data.splice(index, 1);       
+              alert("deleted")      
+            });
             
             // let asd = await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id});
+        },
+        editCompany(index)
+        {
+            this.is_edit_company_dialog_open = true;
+            console.log(this.company_list.data[index]);
+            this.pasData = this.company_list.data[index];
+            return this.company_list.data[index];
+            
         }
     }
 
