@@ -15,8 +15,9 @@
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
                             <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
-                            <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="openFilemanager"></q-btn>
+                            <input style="display:none" id="face_uploadImage" accept="image/*" @change="uploadImage()" ref="face_uploader" type="file">
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="face_openFilemanager"></q-btn>
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Previous Records" @click="profile_img_dialog = true"></q-btn>
                         </div>
                     </div>
                     <!-- BODY TEMPERATURE -->
@@ -195,12 +196,37 @@
 import "./Frontdesk.scss";
 import Model from "../../../models/Model";
 
+function getBase64 (file, callback) {
+
+    const reader = new FileReader();
+
+    reader.addEventListener('load', () => callback(reader.result));
+
+    reader.readAsDataURL(file);
+}
+
+
+
+function toDataUrl(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            callback(reader.result);
+        }
+        reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+}
 // Classes
 import OpticalReadClass from '../../../classes/OpticalReadClass';
 
 export default {
     data:() =>
     ({
+        captured_pic: "",
         id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
         visitor_class: new OpticalReadClass(),
         pic: [],
@@ -235,19 +261,22 @@ export default {
             emergency_contact_number: null,
             location: null
         },
+        face_pic_path: '',
         visitor_purpose:
         {
             purpose_visit: null,
             contact_person: null,
             destination: null
         },
+        ip_address: ["192.168.1.177", "192.168.1.116"],
 
         db: new Model()
     }),
     methods:
     {
         async checkImage(image)
-        {
+        {   
+            this.$q.loading.show();
             let img = await this.getImageURL('id')
             this.personal_information.id_image = img
             // this.$q.loading.show();
@@ -327,6 +356,32 @@ export default {
                 'visitors');
 
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+
+
+                toDataUrl(this.face_pic_path, async (myBase64)=> {
+                let tabletFormData = new FormData();
+                let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
+                tabletFormData.append("pass", "123456");
+                tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ this.personal_information.first_name+" "+ this.personal_information.middle_name +""+ this.personal_information.last_name +"', 'person_id' : '"+ this.personal_information.id_number +"', 'sex' : 0, 'group_id' : 20, 'phone' : "+this.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ this.personal_information.birth_date +"', 'address' : '"+ this.personal_information.home_address +"', 'vipId': '123123', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0,}" );
+                console.log(); // myBase64 is the base64 string
+                
+                this.ip_address.forEach(async (ip) => {
+
+                let rsp = await this.$axios.post("http://"+ip+":8080/person/create", tabletFormData).then(res => res.data);
+
+                // var request = new XMLHttpRequest();
+                // request.open("POST", "http://"+ip+":8080/person/create");
+                // request.onreadystatechange = function() {
+                //     if (request.readyState == XMLHttpRequest.DONE) {
+                //         console.log(request.responseText);
+                //         console.log("ulit")
+                //     }
+                // }
+                // request.send(formData);
+                })
+                
+                });
+
             }
             catch (e)
             {
@@ -339,13 +394,23 @@ export default {
         },
         async uploadImage()
         {  
-            this.personal_information.account_img = await this.getImageURL()
-            // let oFReader = new FileReader();
-            // const formData = new FormData();
-            // formData.append('image',document.getElementById("uploadImage").files[0]); 
+            this.$q.loading.show();
+            this.personal_information.account_img = await this.getImageURL();
 
-            // let res = await this.$_post_file(formData);
-            // alert(res);
+            let oFReader = new FileReader();
+            let formData = new FormData();
+
+            formData.append('image',document.getElementById("face_uploadImage").files[0]); 
+               
+
+            this.face_pic_path = await this.$_post_file(formData);
+
+            
+
+
+
+            this.$q.loading.hide();
+           
 
         },
 
@@ -354,7 +419,7 @@ export default {
             let oFReader = new FileReader();
             const formData = new FormData();
             if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]); 
-            else formData.append('image',document.getElementById("uploadImage").files[0]); 
+            else formData.append('image',document.getElementById("face_uploadImage").files[0]); 
 
             return await this.$_post_file(formData);
         },
@@ -363,6 +428,21 @@ export default {
         {
             this.$refs.uploader.click();
 
+        },
+        face_openFilemanager()
+        {
+            this.$refs.face_uploader.click();
+
+        },
+        randomId(length)
+        {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < 6; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
         }
     },
     async created()
