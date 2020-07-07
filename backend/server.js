@@ -37,6 +37,7 @@ app.post('/api/member/delete/company',  member_only, member_controller.deleteCom
 app.post('/api/member/get/staff',  member_only, member_controller.getStaffs);
 app.post('/api/member/remove/account',  member_only, member_controller.removeAccount);
 app.post('/api/member/get/blacklist',  member_only, member_controller.getBlacklists);
+app.post('/api/member/get/company',  member_only, member_controller.getCompany);
 
 
 

@@ -15,7 +15,7 @@
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img src="https://www.dreamit-conventions.com/assets/img/Marilyn.jpeg">
+                        <q-img :src="account_info.account_img ? account_info.account_img : ''">
                             <q-btn flat dense rounded icon="mdi-magnify" size="13px"></q-btn>
                         </q-img>
                         <div class="personal-info__item-content">
@@ -79,15 +79,15 @@
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img src="https://s3-production.venuerific.com/shrine/venuephotos/12511/green-sun-events-venue-event-place-makati-large.jpg"></q-img>
+                        <q-img :src="getImgUrl(account_info.company_details.company_info.logo_filename)"></q-img>
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Company Name:</div>
-                                <div class="personal-info__item-info">{{account_info.company ? account_info.company : account_info.company}}</div>
+                                <div class="personal-info__item-info">{{account_info.company_details.company_info.company_name ? account_info.company_details.company_info.company_name : account_info.company}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Parent:</div>
-                                <div class="personal-info__item-info">MySolid Technologies & Devices Corp.</div>
+                                <div class="personal-info__item-info">{{account_info.company_details.company_info.parent ? account_info.company_details.company_info.parent : ''}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label"> {{account_info.date_created ? 'Date Registered:' : 'Date Blaclisted'}}</div>
@@ -176,7 +176,7 @@
 <script>
 import { Notify } from 'quasar';
 import "./PersonalInformation.scss";
-import { postRemoveAccount } from '../../../../references/url';
+import { postRemoveAccount , postGetCompany} from '../../../../references/url';
 
 export default {
      data: () => ({
@@ -185,6 +185,10 @@ export default {
 
     methods:
     {
+        getImgUrl(path){
+
+            return "http://localhost:4001/images/"+path;
+        },
         async removeAccount()
         {
             await this.$_post(postRemoveAccount, {id: this.$route.params.account_info._id , type: this.account_info.type});
@@ -211,6 +215,7 @@ export default {
     async mounted()
     {
         this.account_info = this.$route.params.account_info
+        console.log(this.account_info.company_details.company_info.company_logo);
         
     }
 

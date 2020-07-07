@@ -281,7 +281,6 @@ export default {
             this.personal_information.id_image = img
             // this.$q.loading.show();
             if (img) await this.visitor_class.ocrUnirest(this.personal_information.id_type, img )
-            
             this.personal_information.id_number = this.visitor_class.id_num
             this.personal_information.first_name = this.visitor_class.given_name
             this.personal_information.last_name = this.visitor_class.last_name
