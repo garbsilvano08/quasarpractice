@@ -7,10 +7,10 @@ module.exports =
         route: 'member_dashboard',
     },
     {
-        key: '',
+        key: 'member_notification',
         label: 'Notification',
         icon: 'mdi-bell-ring',
-        route: '',
+        route: 'member_notification',
     },
     {
         key: 'member_frontdesk_visitor',
