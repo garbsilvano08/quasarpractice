@@ -148,8 +148,8 @@ export default class OpticalReadClass
             this.middle_name = image[0].lines[5].words[image[0].lines[5].words.length -1].text
             this.id_num = ''
             
-            this.gender = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[0].text : image[0].lines[10].words[0].text
-            this.gender = this.gender.startsWith('M') ? 'Male' : 'Female'
+            this.gender = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[0].text : 'Male'
+            this.gender = image[0].lines[10].words.length == 2 ? image[0].lines[10].words[0].text : 'Male'
             this.nationality = image[0].lines[10].words.length == 2 ? image[0].lines[9].words[0].text.replace(/[^a-zA-Z]/g, '') : image[0].lines[10].words[0].text.replace(/[^a-zA-Z]/g, '')
             this.birthday = image[0].lines[9].words.length == 2 ? image[0].lines[9].words[1].text.replace(/[^/0-9]/g, ' ') : image[0].lines[10].words[1].text.replace(/[^/0-9]/g, ' ')
             
@@ -210,7 +210,7 @@ export default class OpticalReadClass
         {
             Notify.create({
                 color: 'red',
-                message: 'Please try again'
+                message: 'Please try again' + e.message
             }); 
         }
                 
@@ -241,7 +241,7 @@ export default class OpticalReadClass
             color: 'red',
             message: ';lkjlkjhkhkjgjtiyjbjk'
         }); 
-        console.log(image, 'image');
+        
         for (let data of image) {
             for (let line of data.lines) {
                 for (let word of line.words) {

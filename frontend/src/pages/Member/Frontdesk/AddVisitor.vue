@@ -14,7 +14,7 @@
                     <div class="frontdesk__content-info">
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
-                            <q-img class="content__img" src="../../../assets/Member/placeholder-img.jpg"></q-img>
+                            <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
                             <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="openFilemanager"></q-btn>
                         </div>
@@ -32,8 +32,9 @@
                             <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
-                            <q-img class="content__img img__sm" :src="id_url ? id_url : '../../../assets/Member/placeholder-img.jpg'"></q-img>
-                            <q-btn @click="checkImage()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
+                            <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '../../../assets/Member/placeholder-img.jpg'"></q-img>
+                            <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="uploader" type="file">
+                            <q-btn @click="openFilemanager()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
                     </div>
                 </div>
@@ -219,6 +220,8 @@ export default {
         // Submit Data
         personal_information:
         {
+            id_image: '',
+            account_img: '',
             id_type: 'Drivers License',
             id_number: null,
             first_name: null,
@@ -245,8 +248,10 @@ export default {
     {
         async checkImage(image)
         {
-            this.$q.loading.show();
-            await this.visitor_class.ocrUnirest(this.personal_information.id_type, this.id_url)
+            let img = await this.getImageURL('id')
+            this.personal_information.id_image = img
+            // this.$q.loading.show();
+            if (img) await this.visitor_class.ocrUnirest(this.personal_information.id_type, img )
             
             this.personal_information.id_number = this.visitor_class.id_num
             this.personal_information.first_name = this.visitor_class.given_name
@@ -256,7 +261,6 @@ export default {
             this.personal_information.gender = this.visitor_class.gender
             this.personal_information.birth_date = this.visitor_class.birthday
             this.personal_information.nationality = this.visitor_class.nationality
-
             this.$q.loading.hide();
         },
         async getNearbyPlaces(val, update) 
@@ -334,15 +338,27 @@ export default {
             }
         },
         async uploadImage()
-        {   
-            let oFReader = new FileReader();
-            const formData = new FormData();
-            formData.append('image',document.getElementById("uploadImage").files[0]); 
+        {  
+            this.personal_information.account_img = await this.getImageURL()
+            // let oFReader = new FileReader();
+            // const formData = new FormData();
+            // formData.append('image',document.getElementById("uploadImage").files[0]); 
 
-            let res = await this.$_post_file(formData);
-            alert(res);
+            // let res = await this.$_post_file(formData);
+            // alert(res);
 
         },
+
+        async getImageURL(type)
+        {
+            let oFReader = new FileReader();
+            const formData = new FormData();
+            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]); 
+            else formData.append('image',document.getElementById("uploadImage").files[0]); 
+
+            return await this.$_post_file(formData);
+        },
+
         openFilemanager()
         {
             this.$refs.uploader.click();
