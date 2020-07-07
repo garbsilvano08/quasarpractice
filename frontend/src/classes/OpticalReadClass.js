@@ -139,8 +139,6 @@ export default class OpticalReadClass
 
     getDriversLicenseInfo(image)
     {
-        console.log(image);
-        
         if (image.length == 4)
         {
             this.last_name = image[0].lines[5].words[0].text.replace(/[^a-zA-Z0-9]/g, ' ')
