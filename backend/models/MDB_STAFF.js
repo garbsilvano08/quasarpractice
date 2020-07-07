@@ -4,6 +4,9 @@ const Schema    = MONGOOSE.Schema;
 
 const schema    = new Schema(
 {
+    id_type:            { type: String,  required: false},
+    id_img:             { type: String,  required: false},
+    account_img:        { type: String,  required: true },
     id_num:             { type: String,  required: true },
     last_name:          { type: String,  required: true },
     middle_name:        { type: String,  required: true },
@@ -17,7 +20,8 @@ const schema    = new Schema(
     company_name:       { type: String,  required: true },
     position:           { type: String,  required: true },
     date_created:       { type: Date  ,  required: true },
-    is_active:          { type: Boolean, required: true }
+    is_active:          { type: Boolean, required: true },
+    company_details:    { type: Object , required: true },
 });
 
 class MDB_ADD_STAFF extends MODEL

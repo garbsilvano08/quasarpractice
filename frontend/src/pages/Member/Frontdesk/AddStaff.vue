@@ -14,8 +14,9 @@
                     <div class="frontdesk__content-info">
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
-                            <q-img class="content__img" src="../../../assets/Member/placeholder-img.jpg"></q-img>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="openCamera"></q-btn>
+                            <q-img class="content__img" :src="staff_class.account_img ? staff_class.account_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
+                            <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="openFilemanager()"></q-btn>
                         </div>
                     </div>
                     <!-- CHOOSE ID -->
@@ -26,8 +27,11 @@
                             <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
-                            <q-img id="canvas" class="content__img img__sm" :src="id_url ? id_url : '../../../assets/Member/placeholder-img.jpg'"></q-img>
-                            <q-btn @click="checkImage()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
+                            <q-img class="content__img" :src="staff_class.id_img ? staff_class.id_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
+                            <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file">
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture ID" @click="openFilemanager('id')"></q-btn>
+                            <!-- <q-img id="canvas" class="content__img img__sm" :src="id_url ? id_url : '../../../assets/Member/placeholder-img.jpg'"></q-img>
+                            <q-btn @click="checkImage()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn> -->
                         </div>
                     </div>
                 </div>
@@ -182,6 +186,7 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 import position_reference from '../../../references/position';
 
 import { postAddStaff , postGetCompanies, postAddPerson} from '../../../references/url';
+import LoginVue from '../../Front/Login.vue';
 
 export default {
     data:() =>
@@ -239,20 +244,43 @@ export default {
 
     methods:
     {
+        getCompany(company)
+        {
+            for (let comp of this.company_list.data) {
+                if (comp.company_info.company_name == company)
+                {
+                    return comp
+                }
+            }
+        },
+
+        async uploadImage()
+        {  
+            this.staff_class.account_img = await this.getImageURL()
+        },
+
+        async getImageURL(type)
+        {
+            let oFReader = new FileReader();
+            const formData = new FormData();
+            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]); 
+            else formData.append('image',document.getElementById("uploadImage").files[0]); 
+
+            return await this.$_post_file(formData);
+        },
+        openFilemanager(type)
+        {
+            console.log(type);
+            
+            if (type) this.$refs.idUploader.click();
+            else this.$refs.uploader.click();
+
+        },
         testing(){
             var formData = new FormData();
             formData.append("pass", "123456");
             formData.append("length", "50"); // number 123456 is immediately converted to a string "123456"
             formData.append("index", "0"); // number 123456 is immediately converted to a string "123456"
-            
-            // HTML file input, chosen by user
-            // formData.append("userfile", fileInputElement.files[0]);
-
-            // JavaScript file-like object
-            // var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
-            // var blob = new Blob([content], { type: "text/xml"});
-            // Access-Control-Allow-Origin: *;
-            // formData.append("webmasterfile", blob);
 
             var request = new XMLHttpRequest();
             request.open("POST", "http://192.168.1.177:8080/person/findByPage");
@@ -267,7 +295,10 @@ export default {
         async checkImage(image)
         {
             this.$q.loading.show();
-            this.is_done = await this.staff_class.ocrUnirest(this.select__id_type,this.id_url)
+            let img = await this.getImageURL('id')
+            this.staff_class.id_img = img
+            // this.$q.loading.show();
+            if (img) await this.staff_class.ocrUnirest(this.select__id_type, img)
             this.$q.loading.hide();
         },
 
@@ -291,7 +322,12 @@ export default {
         },
         async submit()
         {
+            
             let data = {
+                id_type: this.select__id_type,
+                company_details: this.getCompany( this.staff_class.company_name),
+                account_img: this.staff_class.account_img,
+                id_img: this.staff_class.id_img,
                 id_num: this.staff_class.id_num,
                 last_name: this.staff_class.last_name,
                 middle_name: this.staff_class.middle_name,
@@ -333,6 +369,7 @@ export default {
         for (let company of this.company_list.data) {
             this.options_company.push(company.company_info.company_name)
         }
+        
     }
 }
 </script>

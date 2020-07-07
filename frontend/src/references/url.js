@@ -6,6 +6,7 @@ exports.postCreateAdmin     = 'front/create_admin';
 
 
 //member
+exports.postGetCompany      = 'member/get/company';
 exports.postUserList        = 'member/user/list';
 exports.postAddPerson       = 'member/add/person';
 exports.postGetCompanies    = 'member/get/companies';

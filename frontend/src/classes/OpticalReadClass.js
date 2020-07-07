@@ -14,6 +14,8 @@ export default class OpticalReadClass
 {
     constructor()
     {
+        this.account_img = ''
+        this.id_img = ''
         this.last_name = ''
         this.middle_name = ''
         this.given_name = ''
@@ -26,6 +28,7 @@ export default class OpticalReadClass
         this.contact_number = ''
         this.emergency_contact = ''
         this.company_name = ''
+        this.company_details = {}
         
         // For Visitor
         this.purpose_visit = ''
@@ -37,7 +40,6 @@ export default class OpticalReadClass
 
         // For Adding Blacklist
         this.reason_blacklist = ''
-        this.company_details = {}
 
         this.id_words = []
         this.converted_image = []

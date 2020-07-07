@@ -148,6 +148,10 @@ module.exports =
         {
             await new MDB_STAFF().add(
             {
+                id_type: req.body.id_type,
+                company_details: req.body.company_details,
+                account_img: req.body.account_img,
+                id_img: req.body.id_img,
                 id_num: req.body.id_num,
                 last_name: req.body.last_name,
                 middle_name: req.body.middle_name,
@@ -176,6 +180,7 @@ module.exports =
     {
         await new MDB_BLACKLIST().add(
         {
+            account_img: req.body.account_img,
             last_name: req.body.last_name,
             middle_name: req.body.middle_name,
             given_name: req.body.given_name,
@@ -217,4 +222,8 @@ module.exports =
         else if (req.body.type == 'Blacklist') return res.send(await new MDB_BLACKLIST().update(req.body.id, {is_active: false}));
     },
     
+    async getCompany(req, res)
+    {
+        return res.send(await new MDB_COMPANIES().docs({'company_info.company_name': req.body.name}));
+    },    
 }
