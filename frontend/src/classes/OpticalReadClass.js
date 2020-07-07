@@ -210,7 +210,7 @@ export default class OpticalReadClass
         {
             Notify.create({
                 color: 'red',
-                message: 'Please try again' + e.message
+                message: 'Please try again'
             }); 
         }
                 
