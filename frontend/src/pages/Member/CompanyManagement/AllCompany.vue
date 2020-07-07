@@ -13,7 +13,7 @@
         <div class="company-management__container content__grid-3x3">
             <div v-for="(company, i) in this.company_list.data" :key="i"  class="company-management__content content__card">
                 <div class="company-management__info-logo">
-                    <img :src=getImgUrl(company.company_info.logo_filename)>
+                    <img :src=company.company_info.company_logo_url>
                 </div>
                 <div class="company-management__info-content">
                     <div class="company-management__info-btn">
@@ -56,10 +56,6 @@ export default {
         this.company_list = await this.$_post(postGetCompanies);
     },
     methods:{
-        getImgUrl(path){
-
-            return "http://localhost:4001/images/"+path;
-        },
         async deleteCompany(index)
         {
             this.$q.dialog({

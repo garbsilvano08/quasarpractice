@@ -196,8 +196,8 @@ export default
             blob = base64StringToBlob(respImage.data, contentType);
             blob.lastModifiedDate = new Date();
             formDatatoBackend.append('image', blob, imageName);
-            let res = await this.$_post_file(postAddPerson, formDatatoBackend);
-            return res.path;
+            let res = await this.$_post_file(formDatatoBackend);
+            return res;
         },
         
     }

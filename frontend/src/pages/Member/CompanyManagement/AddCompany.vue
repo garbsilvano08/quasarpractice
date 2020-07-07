@@ -114,8 +114,8 @@ export default {
                 else{
                     const formData = new FormData();
                     formData.append('image',document.getElementById("uploadImage").files[0] ); 
-                    let res = await this.$_post_file(postAddPerson, formData);
-                    await this.$_post('member/add/company', { company_info: { company_name: this.input_company_name,  company_location: this.input_location , company_type:this.company_type, company_logo: res.path, logo_filename: res.filename} });
+                    let res = await this.$_post_file(formData);
+                    await this.$_post('member/add/company', { company_info: { company_name: this.input_company_name,  company_location: this.input_location , company_type:this.company_type, company_logo_url: res} });
                     this.input_company_name = "";
                     this.input_location = "";
                     this.company_type = this.company_type = "public";

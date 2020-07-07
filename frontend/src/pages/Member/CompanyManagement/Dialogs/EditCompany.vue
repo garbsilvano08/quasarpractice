@@ -19,7 +19,7 @@
                          
                          <div></div>
                          <!-- <img id="uploadPreview" style="width: 200px; height: 200px;" /> -->
-                        <img class="content__img img__sm" id="uploadPreview" :src="getImgUrl(company_details.logo_filename)"/>
+                        <img class="content__img img__sm" id="uploadPreview" :src="company_details.company_info.company_logo_url"/>
                         <input style="display:none" id="uploadImage" accept="image/*" @change="PreviewImage()" ref="uploader" class="hidden-uploader" type="file">
                         <q-btn class="btn-upload btn-primary" flat dense no-caps label="Upload" @click="getFile"></q-btn>
                     </div>
