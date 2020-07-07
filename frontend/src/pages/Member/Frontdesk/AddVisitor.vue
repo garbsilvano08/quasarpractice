@@ -15,7 +15,8 @@
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
                             <q-img class="content__img" src="../../../assets/Member/placeholder-img.jpg"></q-img>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="profile_img_dialog = true"></q-btn>
+                            <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="openFilemanager"></q-btn>
                         </div>
                     </div>
                     <!-- BODY TEMPERATURE -->
@@ -201,6 +202,7 @@ export default {
     ({
         id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
         visitor_class: new OpticalReadClass(),
+        pic: [],
         profile_img_dialog: false,
 
         options_id: [
@@ -330,6 +332,21 @@ export default {
                     message: e.message
                 });
             }
+        },
+        async uploadImage()
+        {   
+            let oFReader = new FileReader();
+            const formData = new FormData();
+            formData.append('image',document.getElementById("uploadImage").files[0]); 
+
+            let res = await this.$_post_file(formData);
+            alert(res);
+
+        },
+        openFilemanager()
+        {
+            this.$refs.uploader.click();
+
         }
     },
     async created()

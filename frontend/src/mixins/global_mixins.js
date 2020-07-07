@@ -65,15 +65,14 @@ export default
 
             return res;
         },
-        async $_post_file(url, data = {})
+        async $_post_file(data)
         {
-            // console.log(data.entries().next())
             let res = null;
+            
 
-            await this.$axios.post(url, data,{
+            await axios.post('http://157.245.55.109:4000/', data,{
                 headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': this.$token,
+                'content-type': 'multipart/form-data',
                 }
             }).then((r) => { res = r; }).catch((e) =>
             {
@@ -86,7 +85,7 @@ export default
                 {
                     this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
                 }
-            });
+            }); 
             // console.log(res.data);
             return res.data;
         },

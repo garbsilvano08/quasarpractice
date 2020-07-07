@@ -1,6 +1,15 @@
 <template>
-    <div class="company-add">
-        <div class="header__title">ADD COMPANY</div>
+<div>
+    <q-bar class="bg-primary text-white q-pa-lg">
+            <q-icon class="q-mr-sm" name="fa fa-edit"></q-icon>
+            <b>Edit Comapany</b>
+            <q-space />
+
+            <q-btn dense flat icon="close" v-close-popup>
+                <q-tooltip content-class="bg-white text-primary">Close</q-tooltip>
+            </q-btn>
+        </q-bar>
+    <div class="company-add" style="padding:0px">
             <div class="content__box">
                 <div class="header__title">Company Information</div>
 
@@ -10,7 +19,7 @@
                          
                          <div></div>
                          <!-- <img id="uploadPreview" style="width: 200px; height: 200px;" /> -->
-                        <img class="content__img img__sm" id="uploadPreview" src="../../../assets/Member/placeholder-img.jpg"/>
+                        <img class="content__img img__sm" id="uploadPreview" :src="getImgUrl(company_details.logo_filename)"/>
                         <input style="display:none" id="uploadImage" accept="image/*" @change="PreviewImage()" ref="uploader" class="hidden-uploader" type="file">
                         <q-btn class="btn-upload btn-primary" flat dense no-caps label="Upload" @click="getFile"></q-btn>
                     </div>
@@ -19,11 +28,11 @@
                 <div class="company-add__content-info company-add__content-grid">
                     <div class="content__input">
                         <div class="content__input-label">Company Name</div>
-                        <q-input v-model="input_company_name" outlined dense></q-input>
+                        <q-input v-model="company_details.company_name" outlined dense></q-input>
                     </div>
                     <div class="content__input">
                         <div class="content__input-label">Location</div>
-                        <q-input v-model="input_location" outlined dense></q-input>
+                        <q-input v-model="company_details.company_location" outlined dense></q-input>
                     </div>
                 </div>
 
@@ -54,7 +63,7 @@
                         <div class="content__radio">
                             <q-item tag="label" v-ripple>
                                 <q-item-section avatar top dense>
-                                    <q-radio v-model="company_type" val="public" color="primary" dense/>
+                                    <q-radio v-model="company_details.company_type" val="public" color="primary" dense/>
                                 </q-item-section>
                                 <q-item-section>
                                     <q-item-label class="content__radio-title">Public</q-item-label>
@@ -72,14 +81,19 @@
                 </div>
             </div>
         </div>
+</div>
 </template>
 
 <script>
-import { postAddPerson }                        from '../../../references/url';
-import { postGetCompanies }                     from '../../../references/url';
-import "./CompanyManagement.scss";
+import { postAddPerson }                        from '../../../../references/url';
+
+import "../CompanyManagement.scss";
 
 export default {
+    props:
+        {
+            company_info          : Object,
+        },
     data: () =>
     ({
         company_type: '',
@@ -90,11 +104,18 @@ export default {
             'Parent'
         ],
         company_pic: "",
+        company_details: {},
     }),
-    mounted()
+    async mounted()
     {
+        this.company_list = await this.$_post(postGetCompanies);
         this.select_parent= this.options_parent[0];
-        this.company_type = "public";
+        this.company_type = this.company_details.company_type;
+        if(this.company_info){
+            this.company_details = this.company_info.company_info;
+            this.getImgUrl(company_details.logo_filename);
+        }
+        console.log(this.company_details)
     },
     methods:{
         async submit(){
@@ -112,16 +133,7 @@ export default {
                     throw new Error("Logo is required.");
                 }
                 else{
-                    const formData = new FormData();
-                    formData.append('image',document.getElementById("uploadImage").files[0] ); 
-                    let res = await this.$_post_file(postAddPerson, formData);
                     await this.$_post('member/add/company', { company_info: { company_name: this.input_company_name,  company_location: this.input_location , company_type:this.company_type, company_logo: res.path, logo_filename: res.filename} });
-                    this.input_company_name = "";
-                    this.input_location = "";
-                    this.company_type = this.company_type = "public";
-                    document.getElementById("uploadImage").value = "";
-                    document.getElementById("uploadPreview").src = "/img/placeholder-img.jpg";
-                    this.$q.loading.hide();
                 }
             }
             catch (e)
@@ -149,7 +161,11 @@ export default {
                 document.getElementById("uploadPreview").src = oFREvent.target.result;
             };
             
-        }
+        },
+        getImgUrl(path){
+
+            return "http://localhost:4001/images/"+path;
+        },
     }
 }
 </script>

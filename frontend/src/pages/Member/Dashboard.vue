@@ -7,6 +7,7 @@
         <img style="display:none" id='Img1' src='http://localhost:4001/images/eme.jpg-1593484285090.jpg'>
         <q-btn label="create" @click="create"></q-btn>   
         <q-btn label="get Log" @click="getLog"></q-btn>   
+        <q-btn label="test uploader" @click="testUploader"></q-btn>   
     </div>
 </template>
 
@@ -66,8 +67,9 @@ export default
             const formData = new FormData();
             formData.append('image',this.pic[0]); 
             // console.log(formData.entries().next())
-            console.log(this.pic[0])
-            let res = await this.$_post_file(postAddPerson, formData);
+            // console.log(formData)
+            let res = await this.$_post_file(formData);
+            console.log(res);
             // console.log(res.filename)    
 
             // console.log(res);
@@ -190,6 +192,14 @@ export default
             request.send(formData);
 
             
+        },
+        async testUploader()
+        {
+           const formData = new FormData();
+            formData.append('image',this.pic[0]); 
+            
+            let res = await this.$_post_file(formData);
+            console.log(res);
         }
 
     },
