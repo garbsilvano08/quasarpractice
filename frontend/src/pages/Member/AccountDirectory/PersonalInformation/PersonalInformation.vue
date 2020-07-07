@@ -1,7 +1,7 @@
 <template>
     <div class="personal-info">
         <div class="personal-info__header">
-            <q-btn class="btn-back btn-primary" flat dense no-caps label="Back"></q-btn>
+            <q-btn @click="back" class="btn-back btn-primary" flat dense no-caps label="Back"></q-btn>
             <div class="personal-info__header-btn">
                 <q-btn @click="removeAccount()" class="btn-outline btn-remove" flat dense no-caps label="Remove"></q-btn>
                 <q-btn @click="editAccount()" class="btn-primary btn-edit" flat dense no-caps label="Edit"></q-btn>
@@ -15,7 +15,7 @@
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img :src="account_info.account_img ? account_info.account_img : ''">
+                        <q-img :src="account_info.type == 'Visitor' ? account_info.personal_information.account_img : account_info.account_img ? account_info.account_img : ''">
                             <q-btn flat dense rounded icon="mdi-magnify" size="13px"></q-btn>
                         </q-img>
                         <div class="personal-info__item-content">
@@ -115,7 +115,7 @@
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img :src="account_info.id_img ? account_info.id_img : ''"></q-img>
+                        <q-img :src="account_info.type == 'Visitor' ? account_info.personal_information.id_image : account_info.id_img ? account_info.id_img : ''"></q-img>
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">ID Type:</div>
@@ -185,6 +185,12 @@ export default {
 
     methods:
     {
+        back()
+        {
+            if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory_staff"})
+            else if (this.account_info.type == 'Blacklist') this.$router.push({name: "member_accountdirectory_blacklist"})
+            else if (this.account_info.type == 'Visitor') this.$router.push({name: "member_accountdirectory_visitor"})
+        },
         getImgUrl(path){
 
             return "http://localhost:4001/images/"+path;

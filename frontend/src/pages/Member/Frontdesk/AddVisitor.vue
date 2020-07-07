@@ -15,9 +15,8 @@
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
                             <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
-                            <input style="display:none" id="face_uploadImage" accept="image/*" @change="uploadImage()" ref="face_uploader" type="file">
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="face_openFilemanager"></q-btn>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Previous Records" @click="profile_img_dialog = true"></q-btn>
+                            <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="openFilemanager()"></q-btn>
                         </div>
                     </div>
                     <!-- BODY TEMPERATURE -->
@@ -34,8 +33,8 @@
                         </div>
                         <div class="content__img-holder img-holder__sm">
                             <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '../../../assets/Member/placeholder-img.jpg'"></q-img>
-                            <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="uploader" type="file">
-                            <q-btn @click="openFilemanager()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
+                            <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file">
+                            <q-btn @click="openFilemanager('id')" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
                     </div>
                 </div>
@@ -423,25 +422,10 @@ export default {
             return await this.$_post_file(formData);
         },
 
-        openFilemanager()
+        openFilemanager(type)
         {
-            this.$refs.uploader.click();
-
-        },
-        face_openFilemanager()
-        {
-            this.$refs.face_uploader.click();
-
-        },
-        randomId(length)
-        {
-        var result           = '';
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for ( var i = 0; i < 6; i++ ) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
+            if (type) this.$refs.idUploader.click();
+            else this.$refs.uploader.click();
         }
     },
     async created()
