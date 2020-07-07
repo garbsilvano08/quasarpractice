@@ -25,29 +25,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-green">36°C</td>
-                        </tr>
-                        <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-green">36°C</td>
-                        </tr>
-                        <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-red">38.2°C</td>
+                        <tr @click="checkAccount(visitor)" v-for="(visitor, index) in this.visitor_lists.data" :key="index">
+                            <td class="td-active">{{visitor.name}}</td>
+                            <td>{{visitor.personal_information.gender}}</td>
+                            <td>{{new Date().getFullYear() - new Date(visitor.personal_information.birth_date).getFullYear()}}</td>
+                            <td>{{visitor.personal_information.home_address}}</td>
+                            <td>{{visitor.last_scanned ? staff.last_scanned : 'No Logs Yet'}}</td>
+                            <td class="td-green">{{visitor.last_temperature ? visitor.last_temperature : 'No Temperature Logs Yet'}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -59,6 +43,7 @@
 <script>
 import "./AccountDirectory.scss";
 
+import { postGetVisitors } from '../../../references/url';
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 
@@ -75,6 +60,27 @@ export default {
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
-    })
+        visitor_lists: []
+    }),
+
+    methods:
+    {
+        checkAccount(account_info)
+        {
+            account_info.type = 'Visitor'
+            this.$router.push({
+                name: "member_personal-information",
+                params: {
+                    account_info: account_info
+                }
+            })
+        }
+    }, 
+
+    async mounted()
+    {
+        this.visitor_lists = await this.$_post(postGetVisitors);
+        console.log(this.visitor_lists);
+    }
 }
 </script>

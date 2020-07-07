@@ -31,8 +31,8 @@
                             <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
-                            <q-img class="content__img img__sm" src="../../../assets/Member/placeholder-img.jpg"></q-img>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
+                            <q-img class="content__img img__sm" :src="id_url ? id_url : '../../../assets/Member/placeholder-img.jpg'"></q-img>
+                            <q-btn @click="checkImage()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
                     </div>
                 </div>
@@ -193,13 +193,18 @@
 import "./Frontdesk.scss";
 import Model from "../../../models/Model";
 
+// Classes
+import OpticalReadClass from '../../../classes/OpticalReadClass';
+
 export default {
     data:() =>
     ({
+        id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
+        visitor_class: new OpticalReadClass(),
         profile_img_dialog: false,
 
         options_id: [
-            'Drivers License', 'UMID' , 'PhilHealth'
+            'Drivers License', 'PIC'
         ],
         options_gender: [
             'Male' , 'Female'
@@ -212,7 +217,7 @@ export default {
         // Submit Data
         personal_information:
         {
-            id_type: null,
+            id_type: 'Drivers License',
             id_number: null,
             first_name: null,
             middle_name: null,
@@ -236,6 +241,22 @@ export default {
     }),
     methods:
     {
+        async checkImage(image)
+        {
+            this.$q.loading.show();
+            await this.visitor_class.ocrUnirest(this.personal_information.id_type, this.id_url)
+            
+            this.personal_information.id_number = this.visitor_class.id_num
+            this.personal_information.first_name = this.visitor_class.given_name
+            this.personal_information.last_name = this.visitor_class.last_name
+            this.personal_information.middle_name = this.visitor_class.middle_name
+            this.personal_information.home_address = this.visitor_class.home_address
+            this.personal_information.gender = this.visitor_class.gender
+            this.personal_information.birth_date = this.visitor_class.birthday
+            this.personal_information.nationality = this.visitor_class.nationality
+
+            this.$q.loading.hide();
+        },
         async getNearbyPlaces(val, update) 
         {
             if (val === '') 
@@ -256,6 +277,7 @@ export default {
         {
             try
             {
+                this.personal_information.birth_date = new Date(this.personal_information.birth_date)
                 const capitalize = (str) =>
                 {
                     str = str.split(" ");

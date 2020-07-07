@@ -11,6 +11,7 @@ exports.postAddPerson       = 'member/add/person';
 exports.postGetCompanies    = 'member/get/companies';
 exports.postDeleteCompany   = 'member/delete/company';
 
+exports.postGetVisitors     = 'member/get/visitors';
 exports.postRemoveAccount   = 'member/remove/account';
 exports.postGetStaff        = 'member/get/staff';
 exports.postAddStaff        = 'member/add/staff';

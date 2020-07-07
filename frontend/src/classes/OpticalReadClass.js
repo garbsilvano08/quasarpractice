@@ -18,6 +18,7 @@ export default class OpticalReadClass
         this.middle_name = ''
         this.given_name = ''
         this.id_num = ''
+        this.id_type = 'Drivers License'
         this.gender = ''
         this.birthday = ''
         this.nationality = ''
@@ -25,31 +26,21 @@ export default class OpticalReadClass
         this.contact_number = ''
         this.emergency_contact = ''
         this.company_name = ''
+        
+        // For Visitor
+        this.purpose_visit = ''
+        this.contact_person = ''
+        this.destination = ''
 
         // For Adding Staff
         this.position = '',
 
         // For Adding Blacklist
         this.reason_blacklist = ''
+        this.company_details = {}
 
         this.id_words = []
         this.converted_image = []
-        // this = {
-        //     address: '',
-        //     last_name: '',
-        //     given_name: '',
-        //     middle_name: '',
-        //     gender: 'Male',
-        //     birthday: '',
-        //     nationality: '',
-        //     id_num: '',
-        //     contact_num: '',
-        //     emergency_num: ''
-        // }
-        this.company_details = {
-            company_name: '',
-            position: '',
-        }
     }
     eraseAll()
     {
@@ -63,6 +54,14 @@ export default class OpticalReadClass
         this.id_num = ''
         this.contact_number = ''
         this.emergency_number = ''
+        this.company_name = ''
+        this.home_address = ''
+
+        // For Adding Staff
+        this.position = '',
+
+        // For Adding Blacklist
+        this.reason_blacklist = ''
     }
 
     getIDInformation(type, image_text)
