@@ -1,0 +1,68 @@
+// DEVICE ALL
+.device-management {
+    padding: 50px;
+
+    .device-management__header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+
+        .header__title {
+            line-height: 1.3rem;
+
+            span {
+                font-size: 12px;
+                font-weight: 500;
+                color: rgba(#000000, .6);
+            }
+        }
+
+        .header__filter {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+
+            .q-select {
+                width: 300px;
+                margin-left: 15px;
+                background-color: #e1e3f0;
+
+                .q-field__native {
+                    color: #233b61 !important;
+                    font-size: 12px;
+                    font-weight: 500;
+                    padding-left: 10px;
+                }
+            }
+        }
+    }
+}
+
+// DEVICE ADD
+.device-add {
+    padding: 50px;
+
+    .header__title {
+        margin-bottom: 30px !important;
+    }
+
+    .device-add__content {
+        .device-add__content-info {
+            margin-bottom: 30px;
+        }
+
+        .device-add__content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 15px;
+        }
+
+        .device-add__btn {
+            text-align: right;
+
+            .btn-install {
+                width: 300px;
+            }
+        }
+    }
+}
