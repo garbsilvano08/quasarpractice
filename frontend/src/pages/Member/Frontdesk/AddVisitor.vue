@@ -348,6 +348,7 @@ export default {
                 let characters       = '0123456789';
                 let charactersLength = characters.length;
                 for ( let i = 0; i < 9; i++ ) {
+                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
                 }
                 // let parsedDate = Date.parse(new Date());
                 // result = parsedDate.toString();
