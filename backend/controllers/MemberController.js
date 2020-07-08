@@ -134,10 +134,21 @@ module.exports =
     },
     async addCompany(req, res)
     {
-        await new MDB_COMPANIES().add(
+        
+        
+        console.log(req.body.company_info)
+        let companies = await new MDB_COMPANIES().docs();
+        let parentCompany= {};
+        // console.log(companies);
+        companies.forEach((com) => {
+            if (com._id == req.body.company_info.parent_id)
             {
-                company_info: req.body.company_info
-            });
+                parentCompany=com;
+            }
+        })
+
+        console.log("parent company",parentCompany)
+        console.log("returned", await new MDB_COMPANIES().add({company_info: req.body.company_info}));
     
             return res.send(true);
     },

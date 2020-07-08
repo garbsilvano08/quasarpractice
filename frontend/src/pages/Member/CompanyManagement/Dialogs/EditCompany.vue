@@ -19,7 +19,7 @@
                          
                          <div></div>
                          <!-- <img id="uploadPreview" style="width: 200px; height: 200px;" /> -->
-                        <img class="content__img img__sm" id="uploadPreview" :src="company_details.company_info.company_logo_url"/>
+                        <img class="content__img img__sm" id="uploadPreview" :src="company_details.company_logo_url"/>
                         <input style="display:none" id="uploadImage" accept="image/*" @change="PreviewImage()" ref="uploader" class="hidden-uploader" type="file">
                         <q-btn class="btn-upload btn-primary" flat dense no-caps label="Upload" @click="getFile"></q-btn>
                     </div>
@@ -39,7 +39,8 @@
                 <div class="company-add__content-info">
                     <div class="content__select">
                         <div class="content__select-label">Parent</div>
-                        <q-select v-model="select_parent" :options="options_parent" outlined dense></q-select>
+                        <!-- {{company_list[0].company_info.company_name}} -->
+                        <q-select v-model="select_parent" :option-label="com => com.company_name" :options="company_list" :option-value="com => com._id" outlined dense></q-select>
                     </div>
                 </div>
 
@@ -86,7 +87,7 @@
 
 <script>
 import { postAddPerson }                        from '../../../../references/url';
-import { postGetCompanies }                        from '../../../../references/url';
+import { postGetCompanies }                     from '../../../../references/url';
 
 import "../CompanyManagement.scss";
 
@@ -106,17 +107,33 @@ export default {
         ],
         company_pic: "",
         company_details: {},
+        company_list : [],
     }),
     async mounted()
     {
+        // console.log("company info",this.company_info.company_info);
         this.company_list = await this.$_post(postGetCompanies);
-        this.select_parent= this.options_parent[0];
         this.company_type = this.company_details.company_type;
         if(this.company_info){
             this.company_details = this.company_info.company_info;
-            this.getImgUrl(company_details.logo_filename);
+            this.getImgUrl(this.company_details.company_logo_url);
         }
-        console.log(this.companies_list)
+        let com_list = [];
+        this.company_list.data.forEach((com) => {
+        com_list.push( {"id" : com._id, "company_name" : com.company_info.company_name});
+        })
+        
+        this.company_list = com_list
+        console.log("etos", this.company_list);
+        // if(this.company_list.length>=1)
+        //     {
+        //         // this.company_list.data.splice(0, 0, comp{company_name: "No Parent"});
+        //     }
+        //     else 
+        //     {
+        //         // this.company_list.data.push( {company_name: "No Parent"} );
+        //     }
+        // // console.log(this.company_list.data)
     },
     methods:{
         async submit(){
