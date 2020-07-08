@@ -5,10 +5,9 @@
                 <div class="header__title">Company Information</div>
                 <div class="company-add__content-info">
                     <div class="content__title">Choose ID</div>
-                    <div class="content__img-holder img-holder__sm">
-
-                         <div></div>
-                         <!-- <img id="uploadPreview" style="width: 200px; height: 200px;" /> -->
+                    <div class="content__img-holder">
+                        <div></div>
+                        <!-- <img id="uploadPreview" style="width: 200px; height: 200px;" /> -->
                         <img class="content__img img__sm" id="uploadPreview" src="../../../assets/Member/placeholder-img.jpg"/>
                         <input style="display:none" id="uploadImage" accept="image/*" @change="PreviewImage()" ref="uploader" class="hidden-uploader" type="file">
                         <q-btn class="btn-upload btn-primary" flat dense no-caps label="Upload" @click="getFile"></q-btn>

@@ -4,8 +4,10 @@
         <div class="content__info">
             <div class="content__name">Monica C. de Jesus</div>
             <div class="content__datetime"><span>Date: </span>6/24/2020 9:00 AM</div>
-            <div class="content__temperature">36.5°C</div>
-            <div class="content__location">Green Sun Hotel</div>
+            <div class="content__details">
+                36.5°C <br>
+                <span>Green Sun Hotel lorem</span>
+            </div>
         </div>
     </div>
 </template>

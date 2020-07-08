@@ -8,7 +8,7 @@
                 <q-select v-model="select__company" :options="options_company" outlined dense></q-select>
             </div>
         </div>
-        <div class="account-directory__container content__box">
+        <div class="device-management__container content__box">
             <div class="content__table">
                 <table>
                     <thead>
