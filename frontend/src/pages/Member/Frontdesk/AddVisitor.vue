@@ -352,7 +352,7 @@ export default {
                 }
                 // let parsedDate = Date.parse(new Date());
                 // result = parsedDate.toString();
-                console.log(this.personal_information.gender);
+                // console.log(this.personal_information.gender);
                 let sex="";
                 if (this.personal_information.gender=="Female")
                 {
