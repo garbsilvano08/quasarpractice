@@ -102,7 +102,7 @@
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Devices:</div>
-                                <div class="personal-info__item-info">2</div>
+                                <div class="personal-info__item-info">{{company_device}}</div>
                             </div>
                         </div>
                     </div>
@@ -176,11 +176,12 @@
 <script>
 import { Notify } from 'quasar';
 import "./PersonalInformation.scss";
-import { postRemoveAccount , postGetCompany} from '../../../../references/url';
+import { postRemoveAccount , postGetCompany, postGetDevice} from '../../../../references/url';
 
 export default {
      data: () => ({
         account_info: {},
+        company_device: 0,
     }),
 
     methods:
@@ -207,6 +208,11 @@ export default {
                 message: 'Successfully removed from ' + this.account_info.type
             }); 
         },
+        async getDeviceNumber(comapny)
+        {
+            let device_list = await this.$_post(postGetDevice, {find_device: {company_name: comapny}});
+            this.company_device = device_list.data.length
+        },
         editAccount()
         {
             let name = ''
@@ -228,7 +234,7 @@ export default {
     async mounted()
     {
         this.account_info = this.$route.params.account_info
-        console.log(this.account_info);
+        await this.getDeviceNumber(this.account_info.company_details.company_info.company_name ? this.account_info.company_details.company_info.company_name : account_info.company)
         
     }
 

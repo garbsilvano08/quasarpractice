@@ -41,6 +41,9 @@ app.post('/api/member/get/company',  member_only, member_controller.getCompany);
 app.post('/api/member/update/staff',  member_only, member_controller.updateStaff);
 app.post('/api/member/update/blacklist',  member_only, member_controller.updateBlacklist);
 app.post('/api/member/update/visitor',  member_only, member_controller.updateVisitor);
+app.post('/api/member/add/device',  member_only, member_controller.addDevice);
+app.post('/api/member/get/device',  member_only, member_controller.getDevices);
+app.post('/api/member/delete/device',  member_only, member_controller.deleteDevices);
 
 
 

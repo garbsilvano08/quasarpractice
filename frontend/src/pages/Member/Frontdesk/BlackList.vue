@@ -87,11 +87,11 @@
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
                                     <div class="content__input-label">Contact Number</div>
-                                    <q-input v-model="blacklist_class.contact_number" outlined dense></q-input>
+                                    <q-input type="number" v-model="blacklist_class.contact_number" outlined dense></q-input>
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Emergency Contact Number</div>
-                                    <q-input v-model="blacklist_class.emergency_contact" outlined dense></q-input>
+                                    <q-input type="number" v-model="blacklist_class.emergency_contact" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Choose Type -->
@@ -166,7 +166,7 @@ import "./Frontdesk.scss";
 // Classes
 import OpticalReadClass from '../../../classes/OpticalReadClass';
 
-import { postAddBlacklist, postUpdateBlacklist } from '../../../references/url';
+import { postAddBlacklist, postUpdateBlacklist, postGetCompanies } from '../../../references/url';
 
 export default {
     data:() =>
@@ -187,9 +187,7 @@ export default {
         options_visit_purpose: [
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
         ],
-        options_company: [
-            'Company 1', 'Company 2', 'Company 3'
-        ],
+        options_company: [],
         blacklist_class: new OpticalReadClass()
     }),
 
@@ -269,11 +267,15 @@ export default {
             this.$q.loading.hide();
         }
     },
-    mounted()
+   async mounted()
     {
         if (this.$route.params.is_edit) 
         {
             this.blacklist_class = new OpticalReadClass(this.$route.params.account_info)
+        }
+        let company_list = await this.$_post(postGetCompanies);
+        for (let company of company_list.data) {
+            this.options_company.push(company.company_info.company_name)
         }
     }
 }
