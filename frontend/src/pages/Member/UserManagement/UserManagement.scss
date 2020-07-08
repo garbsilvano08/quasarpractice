@@ -1,0 +1,113 @@
+// ALL USER
+.user-management {
+    padding: 50px;
+
+    .header__title {
+        margin-bottom: 30px;
+    }
+
+    .user-management__container {
+        .user-management__info-content {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr;
+            grid-gap: 25px;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 2px;
+
+            .q-img {
+                height: 60px;
+                width: 60px;
+                border-radius: 100%;
+                border: solid 1px rgba(#000000, .15);
+            }
+
+            .user-management__info-user {
+                .user-management__info-name {
+                    color: #233b61;
+                    font-size: 14px;
+                    font-weight: 700;
+                }
+
+                .user-management__info-email {
+                    color: rgba(#000000, .6);
+                    font-size: 12px;
+                    font-weight: 500;
+                }
+            }
+
+            .user-management__info-action {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                grid-gap: 25px;
+                align-items: center;
+
+                .user-management__info-details {
+                    text-align: right;
+                    color: rgba(#000000, .6);
+                    font-size: 12px;
+                    font-weight: 500;
+                    line-height: 1.6rem;
+
+                        span {
+                            color: #ffffff;
+                            font-size: 12px;
+                            font-weight: 700;
+                            background-color: #464de4;
+                            padding: 3px 15px;
+                            border-radius: 4px;
+                        }
+                }
+
+                .user-management__btn {
+                    .btn-outline {
+                        width: 40px !important;
+                        margin-right: 10px;
+
+                        .q-icon {
+                            margin-left: 0px !important;
+                        }
+                    }
+
+                    .btn-outline:last-child {
+                        margin-right: 0px !important;
+                    }
+                }
+            }
+        }
+
+        .user-management__info-content:nth-child(odd) {
+            background-color: #f4f4f4;
+        }
+    }
+}
+
+// ADD USER
+.user-add {
+    padding: 50px;
+
+    .header__title {
+        margin-bottom: 30px;
+    }
+
+    .user-add__content {
+        .user-add__content-info {
+            margin-bottom: 30px;
+        }
+
+        .user-add__content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 15px;
+        }
+
+        .user-add__btn {
+            text-align: right;
+
+            .btn-save {
+                width: 300px;
+            }
+        }
+    }
+}

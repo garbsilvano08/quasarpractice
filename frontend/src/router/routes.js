@@ -44,6 +44,9 @@ const routes = [
             //DEVICE MANAGEMENT
             { name: 'member_alldevice', path: '/devicemanagement/all-device', component: () => import('pages/Member/DeviceManagement/AllDevice.vue') },
             { name: 'member_adddevice', path: '/devicemanagement/add-device', component: () => import('pages/Member/DeviceManagement/AddDevice.vue') },
+            // USER MANAGEMENT
+            { name: 'member_alluser', path: '/usermanagement/all-user', component: () => import('pages/Member/UserManagement/AllUser.vue') },
+            { name: 'member_adduser', path: '/usermanagement/add-user', component: () => import('pages/Member/UserManagement/AddUser.vue') },
             //NOTIFICATION
             { name: 'member_notification', path: '/notification', component: () => import('pages/Member/Notification/Notification.vue') },
             // HEATMAP
