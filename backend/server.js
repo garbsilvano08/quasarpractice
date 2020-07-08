@@ -19,6 +19,7 @@ app.post('/api/front/register',         front_controller.register);
 
 
 const member_controller     = require('./controllers/MemberController');
+const count_controller     = require('./controllers/CountController');
 const member_only           = require('./middleware/MemberOnly');
 
 app.post('/api/member/add/staff', member_controller.addNewStaff);
@@ -50,7 +51,11 @@ app.post('/api/member/get/user',  member_only, member_controller.getUsers);
 app.post('/api/member/delete/user',  member_only, member_controller.deleteUsers);
 app.post('/api/member/update/user',  member_only, member_controller.updateUser);
 
+// Person
+app.post('/api/member/save/person',  member_only, member_controller.savePerson);
 
+//Count
+app.post('/api/member/count/logs',  member_only, count_controller.counterLogs);
 
 app.listen({port: 4001}, (err) =>
 {

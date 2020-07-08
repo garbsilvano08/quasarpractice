@@ -169,7 +169,7 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 // Refferences
 import position_reference from '../../../references/position';
 
-import { postAddStaff , postGetCompanies, postAddPerson, postUpdateStaff} from '../../../references/url';
+import { postAddStaff , postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson} from '../../../references/url';
 import LoginVue from '../../Front/Login.vue';
 
 export default {
@@ -248,20 +248,21 @@ export default {
         {
             this.$q.loading.show();
             let img = await this.getImageURL('id')
-            this.staff_class.id_img = img
             // this.$q.loading.show();
             if (img) await this.staff_class.ocrUnirest(this.select__id_type, img)
+            this.staff_class.id_img = img
             this.$q.loading.hide();
         },
 
         async submit()
         {
             let data = {
-                id_type: this.staff_class.id_type,
-                company_details: this.getCompany( this.staff_class.company_name),
-                account_img: this.staff_class.account_img,
                 id_img: this.staff_class.id_img,
                 id_num: this.staff_class.id_num,
+                id_type: this.staff_class.id_type,
+                
+                company_details: this.getCompany( this.staff_class.company_name),
+                person_img: this.staff_class.account_img,
                 last_name: this.staff_class.last_name,
                 middle_name: this.staff_class.middle_name,
                 given_name: this.staff_class.given_name,
@@ -271,17 +272,22 @@ export default {
                 home_address: this.staff_class.home_address,
                 contact_number: this.staff_class.contact_number,
                 emergency_contact: this.staff_class.emergency_contact,
+                date_created: new Date(),
                 company_name: this.staff_class.company_name,
+                is_active: true,
+
                 position: this.staff_class.position,
-                is_active: true
+                category: 'Staff'
             }
+            
             
             this.$q.loading.show();
             try
             {
                 if (this.$route.params.is_edit)
                 {
-                    await this.$_post(postUpdateStaff, {id: this.$route.params.account_info._id, update_staff: data});
+                    await this.$_post(postSavePerson, {id: this.$route.params.account_info._id, update_staff: data});
+                    // await this.$_post(postUpdateStaff, {id: this.$route.params.account_info._id, update_staff: data});
                     Notify.create({
                         color: 'green',
                         message: 'Successfully updated Staff'
@@ -296,7 +302,8 @@ export default {
                 }
                 else
                 {
-                    await this.$_post(postAddStaff, data);
+                    await this.$_post(postSavePerson, {person_info: data});
+                    // await this.$_post(postAddStaff, data);
                     this.staff_class.eraseAll()
                     Notify.create({
                         color: 'green',
