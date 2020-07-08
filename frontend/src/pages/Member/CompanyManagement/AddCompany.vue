@@ -1,13 +1,12 @@
 <template>
     <div class="company-add">
         <div class="header__title">ADD COMPANY</div>
-            <div class="content__box">
+            <div class="company-add__content content__box">
                 <div class="header__title">Company Information</div>
-
                 <div class="company-add__content-info">
                     <div class="content__title">Choose ID</div>
                     <div class="content__img-holder img-holder__sm">
-                         
+
                          <div></div>
                          <!-- <img id="uploadPreview" style="width: 200px; height: 200px;" /> -->
                         <img class="content__img img__sm" id="uploadPreview" src="../../../assets/Member/placeholder-img.jpg"/>
@@ -99,7 +98,7 @@ export default {
     methods:{
         async submit(){
             this.$q.loading.show();
-            
+
             try
             {
                 if (this.input_company_name.length <= 2 ){
@@ -113,7 +112,7 @@ export default {
                 }
                 else{
                     const formData = new FormData();
-                    formData.append('image',document.getElementById("uploadImage").files[0] ); 
+                    formData.append('image',document.getElementById("uploadImage").files[0] );
                     let res = await this.$_post_file(formData);
                     await this.$_post('member/add/company', { company_info: { company_name: this.input_company_name,  company_location: this.input_location , company_type:this.company_type, company_logo_url: res} });
                     this.input_company_name = "";
@@ -133,11 +132,11 @@ export default {
                     message: e.message
                 });
             }
-            
+
         },
         getFile () {
             this.$refs.uploader.click();
-            
+
         },
         PreviewImage()
         {
@@ -148,7 +147,7 @@ export default {
             oFReader.onload = function (oFREvent) {
                 document.getElementById("uploadPreview").src = oFREvent.target.result;
             };
-            
+
         }
     }
 }

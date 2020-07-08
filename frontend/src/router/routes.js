@@ -41,6 +41,9 @@ const routes = [
             // COMPANY MANAGEMENT ROUTES
             { name: 'member_allcompany', path: '/companymanagement/all-company', component: () => import('pages/Member/CompanyManagement/AllCompany.vue') },
             { name: 'member_addcompany', path: '/companymanagement/add-company', component: () => import('pages/Member/CompanyManagement/AddCompany.vue') },
+            //DEVICE MANAGEMENT
+            { name: 'member_alldevice', path: '/devicemanagement/all-device', component: () => import('pages/Member/DeviceManagement/AllDevice.vue') },
+            { name: 'member_adddevice', path: '/devicemanagement/add-device', component: () => import('pages/Member/DeviceManagement/AddDevice.vue') },
             //NOTIFICATION
             { name: 'member_notification', path: '/notification', component: () => import('pages/Member/Notification/Notification.vue') },
             // HEATMAP

@@ -91,8 +91,8 @@ module.exports =
         icon: 'mdi-cellphone',
         sub:
         [
-            { label: 'All Devices', route: '' },
-            { label: '+ Add Device', route: '' },
+            { label: 'All Devices', route: 'member_alldevice' },
+            { label: '+ Add Device', route: 'member_adddevice' },
         ]
     },
     {
