@@ -195,17 +195,6 @@
 import "./Frontdesk.scss";
 import Model from "../../../models/Model";
 
-function getBase64 (file, callback) {
-
-    const reader = new FileReader();
-
-    reader.addEventListener('load', () => callback(reader.result));
-
-    reader.readAsDataURL(file);
-}
-
-
-
 function toDataUrl(url, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
@@ -353,33 +342,42 @@ export default {
                 },
                 'visitors');
 
-                this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
-
-
+//***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
                 toDataUrl(this.face_pic_path, async (myBase64)=> {
+                let result           = '';
+                let characters       = '0123456789';
+                let charactersLength = characters.length;
+                for ( let i = 0; i < 9; i++ ) {
+                }
+                // let parsedDate = Date.parse(new Date());
+                // result = parsedDate.toString();
+                console.log(this.personal_information.gender);
+                let sex="";
+                if (this.personal_information.gender=="Female")
+                {
+                    sex=0;
+                }
+                else if (this.personal_information.gender=="Male")
+                {
+                    sex=1;
+                }
+                let today= new Date()
+                let expStartTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+                let expEndTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+(today.getDate()+1).toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+
                 let tabletFormData = new FormData();
                 let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
                 tabletFormData.append("pass", "123456");
-                tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ this.personal_information.first_name+" "+ this.personal_information.middle_name +""+ this.personal_information.last_name +"', 'person_id' : '"+ this.personal_information.id_number +"', 'sex' : 0, 'group_id' : 20, 'phone' : "+this.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ this.personal_information.birth_date +"', 'address' : '"+ this.personal_information.home_address +"', 'vipId': '123123', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0,}" );
+                tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ this.personal_information.first_name+" "+ this.personal_information.middle_name +" "+ this.personal_information.last_name +"', 'person_id' : '"+ this.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+this.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ this.personal_information.birth_date +"', 'address' : '"+ this.personal_information.home_address +"', 'vipId': '"+result+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
                 console.log(); // myBase64 is the base64 string
                 
                 this.ip_address.forEach(async (ip) => {
 
                 let rsp = await this.$axios.post("http://"+ip+":8080/person/create", tabletFormData).then(res => res.data);
-
-                // var request = new XMLHttpRequest();
-                // request.open("POST", "http://"+ip+":8080/person/create");
-                // request.onreadystatechange = function() {
-                //     if (request.readyState == XMLHttpRequest.DONE) {
-                //         console.log(request.responseText);
-                //         console.log("ulit")
-                //     }
-                // }
-                // request.send(formData);
                 })
                 
                 });
-
+//*********************************************************************************************************************************
             }
             catch (e)
             {
@@ -398,7 +396,7 @@ export default {
             let oFReader = new FileReader();
             let formData = new FormData();
 
-            formData.append('image',document.getElementById("face_uploadImage").files[0]); 
+            formData.append('image',document.getElementById("uploadImage").files[0]); 
                
 
             this.face_pic_path = await this.$_post_file(formData);
@@ -417,7 +415,7 @@ export default {
             let oFReader = new FileReader();
             const formData = new FormData();
             if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]); 
-            else formData.append('image',document.getElementById("face_uploadImage").files[0]); 
+            else formData.append('image',document.getElementById("uploadImage").files[0]); 
 
             return await this.$_post_file(formData);
         },
