@@ -86,6 +86,7 @@
 
 <script>
 import { postAddPerson }                        from '../../../../references/url';
+import { postGetCompanies }                        from '../../../../references/url';
 
 import "../CompanyManagement.scss";
 
@@ -115,7 +116,7 @@ export default {
             this.company_details = this.company_info.company_info;
             this.getImgUrl(company_details.logo_filename);
         }
-        console.log(this.company_details)
+        console.log(this.companies_list)
     },
     methods:{
         async submit(){
