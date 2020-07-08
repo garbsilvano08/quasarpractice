@@ -24,7 +24,7 @@
                         {{company.company_info.company_name}}
                     </div>
                     <div class="company-management__info-number">
-                        Owned 2 Establishment(s)
+                        Owned {{company.company_info.subcompanies.length}} Establishment(s)
                     </div>
                     <div class="company-management__info-people">
                         300 People Registered Here
@@ -34,7 +34,7 @@
 
         </div>
     <q-dialog full-width full-height v-model="is_edit_company_dialog_open">
-        <edit-company :company_info="pasData"></edit-company>
+        <edit-company :company_info="pasData" @closePopup="is_edit_company_dialog_open = false"></edit-company>
     </q-dialog>
     </div>
 </template>
@@ -76,7 +76,7 @@ export default {
         editCompany(index)
         {
             this.is_edit_company_dialog_open = true;
-            console.log(this.company_list.data[index]);
+            // console.log(this.company_list.data[index]);
             this.pasData = this.company_list.data[index];
             return this.company_list.data[index];
             

@@ -92,7 +92,7 @@ export default {
     }),
     async mounted()
     {
-        this.parent= this.options_parent[0];
+        
         this.company_type = "public";
         this.getCompanies();
     },
@@ -108,6 +108,7 @@ export default {
             if(this.company_list.data.length>=1)
             {
                 this.company_list.data.forEach((com) => {
+                    if(com.company_info.parent_id=="No Parent")
                     com_list.push( {"_id" : com._id, "company_name" : com.company_info.company_name});
                 })
                 com_list.splice(0, 0, "No Parent");
@@ -118,7 +119,7 @@ export default {
             }
             this.company_list = com_list;
             // console.log("etos", this.company_list);
-
+             this.parent= this.company_list[0];
 
 
         },

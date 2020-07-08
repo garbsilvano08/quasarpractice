@@ -136,20 +136,31 @@ module.exports =
     async addCompany(req, res)
     {
         
-        
-        console.log(req.body.company_info)
+        req.body.company_info.subcompanies = [];
+        // console.log(req.body.company_info)
         let companies = await new MDB_COMPANIES().docs();
         let parentCompany= {};
         // console.log(companies);
-        companies.forEach((com) => {
-            if (com._id == req.body.company_info.parent_id)
-            {
-                parentCompany=com;
-            }
-        })
+        let createdCompany = await new MDB_COMPANIES().add({company_info: req.body.company_info});
 
-        console.log("parent company",parentCompany)
-        console.log("returned", await new MDB_COMPANIES().add({company_info: req.body.company_info}));
+        if (req.body.company_info.parent_id == "No Parent")
+        {
+
+
+        }
+        else
+        {
+            companies.forEach((com) => {
+                if (com._id == req.body.company_info.parent_id)
+                {
+                    parentCompany=com;
+                    parentCompany.company_info.subcompanies.push(createdCompany._id);
+                }
+            })
+            await new MDB_COMPANIES().update( parentCompany._id, parentCompany);
+
+        }
+        
     
             return res.send(true);
     },
@@ -265,4 +276,12 @@ module.exports =
     {
         return res.send(await new MDB_DEVICE().delete(req.body.id));
     }, 
+    async editCompany(req, res)
+    {
+        console.log(req.body);
+        // let updateDet = { _id:  ,company_info : req.body};
+        await new MDB_COMPANIES().update( req.body._id, req.body);
+        res.send(true);
+
+    }
 }
