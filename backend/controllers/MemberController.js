@@ -4,12 +4,15 @@ const path              = require('path');
 const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG  = require('../models/MDB_RAW_PASS_LOG');
 const MDB_STAFF         = require('../models/MDB_STAFF');
+const MDB_USER         = require('../models/MDB_USER');
 const MDB_BLACKLIST     = require('../models/MDB_BLACKLIST');
 const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
 const MDB_DEVICE        = require('../models/MDB_DEVICE');
 const Client            = require("@googlemaps/google-maps-services-js").Client;
 const client            = new Client({});
 const axios             = require('axios');
+const bcrypt            = require('bcrypt');
+const saltRounds        = 10;
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -136,14 +139,14 @@ module.exports =
     async addCompany(req, res)
     {
         
-        req.body.company_info.subcompanies = [];
+        req.body.subcompanies = [];
         // console.log(req.body.company_info)
         let companies = await new MDB_COMPANIES().docs();
         let parentCompany= {};
         // console.log(companies);
-        let createdCompany = await new MDB_COMPANIES().add({company_info: req.body.company_info});
+        let createdCompany = await new MDB_COMPANIES().add(req.body);
 
-        if (req.body.company_info.parent_id == "No Parent")
+        if (req.body.parent_id == "No Parent")
         {
 
 
@@ -151,10 +154,10 @@ module.exports =
         else
         {
             companies.forEach((com) => {
-                if (com._id == req.body.company_info.parent_id)
+                if (com._id == req.body.parent_id)
                 {
                     parentCompany=com;
-                    parentCompany.company_info.subcompanies.push(createdCompany._id);
+                    parentCompany.subcompanies.push(createdCompany._id);
                 }
             })
             await new MDB_COMPANIES().update( parentCompany._id, parentCompany);
@@ -286,8 +289,25 @@ module.exports =
     },
     async addUser(req, res)
     {
-        console.log(req.body)
-        // await new MDB_DEVICE().add(req.body)
+        bcrypt.hash(req.body.password, saltRounds,async function(err, hash) {
+            req.body.date_created = new Date();
+            req.body.password = hash;
+            await new MDB_USER().add(req.body)
+            res.send(true);
+        });
+        
+    },
+    async getUsers(req, res)
+    {
+        return res.send(await new MDB_USER().docs());
+    },
+    async deleteUsers(req, res)
+    {
+        await new MDB_USER().delete(req.body._id);
         res.send(true);
+    },
+    async updateUser(res, req)
+    {
+
     }
 }

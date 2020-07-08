@@ -13,7 +13,7 @@
             <div class="user-add__content-info user-add__content-grid">
                 <div class="content__input">
                     <div class="content__input-label">Full Name</div>
-                    <q-input v-model="user_information.fullname" outlined dense></q-input>
+                    <q-input v-model="user_information.full_name" outlined dense></q-input>
                 </div>
                 <div class="content__input">
                     <div class="content__input-label">Email Address</div>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="content__input">
                     <div class="content__input-label">Password</div>
-                    <q-input v-model="user_information.password" outlined dense></q-input>
+                    <q-input v-model="user_information.password" type="password" outlined dense></q-input>
                 </div>
             </div>
             <div class="user-add__content-info">
@@ -71,7 +71,7 @@ export default {
 
     data: () => ({
         user_information:{
-            fullname: '',
+            full_name: '',
             email: '',
             username: '',
             password: '',
@@ -100,7 +100,7 @@ export default {
             
             try
             {
-                if (this.user_information.fullname <= 2 ){
+                if (this.user_information.full_name <= 2 ){
                     throw new Error("Full Name is required.");
                 }
                 else if (this.user_information.email <= 2 ){
@@ -121,15 +121,29 @@ export default {
                 else if (document.getElementById("userImage").files.length <= 0 ){
                     throw new Error("Picture is required.");
                 }
-                
+                else if (this.user_information.user_type =="Receptionist"){
+                    if (this.user_information.company.company_info.parent_id== "No Parent")
+                    throw new Error("Receptionist can only create on branch company.");
+                }
                 else{
-                    console.log(this.user_information);
+                    this.$q.loading.show();
                     const formData = new FormData();
                     formData.append('image',document.getElementById("userImage").files[0] );
                     let res = await this.$_post_file(formData);
                     this.user_information.user_picture = res;
                     await this.$_post('member/add/user',  this.user_information );
 
+                    this.user_information={
+                        full_name: '',
+                        email: '',
+                        username: '',
+                        password: '',
+                        user_type: '',
+                        company: {},
+                    }
+                    document.getElementById("userImage").value = "";
+                    document.getElementById("imagePreview").src = "../../../assets/Member/placeholder-img.jpg";
+                    this.$q.loading.hide();
                 }
             }
             catch (e)

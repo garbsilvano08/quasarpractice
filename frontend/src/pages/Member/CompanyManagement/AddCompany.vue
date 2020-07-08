@@ -108,8 +108,8 @@ export default {
             if(this.company_list.data.length>=1)
             {
                 this.company_list.data.forEach((com) => {
-                    if(com.company_info.parent_id=="No Parent")
-                    com_list.push( {"_id" : com._id, "company_name" : com.company_info.company_name});
+                    if(com.parent_id=="No Parent")
+                    com_list.push( {"_id" : com._id, "company_name" : com.company_name});
                 })
                 com_list.splice(0, 0, "No Parent");
             }
@@ -142,7 +142,7 @@ export default {
                     const formData = new FormData();
                     formData.append('image',document.getElementById("uploadImage").files[0] );
                     let res = await this.$_post_file(formData);
-                    await this.$_post('member/add/company', { company_info: { company_name: this.input_company_name,  company_location: this.input_location , company_type:this.company_type, company_logo_url: res, parent_id: this.parent } });
+                    await this.$_post('member/add/company', { company_name: this.input_company_name,  company_location: this.input_location , company_type:this.company_type, company_logo_url: res, parent_id: this.parent } );
                     this.input_company_name = "";
                     this.input_location = "";
                     this.company_type = this.company_type = "public";

@@ -19,7 +19,7 @@
                             
                             <div></div>
                             <!-- <img id="uploadPreview" style="width: 200px; height: 200px;" /> -->
-                            <img class="content__img img__sm" id="uploadPreview" :src="company_details.company_info.company_logo_url"/>
+                            <img class="content__img img__sm" id="uploadPreview" :src="company_details.company_logo_url"/>
                             <input style="display:none" id="uploadImage" accept="image/*" @change="PreviewImage()" ref="uploader" class="hidden-uploader" type="file">
                             <q-btn class="btn-upload btn-primary" flat dense no-caps label="Upload" @click="getFile"></q-btn>
                         </div>
@@ -28,11 +28,11 @@
                     <div class="company-add__content-info company-add__content-grid">
                         <div class="content__input">
                             <div class="content__input-label">Company Name</div>
-                            <q-input v-model="company_details.company_info.company_name" outlined dense></q-input>
+                            <q-input v-model="company_details.company_name" outlined dense></q-input>
                         </div>
                         <div class="content__input">
                             <div class="content__input-label">Location</div>
-                            <q-input v-model="company_details.company_info.company_location" outlined dense></q-input>
+                            <q-input v-model="company_details.company_location" outlined dense></q-input>
                         </div>
                     </div>
 
@@ -103,7 +103,7 @@ export default {
         input_location: '',
         parent: '',
         company_pic: "",
-        company_details: { company_info:{} },
+        company_details: { },
         company_list : [],
         does_picture_change : false,
     }),
@@ -114,7 +114,7 @@ export default {
             this.company_details = this.company_info;
         }
         this.getParent();
-        this.company_type = this.company_details.company_info.company_type
+        this.company_type = this.company_details.company_type
     },
     methods:{
         async getParent()
@@ -125,8 +125,8 @@ export default {
             if(this.company_list.data.length>=1)
             {
                 this.company_list.data.forEach((com) => {
-                    if(com._id==this.company_details.company_info.parent_id)
-                    this.parent = com.company_info.company_name;
+                    if(com._id==this.company_details.parent_id)
+                    this.parent = com.company_name;
                     
                 })
             }
@@ -143,10 +143,10 @@ export default {
             this.$q.loading.show();
             try
             {
-                if (this.company_details.company_info.company_name.length <= 2 ){
+                if (this.company_details.company_name.length <= 2 ){
                     throw new Error("Company Name is required.");
                 }
-                else if (this.company_details.company_info.company_location.length <= 2 ){
+                else if (this.company_details.company_location.length <= 2 ){
                     throw new Error("Location is required.");
                 }
                 else{
@@ -155,13 +155,13 @@ export default {
                         const formData = new FormData();
                         formData.append('image',document.getElementById("uploadImage").files[0] );
                         let res = await this.$_post_file(formData);
-                        this.company_details.company_info.company_logo_url = res;
+                        this.company_details.company_logo_url = res;
                     }
                     // this.company_details._id = this.company_info._id;
                     
                     // let pasDat = { _id: this.company_info._id, company_info: this.company_details.company_info }
                     // console.log(this.company_details);
-                    this.company_details.company_info.company_type = this.company_type;
+                    this.company_details.company_type = this.company_type;
                     await this.$_post('member/edit/company', this.company_details );
                     this.$q.loading.hide();
                     this.$emit('closePopup');

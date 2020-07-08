@@ -13,7 +13,7 @@
         <div class="company-management__container content__grid-3x3">
             <div v-for="(company, i) in this.company_list.data" :key="i"  class="company-management__content content__card">
                 <div class="company-management__info-logo">
-                    <img :src=company.company_info.company_logo_url>
+                    <img :src=company.company_logo_url>
                 </div>
                 <div class="company-management__info-content">
                     <div class="company-management__info-btn">
@@ -21,10 +21,10 @@
                         <q-btn flat dense rounded :ripple="false" icon="mdi-square-edit-outline" @click="editCompany(i)"></q-btn>
                     </div>
                     <div class="company-management__info-name">
-                        {{company.company_info.company_name}}
+                        {{company.company_name}}
                     </div>
                     <div class="company-management__info-number">
-                        Owned {{company.company_info.subcompanies.length}} Establishment(s)
+                        Owned {{company.subcompanies.length}} Establishment(s)
                     </div>
                     <div class="company-management__info-people">
                         300 People Registered Here
