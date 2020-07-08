@@ -14,7 +14,7 @@
         color: #233b61;
         line-height: 1.4rem;
 
-        .content__name, .content__temperature {
+        .content__name, .content__details {
             font-size: 14px;
             font-weight: 700;
         }
@@ -28,21 +28,17 @@
             }
         }
 
-        .content__location {
-            color: #ffffff;
-            font-size: 12px;
-            font-weight: 500;
-            background-color: #464de4;
-            padding: 3px 15px;
-            border-radius: 4px;
-            margin-top: 5px;
-            text-align: center;
-            width: 140px;
-            display           : -webkit-box;
-            text-overflow     : ellipsis;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            word-break: break-all;
+        .content__details {
+            line-height: 1.6rem;
+
+            span {
+                color: #ffffff;
+                font-size: 12px;
+                font-weight: 500;
+                background-color: #464de4;
+                padding: 3px 15px;
+                border-radius: 4px;
+            }
         }
     }
 }

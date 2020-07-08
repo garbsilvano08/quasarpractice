@@ -1,0 +1,22 @@
+const MONGOOSE  = require('../config/mongo');
+const MODEL     = require('./MODEL');
+const Schema    = MONGOOSE.Schema;
+
+const schema    = new Schema(
+{
+    company_name:       { type: String,  required: true },
+    device_id:          { type: String,  required: true },
+    date_installed:     { type: Date,    required: true },
+    date_created:       { type: Date,    required: true },
+    company_info:       { type: Object,  required: true },
+});
+
+class MDB_DEVICE extends MODEL
+{
+    constructor()
+    {
+        super('devices', schema);
+    }
+}
+
+module.exports = MDB_DEVICE;

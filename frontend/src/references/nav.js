@@ -1,19 +1,19 @@
 module.exports =
 [
     {
-        key: 'member_dashboard',
+        key: 'dashboard',
         label: 'Dashboard',
         icon: 'mdi-chart-bar',
         route: 'member_dashboard',
     },
     {
-        key: 'member_notification',
+        key: 'notification',
         label: 'Notification',
         icon: 'mdi-bell-ring',
         route: 'member_notification',
     },
     {
-        key: 'member_frontdesk_visitor',
+        key: 'frontdesk_visitor',
         label: 'Frontdesk',
         icon: 'mdi-monitor-cellphone',
         route: 'member_frontdesk_visitor',
@@ -43,7 +43,7 @@ module.exports =
         ]
     },
     {
-        key: 'account-directory',
+        key: 'account_directory',
         label: 'Account Directory',
         icon: 'mdi-account-group',
         sub:
@@ -66,17 +66,17 @@ module.exports =
         ]
     },
     {
-        key: '',
+        key: 'user_management',
         label: 'User Management',
         icon: 'mdi-account-multiple',
         sub:
         [
-            { label: 'All User', route: '' },
-            { label: '+ Add User', route: '' },
+            { label: 'All User', route: 'member_alluser' },
+            { label: '+ Add User', route: 'member_adduser' },
         ]
     },
     {
-        key: '',
+        key: 'company_management',
         label: 'Company Management',
         icon: 'mdi-briefcase',
         sub:
@@ -86,7 +86,7 @@ module.exports =
         ]
     },
     {
-        key: '',
+        key: 'device_management',
         label: 'Device Management',
         icon: 'mdi-cellphone',
         sub:

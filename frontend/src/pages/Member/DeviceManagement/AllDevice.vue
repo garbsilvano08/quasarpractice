@@ -8,7 +8,7 @@
                 <q-select v-model="select__company" :options="options_company" outlined dense></q-select>
             </div>
         </div>
-        <div class="account-directory__container content__box">
+        <div class="device-management__container content__box">
             <div class="content__table">
                 <table>
                     <thead>
@@ -20,23 +20,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>D1ABC123</td>
-                            <td>Green Sun Hotel</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-active">Uninstall</td>
-                        </tr>
-                        <tr>
-                            <td>D1ABC123</td>
-                            <td>Green Sun Hotel</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-active">Uninstall</td>
-                        </tr>
-                        <tr>
-                            <td>D1ABC123</td>
-                            <td>Green Sun Hotel</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-active">Uninstall</td>
+                        <tr v-for="(device, index) in this.device_list.data" :key="index">
+                            <td>{{ device.device_id }}</td>
+                            <td>{{ device.company_name }}</td>
+                            <td>{{ device.date_installed}}</td>
+                            <td @click="deleteDevice(device._id)" class="td-active">Uninstall</td>
                         </tr>
                     </tbody>
                 </table>
@@ -47,13 +35,55 @@
 
 <script>
 import "./DeviceManagement.scss";
+import { postGetDevice, postGetCompanies, postDeleteDevice } from '../../../references/url';
 
 export default {
     data: () => ({
-        select__company: '',
+        select__company: 'All Companies',
         options_company: [
             'All Companies'
-        ]
+        ],
+        device_list: [],
+        company_list: []
     }),
+
+    watch:
+    {
+        async select__company(val)
+        {
+            if (val == 'All Companies')
+            {
+                await this.getAllDevice()
+            }
+            else
+            {
+                await this.getAllDevice(val)
+            }
+        }
+    },
+
+    methods:
+    {
+        async deleteDevice(id)
+        {
+            console.log(id);
+            await this.$_post(postDeleteDevice, {id: id});
+            if (this.select__company == 'All Companies') await this.getAllDevice()
+            else await this.getAllDevice(this.select__company)
+        },
+        async getAllDevice(company)
+        {
+           this.device_list = await this.$_post(postGetDevice, {find_device: {company_name: company}});
+        }
+    },
+
+    async mounted()
+    {
+        await this.getAllDevice()
+        this.company_list = await this.$_post(postGetCompanies);
+        for (let company of this.company_list.data) {
+            this.options_company.push(company.company_info.company_name)
+        }
+    }
 }
 </script>

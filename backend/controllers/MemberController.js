@@ -3,9 +3,10 @@ const multer            = require('multer');
 const path              = require('path');
 const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG  = require('../models/MDB_RAW_PASS_LOG');
-const MDB_STAFF     = require('../models/MDB_STAFF');
-const MDB_BLACKLIST = require('../models/MDB_BLACKLIST');
+const MDB_STAFF         = require('../models/MDB_STAFF');
+const MDB_BLACKLIST     = require('../models/MDB_BLACKLIST');
 const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
+const MDB_DEVICE        = require('../models/MDB_DEVICE');
 const Client            = require("@googlemaps/google-maps-services-js").Client;
 const client            = new Client({});
 const axios             = require('axios');
@@ -236,5 +237,32 @@ module.exports =
     async getCompany(req, res)
     {
         return res.send(await new MDB_COMPANIES().docs({'company_info.company_name': req.body.name}));
+    },   
+
+    async updateStaff(req, res)
+    {
+        return res.send(await new MDB_STAFF().update(req.body.id, req.body.update_staff));
     },    
+    async updateVisitor(req, res)
+    {
+        return res.send(await new MDB_RAW_VISITOR().update(req.body.id, req.body.update_visitor));
+    },  
+    async updateBlacklist(req, res)
+    {
+        return res.send(await new MDB_BLACKLIST().update(req.body.id, req.body.update_blacklist));
+    },  
+    async addDevice(req, res)
+    {
+        await new MDB_DEVICE().add(req.body.device_info)
+        return res.send(true);
+    },
+
+    async getDevices(req, res)
+    {
+        return res.send(await new MDB_DEVICE().docs(req.body.find_device));
+    }, 
+    async deleteDevices(req, res)
+    {
+        return res.send(await new MDB_DEVICE().delete(req.body.id));
+    }, 
 }
