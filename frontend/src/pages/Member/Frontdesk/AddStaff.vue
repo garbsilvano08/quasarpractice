@@ -1,10 +1,11 @@
 <template>
     <div class="frontdesk">
         <div class="frontdesk__header">
-            <div class="header__title">ADD STAFF</div>
+            <div v-if="this.$route.params.is_edit" class="header__title">UPDATE STAFF</div>
+            <div v-else class="header__title">ADD STAFF</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
-                <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
+                <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps :label="this.$route.params.is_edit ? 'Update' : 'Save'"></q-btn>
             </div>
         </div>
         <div class="frontdesk__container content__grid-2x2">
@@ -24,7 +25,7 @@
                         <div class="content__title">Choose ID</div>
                         <div class="content__select">
                             <div class="content__select-label">Identification Card Type</div>
-                            <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
+                            <q-select v-model="staff_class.id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
                             <q-img class="content__img" :src="staff_class.id_img ? staff_class.id_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
@@ -122,23 +123,6 @@
             </div>
         </div>
 
-        <q-dialog v-model="open_camera">
-            <q-card>
-                <q-card-section class="row items-center q-pb-none">
-                <div class="text-h6">Capture Image</div>
-                <q-space />
-                <q-btn icon="close" flat round dense v-close-popup />
-                </q-card-section>
-
-                <q-card-section>
-                    <div class="text-center">
-                        <video id="video" width="500" height="500" autoplay></video>
-                        <q-btn icon="camera" @click="takePhoto"  id="snap"></q-btn>
-                    </div>
-                </q-card-section>
-            </q-card>
-        </q-dialog>
-
         <!-- UNUSUAL BODY TEMPERATURE -->
         <q-dialog v-model="profile_img_dialog">
             <q-card style="width: 700px; max-width: 80vw;">
@@ -185,7 +169,7 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 // Refferences
 import position_reference from '../../../references/position';
 
-import { postAddStaff , postGetCompanies, postAddPerson} from '../../../references/url';
+import { postAddStaff , postGetCompanies, postAddPerson, postUpdateStaff} from '../../../references/url';
 import LoginVue from '../../Front/Login.vue';
 
 export default {
@@ -194,7 +178,6 @@ export default {
         position_input: '',
         id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
         img: '',
-        open_camera: false,
         profile_img_dialog: false,
         select__id_type: 'Drivers License',
         select__gender: '',
@@ -217,20 +200,6 @@ export default {
     }),
     watch:
     {
-        open_camera(val)
-        {
-            if (val)
-            {
-                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    // Not adding `{ audio: true }` since we only want video now
-                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-                    //video.src = window.URL.createObjectURL(stream);
-                    video.srcObject = stream;
-                    video.play();
-                });
-                }
-            }
-        },
         is_done(val)
         {
             if (val)
@@ -270,26 +239,9 @@ export default {
         },
         openFilemanager(type)
         {
-            console.log(type);
-            
             if (type) this.$refs.idUploader.click();
             else this.$refs.uploader.click();
 
-        },
-        testing(){
-            var formData = new FormData();
-            formData.append("pass", "123456");
-            formData.append("length", "50"); // number 123456 is immediately converted to a string "123456"
-            formData.append("index", "0"); // number 123456 is immediately converted to a string "123456"
-
-            var request = new XMLHttpRequest();
-            request.open("POST", "http://192.168.1.177:8080/person/findByPage");
-            request.onreadystatechange = function() {
-                if (request.readyState == XMLHttpRequest.DONE) {
-                    console.log(JSON.parse(request.responseText));
-                }
-            }
-            request.send(formData);
         },
 
         async checkImage(image)
@@ -302,29 +254,10 @@ export default {
             this.$q.loading.hide();
         },
 
-        openCamera()
-        {
-            this.open_camera = true
-        },
-
-        async takePhoto()
-        {
-            var canvas = document.getElementById('canvas');
-            var context = canvas.getContext('2d');
-            var video = document.getElementById('video');
-
-            document.getElementById("snap").addEventListener("click", function() {
-                context.drawImage(video, 0, 0, 640, 480);
-
-            this.image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-
-            });
-        },
         async submit()
         {
-            
             let data = {
-                id_type: this.select__id_type,
+                id_type: this.staff_class.id_type,
                 company_details: this.getCompany( this.staff_class.company_name),
                 account_img: this.staff_class.account_img,
                 id_img: this.staff_class.id_img,
@@ -346,12 +279,30 @@ export default {
             this.$q.loading.show();
             try
             {
-                await this.$_post(postAddStaff, data);
-                this.staff_class.eraseAll()
-                Notify.create({
-                    color: 'green',
-                    message: 'Successfully added Staff'
-                }); 
+                if (this.$route.params.is_edit)
+                {
+                    await this.$_post(postUpdateStaff, {id: this.$route.params.account_info._id, update_staff: data});
+                    Notify.create({
+                        color: 'green',
+                        message: 'Successfully updated Staff'
+                    }); 
+                    data.type = 'Staff'
+                    this.$router.push({
+                        name: 'member_personal-information',
+                        params: {
+                            account_info: data,
+                        }
+                    })
+                }
+                else
+                {
+                    await this.$_post(postAddStaff, data);
+                    this.staff_class.eraseAll()
+                    Notify.create({
+                        color: 'green',
+                        message: 'Successfully added Staff'
+                    }); 
+                }
             }
             catch(e)
             {
@@ -365,6 +316,11 @@ export default {
     },
     async mounted()
     {
+        if (this.$route.params.is_edit) 
+        {
+            this.staff_class = new OpticalReadClass(this.$route.params.account_info)
+        }
+        
         this.company_list = await this.$_post(postGetCompanies);
         for (let company of this.company_list.data) {
             this.options_company.push(company.company_info.company_name)
