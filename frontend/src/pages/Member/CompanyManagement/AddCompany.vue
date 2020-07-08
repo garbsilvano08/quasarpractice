@@ -148,6 +148,7 @@ export default {
                     this.company_type = this.company_type = "public";
                     document.getElementById("uploadImage").value = "";
                     document.getElementById("uploadPreview").src = "/img/placeholder-img.jpg";
+                    this.getCompanies();
                     this.$q.loading.hide();
                 }
             }

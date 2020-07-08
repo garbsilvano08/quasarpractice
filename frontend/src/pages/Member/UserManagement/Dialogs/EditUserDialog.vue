@@ -49,7 +49,7 @@
                     <div class="content__select">
                         <div class="content__select-label">Tag a Company</div>
                         <!-- <q-select v-model="user_information.select_tag_company" :options="options_tag_company" outlined dense></q-select> -->
-                        <q-select v-model="user_information.company.company_info.company_name" disable :options="options_user_type" outlined dense></q-select>
+                        <q-select v-model="user_information.company.company_name" disable :options="options_user_type" outlined dense></q-select>
                         <!-- <com-picker @select=getCompanyData></com-picker> -->
                     
 
@@ -89,7 +89,7 @@ export default {
             username: '',
             password: '',
             user_type: '',
-            company: {company_info:{company_name:""}},
+            company: {company_name:""},
             does_picture_change : false,
         },
         options_user_type: [
@@ -103,11 +103,11 @@ export default {
     }),
     mounted()
     {
-        console.log(this.user_info);
+        // console.log(this.user_info);
         if(this.user_info){
             this.user_information = this.user_info;
         }
-        console.log(this.user_information)
+        // console.log(this.user_information)
     },
     methods:
     {
@@ -136,20 +136,20 @@ export default {
                 else if (isEmpty(this.user_information.company)){
                     throw new Error("select company.");
                 }
-                else if (document.getElementById("userImage").files.length <= 0 ){
-                    throw new Error("Picture is required.");
-                }
-                else if (this.user_information.user_type =="Receptionist"){
-                    if (this.user_information.company.company_info.parent_id== "No Parent")
-                    throw new Error("Receptionist can only create on branch company.");
-                }
                 else{
+                    if (this.does_picture_change)
+                    {
+                        const formData = new FormData();
+                        formData.append('image',document.getElementById("userImage").files[0] );
+                        let res = await this.$_post_file(formData);
+                        this.user_information.user_picture = res;
+                    }
+                    
+                    // console.log(this.user_information);
                     this.$q.loading.show();
-                    const formData = new FormData();
-                    formData.append('image',document.getElementById("userImage").files[0] );
-                    let res = await this.$_post_file(formData);
-                    this.user_information.user_picture = res;
-                    await this.$_post('member/edit/user',  this.user_information );
+                    await this.$_post('member/update/user',  this.user_information );
+                    this.$q.loading.hide();
+                    this.$emit('closePopup');
 
                     this.user_information={
                         full_name: '',
@@ -160,8 +160,8 @@ export default {
                         company: {},
                     }
                     document.getElementById("userImage").value = "";
-                    document.getElementById("imagePreview").src = "../../../assets/Member/placeholder-img.jpg";
-                    this.$q.loading.hide();
+                    document.getElementById("imagePreview").src = "../../assets/Member/placeholder-img.jpg";
+                    
                 }
             }
             catch (e)

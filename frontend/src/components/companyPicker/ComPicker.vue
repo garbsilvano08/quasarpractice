@@ -1,7 +1,7 @@
 <template>
     <div>
         <q-btn bordered class="full-width" unelevated outline align="between">
-            <span>{{value.company_info.company_name ? value.company_info.company_name : "Choose"}}</span>
+            <span>{{value.company_name ? value.company_name : "Choose"}}</span>
             <q-icon size="small" class="icon" name="fa fa-caret-down"></q-icon>
                        
                         <q-menu fit> 
@@ -9,15 +9,15 @@
                                 <div v-for="(data, i) in this.parent_companies" :key="i">
                                     <q-item clickable @click="getValue(data)" v-close-popup>
                                         <q-item-section>
-                                            <q-item-label>{{data.company_info.company_name}}</q-item-label>
+                                            <q-item-label>{{data.company_name}}</q-item-label>
                                         </q-item-section>
                                     </q-item>
 
-                                    <div v-for="(membership, a) in getSubCompanies(data.company_info.subcompanies)" :key="a">
+                                    <div v-for="(membership, a) in getSubCompanies(data.subcompanies)" :key="a">
                                         <q-item clickable v-close-popup @click="getValue(getSubCompanyDetails(membership))" >
                                             <q-item-section>
                                                 
-                                                <q-item-label class="q-ml-md" >{{ getSubCompanyDetails(membership).company_info.company_name}}</q-item-label>
+                                                <q-item-label class="q-ml-md" >{{ getSubCompanyDetails(membership).company_name}}</q-item-label>
 
                                             </q-item-section>
                                         </q-item>
@@ -36,7 +36,7 @@ export default {
     data: () => ({
         company_list: [],
         parent_companies: [],
-        value : { company_info: { company: ""} },
+        value : {   company: "" },
     }),
     async mounted()
     {
@@ -51,7 +51,7 @@ export default {
         getParentCompanies()
         {
             this.company_list.data.forEach((com) => {
-                if(com.company_info.parent_id == "No Parent")
+                if(com.parent_id == "No Parent")
                 {
                     this.parent_companies.push(com);
                 }

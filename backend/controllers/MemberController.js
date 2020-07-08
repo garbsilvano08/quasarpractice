@@ -317,7 +317,7 @@ module.exports =
     }, 
     async editCompany(req, res)
     {
-        console.log(req.body);
+        // console.log(req.body);
         // let updateDet = { _id:  ,company_info : req.body};
         await new MDB_COMPANIES().update( req.body._id, req.body);
         res.send(true);
@@ -342,8 +342,10 @@ module.exports =
         await new MDB_USER().delete(req.body._id);
         res.send(true);
     },
-    async updateUser(res, req)
+    async updateUser(req, res)
     {
-
+        console.log(req.body)
+        await new MDB_USER().update( req.body._id, req.body);
+        res.send(true);
     }
 }
