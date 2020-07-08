@@ -283,5 +283,11 @@ module.exports =
         await new MDB_COMPANIES().update( req.body._id, req.body);
         res.send(true);
 
+    },
+    async addUser(req, res)
+    {
+        console.log(req.body)
+        // await new MDB_DEVICE().add(req.body)
+        res.send(true);
     }
 }

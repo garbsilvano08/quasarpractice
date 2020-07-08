@@ -161,6 +161,7 @@ export default {
                     
                     // let pasDat = { _id: this.company_info._id, company_info: this.company_details.company_info }
                     // console.log(this.company_details);
+                    this.company_details.company_info.company_type = this.company_type;
                     await this.$_post('member/edit/company', this.company_details );
                     this.$q.loading.hide();
                     this.$emit('closePopup');
