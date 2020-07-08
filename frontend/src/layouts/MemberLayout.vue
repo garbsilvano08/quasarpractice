@@ -53,7 +53,7 @@
 import EssentialLink    from 'components/EssentialLink.vue'
 import Layout           from './MemberLayout.scss'
 import navigation       from '../references/nav'
-import { postAddPerson }                        from '../references/url';
+import { postAddPerson , postSavePerson}                        from '../references/url';
 import Model from "../models/Model";
 import { base64StringToBlob } from 'blob-util';
 
@@ -112,10 +112,40 @@ export default
     {
         async checkQueueSync()
         {
+            
             // Info
             for (let visitor of this.visitors)
             {
-                await this.$_post('member/add/visitor', visitor);
+                let data = {
+                    visit_purpose:      visitor.visitor_purpose.purpose_visit,
+                    contact_person:     visitor.visitor_purpose.contact_person,
+                    destination:        visitor.visitor_purpose.destination,
+
+                    id_img: visitor.personal_information.id_image,
+                    id_num: visitor.personal_information.id_number,
+                    id_type: visitor.personal_information.id_type,
+
+                    person_img: visitor.personal_information.account_img,
+                    last_name: visitor.personal_information.last_name,
+                    middle_name: visitor.personal_information.middle_name,
+                    given_name: visitor.personal_information.first_name,
+                    gender: visitor.personal_information.gender,
+                    birthday: new Date(visitor.personal_information.birth_day),
+                    nationality: visitor.personal_information.nationality,
+                    home_address: visitor.personal_information.home_address,
+                    contact_number: visitor.personal_information.contact_number,
+                    emergency_contact: visitor.personal_information.emergency_contact_number,
+                    date_created: new Date(),
+                    company_name: visitor.personal_information.company_name,
+                    frontdesk_person_id: visitor.personal_information.frontdesk_person_id,
+                    frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
+                    is_active: true,
+
+                    category: 'Visitors'
+                }
+
+                await this.$_post(postSavePerson, {person_info: data} );
+
                 await this.db.delete(visitor.id, "visitors");
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
             }

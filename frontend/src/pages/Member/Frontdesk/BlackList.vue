@@ -166,7 +166,7 @@ import "./Frontdesk.scss";
 // Classes
 import OpticalReadClass from '../../../classes/OpticalReadClass';
 
-import { postAddBlacklist, postUpdateBlacklist, postGetCompanies } from '../../../references/url';
+import { postAddBlacklist, postUpdateBlacklist, postGetCompanies, postSavePerson } from '../../../references/url';
 
 export default {
     data:() =>
@@ -215,7 +215,8 @@ export default {
         async submit()
         {
             let data = {
-                account_img: this.blacklist_class.account_img,
+
+                person_img: this.blacklist_class.account_img,
                 last_name: this.blacklist_class.last_name,
                 middle_name: this.blacklist_class.middle_name,
                 given_name: this.blacklist_class.given_name,
@@ -225,8 +226,12 @@ export default {
                 home_address: this.blacklist_class.home_address,
                 contact_number: this.blacklist_class.contact_number,
                 emergency_contact: this.blacklist_class.emergency_contact,
+                date_created: new Date(),
                 company_name: this.blacklist_class.company_name,
-                reason_blacklist: this.blacklist_class.reason_blacklist
+                is_active: true,
+                
+                reason_blacklist: this.blacklist_class.reason_blacklist,
+                category: 'Blacklist'
             }
             
             this.$q.loading.show();
@@ -234,7 +239,8 @@ export default {
             {
                 if (this.$route.params.is_edit)
                 {
-                    await this.$_post(postUpdateBlacklist, {id: this.$route.params.account_info._id, update_blacklist: data});
+                    await this.$_post(postSavePerson, {id: this.$route.params.account_info._id, update_blacklist: data});
+                    // await this.$_post(postUpdateBlacklist, {id: this.$route.params.account_info._id, update_blacklist: data});
                     Notify.create({
                         color: 'green',
                         message: 'Successfully updated Blacklist'
@@ -249,7 +255,7 @@ export default {
                 }
                 else
                 {
-                    await this.$_post(postAddBlacklist, data);
+                    await this.$_post(postSavePerson, {person_info: data});
                     this.blacklist_class.eraseAll()
                     Notify.create({
                         color: 'green',

@@ -45,7 +45,8 @@ app.post('/api/member/add/device',  member_only, member_controller.addDevice);
 app.post('/api/member/get/device',  member_only, member_controller.getDevices);
 app.post('/api/member/delete/device',  member_only, member_controller.deleteDevices);
 
-
+// Person
+app.post('/api/member/save/person',  member_only, member_controller.savePerson);
 
 app.listen({port: 4001}, (err) =>
 {

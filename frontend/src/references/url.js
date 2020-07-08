@@ -24,4 +24,7 @@ exports.postUpdateBlacklist = 'member/update/blacklist';
 exports.postAddDevice       = 'member/add/device';
 exports.postGetDevice       = 'member/get/device';
 exports.postDeleteDevice       = 'member/delete/device';
+
+// Person
+exports.postSavePerson       = 'member/save/person';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';
