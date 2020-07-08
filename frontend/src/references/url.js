@@ -27,4 +27,6 @@ exports.postDeleteDevice       = 'member/delete/device';
 
 // Person
 exports.postSavePerson       = 'member/save/person';
+
+exports.postCountLogs       = 'member/count/logs';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';

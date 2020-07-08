@@ -1,4 +1,4 @@
-const AccountClass      = require('../classess/AccountClass');
+const CounterClass      = require('../classess/CounterClass');
 const multer            = require('multer');
 const path              = require('path');
 const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
@@ -171,6 +171,7 @@ module.exports =
     {
         try
         {
+            
             await new MDB_STAFF().add(
             {
                 id_type: req.body.id_type,
@@ -281,6 +282,9 @@ module.exports =
 
     async savePerson(req, res)
     {
+        console.log('check');
+        
+        await new CounterClass().counterActivities()
         let data = await new MDB_PERSON().add(req.body.person_info);
         // Identification
         let id_info = {

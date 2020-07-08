@@ -153,11 +153,13 @@ export default
             // Logs
             for (let log of this.passLogs)
             {
+                console.log(log, 'logs');
+                
                 await this.$_post('member/add/pass_log', { data: log });
                 await this.db.delete(log.id, "passLogs");
                 this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
             }
-
+            await this.$_post('member/count/logs');
             setTimeout(() => this.checkQueueSync(), 1000);
         },
         async getLog()
