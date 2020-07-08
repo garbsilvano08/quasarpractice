@@ -12,40 +12,42 @@ const globals = methods.methods;
 
 export default class OpticalReadClass
 {
-    constructor()
+    constructor(data = {})
     {
-        this.account_img = ''
-        this.id_img = ''
-        this.last_name = ''
-        this.middle_name = ''
-        this.given_name = ''
-        this.id_num = ''
-        this.id_type = 'Drivers License'
-        this.gender = ''
-        this.birthday = ''
-        this.nationality = ''
-        this.home_address = ''
-        this.contact_number = ''
-        this.emergency_contact = ''
-        this.company_name = ''
-        this.company_details = {}
+        this.account_img = data.hasOwnProperty('account_img') ? data.account_img : '';
+        this.id_img = data.hasOwnProperty('id_img') ? data.id_img : '';
+        this.last_name = data.hasOwnProperty('last_name') ? data.last_name : '';
+        this.middle_name = data.hasOwnProperty('middle_name') ? data.middle_name : '';
+        this.given_name = data.hasOwnProperty('given_name') ? data.given_name : '';
+        this.id_num = data.hasOwnProperty('id_num') ? data.id_num : '';
+        this.id_type = data.hasOwnProperty('id_type') ? data.id_type : 'Drivers License'
+        this.gender = data.hasOwnProperty('gender') ? data.gender : 'Male';
+        this.birthday = data.hasOwnProperty('birthday') ? data.birthday : '';
+        this.nationality = data.hasOwnProperty('nationality') ? data.nationality : '';
+        this.home_address = data.hasOwnProperty('home_address') ? data.home_address : '';
+        this.contact_number = data.hasOwnProperty('contact_number') ? data.contact_number : '';
+        this.emergency_contact = data.hasOwnProperty('emergency_contact') ? data.emergency_contact : '';
+        this.company_name = data.hasOwnProperty('company_name') ? data.company_name : '';
+        this.company_details = data.hasOwnProperty('company_details') ? data.company_details : {}
         
         // For Visitor
-        this.purpose_visit = ''
-        this.contact_person = ''
-        this.destination = ''
+        this.purpose_visit = data.hasOwnProperty('purpose_visit') ? data.purpose_visit : ''
+        this.contact_person = data.hasOwnProperty('contact_person') ? data.contact_person : ''
+        this.destination = data.hasOwnProperty('destination') ? data.destination : ''
 
         // For Adding Staff
-        this.position = '',
+        this.position = data.hasOwnProperty('position') ? data.position : ''
 
         // For Adding Blacklist
-        this.reason_blacklist = ''
+        this.reason_blacklist = data.hasOwnProperty('reason_blacklist') ? data.reason_blacklist : ''
 
         this.id_words = []
         this.converted_image = []
     }
     eraseAll()
     {
+        this.account_img =  '';
+        this.id_img = '';
         this.address = ''
         this.last_name = ''
         this.given_name = ''
@@ -55,9 +57,10 @@ export default class OpticalReadClass
         this.nationality = ''
         this.id_num = ''
         this.contact_number = ''
-        this.emergency_number = ''
+        this.emergency_contact = ''
         this.company_name = ''
         this.home_address = ''
+
 
         // For Adding Staff
         this.position = '',

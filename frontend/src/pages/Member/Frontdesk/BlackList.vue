@@ -14,8 +14,10 @@
                     <div class="frontdesk__content-info">
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
-                            <q-img class="content__img" src="../../../assets/Member/placeholder-img.jpg"></q-img>
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Browse Face Detection" @click="profile_img_dialog = true"></q-btn>
+                            <q-img class="content__img" :src="blacklist_class.account_img ? blacklist_class.account_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
+                            <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Browse Face Detection" @click="openFilemanager()"></q-btn>
+                            <!-- <q-btn class="btn-upload btn-primary" flat dense no-caps label="Browse Face Detection" @click="profile_img_dialog = true"></q-btn> -->
                         </div>
                     </div>
                     <!-- REASON TO BLACKLIST -->
@@ -164,7 +166,7 @@ import "./Frontdesk.scss";
 // Classes
 import OpticalReadClass from '../../../classes/OpticalReadClass';
 
-import { postAddBlacklist } from '../../../references/url';
+import { postAddBlacklist, postUpdateBlacklist } from '../../../references/url';
 
 export default {
     data:() =>
@@ -193,9 +195,29 @@ export default {
 
     methods:
     {
+        openFilemanager(type)
+        {
+            this.$refs.uploader.click();
+        },
+
+        async uploadImage()
+        {  
+            this.blacklist_class.account_img = await this.getImageURL()
+        },
+
+         async getImageURL(type)
+        {
+            let oFReader = new FileReader();
+            const formData = new FormData();
+            formData.append('image',document.getElementById("uploadImage").files[0]); 
+
+            return await this.$_post_file(formData);
+        },
+
         async submit()
         {
             let data = {
+                account_img: this.blacklist_class.account_img,
                 last_name: this.blacklist_class.last_name,
                 middle_name: this.blacklist_class.middle_name,
                 given_name: this.blacklist_class.given_name,
@@ -212,12 +234,30 @@ export default {
             this.$q.loading.show();
             try
             {
-                await this.$_post(postAddBlacklist, data);
-                this.blacklist_class.eraseAll()
-                Notify.create({
-                    color: 'green',
-                    message: 'Successfully added blacklist'
-                }); 
+                if (this.$route.params.is_edit)
+                {
+                    await this.$_post(postUpdateBlacklist, {id: this.$route.params.account_info._id, update_blacklist: data});
+                    Notify.create({
+                        color: 'green',
+                        message: 'Successfully updated Blacklist'
+                    }); 
+                    data.type = 'Blacklist'
+                    this.$router.push({
+                        name: 'member_personal-information',
+                        params: {
+                            account_info: data,
+                        }
+                    })
+                }
+                else
+                {
+                    await this.$_post(postAddBlacklist, data);
+                    this.blacklist_class.eraseAll()
+                    Notify.create({
+                        color: 'green',
+                        message: 'Successfully added blacklist'
+                    }); 
+                }
             }
             catch(e)
             {
@@ -227,6 +267,13 @@ export default {
                 }); 
             }
             this.$q.loading.hide();
+        }
+    },
+    mounted()
+    {
+        if (this.$route.params.is_edit) 
+        {
+            this.blacklist_class = new OpticalReadClass(this.$route.params.account_info)
         }
     }
 }

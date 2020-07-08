@@ -7,7 +7,7 @@
                 <q-btn @click="editAccount()" class="btn-primary btn-edit" flat dense no-caps label="Edit"></q-btn>
             </div>
         </div>
-        <div class="personal-info__container content__box">
+        <div v-if="account_info" class="personal-info__container content__box">
             <div class="personal-info__holder">
                 <div class="personal-info__content-header">
                     <q-icon name="mdi-apple-icloud" size="30px"></q-icon>
@@ -209,10 +209,17 @@ export default {
         },
         editAccount()
         {
+            let name = ''
+
+            if (this.account_info.type == 'Staff') name = 'member_frontdesk_staff'
+            else if (this.account_info.type == 'Blacklist') name = 'member_frontdesk_blacklist'
+            else if (this.account_info.type == 'Visitor') name = 'member_frontdesk_visitor'
+
             this.$router.push({
-                name: "member_frontdesk_staff",
+                name: name,
                 params: {
-                    account_info: this.account_info
+                    account_info: this.account_info,
+                    is_edit: 'edit'
                 }
             })
         }
@@ -221,7 +228,7 @@ export default {
     async mounted()
     {
         this.account_info = this.$route.params.account_info
-        console.log(this.account_info.company_details.company_info.company_logo);
+        console.log(this.account_info);
         
     }
 

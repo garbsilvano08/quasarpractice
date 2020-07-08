@@ -225,5 +225,18 @@ module.exports =
     async getCompany(req, res)
     {
         return res.send(await new MDB_COMPANIES().docs({'company_info.company_name': req.body.name}));
+    },   
+
+    async updateStaff(req, res)
+    {
+        return res.send(await new MDB_STAFF().update(req.body.id, req.body.update_staff));
     },    
+    async updateVisitor(req, res)
+    {
+        return res.send(await new MDB_RAW_VISITOR().update(req.body.id, req.body.update_visitor));
+    },  
+    async updateBlacklist(req, res)
+    {
+        return res.send(await new MDB_BLACKLIST().update(req.body.id, req.body.update_blacklist));
+    },  
 }
