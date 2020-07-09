@@ -10,6 +10,7 @@ const schema    = new Schema(
     date_created:       { type: Date,    required: true },
     company_info:       { type: Object,  required: true },
     device_ip:          { type: String,  required: true },
+    company_id:         { type: String,  required: true },
 });
 
 class MDB_DEVICE extends MODEL

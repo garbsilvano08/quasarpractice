@@ -85,6 +85,7 @@ export default {
                         date_installed: new Date(this.input_date_installed),
                         date_created: new Date(),
                         company_name: this.select_company.company_name,
+                        company_id: this.select_company._id,
                     }
                     await this.$_post(postAddDevice, {device_info: device_info});
                     this.select_company = ''

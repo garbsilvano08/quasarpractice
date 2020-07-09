@@ -273,7 +273,6 @@ module.exports =
 
     async getDevices(req, res)
     {
-        console.log(req.body.find_device)
         return res.send(await new MDB_DEVICE().docs(req.body.find_device));
     }, 
     async deleteDevices(req, res)
