@@ -53,9 +53,23 @@
 import EssentialLink    from 'components/EssentialLink.vue'
 import Layout           from './MemberLayout.scss'
 import navigation       from '../references/nav'
-import { postAddPerson , postSavePerson}                        from '../references/url';
+import { postAddPerson , postSavePerson ,postGetDevice}                        from '../references/url';
 import Model from "../models/Model";
 import { base64StringToBlob } from 'blob-util';
+
+function toDataUrl(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            callback(reader.result);
+        }
+        reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+}
 
 export default
 {
@@ -71,6 +85,7 @@ export default
         navigation: [],
         db: new Model(),
         devicelist: [{ip: "192.168.1.177", device_id: "d1"},{ip: "192.168.1.116", device_id: "d2"}],
+        device_list: [],
     }),
     computed:
     {
@@ -87,7 +102,7 @@ export default
             return this.$store.state.sync.passLogs;
         }
     },
-    mounted()
+    async mounted()
     {
         if(!this.$user_info)
         {
@@ -95,6 +110,7 @@ export default
         }
 
         this.navigation = navigation;
+        await this.getAllDevice(this.$user_info.company._id);
     },
     async created()
     {
@@ -110,9 +126,14 @@ export default
     },
     methods:
     {
+        async getAllDevice(id)
+        {
+           this.device_list = await this.$_post(postGetDevice, {find_device: {company_id: id}});
+           this.device_list = this.device_list.data;
+        },
         async checkQueueSync()
         {
-            
+            this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
             // Info
             for (let visitor of this.visitors)
             {
@@ -144,6 +165,42 @@ export default
                     category: 'Visitors'
                 }
 
+//***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
+                toDataUrl(visitor.personal_information.account_img, async (myBase64)=> {
+                console.log("pumasok")
+                let result           = '';
+                let characters       = '0123456789';
+                let charactersLength = characters.length;
+                for ( let i = 0; i < 9; i++ ) {
+                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                }
+
+                let sex="";
+                if (visitor.personal_information.gender=="Female")
+                {
+                    sex=0;
+                }
+                else if (visitor.personal_information.gender=="Male")
+                {
+                    sex=1;
+                }
+                let today= new Date()
+                let expStartTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+                let expEndTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+(today.getDate()+1).toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+
+                let tabletFormData = new FormData();
+                let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
+                tabletFormData.append("pass", "123456");
+                tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name +"', 'person_id' : '"+ visitor.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+visitor.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ visitor.personal_information.birth_day +"', 'address' : '"+ visitor.personal_information.home_address +"', 'vipId': '"+visitor.personal_information.frontdesk_person_id+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
+                
+                this.device_list.forEach(async (device) => {
+                console.log("nag create")
+
+                let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
+                })
+                
+                });
+//*********************************************************************************************************************************
                 await this.$_post(postSavePerson, {person_info: data} );
 
                 await this.db.delete(visitor.id, "visitors");
@@ -159,7 +216,7 @@ export default
                 await this.db.delete(log.id, "passLogs");
                 this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
             }
-            await this.$_post('member/count/logs');
+            // await this.$_post('member/count/logs');
             setTimeout(() => this.checkQueueSync(), 1000);
         },
         async getLog()

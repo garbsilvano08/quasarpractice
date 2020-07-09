@@ -425,28 +425,28 @@ export default {
                 // let parsedDate = Date.parse(new Date());
                 // result = parsedDate.toString();
                 // console.log(this.personal_information.gender);
-                let sex="";
-                if (this.personal_information.gender=="Female")
-                {
-                    sex=0;
-                }
-                else if (this.personal_information.gender=="Male")
-                {
-                    sex=1;
-                }
-                let today= new Date()
-                let expStartTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
-                let expEndTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+(today.getDate()+1).toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+                                // let sex="";
+                                // if (this.personal_information.gender=="Female")
+                                // {
+                                //     sex=0;
+                                // }
+                                // else if (this.personal_information.gender=="Male")
+                                // {
+                                //     sex=1;
+                                // }
+                                // let today= new Date()
+                                // let expStartTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+                                // let expEndTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+(today.getDate()+1).toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
 
-                let tabletFormData = new FormData();
-                let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                tabletFormData.append("pass", "123456");
-                tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ this.personal_information.first_name+" "+ this.personal_information.middle_name +" "+ this.personal_information.last_name +"', 'person_id' : '"+ this.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+this.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ this.personal_information.birth_day +"', 'address' : '"+ this.personal_information.home_address +"', 'vipId': '"+result+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
-                
-                this.device_list.forEach(async (device) => {
+                                // let tabletFormData = new FormData();
+                                // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
+                                // tabletFormData.append("pass", "123456");
+                                // tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ this.personal_information.first_name+" "+ this.personal_information.middle_name +" "+ this.personal_information.last_name +"', 'person_id' : '"+ this.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+this.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ this.personal_information.birth_day +"', 'address' : '"+ this.personal_information.home_address +"', 'vipId': '"+result+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
+                                
+                                // this.device_list.forEach(async (device) => {
 
-                let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
-                })
+                                // let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
+                                // })
                 this.$q.notify(
                 {
                     color: 'green',
