@@ -23,7 +23,7 @@
                         <tr v-for="(device, index) in this.device_list.data" :key="index">
                             <td>{{ device.device_id }}</td>
                             <td>{{ device.company_name }}</td>
-                            <td>{{ device.date_installed}}</td>
+                            <td>{{ convertToDate(device.date_installed)}}</td>
                             <td @click="deleteDevice(device._id)" class="td-active">Uninstall</td>
                         </tr>
                     </tbody>
@@ -73,17 +73,27 @@ export default {
         },
         async getAllDevice(company)
         {
+            console.log(company)
            this.device_list = await this.$_post(postGetDevice, {find_device: {company_name: company}});
+        },
+        convertToDate(timestamp){
+            let date = new Date(timestamp);
+            return date.getDate().toString().padStart(2, "0")+'-'+(date.getMonth()+1).toString().padStart(2, "0")+ '-' +date.getFullYear();
         }
     },
 
     async mounted()
     {
+        console.log("user_info",this.$user_info)
         await this.getAllDevice()
         this.company_list = await this.$_post(postGetCompanies);
         for (let company of this.company_list.data) {
+            console.log(this.$user_info.company._id, company._id)
+            if(this.$user_info.company._id == company._id)
             this.options_company.push(company.company_name)
         }
+        this.company_list = await this.$_post(postGetCompanies);
+        console.log(this.options_company)
     }
 }
 </script>
