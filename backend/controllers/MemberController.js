@@ -280,11 +280,21 @@ module.exports =
         return res.send(await new MDB_DEVICE().delete(req.body.id));
     }, 
 
+    // async getPerson(req, res)
+    // {
+    //     let data = {}
+    //     // await new CounterClass().counterActivities()
+    //     let data.personal = await new MDB_PERSON().docs(req.body.person_info);
+    //     await new MDB_IDENTIFICATION().add(id_info);
+    //     await new MDB_PURPOSE().add(purpose_visit);
+
+
+    //     res.send(data)
+    // }, 
+
     async savePerson(req, res)
     {
-        console.log('check');
-        
-        await new CounterClass().counterActivities()
+        // await new CounterClass().counterActivities()
         let data = await new MDB_PERSON().add(req.body.person_info);
         // Identification
         let id_info = {
