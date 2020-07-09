@@ -84,7 +84,6 @@ export default
 		leftDrawerOpen: false,
         navigation: [],
         db: new Model(),
-        devicelist: [{ip: "192.168.1.177", device_id: "d1"},{ip: "192.168.1.116", device_id: "d2"}],
         device_list: [],
     }),
     computed:
@@ -167,7 +166,6 @@ export default
 
 //***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
                 toDataUrl(visitor.personal_information.account_img, async (myBase64)=> {
-                console.log("pumasok")
                 let result           = '';
                 let characters       = '0123456789';
                 let charactersLength = characters.length;
@@ -194,7 +192,6 @@ export default
                 tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name +"', 'person_id' : '"+ visitor.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+visitor.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ visitor.personal_information.birth_day +"', 'address' : '"+ visitor.personal_information.home_address +"', 'vipId': '"+visitor.personal_information.frontdesk_person_id+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
                 
                 this.device_list.forEach(async (device) => {
-                console.log("nag create")
 
                 let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
                 })
@@ -238,9 +235,9 @@ export default
             let logs= [];
             var request = new XMLHttpRequest();
 
-            this.devicelist.forEach((device) => {
+            this.device_list.forEach((device) => {
             var request = new XMLHttpRequest();
-            request.open("POST", "http://"+device.ip+":8080/newFindRecords");
+            request.open("POST", "http://"+device.device_ip+":8080/newFindRecords");
             request.onreadystatechange = () => {
                 if (request.readyState == XMLHttpRequest.DONE) {
                     let resp = request.responseText;
