@@ -7,11 +7,8 @@ module.exports =
 {
     async counterLogs(req, res)
     {
-        await new CounterClass().counterActivities()
-        // await MDB_COUNT_OVERALL.update({company_id: req.body.company_id}, 
-        // {
-        //     key: req.body.key,
-        //     $inc: {count: 1}
-        // })
+        let date_string = new Date().toISOString().split('T')[0]
+        date_string = date_string.split('-')
+        await new CounterClass().counterActivities('Traffic', date_string)
     }
 }
