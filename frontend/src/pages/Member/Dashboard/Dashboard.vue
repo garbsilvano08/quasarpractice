@@ -183,7 +183,7 @@
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
-                  Visitor Logs
+                  Alert Logs
                </div>
                <q-select v-model="select_date" :options="options" outlined dense></q-select>
             </div>
@@ -197,10 +197,10 @@
                         <div class="visitor-logs__user-temp">36.5 °C</div>
                      </div>
                      <div class="visitor-logs__info-visit">
-                        <div class="visitor-logs__visit-datetime">Today 1:00 PM</div>
-                        <div class="visitor-logs__visit-reason">
-                           <span class="badge__official-business"></span>
-                           Official Business</div>
+                        <div class="visitor-logs__visit-details">
+                           6/19/2020 9:00 AM<br>
+                           <span>Green Sun Hotel</span>
+                        </div>
                      </div>
                   </div>
 
@@ -212,10 +212,10 @@
                         <div class="visitor-logs__user-temp">36.5 °C</div>
                      </div>
                      <div class="visitor-logs__info-visit">
-                        <div class="visitor-logs__visit-datetime">Today 1:00 PM</div>
-                        <div class="visitor-logs__visit-reason">
-                           <span class="badge__collection"></span>
-                           Collection & Pickup</div>
+                        <div class="visitor-logs__visit-details">
+                           6/17/2020 1:00 PM<br>
+                           <span>My Phone</span>
+                        </div>
                      </div>
                   </div>
 
@@ -227,15 +227,15 @@
                         <div class="visitor-logs__user-temp">36.5 °C</div>
                      </div>
                      <div class="visitor-logs__info-visit">
-                        <div class="visitor-logs__visit-datetime">Today 1:00 PM</div>
-                        <div class="visitor-logs__visit-reason">
-                           <span class="badge__delivery"></span>
-                           Delivery</div>
+                        <div class="visitor-logs__visit-details">
+                           6/15/2020 4:00 pM<br>
+                           <span>Green Sun Hotel</span>
+                        </div>
                      </div>
                   </div>
                </div>
                <div class="visitor-logs__btn">
-                  <q-btn flat dense no-caps class="btn-primary" label="See All"></q-btn>
+                  <q-btn flat dense no-caps class="btn-see btn-outline" label="See All"></q-btn>
                </div>
             </div>
          </div>
