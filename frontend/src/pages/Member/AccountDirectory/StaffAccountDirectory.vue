@@ -47,7 +47,7 @@ import "./AccountDirectory.scss";
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 
 // References
-import { postGetStaff } from '../../../references/url';
+import { postGetStaff, postGetPersons } from '../../../references/url';
 
 export default {
     components: {
@@ -79,7 +79,7 @@ export default {
     },
     async mounted()
     {
-        this.staff_list = await this.$_post(postGetStaff);
+        this.staff_list = await this.$_post(postGetPersons, {find_by_category: {category: 'Staff'}});
     }
 
 }

@@ -23,10 +23,13 @@ exports.postGetBlacklist    = 'member/get/blacklist';
 exports.postUpdateBlacklist = 'member/update/blacklist';
 exports.postAddDevice       = 'member/add/device';
 exports.postGetDevice       = 'member/get/device';
-exports.postDeleteDevice       = 'member/delete/device';
+exports.postDeleteDevice    = 'member/delete/device';
 
 // Person
-exports.postSavePerson       = 'member/save/person';
+exports.postSavePerson      = 'member/save/person';
+exports.postGetPersons      = 'member/get/persons';
+exports.postGetPerson       = 'member/get/person';
 
 exports.postCountLogs       = 'member/count/logs';
+exports.postGetLogs       = 'member/get/logs';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';

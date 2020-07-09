@@ -6,6 +6,7 @@
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps :label="this.$route.params.is_edit ? 'Update' : 'Save'"></q-btn>
+                <q-btn @click="test()" class="btn-save btn-primary" flat dense no-caps label='Test'></q-btn>
             </div>
         </div>
         <div class="frontdesk__container content__grid-2x2">
@@ -20,8 +21,24 @@
                             <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="openFilemanager()"></q-btn>
                         </div>
                     </div>
+                     <!-- EMPLOYMENT INFORMATION -->
+                    <div class="frontdesk__content content__box" style="margin-top: 30px;">
+                        <div class="frontdesk__content">
+                            <div class="frontdesk__content-info">
+                                <div class="content__title">Employment Information</div>
+                                <div class="content__select">
+                                    <div class="content__select-label">Tag a Company</div>
+                                    <q-select v-model="staff_class.company_name" :options="options_company" outlined dense></q-select>
+                                </div>
+                                <div class="content__input">
+                                    <div class="content__input-label">Position</div>
+                                    <q-select v-model="staff_class.position" :options="options_position" outlined dense></q-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- CHOOSE ID -->
-                    <div class="frontdesk__content-info">
+                    <!-- <div class="frontdesk__content-info">
                         <div class="content__title">Choose ID</div>
                         <div class="content__select">
                             <div class="content__select-label">Identification Card Type</div>
@@ -31,10 +48,8 @@
                             <q-img class="content__img" :src="staff_class.id_img ? staff_class.id_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file">
                             <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture ID" @click="openFilemanager('id')"></q-btn>
-                            <!-- <q-img id="canvas" class="content__img img__sm" :src="id_url ? id_url : '../../../assets/Member/placeholder-img.jpg'"></q-img>
-                            <q-btn @click="checkImage()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn> -->
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="content__grid-right">
@@ -44,7 +59,7 @@
                         <div class="frontdesk__content-info">
                             <div class="content__title">Personal Information</div>
                             <!-- ID Information -->
-                            <div class="frontdesk__content-grid">
+                            <!-- <div class="frontdesk__content-grid">
                                 <div class="content__select">
                                     <div class="content__select-label">Identification Card Type</div>
                                     <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
@@ -53,7 +68,7 @@
                                     <div class="content__input-label">ID Type</div>
                                     <q-input v-model="staff_class.id_num" outlined dense></q-input>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- Firstname -->
                             <div class="content__input">
                                 <div class="content__input-label">First Name</div>
@@ -105,7 +120,7 @@
                     </div>
                 </div>
                 <!-- EMPLOYMENT INFORMATION -->
-                <div class="frontdesk__content content__box" style="margin-top: 30px;">
+                <!-- <div class="frontdesk__content content__box" style="margin-top: 30px;">
                     <div class="frontdesk__content">
                         <div class="frontdesk__content-info">
                             <div class="content__title">Employment Information</div>
@@ -119,7 +134,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -169,7 +184,7 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 // Refferences
 import position_reference from '../../../references/position';
 
-import { postAddStaff , postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson} from '../../../references/url';
+import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson} from '../../../references/url';
 import LoginVue from '../../Front/Login.vue';
 
 export default {
@@ -213,12 +228,34 @@ export default {
 
     methods:
     {
+        test()
+        {
+            this.staff_class =
+            {
+                // id_img: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+                // id_num: '123423123',
+                // id_type: 'Drivers License',
+
+                account_img: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+                given_name: 'Joe',
+                middle_name: 'Jonas',
+                last_name: 'Brown',
+                gender: 'Male',
+                birthday: '2020-07-02',
+                nationality: 'Filipino',
+                home_address: 'Balagtas',
+                contact_number: '09556741079',
+                emergency_contact: '09556741079',
+                company_name: 'Mang Inasal Balagtas',
+                position : 'Sub Company'
+            }
+        },
         getCompany(company)
         {
             for (let comp of this.company_list.data) {
-                if (comp.company_info.company_name == company)
+                if (comp.company_name == company)
                 {
-                    return comp
+                    return comp._id
                 }
             }
         },
@@ -257,11 +294,11 @@ export default {
         async submit()
         {
             let data = {
-                id_img: this.staff_class.id_img,
-                id_num: this.staff_class.id_num,
-                id_type: this.staff_class.id_type,
+                // id_img: this.staff_class.id_img,
+                // id_num: this.staff_class.id_num,
+                // id_type: this.staff_class.id_type,
                 
-                company_details: this.getCompany( this.staff_class.company_name),
+                // company_details: this.getCompany( this.staff_class.company_name),
                 person_img: this.staff_class.account_img,
                 last_name: this.staff_class.last_name,
                 middle_name: this.staff_class.middle_name,
@@ -274,6 +311,7 @@ export default {
                 emergency_contact: this.staff_class.emergency_contact,
                 date_created: new Date(),
                 company_name: this.staff_class.company_name,
+                company_id: this.getCompany( this.staff_class.company_name),
                 is_active: true,
 
                 position: this.staff_class.position,
@@ -315,7 +353,7 @@ export default {
             {
                 Notify.create({
                     color: 'red',
-                    message: 'Try again'
+                    message: 'Try again' + e.message
                 }); 
             }
             this.$q.loading.hide();
@@ -330,7 +368,7 @@ export default {
         
         this.company_list = await this.$_post(postGetCompanies);
         for (let company of this.company_list.data) {
-            this.options_company.push(company.company_info.company_name)
+            this.options_company.push(company.company_name) 
         }
         
     }
