@@ -6,7 +6,7 @@ const schema    = new Schema(
 {
     company_id: { type: String, required: true },
     key: { type: String, required: true },
-    count: { type: String, required: true },
+    count: { type: Number, required: true },
     date_string: { type: String, required: true }
 });
 
