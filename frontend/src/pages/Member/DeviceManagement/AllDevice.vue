@@ -82,7 +82,7 @@ export default {
         await this.getAllDevice()
         this.company_list = await this.$_post(postGetCompanies);
         for (let company of this.company_list.data) {
-            this.options_company.push(company.company_info.company_name)
+            this.options_company.push(company.company_name)
         }
     }
 }
