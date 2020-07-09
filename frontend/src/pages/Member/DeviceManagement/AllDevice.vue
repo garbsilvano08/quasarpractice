@@ -5,7 +5,7 @@
                 DEVICE MANAGEMENT <br>
                 <span>300 DEVICES INSTALLED</span></div>
             <div class="header__filter">
-                <q-select v-model="select__company" :options="options_company" outlined dense></q-select>
+                <!-- <q-select v-model="select__company" :options="options_company" outlined dense></q-select> -->
             </div>
         </div>
         <div class="device-management__container content__box">
@@ -23,7 +23,7 @@
                         <tr v-for="(device, index) in this.device_list.data" :key="index">
                             <td>{{ device.device_id }}</td>
                             <td>{{ device.company_name }}</td>
-                            <td>{{ device.date_installed}}</td>
+                            <td>{{ convertToDate(device.date_installed)}}</td>
                             <td @click="deleteDevice(device._id)" class="td-active">Uninstall</td>
                         </tr>
                     </tbody>
@@ -66,24 +66,32 @@ export default {
     {
         async deleteDevice(id)
         {
-            console.log(id);
             await this.$_post(postDeleteDevice, {id: id});
-            if (this.select__company == 'All Companies') await this.getAllDevice()
-            else await this.getAllDevice(this.select__company)
+            // if (this.select__company == 'All Companies') await this.getAllDevice()
+            // else await this.getAllDevice(this.select__company)
+            await this.getAllDevice(this.$user_info.company._id)
         },
         async getAllDevice(company)
         {
-           this.device_list = await this.$_post(postGetDevice, {find_device: {company_name: company}});
+           this.device_list = await this.$_post(postGetDevice, {find_device: {company_id: company}});
+        },
+        convertToDate(timestamp){
+            let date = new Date(timestamp);
+            return date.getDate().toString().padStart(2, "0")+'-'+(date.getMonth()+1).toString().padStart(2, "0")+ '-' +date.getFullYear();
         }
     },
 
     async mounted()
     {
-        await this.getAllDevice()
-        this.company_list = await this.$_post(postGetCompanies);
-        for (let company of this.company_list.data) {
-            this.options_company.push(company.company_info.company_name)
-        }
+        await this.getAllDevice(this.$user_info.company._id);
+        // this.company_list = await this.$_post(postGetCompanies);
+        // for (let company of this.company_list.data) {
+        //     console.log(this.$user_info.company._id, company._id)
+        //     if(this.$user_info.company._id == company._id)
+        //     this.options_company.push(company.company_name)
+        // }
+        // this.company_list = await this.$_post(postGetCompanies);
+        // console.log(this.company_list)
     }
 }
 </script>

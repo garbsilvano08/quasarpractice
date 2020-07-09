@@ -1,11 +1,12 @@
 const jwt           = require('jsonwebtoken');
+const MDB_USER      = require('../models/MDB_USER');
 
 module.exports = (req, res, next) =>
 {
     let token       = req.headers.authorization;
     let token_mixer = process.env.TOKEN_MIXER;
 
-    jwt.verify(token, token_mixer ? token_mixer : 'water123', function(err, decoded)
+    jwt.verify(token, token_mixer ? token_mixer : 'water123', async function(err, decoded)
     {
         if (err)
         {
@@ -13,6 +14,8 @@ module.exports = (req, res, next) =>
         } 
         else
         {
+            let user_info = await new MDB_USER().doc(decoded._id);
+            req.user_info = user_info;
             next();
         }
     });

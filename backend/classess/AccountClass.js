@@ -2,6 +2,8 @@ const MDB_USER = require('../models/MDB_USER');
 const FormData = require('form-data');
 const axios = require('axios');
 const fs = require('fs');
+const bcrypt            = require('bcrypt');
+const saltRounds        = 10;
 
 module.exports = class AccountClass
 {
@@ -22,12 +24,22 @@ module.exports = class AccountClass
     async authenticate(email, password)
     {
         let res             = {};
-        let check_account   = await this.mdb_user.findByEmailPassword(email, password);
+        let check_account   = await this.mdb_user.findByEmail(email);
 
         if(check_account)
         {
-            res.status = "success";
-            res.data = check_account;
+            let check_password = await bcrypt.compare(password, check_account.password);
+
+            if(check_password)
+            {
+                res.status = "success";
+                res.data = check_account;
+            }
+            else 
+            {
+                res.status = "error";
+                res.message = "The account you are trying to find doesn't exist.";  
+            }
         }
         else
         {
@@ -53,9 +65,15 @@ module.exports = class AccountClass
      */
     async create(account_information)
     {
+        bcrypt.hash(account_information.password, saltRounds,async function(err, hash) {
+        account_information.date_created = new Date();
+        account_information.password = hash;
+        // await new MDB_USER().add(req.body)
+        // res.send(true);
+        
         let res = {};
 
-        let check_email = await this.mdb_user.findByEmail(account_information.email);
+        let check_email = await new MDB_USER().findByEmail(account_information.email);
 
         if(check_email)
         {
@@ -64,12 +82,13 @@ module.exports = class AccountClass
         }
         else
         {
-            let add_user_respose = await this.mdb_user.add(account_information);
+            let add_user_respose = await new MDB_USER().add(account_information);
             res.data = add_user_respose;
             res.status = "success";
         }
 
         return res;
+        });
     }
     async addingPerson(data){
         

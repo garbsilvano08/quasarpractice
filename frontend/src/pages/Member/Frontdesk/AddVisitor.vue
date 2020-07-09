@@ -211,6 +211,7 @@ function toDataUrl(url, callback) {
 }
 // Classes
 import OpticalReadClass from '../../../classes/OpticalReadClass';
+import { postGetDevice } from '../../../references/url';
 
 export default {
     data:() =>
@@ -257,12 +258,21 @@ export default {
             contact_person: null,
             destination: null
         },
-        ip_address: ["192.168.1.177", "192.168.1.116"],
+        device_list: [],
 
         db: new Model()
     }),
+    async mounted()
+    {
+        await this.getAllDevice(this.$user_info.company._id);
+    },
     methods:
     {
+        async getAllDevice(id)
+        {
+           this.device_list = await this.$_post(postGetDevice, {find_device: {company_id: id}});
+           this.device_list = this.device_list.data;
+        },
         test()
         {
             this.visitor_purpose=
@@ -433,9 +443,9 @@ export default {
                 tabletFormData.append("pass", "123456");
                 tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ this.personal_information.first_name+" "+ this.personal_information.middle_name +" "+ this.personal_information.last_name +"', 'person_id' : '"+ this.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+this.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ this.personal_information.birth_day +"', 'address' : '"+ this.personal_information.home_address +"', 'vipId': '"+result+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
                 
-                this.ip_address.forEach(async (ip) => {
+                this.device_list.forEach(async (device) => {
 
-                let rsp = await this.$axios.post("http://"+ip+":8080/person/create", tabletFormData).then(res => res.data);
+                let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
                 })
                 this.$q.notify(
                 {

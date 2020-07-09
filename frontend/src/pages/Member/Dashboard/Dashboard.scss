@@ -4,12 +4,37 @@
     .dashboard__header {
         display: flex;
         align-items: center;
+        width: 100%;
         margin-bottom: 30px;
 
-        .btn-export {
+        .content__title {
+            margin-bottom: 0px !important
+        }
+
+        .header__filter {
+            display: flex;
+            align-items: center;
             margin-left: auto;
+
+            .q-select {
+                width: 300px;
+                margin-left: 15px;
+                background-color: #e1e3f0;
+
+                .q-field__native {
+                    color: #233b61 !important;
+                    font-size: 12px;
+                    font-weight: 500;
+                    padding-left: 10px;
+                }
+            }
+
+            .btn-export {
+                margin-left: 15px;
+            }
         }
     }
+
 
     .dashboard__overview {
         display: grid;
@@ -172,9 +197,16 @@
                         }
 
                         .visitor-logs__info-user {
-                            color: #233b61;
                             font-size: 14px;
                             font-weight: 500;
+
+                            .visitor-logs__user-name {
+                                color: #233b61;
+                            }
+
+                            .visitor-logs__user-temp {
+                                color: #e85d00;
+                            }
                         }
 
                         .visitor-logs__info-visit {
@@ -183,32 +215,19 @@
                             font-weight: 500;
                             text-align: right;
 
-                            .visitor-logs__visit-datetime {
-                                color: rgba(#000000, .3);
-                            }
-
-                            .visitor-logs__visit-reason {
-                                display: flex;
-                                align-items: center;
-                                color: #233b61;
+                            .visitor-logs__visit-details {
+                                color: rgba(#000000, .6);
+                                font-size: 12px;
+                                font-weight: 500;
+                                line-height: 1.6rem;
 
                                 span {
-                                    width: 10px;
-                                    height: 10px;
-                                    border-radius: 100%;
-                                    margin-right: 10px;
-                                }
-
-                                .badge__official-business {
-                                    background-color: #9825f1;
-                                }
-
-                                .badge__collection {
-                                    background-color: #fd8e21;
-                                }
-
-                                .badge__delivery {
-                                    background-color: #fafd21;
+                                    color: #ffffff;
+                                    font-size: 12px;
+                                    font-weight: 700;
+                                    background-color: #464de4;
+                                    padding: 3px 15px;
+                                    border-radius: 4px;
                                 }
                             }
                         }
@@ -226,7 +245,7 @@
                 .visitor-logs__btn {
                     text-align: center;
 
-                    .btn-primary {
+                    .btn-see {
                         font-size: 12px !important;
                         font-weight: 700 !important;
                         width: 150px !important;

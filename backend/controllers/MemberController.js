@@ -12,8 +12,7 @@ const MDB_DEVICE        = require('../models/MDB_DEVICE');
 const Client            = require("@googlemaps/google-maps-services-js").Client;
 const client            = new Client({});
 const axios             = require('axios');
-const bcrypt            = require('bcrypt');
-const saltRounds        = 10;
+const AccountClass  = require('../classess/AccountClass');
 
 const MDB_PERSON        = require('../models/MDB_PERSON');
 const MDB_IDENTIFICATION       = require('../models/MDB_IDENTIFICATION');
@@ -351,13 +350,8 @@ module.exports =
     },
     async addUser(req, res)
     {
-        bcrypt.hash(req.body.password, saltRounds,async function(err, hash) {
-            req.body.date_created = new Date();
-            req.body.password = hash;
-            await new MDB_USER().add(req.body)
-            res.send(true);
-        });
-        
+        let response = await new AccountClass().create(req.body);
+        res.send(true);
     },
     async getUsers(req, res)
     {
@@ -372,5 +366,10 @@ module.exports =
     {
         await new MDB_USER().update( req.body._id, req.body);
         res.send(true);
+    },
+    async getDeviceByUser(req, res)
+    {
+        console.log(req.user_info);
+        console.log(await new MDB_DEVICE.docs());
     }
 }
