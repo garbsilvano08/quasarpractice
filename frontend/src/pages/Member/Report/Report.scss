@@ -1,0 +1,90 @@
+.report {
+    padding: 50px;
+
+    .report__header {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 30px;
+
+        .content__title {
+            margin-bottom: 0px !important
+        }
+
+        .header__filter {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+
+            .q-select {
+                width: 300px;
+                margin-left: 15px;
+                background-color: #e1e3f0;
+
+                .q-field__native {
+                    color: #233b61 !important;
+                    font-size: 12px;
+                    font-weight: 500;
+                    padding-left: 10px;
+                }
+            }
+
+            .select-lg {
+                width: 300px;
+            }
+
+            .select-sm {
+                width: 200px;
+            }
+
+            .btn-export {
+                margin-left: 15px;
+            }
+        }
+    }
+
+    .report__container {
+        .report__content {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 25px;
+            align-items: center;
+            margin-bottom: 15px;
+
+            .q-img {
+                height: 60px;
+                width: 60px;
+                border-radius: 100%;
+                border: solid 1px rgba(#000000, .15);
+            }
+
+            .report__info {
+                .report__info-details {
+                    color: rgba(#000000, .6);
+                    font-size: 14px;
+                    font-weight: 500;
+
+                    span {
+                        color: #233b61;
+                        font-weight: 700;
+                    }
+
+                    .text-red {
+                        color: #e70001 !important;
+                    }
+                }
+
+                .report__info-datetime {
+                    color: rgba(#000000, .6);
+                    font-size: 12px;
+                    font-weight: 500;
+                    margin-top: 5px;
+                }
+            }
+        }
+
+        .report__content:last-child {
+            margin-bottom: 0px !important;
+        }
+    }
+}

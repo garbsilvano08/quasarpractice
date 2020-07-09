@@ -4,12 +4,37 @@
     .dashboard__header {
         display: flex;
         align-items: center;
+        width: 100%;
         margin-bottom: 30px;
 
-        .btn-export {
+        .content__title {
+            margin-bottom: 0px !important
+        }
+
+        .header__filter {
+            display: flex;
+            align-items: center;
             margin-left: auto;
+
+            .q-select {
+                width: 300px;
+                margin-left: 15px;
+                background-color: #e1e3f0;
+
+                .q-field__native {
+                    color: #233b61 !important;
+                    font-size: 12px;
+                    font-weight: 500;
+                    padding-left: 10px;
+                }
+            }
+
+            .btn-export {
+                margin-left: 15px;
+            }
         }
     }
+
 
     .dashboard__overview {
         display: grid;

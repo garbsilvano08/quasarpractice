@@ -60,9 +60,9 @@ module.exports =
         icon: 'mdi-clipboard-text',
         sub:
         [
-            { label: 'Fever Logs', route: '' },
-            { label: 'Fever Monitoring', route: '' },
-            { label: 'Fever Heatmap', route: '' },
+            { label: 'Fever Detected', route: 'member_feverdetected_report' },
+            { label: 'Fever Monitoring', route: 'member_fevermonitoring_report' },
+            { label: 'Fever Heatmap', route: 'member_feverheatmap_report' },
         ]
     },
     {
