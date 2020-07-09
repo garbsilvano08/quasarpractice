@@ -122,7 +122,7 @@ export default {
                     throw new Error("Picture is required.");
                 }
                 else if (this.user_information.user_type =="Receptionist"){
-                    if (this.user_information.company.company_info.parent_id== "No Parent")
+                    if (this.user_information.company.parent_id== "No Parent")
                     throw new Error("Receptionist can only create on branch company.");
                 }
                 else{
