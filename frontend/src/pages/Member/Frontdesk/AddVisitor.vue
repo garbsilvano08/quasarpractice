@@ -5,6 +5,7 @@
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
+                <q-btn @click="test()" class="btn-save btn-primary" flat dense no-caps label="Test"></q-btn>
             </div>
         </div>
         <div class="frontdesk__container content__grid-2x2">
@@ -14,7 +15,7 @@
                     <div class="frontdesk__content-info">
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
-                            <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
+                            <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
                             <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="openFilemanager()"></q-btn>
                         </div>
@@ -32,7 +33,7 @@
                             <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
-                            <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '../../../assets/Member/placeholder-img.jpg'"></q-img>
+                            <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '/img/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file">
                             <q-btn @click="openFilemanager('id')" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
@@ -262,6 +263,64 @@ export default {
     }),
     methods:
     {
+        test()
+        {
+            this.visitor_purpose=
+            {
+                purpose_visit: 'Collection and Pickup',
+                contact_person: 'Ako',
+                destination: 'Sa kanila'
+            },
+            this.personal_information =
+            {
+                id_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+                account_img: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+                id_type: 'Drivers License',
+                id_number: '123423123',
+                first_name: 'Joe',
+                middle_name: 'Jonas',
+                last_name: 'Brown',
+                gender: 'Male',
+                birth_date: '2020-07-02',
+                nationality: 'Filipino',
+                home_address: 'Balagtas',
+                contact_number: '09556741079',
+                emergency_contact_number: '09556741079',
+                location: {
+                    "description": "Pandi, Bulacan, Philippines",
+                    "id": "a38381d0bd85fb79a8b674555426cb311c0e097e",
+                    "matched_substrings": [{
+                        "length": 5,
+                        "offset": 0
+                    }],
+                    "place_id": "ChIJ-Ug1FZirlzMRXgh19mV3Myg",
+                    "reference": "ChIJ-Ug1FZirlzMRXgh19mV3Myg",
+                    "structured_formatting": {
+                        "main_text": "Pandi",
+                        "main_text_matched_substrings": [{
+                            "length": 5,
+                            "offset": 0
+                        }],
+                        "secondary_text": "Bulacan, Philippines"
+                    },
+                    "terms": [{
+                        "offset": 0,
+                        "value": "Pandi"
+                    }, {
+                        "offset": 7,
+                        "value": "Bulacan"
+                    }, {
+                        "offset": 16,
+                        "value": "Philippines"
+                    }],
+                    "types": ["locality", "political", "geocode"]
+                },
+                location_coordinates: {
+                    "lat": 14.8756999,
+                    "lon": 120.9592956
+                }
+            }
+        },
         async checkImage(image)
         {   
             this.$q.loading.show();
@@ -275,7 +334,7 @@ export default {
             this.personal_information.middle_name = this.visitor_class.middle_name
             this.personal_information.home_address = this.visitor_class.home_address
             this.personal_information.gender = this.visitor_class.gender
-            this.personal_information.birth_date = this.visitor_class.birthday
+            this.personal_information.birth_date = this.visitor_class.birthday ? this.visitor_class.birthday : null
             this.personal_information.nationality = this.visitor_class.nationality
             this.$q.loading.hide();
         },
@@ -299,7 +358,7 @@ export default {
         {
             try
             {
-                this.personal_information.birth_date = new Date(this.personal_information.birth_date)
+                this.personal_information.birth_day = new Date(this.personal_information.birth_date)
                 const capitalize = (str) =>
                 {
                     str = str.split(" ");
@@ -335,13 +394,6 @@ export default {
 
                 if (this.personal_information.location) this.personal_information.location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.personal_information.location.place_id }).then(res => res.data);
 
-                await this.db.add(
-                {
-                    personal_information: this.personal_information,
-                    visitor_purpose: this.visitor_purpose
-                },
-                'visitors');
-
 //***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
                 toDataUrl(this.face_pic_path, async (myBase64)=> {
                 let result           = '';
@@ -350,6 +402,16 @@ export default {
                 for ( let i = 0; i < 9; i++ ) {
                     result += characters.charAt(Math.floor(Math.random() * charactersLength));
                 }
+                this.personal_information.frontdesk_person_id = result
+                this.personal_information.frontdesk_person_date = new Date()
+
+                await this.db.add(
+                {
+                    personal_information: this.personal_information,
+                    visitor_purpose: this.visitor_purpose
+                },
+                'visitors');
+
                 // let parsedDate = Date.parse(new Date());
                 // result = parsedDate.toString();
                 // console.log(this.personal_information.gender);
@@ -369,13 +431,17 @@ export default {
                 let tabletFormData = new FormData();
                 let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
                 tabletFormData.append("pass", "123456");
-                tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ this.personal_information.first_name+" "+ this.personal_information.middle_name +" "+ this.personal_information.last_name +"', 'person_id' : '"+ this.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+this.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ this.personal_information.birth_date +"', 'address' : '"+ this.personal_information.home_address +"', 'vipId': '"+result+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
-                console.log(); // myBase64 is the base64 string
+                tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ this.personal_information.first_name+" "+ this.personal_information.middle_name +" "+ this.personal_information.last_name +"', 'person_id' : '"+ this.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+this.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ this.personal_information.birth_day +"', 'address' : '"+ this.personal_information.home_address +"', 'vipId': '"+result+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
                 
                 this.ip_address.forEach(async (ip) => {
 
                 let rsp = await this.$axios.post("http://"+ip+":8080/person/create", tabletFormData).then(res => res.data);
                 })
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'Account was successfully created'
+                });
                 
                 });
 //*********************************************************************************************************************************

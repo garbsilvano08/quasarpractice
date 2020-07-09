@@ -13,7 +13,7 @@
         <div class="company-management__container content__grid-3x3">
             <div v-for="(company, i) in this.company_list.data" :key="i"  class="company-management__content content__card">
                 <div class="company-management__info-logo">
-                    <img :src=company.company_info.company_logo_url>
+                    <img :src=company.company_logo_url>
                 </div>
                 <div class="company-management__info-content">
                     <div class="company-management__info-btn">
@@ -21,10 +21,10 @@
                         <q-btn flat dense rounded :ripple="false" icon="mdi-square-edit-outline" @click="editCompany(i)"></q-btn>
                     </div>
                     <div class="company-management__info-name">
-                        {{company.company_info.company_name}}
+                        {{company.company_name}}
                     </div>
                     <div class="company-management__info-number">
-                        Owned 2 Establishment(s)
+                        Owned {{company.subcompanies.length}} Establishment(s)
                     </div>
                     <div class="company-management__info-people">
                         300 People Registered Here
@@ -34,7 +34,7 @@
 
         </div>
     <q-dialog full-width full-height v-model="is_edit_company_dialog_open">
-        <edit-company :company_info="pasData"></edit-company>
+        <edit-company :company_info="pasData" @closePopup="is_edit_company_dialog_open = false"></edit-company>
     </q-dialog>
     </div>
 </template>
@@ -66,9 +66,11 @@ export default {
             cancel: true,
             default: 'cancel'   // <<<<
             }).onOk(async () =>{
-              await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id} )
-              this.company_list.data.splice(index, 1);       
-              alert("deleted")      
+                this.$q.loading.show();
+                await this.$_post(postDeleteCompany, { id:this.company_list.data[index]._id} )
+                this.$q.loading.hide();
+                console.log(this.company_list.data)
+                this.company_list.data.splice(index, 1);
             });
             
             // let asd = await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id});
@@ -76,7 +78,7 @@ export default {
         editCompany(index)
         {
             this.is_edit_company_dialog_open = true;
-            console.log(this.company_list.data[index]);
+            // console.log(this.company_list.data[index]);
             this.pasData = this.company_list.data[index];
             return this.company_list.data[index];
             

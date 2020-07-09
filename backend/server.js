@@ -19,6 +19,7 @@ app.post('/api/front/register',         front_controller.register);
 
 
 const member_controller     = require('./controllers/MemberController');
+const count_controller     = require('./controllers/CountController');
 const member_only           = require('./middleware/MemberOnly');
 
 app.post('/api/member/add/staff', member_controller.addNewStaff);
@@ -31,6 +32,7 @@ app.post('/api/member/get/nearby_places',  member_only, member_controller.getNea
 app.post('/api/member/get/coordinates',  member_only, member_controller.getCoordinates);
 app.post('/api/member/get/visitors', member_only, member_controller.getVisitors);
 app.post('/api/member/add/company',  member_only, member_controller.addCompany);
+app.post('/api/member/edit/company',  member_only, member_controller.editCompany);
 app.post('/api/member/update/company',  member_only, member_controller.addCompany);
 app.post('/api/member/get/companies',  member_only, member_controller.getCompanies);
 app.post('/api/member/delete/company',  member_only, member_controller.deleteCompany);
@@ -44,8 +46,16 @@ app.post('/api/member/update/visitor',  member_only, member_controller.updateVis
 app.post('/api/member/add/device',  member_only, member_controller.addDevice);
 app.post('/api/member/get/device',  member_only, member_controller.getDevices);
 app.post('/api/member/delete/device',  member_only, member_controller.deleteDevices);
+app.post('/api/member/add/user',  member_only, member_controller.addUser);
+app.post('/api/member/get/user',  member_only, member_controller.getUsers);
+app.post('/api/member/delete/user',  member_only, member_controller.deleteUsers);
+app.post('/api/member/update/user',  member_only, member_controller.updateUser);
 
+// Person
+app.post('/api/member/save/person',  member_only, member_controller.savePerson);
 
+//Count
+app.post('/api/member/count/logs',  member_only, count_controller.counterLogs);
 
 app.listen({port: 4001}, (err) =>
 {

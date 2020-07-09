@@ -1,7 +1,8 @@
-const MDB_USER = require('../models/MDB_USER');
-const FormData = require('form-data');
-const axios = require('axios');
-const fs = require('fs');
+const MDB_USER  = require('../models/MDB_USER');
+const FormData  = require('form-data');
+const axios     = require('axios');
+const fs        = require('fs');
+const bcrypt    = require('bcrypt');
 
 module.exports = class AccountClass
 {
@@ -22,12 +23,22 @@ module.exports = class AccountClass
     async authenticate(email, password)
     {
         let res             = {};
-        let check_account   = await this.mdb_user.findByEmailPassword(email, password);
+        let check_account   = await this.mdb_user.findByEmail(email);
 
         if(check_account)
         {
-            res.status = "success";
-            res.data = check_account;
+            let check_password = await bcrypt.compare(password, check_account.password);
+
+            if(check_password)
+            {
+                res.status = "success";
+                res.data = check_account;
+            }
+            else 
+            {
+                res.status = "error";
+                res.message = "The account you are trying to find doesn't exist.";  
+            }
         }
         else
         {

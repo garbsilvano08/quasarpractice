@@ -28,7 +28,7 @@
                 <div class="company-add__content-info">
                     <div class="content__select">
                         <div class="content__select-label">Parent</div>
-                        <q-select v-model="select_parent" :options="options_parent" outlined dense></q-select>
+                        <q-select v-model="parent"  map-options emit-value  option-label="company_name" option-value="_id" :options="company_list" outlined dense></q-select>
                     </div>
                 </div>
 
@@ -83,19 +83,48 @@ export default {
         company_type: '',
         input_company_name: '',
         input_location: '',
-        select_parent: '',
+        parent: '',
         options_parent: [
             'Parent'
         ],
         company_pic: "",
+        company_list: [],
     }),
-    mounted()
+    async mounted()
     {
-        this.select_parent= this.options_parent[0];
+        
         this.company_type = "public";
+        this.getCompanies();
     },
     methods:{
-        async submit(){
+        async getCompanies()
+        {
+            this.company_list = await this.$_post(postGetCompanies);
+            let com_list = [];
+            
+
+            
+
+            if(this.company_list.data.length>=1)
+            {
+                this.company_list.data.forEach((com) => {
+                    if(com.parent_id=="No Parent")
+                    com_list.push( {"_id" : com._id, "company_name" : com.company_name});
+                })
+                com_list.splice(0, 0, "No Parent");
+            }
+            else 
+            {
+                com_list.push("No Parent");
+            }
+            this.company_list = com_list;
+            // console.log("etos", this.company_list);
+             this.parent= this.company_list[0];
+
+
+        },
+        async submit()
+        {
             this.$q.loading.show();
 
             try
@@ -113,12 +142,13 @@ export default {
                     const formData = new FormData();
                     formData.append('image',document.getElementById("uploadImage").files[0] );
                     let res = await this.$_post_file(formData);
-                    await this.$_post('member/add/company', { company_info: { company_name: this.input_company_name,  company_location: this.input_location , company_type:this.company_type, company_logo_url: res} });
+                    await this.$_post('member/add/company', { company_name: this.input_company_name,  company_location: this.input_location , company_type:this.company_type, company_logo_url: res, parent_id: this.parent } );
                     this.input_company_name = "";
                     this.input_location = "";
                     this.company_type = this.company_type = "public";
                     document.getElementById("uploadImage").value = "";
                     document.getElementById("uploadPreview").src = "/img/placeholder-img.jpg";
+                    this.getCompanies();
                     this.$q.loading.hide();
                 }
             }

@@ -12,7 +12,7 @@ module.exports = class MODEL {
         try 
         {
             const collection    = this.collection;
-            const res           = await collection.findById(id).toJSON();
+            const res           = await collection.findById(id);
 
             return res;
         }

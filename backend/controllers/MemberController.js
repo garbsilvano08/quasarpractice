@@ -1,15 +1,22 @@
-const AccountClass      = require('../classess/AccountClass');
+const CounterClass      = require('../classess/CounterClass');
 const multer            = require('multer');
 const path              = require('path');
 const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG  = require('../models/MDB_RAW_PASS_LOG');
+const MDB_LOGS  =        require('../models/MDB_LOGS');
 const MDB_STAFF         = require('../models/MDB_STAFF');
+const MDB_USER         = require('../models/MDB_USER');
 const MDB_BLACKLIST     = require('../models/MDB_BLACKLIST');
 const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
 const MDB_DEVICE        = require('../models/MDB_DEVICE');
 const Client            = require("@googlemaps/google-maps-services-js").Client;
 const client            = new Client({});
 const axios             = require('axios');
+const AccountClass  = require('../classess/AccountClass');
+
+const MDB_PERSON        = require('../models/MDB_PERSON');
+const MDB_IDENTIFICATION       = require('../models/MDB_IDENTIFICATION');
+const MDB_PURPOSE       = require('../models//MDB_PURPOSE');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -87,10 +94,7 @@ module.exports =
     },
     async addPassLog(req, res)
     {
-        await new MDB_RAW_PASS_LOG().add(
-        {
-            data: req.body.data
-        });
+        await new MDB_LOGS().add(req.body.data);
 
         return res.send(true);
     },
@@ -135,10 +139,30 @@ module.exports =
     },
     async addCompany(req, res)
     {
-        await new MDB_COMPANIES().add(
-            {
-                company_info: req.body.company_info
-            });
+        
+        req.body.subcompanies = [];
+        let companies = await new MDB_COMPANIES().docs();
+        let parentCompany= {};
+        let createdCompany = await new MDB_COMPANIES().add(req.body);
+
+        if (req.body.parent_id == "No Parent")
+        {
+
+
+        }
+        else
+        {
+            companies.forEach((com) => {
+                if (com._id == req.body.parent_id)
+                {
+                    parentCompany=com;
+                    parentCompany.subcompanies.push(createdCompany._id);
+                }
+            })
+            await new MDB_COMPANIES().update( parentCompany._id, parentCompany);
+
+        }
+        
     
             return res.send(true);
     },
@@ -147,6 +171,7 @@ module.exports =
     {
         try
         {
+            
             await new MDB_STAFF().add(
             {
                 id_type: req.body.id_type,
@@ -205,7 +230,7 @@ module.exports =
     },
     async deleteCompany(req, res)
     {
-        await new MDB_COMPANIES().delete(req.body.id);
+        return res.send(await new MDB_COMPANIES().delete(req.body.id));
     },
     async getStaffs(req, res)
     {
@@ -254,4 +279,72 @@ module.exports =
     {
         return res.send(await new MDB_DEVICE().delete(req.body.id));
     }, 
+
+    // async getPerson(req, res)
+    // {
+    //     let data = {}
+    //     // await new CounterClass().counterActivities()
+    //     let data.personal = await new MDB_PERSON().docs(req.body.person_info);
+    //     await new MDB_IDENTIFICATION().add(id_info);
+    //     await new MDB_PURPOSE().add(purpose_visit);
+
+
+    //     res.send(data)
+    // }, 
+
+    async savePerson(req, res)
+    {
+        // await new CounterClass().counterActivities()
+        let data = await new MDB_PERSON().add(req.body.person_info);
+        // Identification
+        let id_info = {
+            person_id:  data._id,
+            id_image:   req.body.person_info.id_img,
+            id_number:  req.body.person_info.id_num,
+            id_type:    req.body.person_info.id_type,
+            date_saved: new Date()
+        }
+
+        // Purpose
+        let purpose_visit = {
+            person_id:          data._id,
+            company_id:         'Company 1',
+            visit_purpose:      req.body.person_info.visit_purpose,
+            contact_person:     req.body.person_info.contact_person,
+            destination:        req.body.person_info.destination,
+            date_saved:         new Date()
+        }
+
+
+        await new MDB_IDENTIFICATION().add(id_info);
+        await new MDB_PURPOSE().add(purpose_visit);
+
+
+        res.send(data)
+    }, 
+    async editCompany(req, res)
+    {
+        await new MDB_COMPANIES().update( req.body._id, req.body);
+        res.send(true);
+
+    },
+    async addUser(req, res)
+    {
+        let response = await new AccountClass().create(req.body);
+        res.send(true);
+    },
+    async getUsers(req, res)
+    {
+        return res.send(await new MDB_USER().docs());
+    },
+    async deleteUsers(req, res)
+    {
+        await new MDB_USER().delete(req.body._id);
+        res.send(true);
+    },
+    async updateUser(req, res)
+    {
+        await new MDB_USER().update( req.body._id, req.body);
+        res.send(true);
+    }
 }
