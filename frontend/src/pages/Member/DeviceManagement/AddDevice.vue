@@ -77,23 +77,22 @@ export default {
                 }
                 else{
                     this.$q.loading.show();
-                    const formData = new FormData();
-                    formData.append('image',document.getElementById("userImage").files[0] );
-                    let res = await this.$_post_file(formData);
-                    this.user_information.user_picture = res;
-                    await this.$_post('member/add/user',  this.user_information );
-
-                    this.user_information={
-                        full_name: '',
-                        email: '',
-                        username: '',
-                        password: '',
-                        user_type: '',
-                        company: {},
+            
+                    let device_info = {
+                        company_info: this.select_company,
+                        device_id: this.input_device_id,
+                        device_ip: this.input_device_ip,
+                        date_installed: new Date(this.input_date_installed),
+                        date_created: new Date(),
+                        company_name: this.select_company.company_name,
                     }
-                    document.getElementById("userImage").value = "";
-                    document.getElementById("imagePreview").src = "/img/placeholder-img.jpg";
-                    this.$q.loading.hide();
+                    await this.$_post(postAddDevice, {device_info: device_info});
+                    this.select_company = ''
+                    this.input_device_id = ''
+                    this.input_date_installed = ''
+                    this.input_device_ip = ''
+                    this.$q.loading.hide();     
+
                 }
             }
             catch (e)
@@ -105,20 +104,7 @@ export default {
                     message: e.message
                 });
             }
-            this.$q.loading.show();
-            let device_info = {
-                company_name: this.select_company.company_name,
-                company_info: this.select_company,
-                device_id: this.input_device_id,
-                date_installed: new Date(this.input_date_installed),
-                date_created: new Date()
-            }
-            console.log(device_info)
-            // await this.$_post(postAddDevice, {device_info: device_info});
-            this.select_company = ''
-            this.input_device_id = ''
-            this.input_date_installed = ''
-            this.$q.loading.hide();            
+                   
         },
         getCompanyData(value)
         {
