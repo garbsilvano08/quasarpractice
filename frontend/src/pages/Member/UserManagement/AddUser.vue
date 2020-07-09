@@ -121,8 +121,7 @@ export default {
                 else if (document.getElementById("userImage").files.length <= 0 ){
                     throw new Error("Picture is required.");
                 }
-                else if (this.user_information.user_type =="Receptionist"){
-                    if (this.user_information.company.parent_id== "No Parent")
+                else if ((this.user_information.user_type =="Receptionist") && (this.user_information.company.parent_id== "No Parent")){
                     throw new Error("Receptionist can only create on branch company.");
                 }
                 else{
@@ -142,7 +141,7 @@ export default {
                         company: {},
                     }
                     document.getElementById("userImage").value = "";
-                    document.getElementById("imagePreview").src = "../../../assets/Member/placeholder-img.jpg";
+                    document.getElementById("imagePreview").src = "/img/placeholder-img.jpg";
                     this.$q.loading.hide();
                 }
             }
