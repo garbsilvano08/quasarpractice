@@ -160,7 +160,7 @@ export default {
                         company: {},
                     }
                     document.getElementById("userImage").value = "";
-                    document.getElementById("imagePreview").src = "../../assets/Member/placeholder-img.jpg";
+                    // document.getElementById("imagePreview").src = "../../assets/Member/placeholder-img.jpg";
                     
                 }
             }

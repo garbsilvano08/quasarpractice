@@ -142,10 +142,8 @@ module.exports =
     {
         
         req.body.subcompanies = [];
-        // console.log(req.body.company_info)
         let companies = await new MDB_COMPANIES().docs();
         let parentCompany= {};
-        // console.log(companies);
         let createdCompany = await new MDB_COMPANIES().add(req.body);
 
         if (req.body.parent_id == "No Parent")
@@ -233,7 +231,7 @@ module.exports =
     },
     async deleteCompany(req, res)
     {
-        await new MDB_COMPANIES().delete(req.body.id);
+        return res.send(await new MDB_COMPANIES().delete(req.body.id));
     },
     async getStaffs(req, res)
     {
@@ -327,8 +325,6 @@ module.exports =
     }, 
     async editCompany(req, res)
     {
-        // console.log(req.body);
-        // let updateDet = { _id:  ,company_info : req.body};
         await new MDB_COMPANIES().update( req.body._id, req.body);
         res.send(true);
 
@@ -354,7 +350,6 @@ module.exports =
     },
     async updateUser(req, res)
     {
-        console.log(req.body)
         await new MDB_USER().update( req.body._id, req.body);
         res.send(true);
     }
