@@ -30,7 +30,12 @@ module.exports =
         {
             full_name: 'Guillermo Tabligan',
             email: 'guillermotabligan@gmail.com',
-            password: 'water123'
+            username: 'jr',
+            password: 'water123',
+            user_type:     'Super Admin',
+            user_picture:  'none',
+            company:        {},
+            date_created:    new Date(),
         };
 
         let response = await new AccountClass().create(account_information);
