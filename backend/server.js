@@ -53,9 +53,14 @@ app.post('/api/member/update/user',  member_only, member_controller.updateUser);
 
 // Person
 app.post('/api/member/save/person',  member_only, member_controller.savePerson);
+app.post('/api/member/get/persons',  member_only, member_controller.getPersons);
+app.post('/api/member/get/person',  member_only, member_controller.getPerson);
 
 //Count
 app.post('/api/member/count/logs',  member_only, count_controller.counterLogs);
+
+//Logs
+app.post('/api/member/get/logs',  member_only, member_controller.getLogs);
 
 app.listen({port: 4001}, (err) =>
 {

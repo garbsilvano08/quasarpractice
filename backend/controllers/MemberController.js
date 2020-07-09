@@ -250,7 +250,7 @@ module.exports =
     
     async getCompany(req, res)
     {
-        return res.send(await new MDB_COMPANIES().docs({'company_info.company_name': req.body.name}));
+        return res.send(await new MDB_COMPANIES().doc(req.body.id));
     },   
 
     async updateStaff(req, res)
@@ -280,44 +280,64 @@ module.exports =
         return res.send(await new MDB_DEVICE().delete(req.body.id));
     }, 
 
-    // async getPerson(req, res)
-    // {
-    //     let data = {}
-    //     // await new CounterClass().counterActivities()
-    //     let data.personal = await new MDB_PERSON().docs(req.body.person_info);
-    //     await new MDB_IDENTIFICATION().add(id_info);
-    //     await new MDB_PURPOSE().add(purpose_visit);
+    async getPersons(req, res)
+    {
+        return res.send(await new MDB_PERSON().docs(req.body.find_by_category));
+    }, 
+    
+    async getLogs(req, res)
+    {
+        console.log(req, 'lklklk');
+        
+        res.send(await new MDB_LOGS().collection.find({idCardNum: req.body.id}).limit(req.body.limit).sort({currentTime:-1}))
+    },
 
+    async getPerson(req, res)
+    {
+        let data = {}
+        data.personal_info = await new MDB_PERSON().doc(req.body.id);
+        console.log(data.personal_info);
+        
+        if (data.personal_info.category ==  'Visitors')
+        {
+            data.identification = await new MDB_IDENTIFICATION().collection.find({person_id: req.body.id}).limit(1).sort({date_saved:-1})
+            data.purpose_visit = await new MDB_PURPOSE().collection.find({person_id: req.body.id}).limit(1).sort({date_saved:-1})
+            
+        }
+        // await new MDB_LOGS().collection.find({idCardNum: data.personal_info.frontdesk_person_id}).limit(3).sort({currentTime:-1});
 
-    //     res.send(data)
-    // }, 
+        res.send(data)
+    }, 
 
     async savePerson(req, res)
     {
         // await new CounterClass().counterActivities()
         let data = await new MDB_PERSON().add(req.body.person_info);
-        // Identification
-        let id_info = {
-            person_id:  data._id,
-            id_image:   req.body.person_info.id_img,
-            id_number:  req.body.person_info.id_num,
-            id_type:    req.body.person_info.id_type,
-            date_saved: new Date()
+        console.log(req.body.person_info.category);
+        
+        if (req.body.person_info.category == 'Visitors')
+        {
+            // Identification
+            let id_info = {
+                person_id:  data._id,
+                id_image:   req.body.person_info.id_img,
+                id_number:  req.body.person_info.id_num,
+                id_type:    req.body.person_info.id_type,
+                date_saved: new Date()
+            }
+
+            // Purpose
+            let purpose_visit = {
+                person_id:          data._id,
+                company_id:         'Company 1',
+                visit_purpose:      req.body.person_info.visit_purpose,
+                contact_person:     req.body.person_info.contact_person,
+                destination:        req.body.person_info.destination,
+                date_saved:         new Date()
+            }
+            await new MDB_IDENTIFICATION().add(id_info);
+            await new MDB_PURPOSE().add(purpose_visit);
         }
-
-        // Purpose
-        let purpose_visit = {
-            person_id:          data._id,
-            company_id:         'Company 1',
-            visit_purpose:      req.body.person_info.visit_purpose,
-            contact_person:     req.body.person_info.contact_person,
-            destination:        req.body.person_info.destination,
-            date_saved:         new Date()
-        }
-
-
-        await new MDB_IDENTIFICATION().add(id_info);
-        await new MDB_PURPOSE().add(purpose_visit);
 
 
         res.send(data)

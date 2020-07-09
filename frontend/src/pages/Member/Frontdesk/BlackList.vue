@@ -281,7 +281,7 @@ export default {
         }
         let company_list = await this.$_post(postGetCompanies);
         for (let company of company_list.data) {
-            this.options_company.push(company.company_info.company_name)
+            this.options_company.push(company.company_name)
         }
     }
 }

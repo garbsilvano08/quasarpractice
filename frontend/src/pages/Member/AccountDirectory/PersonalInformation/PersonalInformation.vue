@@ -7,7 +7,7 @@
                 <q-btn @click="editAccount()" class="btn-primary btn-edit" flat dense no-caps label="Edit"></q-btn>
             </div>
         </div>
-        <div v-if="account_info" class="personal-info__container content__box">
+        <div v-if="account_info.data" class="personal-info__container content__box">
             <div class="personal-info__holder">
                 <div class="personal-info__content-header">
                     <q-icon name="mdi-apple-icloud" size="30px"></q-icon>
@@ -15,86 +15,79 @@
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img :src="account_info.type == 'Visitor' ? account_info.personal_information.account_img : account_info.account_img ? account_info.account_img : ''">
+                        <q-img :src="account_info.data.personal_info.person_img">
                             <q-btn flat dense rounded icon="mdi-magnify" size="13px"></q-btn>
                         </q-img>
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">First Name:</div>
-                                <div class="personal-info__item-info">{{account_info.given_name ? account_info.given_name : account_info.personal_information.first_name}}</div>
+                                <div class="personal-info__item-info">{{account_info.data.personal_info.given_name}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Last Name:</div>
-                                <div class="personal-info__item-info">{{account_info.last_name ? account_info.last_name : account_info.personal_information.last_name}}</div>
+                                <div class="personal-info__item-info">{{account_info.data.personal_info.last_name}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Middle Name:</div>
-                                <div class="personal-info__item-info">{{account_info.middle_name ? account_info.middle_name : account_info.personal_information.middle_name}}</div>
+                                <div class="personal-info__item-info">{{account_info.data.personal_info.middle_name}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Gender:</div>
-                                <div class="personal-info__item-info">{{account_info.gender ? account_info.gender : account_info.personal_information.gender}}</div>
+                                <div class="personal-info__item-info">{{account_info.data.personal_info.gender}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Birth Date:</div>
-                                <div class="personal-info__item-info">{{ account_info.birthday ? new Date(account_info.birthday).getFullYear() + 
-                                    "/" + new Date(account_info.birthday).getDay() + 
-                                    "/" +new Date(account_info.birthday).getMonth() : 
-                                    new Date(account_info.personal_information.birth_date).getFullYear() + 
-                                    "/" + new Date(account_info.personal_information.birth_date).getDay() + 
-                                    "/" +new Date(account_info.personal_information.birth_date).getMonth()}}</div>
+                                <div class="personal-info__item-info">{{ new Date(account_info.data.personal_info.birthday).getFullYear() + 
+                                    "/" + new Date(account_info.data.personal_info.birthday).getDay() + 
+                                    "/" +new Date(account_info.data.personal_info.birthday).getMonth()}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Age:</div>
-                                <div class="personal-info__item-info">{{ account_info.birthday ? 
-                                    new Date().getFullYear() - new Date(account_info.birthday).getFullYear():
-                                    new Date().getFullYear() - new Date(account_info.personal_information.birth_date).getFullYear()}}</div>
+                                <div class="personal-info__item-info">{{ new Date().getFullYear() - new Date(account_info.data.personal_info.birthday).getFullYear()}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Nationality:</div>
-                                <div class="personal-info__item-info">{{account_info.nationality ? account_info.nationality : account_info.personal_information.nationality}}</div>
+                                <div class="personal-info__item-info">{{ account_info.data.personal_info.nationality }}</div>
                             </div>
                         </div>
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Home Address:</div>
-                                <div class="personal-info__item-info">{{account_info.home_address ? account_info.home_address : account_info.personal_information.home_address}}</div>
+                                <div class="personal-info__item-info">{{ account_info.data.personal_info.home_address}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Contact Number:</div>
-                                <div class="personal-info__item-info">{{account_info.contact_number ? account_info.contact_number : account_info.personal_information.contact_number}}</div>
+                                <div class="personal-info__item-info">{{ account_info.data.personal_info.contact_number }}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Emergency Contact Number:</div>
-                                <div class="personal-info__item-info">{{account_info.emergency_contact ? account_info.emergency_contact : account_info.personal_information.emergency_contact_number}}</div>
+                                <div class="personal-info__item-info">{{ account_info.data.personal_info.emergency_contact }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-if="account_info.type == 'Staff'" class="personal-info__holder">
+            <div v-if="company_info.data" class="personal-info__holder">
                 <div class="personal-info__content-header content-header__grey">
                     <q-icon name="mdi-briefcase" size="20px"></q-icon>
                     <div class="content__title">Data Source</div>
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img :src="getImgUrl(account_info.company_details.company_info.logo_filename)"></q-img>
+                        <q-img :src="company_info.data.company_logo_url"></q-img>
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Company Name:</div>
-                                <div class="personal-info__item-info">{{account_info.company_details.company_info.company_name ? account_info.company_details.company_info.company_name : account_info.company}}</div>
+                                <div class="personal-info__item-info">{{company_info.data.company_name }}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Parent:</div>
-                                <div class="personal-info__item-info">{{account_info.company_details.company_info.parent ? account_info.company_details.company_info.parent : ''}}</div>
+                                <div class="personal-info__item-info">{{ company_info.data.parent_company }}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label"> {{account_info.date_created ? 'Date Registered:' : 'Date Blaclisted'}}</div>
                                 <div class="personal-info__item-info">{{ 
-                                    account_info.date_created ?
-                                    new Date(account_info.date_created).getFullYear() + "/" + new Date(account_info.date_created).getDay() + "/" +new Date(account_info.date_created).getMonth(): 
-                                    new Date(account_info.date_blacklisted).getFullYear() + "/" + new Date(account_info.date_blacklisted).getDay() + "/" +new Date(account_info.date_blacklisted).getMonth()}}</div>
+                                    new Date(account_info.data.personal_info.date_created).getFullYear() + "/" + new Date(account_info.data.personal_info.date_created).getDay() + "/" +new Date(account_info.data.personal_info.date_created).getMonth()}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">Total Registered:</div>
@@ -108,24 +101,24 @@
                     </div>
                 </div>
             </div>
-            <div v-if="account_info.type != 'Blacklist'" class="personal-info__holder">
+            <div v-if="account_info.data.personal_info.type == 'Visitor'" class="personal-info__holder">
                 <div class="personal-info__content-header content-header__grey">
                     <q-icon name="mdi-card-account-details" size="20px"></q-icon>
                     <div class="content__title">Registered Identification Card</div>
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img :src="account_info.type == 'Visitor' ? account_info.personal_information.id_image : account_info.id_img ? account_info.id_img : ''"></q-img>
+                        <q-img :src="account_info.data.identification.type == 'Visitor' ? account_info.data.identification.id_img : ''"></q-img>
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">ID Type:</div>
-                                <div v-if="account_info.type == 'Staff'" class="personal-info__item-info">{{account_info.id_type ? account_info.id_type : 'N/A'}}</div>
-                                <div v-else class="personal-info__item-info">{{account_info.personal_information.id_type ? account_info.personal_information.id_type : 'N/A'}}</div>
+                                <div v-if="account_info.data.identification.type == 'Staff'" class="personal-info__item-info">{{account_info.data.identification.id_type ? account_info.id_type : 'N/A'}}</div>
+                                <div v-else class="personal-info__item-info">{{account_info.data.identification.id_type ? account_info.data.identification.id_type : 'N/A'}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">ID Number:</div>
-                                <div v-if="account_info.type == 'Staff'" class="personal-info__item-info">{{account_info.id_num ? account_info.id_num : 'N/A'}}</div>
-                                <div v-else class="personal-info__item-info">{{account_info.personal_information.id_number ? account_info.personal_information.id_number : 'N/A'}}</div>
+                                <div v-if="account_info.data.identification.type == 'Staff'" class="personal-info__item-info">{{account_info.data.identification.id_num ? account_info.data.identification.id_num : 'N/A'}}</div>
+                                <div v-else class="personal-info__item-info">{{account_info.data.identification.id_number ? account_info.data.identification.id_number : 'N/A'}}</div>
                             </div>
                         </div>
                     </div>
@@ -148,22 +141,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-green">36.5°C</td>
-                            <td>D1ABC123</td>
-                            <td>Green Sun Hotel</td>
-                        </tr>
-                        <tr>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-green">36.5°C</td>
-                            <td>D1ABC123</td>
-                            <td>Green Sun Hotel</td>
-                        </tr>
-                        <tr>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-red">38.5°C</td>
-                            <td>D1ABC123</td>
+                        <tr v-for="(logs, index) in this.account_info.logs.data" :key="index">
+                            <td>{{new Date(logs.currentTime * 1000).toString()}}</td>
+                            <td class="td-green">{{logs.tempratrue}}°C</td>
+                            <td>{{logs.device_id}}</td>
                             <td>Green Sun Hotel</td>
                         </tr>
                     </tbody>
@@ -176,12 +157,13 @@
 <script>
 import { Notify } from 'quasar';
 import "./PersonalInformation.scss";
-import { postRemoveAccount , postGetCompany, postGetDevice} from '../../../../references/url';
+import { postRemoveAccount , postGetCompany, postGetDevice, postGetPerson, postGetLogs} from '../../../../references/url';
 
 export default {
      data: () => ({
         account_info: {},
         company_device: 0,
+        company_info: {}
     }),
 
     methods:
@@ -228,14 +210,38 @@ export default {
                     is_edit: 'edit'
                 }
             })
+        },
+        async getCompany(company_id)
+        {
+            return await this.$_post(postGetCompany, {id: company_id})
+        },
+        async getParentCompany(company_id)
+        {
+            if (company_id != 'No Parent') 
+            {
+                let company = await this.getCompany(company_id)
+                return company.data.company_name
+            }
+            return company_id
         }
     },
 
     async mounted()
     {
-        this.account_info = this.$route.params.account_info
-        await this.getDeviceNumber(this.account_info.company_details.company_info.company_name ? this.account_info.company_details.company_info.company_name : account_info.company)
         
+        this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.account_info._id})
+        this.account_info.type = this.$route.params.account_info.type 
+        await this.getDeviceNumber(this.account_info.data.personal_info.company_name ? this.account_info.data.personal_info.company_name : '')
+        if (this.account_info.data.personal_info.company_id)
+        {
+            this.company_info = await this.getCompany(this.account_info.data.personal_info.company_id)
+            this.company_info.data.parent_company =  await this.getParentCompany(this.company_info.data.parent_id)
+        }
+
+        if (this.account_info.data.personal_info.frontdesk_person_id)
+        {
+            this.account_info.logs = await this.$_post(postGetLogs,{ id: this.account_info.data.personal_info.frontdesk_person_id, limit: 3})
+        }
     }
 
 }

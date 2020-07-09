@@ -31,6 +31,7 @@ const schema    = new Schema(
     reason_blacklist:   { type: String,  required: false },
 
     company_name:       { type: String,  required: false },
+    company_id:         { type: String,  required: false },
 
     frontdesk_person_id:    { type: String,  required: false },
     frontdesk_person_date:  { type: Date,  required: false }

@@ -26,12 +26,12 @@
                     </thead>
                     <tbody>
                         <tr @click="checkAccount(visitor)" v-for="(visitor, index) in this.visitor_lists.data" :key="index">
-                            <td class="td-active">{{visitor.name}}</td>
-                            <td>{{visitor.personal_information.gender}}</td>
-                            <td>{{new Date().getFullYear() - new Date(visitor.personal_information.birth_date).getFullYear()}}</td>
-                            <td>{{visitor.personal_information.home_address}}</td>
-                            <td>{{visitor.last_scanned ? staff.last_scanned : 'No Logs Yet'}}</td>
-                            <td class="td-green">{{visitor.last_temperature ? visitor.last_temperature : 'No Temperature Logs Yet'}}</td>
+                            <td class="td-active">{{visitor.given_name}}</td>
+                            <td>{{visitor.gender}}</td>
+                            <td>{{new Date().getFullYear() - new Date(visitor.birthday).getFullYear()}}</td>
+                            <td>{{visitor.home_address}}</td>
+                            <!-- <td>{{visitor.last_scanned ? staff.last_scanned : 'No Logs Yet'}}</td>
+                            <td class="td-green">{{visitor.last_temperature ? visitor.last_temperature : 'No Temperature Logs Yet'}}</td> -->
                         </tr>
                     </tbody>
                 </table>
@@ -43,7 +43,7 @@
 <script>
 import "./AccountDirectory.scss";
 
-import { postGetVisitors } from '../../../references/url';
+import { postGetVisitors, postGetPersons } from '../../../references/url';
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 
@@ -79,8 +79,7 @@ export default {
 
     async mounted()
     {
-        this.visitor_lists = await this.$_post(postGetVisitors);
-        console.log(this.visitor_lists);
+        this.visitor_lists = await this.$_post(postGetPersons, {find_by_category: {category: 'Visitors'}});
     }
 }
 </script>
