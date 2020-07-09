@@ -31,25 +31,31 @@ app.post('/api/member/add/pass_log',  member_only, member_controller.addPassLog)
 app.post('/api/member/get/nearby_places',  member_only, member_controller.getNearbyPlaces);
 app.post('/api/member/get/coordinates',  member_only, member_controller.getCoordinates);
 app.post('/api/member/get/visitors', member_only, member_controller.getVisitors);
+app.post('/api/member/get/staff',  member_only, member_controller.getStaffs);
+app.post('/api/member/remove/account',  member_only, member_controller.removeAccount);
+app.post('/api/member/get/blacklist',  member_only, member_controller.getBlacklists);
+app.post('/api/member/update/staff',  member_only, member_controller.updateStaff);
+app.post('/api/member/update/blacklist',  member_only, member_controller.updateBlacklist);
+app.post('/api/member/update/visitor',  member_only, member_controller.updateVisitor);
+
+//Device
+app.post('/api/member/add/device',  member_only, member_controller.addDevice);
+app.post('/api/member/get/device',  member_only, member_controller.getDevices);
+app.post('/api/member/delete/device',  member_only, member_controller.deleteDevices);
+
+//User
+app.post('/api/member/add/user',  member_only, member_controller.addUser);
+app.post('/api/member/get/user',  member_only, member_controller.getUsers);
+app.post('/api/member/delete/user',  member_only, member_controller.deleteUsers);
+app.post('/api/member/update/user',  member_only, member_controller.updateUser);
+
+// Companies
 app.post('/api/member/add/company',  member_only, member_controller.addCompany);
 app.post('/api/member/edit/company',  member_only, member_controller.editCompany);
 app.post('/api/member/update/company',  member_only, member_controller.addCompany);
 app.post('/api/member/get/companies',  member_only, member_controller.getCompanies);
 app.post('/api/member/delete/company',  member_only, member_controller.deleteCompany);
-app.post('/api/member/get/staff',  member_only, member_controller.getStaffs);
-app.post('/api/member/remove/account',  member_only, member_controller.removeAccount);
-app.post('/api/member/get/blacklist',  member_only, member_controller.getBlacklists);
 app.post('/api/member/get/company',  member_only, member_controller.getCompany);
-app.post('/api/member/update/staff',  member_only, member_controller.updateStaff);
-app.post('/api/member/update/blacklist',  member_only, member_controller.updateBlacklist);
-app.post('/api/member/update/visitor',  member_only, member_controller.updateVisitor);
-app.post('/api/member/add/device',  member_only, member_controller.addDevice);
-app.post('/api/member/get/device',  member_only, member_controller.getDevices);
-app.post('/api/member/delete/device',  member_only, member_controller.deleteDevices);
-app.post('/api/member/add/user',  member_only, member_controller.addUser);
-app.post('/api/member/get/user',  member_only, member_controller.getUsers);
-app.post('/api/member/delete/user',  member_only, member_controller.deleteUsers);
-app.post('/api/member/update/user',  member_only, member_controller.updateUser);
 
 // Person
 app.post('/api/member/save/person',  member_only, member_controller.savePerson);
