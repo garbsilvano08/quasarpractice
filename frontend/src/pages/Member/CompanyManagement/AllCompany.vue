@@ -66,9 +66,11 @@ export default {
             cancel: true,
             default: 'cancel'   // <<<<
             }).onOk(async () =>{
-              await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id} )
-              this.company_list.data.splice(index, 1);       
-              alert("deleted")      
+                this.$q.loading.show();
+                await this.$_post(postDeleteCompany, { id:this.company_list.data[index]._id} )
+                this.$q.loading.hide();
+                console.log(this.company_list.data)
+                this.company_list.data.splice(index, 1);
             });
             
             // let asd = await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id});
