@@ -49,6 +49,10 @@ const routes = [
             { name: 'member_adduser', path: '/usermanagement/add-user', component: () => import('pages/Member/UserManagement/AddUser.vue') },
             //NOTIFICATION
             { name: 'member_notification', path: '/notification', component: () => import('pages/Member/Notification/Notification.vue') },
+            //REPORTS
+            { name: 'member_feverdetected_report', path: '/report/fever-detected', component: () => import('pages/Member/Report/FeverDetectedReport.vue') },
+            { name: 'member_fevermonitoring_report', path: '/report/fever-monitoring', component: () => import('pages/Member/Report/FeverMonitoringReport.vue') },
+            { name: 'member_feverheatmap_report', path: '/report/fever-heatmap', component: () => import('pages/Member/Report/FeverHeatMapReport.vue') },
             // HEATMAP
             { name: 'member_heatmap', path: '/heatmap', component: () => import('pages/Member/Heatmap/Heatmap.vue') },
             { name: 'member_logout', path: 'logout', component: () => import('pages/Member/Logout.vue') },

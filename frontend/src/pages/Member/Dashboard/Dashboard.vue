@@ -2,10 +2,14 @@
    <div class="dashboard">
       <div class="dashboard__header">
          <div class="header__title">DASHBOARD OVERVIEW</div>
-         <q-btn flat dense no-caps label="Export" class="btn-export btn-outline">
-            <q-icon name="mdi-export"></q-icon>
-         </q-btn>
+         <div class="header__filter">
+            <q-btn class="btn-outline btn-export" flat dense no-caps>
+               Export &nbsp;<q-icon name="mdi-export"></q-icon>
+            </q-btn>
+            <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select>
+         </div>
       </div>
+
       <div class="dashboard__overview">
          <!-- <div class="dashboard__overview-item" v-for="(overview, index) in dashboard_overview" :key="index">
             <q-img cover :src="overview.overview_img">
@@ -251,6 +255,10 @@ export default
 {
    data:() =>
    ({
+      select__company: '',
+      options_company: [
+            'Green Sun Hotel', 'SM Mall' , 'WalterMart'
+      ],
       options: [
          'July 1, 2019' , 'July 2, 2019', 'July 3, 2019' , 'July 4, 2019', 'July 5, 2019'
       ],
