@@ -293,6 +293,13 @@ export default {
 
         async submit()
         {
+            let result           = '';
+            let characters       = '0123456789';
+            let charactersLength = characters.length;
+            for ( let i = 0; i < 9; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+
             let data = {
                 // id_img: this.staff_class.id_img,
                 // id_num: this.staff_class.id_num,
@@ -315,7 +322,9 @@ export default {
                 is_active: true,
 
                 position: this.staff_class.position,
-                category: 'Staff'
+                category: 'Staff',
+                frontdesk_person_id: result,
+                frontdesk_person_date: new Date()
             }
             
             
@@ -342,7 +351,7 @@ export default {
                 {
                     await this.$_post(postSavePerson, {person_info: data});
                     // await this.$_post(postAddStaff, data);
-                    this.staff_class.eraseAll()
+                    // this.staff_class.eraseAll()
                     Notify.create({
                         color: 'green',
                         message: 'Successfully added Staff'

@@ -101,24 +101,23 @@
                     </div>
                 </div>
             </div>
-            <div v-if="account_info.data.personal_info.type == 'Visitor'" class="personal-info__holder">
+            <div v-if="account_info.type == 'Visitor'" class="personal-info__holder">
                 <div class="personal-info__content-header content-header__grey">
                     <q-icon name="mdi-card-account-details" size="20px"></q-icon>
                     <div class="content__title">Registered Identification Card</div>
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img :src="account_info.data.identification.type == 'Visitor' ? account_info.data.identification.id_img : ''"></q-img>
+                        <q-img :src="account_info.data.identification[0].id_image ? account_info.data.identification[0].id_image : ''"></q-img>
                         <div class="personal-info__item-content">
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">ID Type:</div>
-                                <div v-if="account_info.data.identification.type == 'Staff'" class="personal-info__item-info">{{account_info.data.identification.id_type ? account_info.id_type : 'N/A'}}</div>
-                                <div v-else class="personal-info__item-info">{{account_info.data.identification.id_type ? account_info.data.identification.id_type : 'N/A'}}</div>
+                                <div class="personal-info__item-info">{{account_info.data.identification[0].id_type ? account_info.data.identification[0].id_type : 'N/A'}}</div>
                             </div>
                             <div class="personal-info__item">
                                 <div class="personal-info__item-label">ID Number:</div>
-                                <div v-if="account_info.data.identification.type == 'Staff'" class="personal-info__item-info">{{account_info.data.identification.id_num ? account_info.data.identification.id_num : 'N/A'}}</div>
-                                <div v-else class="personal-info__item-info">{{account_info.data.identification.id_number ? account_info.data.identification.id_number : 'N/A'}}</div>
+                                <div v-if="account_info.data.identification[0].type == 'Staff'" class="personal-info__item-info">{{account_info.data.identification[0].id_num ? account_info.data.identification[0].id_num : 'N/A'}}</div>
+                                <div v-else class="personal-info__item-info">{{account_info.data.identification[0].id_number ? account_info.data.identification[0].id_number : 'N/A'}}</div>
                             </div>
                         </div>
                     </div>
@@ -140,7 +139,7 @@
                             <th>Company/Location Scanned</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody v-if="this.account_info.logs">
                         <tr v-for="(logs, index) in this.account_info.logs.data" :key="index">
                             <td>{{new Date(logs.currentTime * 1000).toString()}}</td>
                             <td class="td-green">{{logs.tempratrue}}°C</td>
@@ -242,6 +241,8 @@ export default {
         {
             this.account_info.logs = await this.$_post(postGetLogs,{ id: this.account_info.data.personal_info.frontdesk_person_id, limit: 3})
         }
+        console.log(this.account_info);
+        
     }
 
 }

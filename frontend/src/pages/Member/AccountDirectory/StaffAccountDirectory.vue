@@ -47,7 +47,7 @@ import "./AccountDirectory.scss";
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 
 // References
-import { postGetStaff, postGetPersons } from '../../../references/url';
+import { postGetStaff, postGetPersons, postGetLogs } from '../../../references/url';
 
 export default {
     components: {
@@ -75,11 +75,19 @@ export default {
                     account_info: account_info
                 }
             })
+        },
+
+        async getTempLogs(person_id)
+        {
+            let temp_log = await this.$_post(postGetLogs,{ id: person_id, limit: 1})
+            return temp_log.data[0]
         }
     },
     async mounted()
     {
         this.staff_list = await this.$_post(postGetPersons, {find_by_category: {category: 'Staff'}});
+        console.log(this.staff_list);
+        
     }
 
 }

@@ -290,8 +290,6 @@ module.exports =
     
     async getLogs(req, res)
     {
-        console.log(req, 'lklklk');
-        
         res.send(await new MDB_LOGS().collection.find({idCardNum: req.body.id}).limit(req.body.limit).sort({currentTime:-1}))
     },
 
@@ -299,7 +297,6 @@ module.exports =
     {
         let data = {}
         data.personal_info = await new MDB_PERSON().doc(req.body.id);
-        console.log(data.personal_info);
         
         if (data.personal_info.category ==  'Visitors')
         {
@@ -316,7 +313,6 @@ module.exports =
     {
         // await new CounterClass().counterActivities()
         let data = await new MDB_PERSON().add(req.body.person_info);
-        console.log(req.body.person_info.category);
         
         if (req.body.person_info.category == 'Visitors')
         {
