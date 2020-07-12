@@ -63,7 +63,7 @@ import "./AccountDirectory.scss";
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 
 // References
-import { postGetBlacklist } from '../../../references/url';
+import { postGetBlacklist, postGetPersons } from '../../../references/url';
 
 export default {
     components: {
@@ -98,6 +98,8 @@ export default {
     async mounted()
     {
         this.blacklist_account = await this.$_post(postGetPersons, {find_by_category: {category: 'Blacklist'}});
+        console.log(this.$user_info);
+        
         // this.blacklist_account = await this.$_post(postGetBlacklist);
     }
 }

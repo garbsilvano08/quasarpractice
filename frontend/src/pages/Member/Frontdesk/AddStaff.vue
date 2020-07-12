@@ -324,7 +324,9 @@ export default {
                 position: this.staff_class.position,
                 category: 'Staff',
                 frontdesk_person_id: result,
-                frontdesk_person_date: new Date()
+                frontdesk_person_date: new Date(),
+
+                saved_from: this.$user_info.company._id ? this.$user_info.company._id : ''
             }
             
             
@@ -349,14 +351,23 @@ export default {
                 }
                 else
                 {
-                    await this.$_post(postSavePerson, {person_info: data});
-                    // await this.$_post(postAddStaff, data);
-                    // this.staff_class.eraseAll()
-                    Notify.create({
-                        color: 'green',
-                        message: 'Successfully added Staff'
-                    }); 
+                    let save = await this.$_post(postSavePerson, {person_info: data});
+                    if (save.data == true)
+                    {
+                        Notify.create({
+                            color: 'green',
+                            message: 'Successfully added Staff'
+                        }); 
+                    }
+                    else
+                    {
+                       Notify.create({
+                            color: 'red',
+                            message: 'This account is already existing'
+                        }); 
+                    }
                 }
+                this.staff_class = {}
             }
             catch(e)
             {
@@ -379,6 +390,7 @@ export default {
         for (let company of this.company_list.data) {
             this.options_company.push(company.company_name) 
         }
+        
         
     }
 }

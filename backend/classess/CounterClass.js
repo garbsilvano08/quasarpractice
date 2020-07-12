@@ -24,9 +24,9 @@ module.exports = class CounterClass
         }
     }
 
-    async counterActivities(key, date_string)
+    async counterActivities(company_id, key, date_string)
     {
-        await this.getCompany(this.company_id)
+        await this.getCompany(company_id)
         for ( let company_id of this.company_to_update )
         {
             //Overall counter
@@ -35,12 +35,12 @@ module.exports = class CounterClass
             else await new MDB_COUNT_OVERALL().add({count: 1, key: key, company_id: company_id})
                 
             //Daily counter
-            let count_daily = await new MDB_COUNT_DAILY().docs({company_id: company_id, key: key})
+            let count_daily = await new MDB_COUNT_DAILY().docs({company_id: company_id, key: key, date_string: date_string[0] + "-" + date_string[1] + "-" + date_string[2]})
             if (count_daily.length) await new MDB_COUNT_DAILY().collection.where({company_id: company_id}).updateMany({$inc: {count: 1}})
             else await new MDB_COUNT_DAILY().add({count: 1, key: key, company_id: company_id, date_string: date_string[0] + "-" + date_string[1] + "-" + date_string[2] })
 
             //Monthly counter
-            let count_monthly = await new MDB_COUNT_MONTHLY().docs({company_id: company_id, key: key})
+            let count_monthly = await new MDB_COUNT_MONTHLY().docs({company_id: company_id, key: key, date_string: date_string[0] + "-" + date_string[1]})
             if (count_monthly.length) await new MDB_COUNT_MONTHLY().collection.where({company_id: company_id}).updateMany({$inc: {count: 1}})
             else await new MDB_COUNT_MONTHLY().add({count: 1, key: key, company_id: company_id, date_string: date_string[0] + "-" + date_string[1]})
         }

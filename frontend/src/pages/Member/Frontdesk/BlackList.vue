@@ -5,6 +5,7 @@
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
+                <q-btn @click="test()" class="btn-save btn-primary" flat dense no-caps label="Test"></q-btn>
             </div>
         </div>
         <div class="frontdesk__container content__grid-2x2">
@@ -193,6 +194,29 @@ export default {
 
     methods:
     {
+        test()
+        {
+            this.blacklist_class =
+            {
+                // id_img: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+                // id_num: '123423123',
+                // id_type: 'Drivers License',
+
+                account_img: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+                given_name: 'Mark',
+                middle_name: 'Jonas',
+                last_name: 'Caguioa',
+                gender: 'Male',
+                birthday: '1985-04-02',
+                nationality: 'Filipino',
+                home_address: 'Malolos',
+                contact_number: '09556741079',
+                emergency_contact: '09556741079',
+                company_name: 'Mang Inasal Balagtas',
+                position : 'Sub Company',
+                reason_blacklist: 'Wala lang',
+            }
+        },
         openFilemanager(type)
         {
             this.$refs.uploader.click();
@@ -231,7 +255,9 @@ export default {
                 is_active: true,
                 
                 reason_blacklist: this.blacklist_class.reason_blacklist,
-                category: 'Blacklist'
+                category: 'Blacklist',
+
+                saved_from: this.$user_info.company._id ? this.$user_info.company._id : ''
             }
             
             this.$q.loading.show();
@@ -255,13 +281,25 @@ export default {
                 }
                 else
                 {
-                    await this.$_post(postSavePerson, {person_info: data});
-                    this.blacklist_class.eraseAll()
-                    Notify.create({
+                    // await this.$_post(postSavePerson, {person_info: data});
+
+                    let save =  await this.$_post(postSavePerson, {person_info: data});
+                    if (save.data == true)
+                    {
+                        Notify.create({
                         color: 'green',
                         message: 'Successfully added blacklist'
                     }); 
+                    }
+                    else
+                    {
+                       Notify.create({
+                            color: 'red',
+                            message: 'This account is already existing'
+                        }); 
+                    }
                 }
+                this.blacklist_class = {}
             }
             catch(e)
             {

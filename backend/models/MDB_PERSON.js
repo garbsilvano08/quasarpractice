@@ -7,7 +7,7 @@ const schema    = new Schema(
 
     person_img:         { type: String,  required: true },
     last_name:          { type: String,  required: true },
-    middle_name:        { type: String,  required: true },
+    middle_name:        { type: String,  required: false },
     given_name:         { type: String,  required: true },
     gender:             { type: String,  required: true },
     birthday:           { type: Date,    required: true },

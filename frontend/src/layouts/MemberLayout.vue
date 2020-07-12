@@ -161,6 +161,8 @@ export default
                     frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
                     is_active: true,
 
+                    saved_from: this.$user_info.company._id ? this.$user_info.company._id : '',
+
                     category: 'Visitors'
                 }
 
@@ -208,7 +210,8 @@ export default
             for (let log of this.passLogs)
             {
                 console.log(log, 'logs');
-                
+                log.saved_from = this.$user_info.company._id ? this.$user_info.company._id : '';
+
                 await this.$_post('member/add/pass_log', { data: log });
                 await this.db.delete(log.id, "passLogs");
                 this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
@@ -264,7 +267,7 @@ export default
                 formData.append("pass", "123456");
                 formData.append("imgName", data.imageName);
 
-                let getImgRes = await this.$axios.post("http://"+device.ip+":8080/getRecordImg", formData).then(res => res.data);
+                let getImgRes = await this.$axios.post("http://"+device.device_ip+":8080/getRecordImg", formData).then(res => res.data);
                let imgPath= await this.savePicsLocal(getImgRes, data.imageName).then( rest => rest);
                 data.image_path = imgPath;
                 data.device_id = device.device_id;
