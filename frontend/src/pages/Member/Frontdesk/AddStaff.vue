@@ -16,7 +16,7 @@
                     <div class="frontdesk__content-info">
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
-                            <q-img class="content__img" :src="staff_class.account_img ? staff_class.account_img : '../../../assets/Member/placeholder-img.jpg'"></q-img>
+                            <q-img class="content__img" :src="staff_class.account_img ? staff_class.account_img : '/img/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
                             <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="openFilemanager()"></q-btn>
                         </div>
