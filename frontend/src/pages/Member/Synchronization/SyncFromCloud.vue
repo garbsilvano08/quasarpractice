@@ -4,7 +4,7 @@
 
         <div class="content__grid-2x2">
             <div class="synchronization__content content__box">
-                <div class="sync-btn">
+                <div class="sync-btn" @click="sync">
                     <q-img src="../../../assets/Member/cloud-sync.svg"></q-img>
                     <div class="sync-btn__name">SYNC</div>
                 </div>
@@ -54,6 +54,8 @@ export default {
     async mounted()
     {
         await this.getAllDevice(this.$user_info.company._id);
+        this.persons_list = await this.$_post(postGetPersons);
+        this.persons_list = this.persons_list.data;
     },
     methods:
     {
@@ -66,6 +68,10 @@ export default {
         {      
             this.deleteAllTabletPerson();
         },
+        sync()
+        {
+            this.singlecreate();
+        },
         async deleteAllTabletPerson()
         {
             this.$q.loading.show();
@@ -73,17 +79,15 @@ export default {
                 let tabletFormData = new FormData();
                 tabletFormData.append("pass", "123456");
                 let rsp = await this.$axios.post("http://"+device.device_ip+":8080/initialization", tabletFormData).then(res => res.data);
-                setTimeout(() => this.createAll(), 2000);
+                setTimeout(() => this.createAll(this.persons_list), 2000);
            })
         },
-        async createAll()
+        async createAll(personToTablet)
         {
-                this.persons_list = await this.$_post(postGetPersons);
-                this.persons_list = this.persons_list.data;
                 // console.log(this.persons_list[0].category);
                 
                 
-                this.persons_list.forEach(async (person) => {
+                personToTablet.forEach(async (person) => {
                     // console.log(person)
                 
 
@@ -129,8 +133,44 @@ export default {
                 });
 //*********************************************************************************************************************************
         })
-         this.$q.loading.hide();
-        }
+            this.$q.loading.hide();
+            this.persons_list = await this.$_post(postGetPersons);
+            this.persons_list = this.persons_list.data;
+        },
+        async singlecreate(){
+            this.$q.loading.show();
+            let personCloud = this.persons_list;
+            let accountNotSync = [];
+            console.log("cloud",personCloud);
+            let getFormData = new FormData();
+            getFormData.append("pass", "123456");
+            getFormData.append("index", "0");
+            getFormData.append("length", "50");
+            this.device_list.forEach(async (device) => {
+            let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
+            rsp = JSON.parse(rsp.data).records;
+            console.log("tablet",rsp)
+            // let personCloud
+                let newRegistered = [];
+                personCloud.forEach(async (person, i) => 
+                {
+                    let is = false;
+
+                    rsp.forEach(tabletRegistered => 
+                    {
+                        if (person.frontdesk_person_id == tabletRegistered.vipID) is = true;
+                    });
+
+                    if (!is)
+                    {
+                        newRegistered.push(person);
+                    }
+                });
+
+                console.log(newRegistered);
+                this.createAll(newRegistered);
+            });
+        },
 
     }
 }
