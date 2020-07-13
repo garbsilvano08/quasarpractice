@@ -67,6 +67,7 @@ app.post('/api/member/count/logs',  member_only, count_controller.counterLogs);
 
 //Logs
 app.post('/api/member/get/logs',  member_only, member_controller.getLogs);
+app.post('/api/member/find/logs',  member_only, member_controller.getFindLogs);
 
 app.listen({port: 4001}, (err) =>
 {

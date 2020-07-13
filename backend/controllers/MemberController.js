@@ -287,11 +287,16 @@ module.exports =
 
     async getPersons(req, res)
     {
-        if(req.body.find_by_category)
-        return res.send(await new MDB_PERSON().docs(req.body.find_by_category));
+        if(req.body.find_person)
+        return res.send(await new MDB_PERSON().docs(req.body.find_person));
         else
         return res.send(await new MDB_PERSON().docs());
     }, 
+
+    async getFindLogs(req, res)
+    {
+        res.send(await new MDB_LOGS().docs(req.body.find_logs))
+    },
     
     async getLogs(req, res)
     {

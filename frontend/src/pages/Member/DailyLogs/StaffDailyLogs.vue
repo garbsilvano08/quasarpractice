@@ -6,7 +6,7 @@
                 <q-btn class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <q-select class="select-lg" v-model="select__id_type" :options="options_name" outlined dense></q-select>
+                <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select>
             </div>
         </div>
         <div class="daily-logs__header" style="margin-bottom: 30px !important;">
@@ -17,14 +17,15 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select>
+                <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
+                <!-- <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select> -->
             </div>
         </div>
         <div class="content__grid-4x4">
             <DailyLogCards></DailyLogCards>
+            <!-- <DailyLogCards></DailyLogCards>
             <DailyLogCards></DailyLogCards>
-            <DailyLogCards></DailyLogCards>
-            <DailyLogCards></DailyLogCards>
+            <DailyLogCards></DailyLogCards> -->
         </div>
     </div>
 </template>
@@ -34,20 +35,33 @@ import "./DailyLogs.scss";
 
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
+import { postGetCompanies, postFindLogs } from '../../../references/url';
 
 export default {
     components: {
         DailyLogCards
     },
     data: () => ({
-        select__id_type: '',
-        select__date: '',
+        company_list: [],
+        options_company: ['All Company'],
+        select__id_type: 'All Company',
+        select__date: new Date().toISOString().split('T')[0],
         options_name: [
             'Green Sun Hotel', 'SM Mall' , 'WalterMart'
         ],
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
-    })
+    }),
+    async mounted()
+    {
+        let data = await this.$_post(postFindLogs, {find_logs: {}});
+        console.log(data, 'data');
+          
+        this.company_list = await this.$_post(postGetCompanies);
+        for (let company of this.company_list.data) {
+            this.options_company.push(company.company_name) 
+        }
+    }
 }
 </script>

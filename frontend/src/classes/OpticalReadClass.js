@@ -111,7 +111,7 @@ export default class OpticalReadClass
         {
             Notify.create({
                 color: 'red',
-                message: 'Please try again'
+                message: "The picture can't be recognized. Kindly input manually or try again."
             }); 
         }
     }

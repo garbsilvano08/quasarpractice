@@ -97,7 +97,7 @@ export default {
 
     async mounted()
     {
-        this.blacklist_account = await this.$_post(postGetPersons, {find_by_category: {category: 'Blacklist'}});
+        this.blacklist_account = await this.$_post(postGetPersons, {find_person: {category: 'Blacklist'}});
         console.log(this.$user_info);
         
         // this.blacklist_account = await this.$_post(postGetBlacklist);

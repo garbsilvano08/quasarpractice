@@ -85,7 +85,7 @@ export default {
     },
     async mounted()
     {
-        this.staff_list = await this.$_post(postGetPersons, {find_by_category: {category: 'Staff'}});
+        this.staff_list = await this.$_post(postGetPersons, {find_person: {category: 'Staff'}});
         console.log(this.staff_list);
         
     }
