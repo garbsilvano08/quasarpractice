@@ -1,23 +1,27 @@
+// Classes
 const CounterClass      = require('../classess/CounterClass');
-const PersonClass      = require('../classess/PersonClass');
+const PersonClass       = require('../classess/PersonClass');
+const PersonLogsClass   = require('../classess/PersonLogsClass');
+const AccountClass      = require('../classess/AccountClass');
 
+const Client            = require("@googlemaps/google-maps-services-js").Client;
+const client            = new Client({});
+
+const axios             = require('axios');
 const multer            = require('multer');
 const path              = require('path');
+
+// Models
 const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
 const MDB_RAW_PASS_LOG  = require('../models/MDB_RAW_PASS_LOG');
-const MDB_LOGS  =        require('../models/MDB_LOGS');
+const MDB_LOGS          = require('../models/MDB_LOGS');
 const MDB_STAFF         = require('../models/MDB_STAFF');
-const MDB_USER         = require('../models/MDB_USER');
+const MDB_USER          = require('../models/MDB_USER');
 const MDB_BLACKLIST     = require('../models/MDB_BLACKLIST');
 const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
 const MDB_DEVICE        = require('../models/MDB_DEVICE');
-const Client            = require("@googlemaps/google-maps-services-js").Client;
-const client            = new Client({});
-const axios             = require('axios');
-const AccountClass  = require('../classess/AccountClass');
-
 const MDB_PERSON        = require('../models/MDB_PERSON');
-const MDB_IDENTIFICATION       = require('../models/MDB_IDENTIFICATION');
+const MDB_IDENTIFICATION= require('../models/MDB_IDENTIFICATION');
 const MDB_PURPOSE       = require('../models//MDB_PURPOSE');
 
 const storage = multer.diskStorage({
@@ -99,6 +103,22 @@ module.exports =
         let date_string = new Date().toISOString().split('T')[0]
         date_string = date_string.split("-")
         await new CounterClass().counterActivities(req.body.data.saved_from, "Traffic", date_string)
+        
+        let person_info = {
+            mask:                   req.body.data.mask,
+            temperature:            req.body.data.tempratrue,
+
+            person_img:             req.body.data.image_path,
+            full_name:              req.body.data.name,
+
+            company_id:             req.body.data.saved_from,
+            device_id:              req.body.data.device_id,
+
+            frontdesk_person_id:    req.body.data.idCardNum,
+            date_logged:            req.body.data.currentTime,
+        }
+
+        await new PersonLogsClass(person_info).submit()
 
         await new MDB_LOGS().add(req.body.data);
         return res.send(true);

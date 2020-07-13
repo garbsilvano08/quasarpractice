@@ -64,6 +64,8 @@ app.post('/api/member/get/person',  member_only, member_controller.getPerson);
 
 //Count
 app.post('/api/member/count/logs',  member_only, count_controller.counterLogs);
+app.post('/api/member/get/daily_log',  member_only, count_controller.getCountDaily);
+
 
 //Logs
 app.post('/api/member/get/logs',  member_only, member_controller.getLogs);
