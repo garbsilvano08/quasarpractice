@@ -24,12 +24,17 @@ module.exports = class PersonLogsClass
 
     async submit()
     {
-        for (let index = 0; index <= (9 - this.frontdesk_person_id.length); index++) {
-            this.frontdesk_person_id = '0' + this.frontdesk_person_id
+        if (this.frontdesk_person_id.length < 9)
+        {
+            for (let index = 0; index <= (9 - this.frontdesk_person_id.length); index++) {
+                this.frontdesk_person_id = '0' + this.frontdesk_person_id
+            }
         }
+        console.log(this.frontdesk_person_id, 'person');
         let person_details = await new MDB_PERSON().docs({frontdesk_person_id: this.frontdesk_person_id})
         this.category  = person_details[0].category
         this.person_id = person_details[0]._id
+
         let person_logs = await new MDB_PERSON_LOGS().docs({person_id: this.person_id, date_logged: this.date_logged})
         if (person_logs.length) await new MDB_PERSON_LOGS().update(person_logs[0]._id ,this.convertObject())
         else await new MDB_PERSON_LOGS().add(this.convertObject())

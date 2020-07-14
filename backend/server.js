@@ -65,6 +65,7 @@ app.post('/api/member/get/person',  member_only, member_controller.getPerson);
 //Count
 app.post('/api/member/count/logs',  member_only, count_controller.counterLogs);
 app.post('/api/member/get/daily_log',  member_only, count_controller.getCountDaily);
+app.post('/api/member/get/weekly_count',  member_only, count_controller.getOneWeekTrafficCount);
 
 
 //Logs

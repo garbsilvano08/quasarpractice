@@ -10,7 +10,7 @@ const schema    = new Schema(
     person_id:              { type: String,  required: true },
     person_img:             { type: String,  required: true },
     full_name:              { type: String,  required: true },
-    category:               { type: String,  required: true },
+    category:               { type: String,  required: false },
     company_name:           { type: String,  required: false },
 
     company_id:             { type: String,  required: false },
