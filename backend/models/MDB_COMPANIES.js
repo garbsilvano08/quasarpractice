@@ -11,6 +11,7 @@ const schema    = new Schema(
     company_logo_url:    { type: String  , required:   true },
     parent_id:    { type: String  , required:   true },
     subcompanies: { type: Array , required: true},
+    staff: {type: Number , required: true , default: 0}
     
 });
 

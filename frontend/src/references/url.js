@@ -30,6 +30,7 @@ exports.postSavePerson      = 'member/save/person';
 exports.postGetPersons      = 'member/get/persons';
 exports.postGetPerson       = 'member/get/person';
 
+exports.postGetWeeklyCount  = 'member/get/weekly_count';
 exports.postCountLogs       = 'member/count/logs';
 exports.postGetDailyLog     = 'member/get/daily_log';
 exports.postGetLogs         = 'member/get/logs';

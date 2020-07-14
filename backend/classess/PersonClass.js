@@ -1,3 +1,4 @@
+const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
 const MDB_PERSON     = require('../models/MDB_PERSON');
 const MDB_IDENTIFICATION = require('../models/MDB_IDENTIFICATION');
 const MDB_PURPOSE   = require('../models/MDB_PURPOSE')
@@ -16,7 +17,7 @@ module.exports = class PersonClass
     async submit(person, company_id)
     {
         let already_existed = await new MDB_PERSON().docs({contact_number:  person.person_info.contact_number, birthday: person.person_info.birthday});
-        console.log(already_existed);
+        
         if (already_existed.length)
         {
             if (already_existed[0].category == 'Visitors')
@@ -31,6 +32,9 @@ module.exports = class PersonClass
             let data = await new MDB_PERSON().add(person.person_info);
             if (person.person_info.category == 'Visitors') await this.updateOtherDetails(person, data._id, company_id)
         }
+
+        console.log(person.person_info.category);
+        if (person.person_info.category == 'Staff') await new MDB_COMPANIES().update(company_id, {$inc: {staff: 1}})
         return true
         
     }

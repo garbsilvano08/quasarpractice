@@ -30,7 +30,7 @@
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-title">Total Scanned Today</div>
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">{{traffic_data.count}}</div>
+                     <div class="decs-total">{{traffic_data.count ? traffic_data.count : 0}}</div>
                      <div class="desc-separator"></div>
                      <div class="decs-info">93% of Registered Users</div>
                   </div>
@@ -81,7 +81,7 @@
             <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Employess</div>
-               <div class="dashboard__total-number">200</div>
+               <div class="dashboard__total-number">{{company_details.staff ? company_details.staff : 0}}</div>
                <div class="dashboard__total-date">Since June, 2020</div>
             </div>
          </div>
@@ -117,7 +117,8 @@
                <div class="dashboard__graph-title">
                   Foot Traffic
                </div>
-               <q-select v-model="select_date" :options="options" outlined dense></q-select>
+               <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+               <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div class="dashboard__graph-content">
                <line-chart style="position: relative; height:250px; width:100%"
@@ -140,7 +141,8 @@
                <div class="dashboard__graph-title">
                   Employee/Visitor Overview
                </div>
-               <q-select v-model="select_date" :options="options" outlined dense></q-select>
+               <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+               <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div class="dashboard__graph-content">
                <bar-chart style="position: relative; height:250px; width:100%"
@@ -163,7 +165,8 @@
                <div class="dashboard__graph-title">
                   Visitors Purpose
                </div>
-               <q-select v-model="select_date" :options="options" outlined dense></q-select>
+               <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+               <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div class="dashboard__graph-content">
                <pie-chart style="position: relative; height:250px; width:100%"
@@ -186,7 +189,8 @@
                <div class="dashboard__graph-title">
                   Alert Logs
                </div>
-               <q-select v-model="select_date" :options="options" outlined dense></q-select>
+               <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+               <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div class="dashboard__graph-content">
                <div class="visitor-logs__list">
@@ -250,7 +254,7 @@ import "./Dashboard.scss";
 import Vue from 'vue';
 import Chartkick from 'vue-chartkick';
 import "chart.js"
-import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson, postGetDailyLog} from '../../../references/url';
+import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson, postGetDailyLog, postGetWeeklyCount } from '../../../references/url';
 
 // Classes
 import DashboardClass from '../../../classes/DashboardClass';
@@ -263,6 +267,9 @@ export default
    
    data:() =>
    ({
+      traffic_date: new Date().toISOString().split('T')[0],
+      company_details: {},
+      traffic_weekly: [],
       options: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
       dashboard_class: new DashboardClass(),
       company_list: [],
@@ -288,10 +295,14 @@ export default
    methods: {
       getCompanyData(value)
       {
+         this.company_details = value
          console.log(value);
       },
       async getTotalScannedToday()
       {
+         this.traffic_weekly = await this.$_post(postGetWeeklyCount, {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global', key: 'Traffic'}});
+         
+         console.log(this.traffic_weekly);
          let data = await this.$_post(postGetDailyLog, {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global'}});
          for (let logs of data.data)
          {
