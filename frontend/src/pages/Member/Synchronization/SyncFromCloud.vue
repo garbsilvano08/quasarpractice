@@ -84,55 +84,54 @@ export default {
         },
         async createAll(personToTablet)
         {
-                // console.log(this.persons_list[0].category);
-                
-                
-                personToTablet.forEach(async (person) => {
-                    // console.log(person)
-                
-
-                let expStart = (new Date(person.frontdesk_person_date).getFullYear())+ '-' +(new Date(person.frontdesk_person_date).getMonth()+1).toString().padStart(2, "0")+'-'+new Date(person.frontdesk_person_date).getDate().toString().padStart(2, "0")+ " "+ new Date(person.frontdesk_person_date).getHours().toString().padStart(2, "0")+":"+new Date(person.frontdesk_person_date).getMinutes().toString().padStart(2, "0");
-                let expEnd =  (new Date(person.frontdesk_person_date).getFullYear())+ '-' +(new Date(person.frontdesk_person_date).getMonth()+1).toString().padStart(2, "0")+'-'+(new Date(person.frontdesk_person_date).getDate()+1).toString().padStart(2, "0")+ " "+ new Date(person.frontdesk_person_date).getHours().toString().padStart(2, "0")+":"+new Date(person.frontdesk_person_date).getMinutes().toString().padStart(2, "0");
-                // console.log(expStart);
+            for (let person of personToTablet)
+            {
+                let expStart = (new Date(person.frontdesk_person_date).getFullYear()) + '-' + (new Date(person.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + '-' + new Date(person.frontdesk_person_date).getDate().toString().padStart(2, "0") + " " + new Date(person.frontdesk_person_date).getHours().toString().padStart(2, "0") + ":" + new Date(person.frontdesk_person_date).getMinutes().toString().padStart(2, "0");
+                let expEnd = (new Date(person.frontdesk_person_date).getFullYear()) + '-' + (new Date(person.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + '-' + (new Date(person.frontdesk_person_date).getDate() + 1).toString().padStart(2, "0") + " " + new Date(person.frontdesk_person_date).getHours().toString().padStart(2, "0") + ":" + new Date(person.frontdesk_person_date).getMinutes().toString().padStart(2, "0");
                 let prescription = "";
                 let type = "";
-                
 
-        //***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
-                toDataUrl(person.person_img, async (myBase64)=> {
+                //***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
+                await new Promise(resolve =>
+                {
+                    toDataUrl(person.person_img, async(myBase64) =>
+                    {
+                        let sex = "";
+                        if (person.gender == "Female")
+                        {
+                            sex = 0;
+                        }
+                        else if (person.gender == "Male")
+                        {
+                            sex = 1;
+                        }
+                        let tabletFormData = new FormData();
+                        let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
+                        tabletFormData.append("pass", "123456");
 
-                let sex="";
-                if (person.gender=="Female")
-                {
-                    sex=0;
-                }
-                else if (person.gender=="Male")
-                {
-                    sex=1;
-                }
-                let tabletFormData = new FormData();
-                let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                tabletFormData.append("pass", "123456");
+                        if (person.category == "Visitors")
+                        {
+                            prescription = "'" + expStart + "," + expEnd + "'";
+                            type = 1.1;
+                            tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0, 'prescription' : " + prescription + "}");
+                        }
+                        else if (person.category == "Staff")
+                        {
+                            type = 3;
+                            tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0}");
+                        }
 
-                if (person.category == "Visitors") 
-                {
-                    prescription = "'"+ expStart +","+ expEnd+"'";
-                    type= 1.1;
-                    tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ person.given_name+" "+ person.middle_name +" "+ person.last_name +"', 'person_id' : '1234', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+person.contact_number+",  'address' : '"+ person.home_address +"', 'vipId': '"+person.frontdesk_person_id+"',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : "+type+", 'reg_type' : 0, 'prescription' : "+ prescription +"}" );
-                }
-                else if (person.category == "Staff")
-                {
-                    type = 3;
-                    tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ person.given_name+" "+ person.middle_name +" "+ person.last_name +"', 'person_id' : '1234', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+person.contact_number+",  'address' : '"+ person.home_address +"', 'vipId': '"+person.frontdesk_person_id+"',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : "+type+", 'reg_type' : 0}" );
-                }
-                
-                this.device_list.forEach(async (device) => {                  
-                let createRes = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
-               })
-                
+                        for (let device of this.device_list)
+                        {
+                            let createRes = await this.$axios.post("http://" + device.device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
+                        }
+
+                        resolve();
+                    });
                 });
-//*********************************************************************************************************************************
-        })
+                //*********************************************************************************************************************************
+            }
+
             this.$q.loading.hide();
             this.persons_list = await this.$_post(postGetPersons);
             this.persons_list = this.persons_list.data;
