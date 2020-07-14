@@ -141,7 +141,7 @@ export default {
             this.$q.loading.show();
             let personCloud = this.persons_list;
             let accountNotSync = [];
-            console.log("cloud",personCloud);
+            // console.log("cloud",personCloud);
             let getFormData = new FormData();
             getFormData.append("pass", "123456");
             getFormData.append("index", "0");
@@ -149,7 +149,7 @@ export default {
             this.device_list.forEach(async (device) => {
             let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
             rsp = JSON.parse(rsp.data).records;
-            console.log("tablet",rsp)
+            // console.log("tablet",rsp)
             // let personCloud
                 let newRegistered = [];
                 personCloud.forEach(async (person, i) => 
@@ -167,7 +167,7 @@ export default {
                     }
                 });
 
-                console.log(newRegistered);
+                // console.log(newRegistered);
                 this.createAll(newRegistered);
             });
         },
