@@ -6,7 +6,8 @@
             <q-btn class="btn-outline btn-export" flat dense no-caps>
                Export &nbsp;<q-icon name="mdi-export"></q-icon>
             </q-btn>
-            <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select>
+            <com-picker @select=getCompanyData></com-picker>
+            <!-- <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select> -->
          </div>
       </div>
 
@@ -29,11 +30,11 @@
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-title">Total Scanned Today</div>
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">193</div>
+                     <div class="decs-total">{{traffic_data.count}}</div>
                      <div class="desc-separator"></div>
                      <div class="decs-info">93% of Registered Users</div>
                   </div>
-                  <div class="dashboard__overview-date">June 21, 2020</div>
+                  <div class="dashboard__overview-date">{{traffic_data.date_string}}</div>
                </div>
             </q-img>
          </div>
@@ -244,25 +245,35 @@
 </template>
 
 <script>
+import  ComPicker from "../../../components/companyPicker/ComPicker"
 import "./Dashboard.scss";
 import Vue from 'vue';
 import Chartkick from 'vue-chartkick';
 import "chart.js"
+import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson, postGetDailyLog} from '../../../references/url';
+
+// Classes
+import DashboardClass from '../../../classes/DashboardClass';
 
 Vue.use(Chartkick.use(Chart))
 
 export default
 {
+   components: { ComPicker },
+   
    data:() =>
    ({
-      select__company: '',
-      options_company: [
-            'Green Sun Hotel', 'SM Mall' , 'WalterMart'
-      ],
+      options: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
+      dashboard_class: new DashboardClass(),
+      company_list: [],
+      select__company: 'All Caompanies',
+      options_company: ['All Caompanies'],
       options: [
          'July 1, 2019' , 'July 2, 2019', 'July 3, 2019' , 'July 4, 2019', 'July 5, 2019'
       ],
       select_date: '',
+
+      traffic_data: {}
       // dashboard_overview: [
       //    {
       //       overview_img  : '../../../assets/Member/dashboard_overview-bg-1.jpg',
@@ -275,7 +286,32 @@ export default
    }),
    mounted() { },
    methods: {
+      getCompanyData(value)
+      {
+         console.log(value);
+      },
+      async getTotalScannedToday()
+      {
+         let data = await this.$_post(postGetDailyLog, {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global'}});
+         for (let logs of data.data)
+         {
+            if (logs.key == 'Traffic')
+            {
+               this.traffic_data = logs
+               this.traffic_data.date_string = new Date(logs.date_string).toUTCString().split(" ")
+               this.traffic_data.date_string = this.traffic_data.date_string[0] + " " + this.traffic_data.date_string[1] + " " + this.traffic_data.date_string[2] + " " + this.traffic_data.date_string[3]
+            }
+         }
+      }
 
    },
+   async mounted()
+   {
+      this.getTotalScannedToday()
+      // this.company_list = await this.$_post(postGetCompanies);
+      // for (let company of this.company_list.data) {
+      //    this.options_company.push(company.company_name) 
+      // }
+   }
 }
 </script>

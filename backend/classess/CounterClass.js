@@ -11,7 +11,7 @@ module.exports = class CounterClass
 {
     constructor()
     {
-        this.company_to_update = []
+        this.company_to_update = ['global']
         this.company_id = '5f05fec1a3ed7128705f680e'
     }
     async getCompany(company_id)

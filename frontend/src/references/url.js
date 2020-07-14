@@ -31,5 +31,7 @@ exports.postGetPersons      = 'member/get/persons';
 exports.postGetPerson       = 'member/get/person';
 
 exports.postCountLogs       = 'member/count/logs';
-exports.postGetLogs       = 'member/get/logs';
+exports.postGetDailyLog     = 'member/get/daily_log';
+exports.postGetLogs         = 'member/get/logs';
+exports.postFindLogs        = 'member/find/logs';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';

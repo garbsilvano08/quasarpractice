@@ -21,10 +21,10 @@
                         </div>
                     </div>
                     <!-- BODY TEMPERATURE -->
-                    <div class="frontdesk__content-info">
+                    <!-- <div class="frontdesk__content-info">
                         <div class="content__title">Body Temperature</div>
                         <div class="frontdesk__content-temperature">36°C</div>
-                    </div>
+                    </div> -->
                     <!-- CHOOSE ID -->
                     <div class="frontdesk__content-info">
                         <div class="content__title">Choose ID</div>
@@ -414,12 +414,18 @@ export default {
                 this.personal_information.frontdesk_person_id = result
                 this.personal_information.frontdesk_person_date = new Date()
 
-                await this.db.add(
+                let data = await this.db.add(
                 {
                     personal_information: this.personal_information,
                     visitor_purpose: this.visitor_purpose
                 },
                 'visitors');
+
+                setTimeout(() => {
+                    this.visitor_purpose = {}
+                    this.personal_information = {}
+                });
+                
                 this.$q.notify(
                 {
                     color: 'green',

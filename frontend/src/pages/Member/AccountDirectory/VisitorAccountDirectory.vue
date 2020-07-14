@@ -79,7 +79,7 @@ export default {
 
     async mounted()
     {
-        this.visitor_lists = await this.$_post(postGetPersons, {find_by_category: {category: 'Visitors'}});
+        this.visitor_lists = await this.$_post(postGetPersons, {find_person: {category: 'Visitors'}});
     }
 }
 </script>

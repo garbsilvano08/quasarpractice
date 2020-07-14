@@ -15,8 +15,8 @@ module.exports = class PersonClass
 
     async submit(person, company_id)
     {
-        console.log(person);
         let already_existed = await new MDB_PERSON().docs({contact_number:  person.person_info.contact_number, birthday: person.person_info.birthday});
+        console.log(already_existed);
         if (already_existed.length)
         {
             if (already_existed[0].category == 'Visitors')

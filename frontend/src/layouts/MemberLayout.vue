@@ -209,7 +209,7 @@ export default
             // Logs
             for (let log of this.passLogs)
             {
-                console.log(log, 'logs');
+                console.log(log);
                 log.saved_from = this.$user_info.company._id ? this.$user_info.company._id : '';
 
                 await this.$_post('member/add/pass_log', { data: log });
