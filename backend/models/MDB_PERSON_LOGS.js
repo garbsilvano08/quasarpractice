@@ -20,6 +20,8 @@ const schema    = new Schema(
     date_logged:            { type: String,  required: false },
     date_saved:             { type: Date,    required: false },
 
+    has_fever:              { type: Boolean, required: true },
+
 });
 
 class MDB_PERSON_LOGS extends MODEL

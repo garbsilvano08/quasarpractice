@@ -1,5 +1,6 @@
 const MDB_PERSON_LOGS       = require('../models/MDB_PERSON_LOGS');
 const MDB_PERSON            = require('../models/MDB_PERSON');
+const MDB_COMPANIES            = require('../models/MDB_COMPANIES');
 
 module.exports = class PersonLogsClass
 {
@@ -20,6 +21,7 @@ module.exports = class PersonLogsClass
         this.category               = data.hasOwnProperty('category') ? data.category : '';
         this.date_logged            = data.hasOwnProperty('date_logged') ? new Date(data.date_logged).toISOString().split('T')[0] : ''; 
         this.date_saved             = new Date(data.date_logged); 
+        this.has_fever              = false
     }
 
     async submit()
@@ -30,10 +32,13 @@ module.exports = class PersonLogsClass
                 this.frontdesk_person_id = '0' + this.frontdesk_person_id
             }
         }
-        console.log(this.frontdesk_person_id, 'person');
         let person_details = await new MDB_PERSON().docs({frontdesk_person_id: this.frontdesk_person_id})
         this.category  = person_details[0].category
         this.person_id = person_details[0]._id
+        if (Number(this.temperature) >= 37) this.has_fever = true
+        let company = await new MDB_COMPANIES().doc(this.company_id)
+        this.company_name = company.company_name
+        console.log(this.company_name, 'person');
 
         let person_logs = await new MDB_PERSON_LOGS().docs({person_id: this.person_id, date_logged: this.date_logged})
         if (person_logs.length) await new MDB_PERSON_LOGS().update(person_logs[0]._id ,this.convertObject())

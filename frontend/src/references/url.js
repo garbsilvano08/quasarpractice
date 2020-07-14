@@ -35,4 +35,5 @@ exports.postCountLogs       = 'member/count/logs';
 exports.postGetDailyLog     = 'member/get/daily_log';
 exports.postGetLogs         = 'member/get/logs';
 exports.postFindLogs        = 'member/find/logs';
+exports.postPersonByCateg   = 'member/get/logs_by_category';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';

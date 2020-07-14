@@ -21,11 +21,13 @@
                 <!-- <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select> -->
             </div>
         </div>
-        <div class="content__grid-4x4">
-            <DailyLogCards></DailyLogCards>
+        <div v-if(staff_list) class="content__grid-4x4">
+            <div v-for="(staff, index) in this.staff_list.data" :key="index">
+            <DailyLogCards :staff_logs="staff"></DailyLogCards>
             <!-- <DailyLogCards></DailyLogCards>
             <DailyLogCards></DailyLogCards>
             <DailyLogCards></DailyLogCards> -->
+            </div>
         </div>
     </div>
 </template>
@@ -35,13 +37,14 @@ import "./DailyLogs.scss";
 
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
-import { postGetCompanies, postFindLogs } from '../../../references/url';
+import { postGetCompanies, postFindLogs, postPersonByCateg } from '../../../references/url';
 
 export default {
     components: {
         DailyLogCards
     },
     data: () => ({
+        staff_list: [],
         company_list: [],
         options_company: ['All Company'],
         select__id_type: 'All Company',
@@ -55,7 +58,7 @@ export default {
     }),
     async mounted()
     {
-        let data = await this.$_post(postFindLogs, {find_logs: {}});
+        this.staff_list = await this.$_post(postPersonByCateg, {find_by_category: {category: 'Staff'}});
         console.log(data, 'data');
           
         this.company_list = await this.$_post(postGetCompanies);

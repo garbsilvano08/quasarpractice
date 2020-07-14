@@ -1,12 +1,12 @@
 <template>
     <div class="content__card">
-        <q-img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80"></q-img>
+        <q-img :src="staff_logs.person_img"></q-img>
         <div class="content__info">
-            <div class="content__name">Monica C. de Jesus</div>
-            <div class="content__datetime"><span>Date: </span>6/24/2020 9:00 AM</div>
+            <div class="content__name">{{staff_logs.full_name}}</div>
+            <div class="content__datetime"><span>Date: </span>{{new Date(staff_logs.date_saved).toLocaleString()}}</div>
             <div class="content__details">
-                36.5°C <br>
-                <span>Green Sun Hotel lorem</span>
+                {{staff_logs.temperature}}°C <br>
+                <span>{{staff_logs.company_name}}</span>
             </div>
         </div>
     </div>
@@ -16,6 +16,10 @@
 import "./DailyLogCards.scss";
 
 export default {
+    props:
+    {
+        staff_logs: Object
+    },
 
 }
 </script>
