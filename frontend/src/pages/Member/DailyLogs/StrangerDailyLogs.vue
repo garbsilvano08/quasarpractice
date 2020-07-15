@@ -84,7 +84,7 @@ export default {
     },
     async mounted()
     {
-        this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: this.select__date})
+        this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: (new Date().getFullYear())+ '-' +(new Date().getMonth()+1).toString().padStart(2, "0")+'-'+new Date().getDate().toString().padStart(2, "0")})
     }
 }
 </script>
