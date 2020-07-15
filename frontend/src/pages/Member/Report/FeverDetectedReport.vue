@@ -75,11 +75,21 @@ export default {
             logs.forEach(async person => {   
             if(person.has_fever)
             {
+                if (person.person_id == null)
+                {
+                    person.gender = "Unknown";
+                    person.home_address = "Unknown";
+                    person.age = "Unknown";
+                    this.personWithFever.push(person);
+                }
+                else
+                {
                 let det = await this.$_post(postGetPerson, {id: person.person_id});
                 person.gender = det.data.personal_info.gender;
                 person.home_address = det.data.personal_info.home_address;
                 person.age = calculate_age(new Date(det.data.personal_info.birthday))
                 this.personWithFever.push(person);
+                }
             }
         });
         }
