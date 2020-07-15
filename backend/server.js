@@ -72,6 +72,8 @@ app.post('/api/member/get/weekly_count',  member_only, count_controller.getOneWe
 app.post('/api/member/get/logs',  member_only, member_controller.getLogs);
 app.post('/api/member/find/logs',  member_only, member_controller.getFindLogs);
 
+app.post('/api/member/get/logs_by_category',  member_only, count_controller.getPersonLogs);
+
 app.listen({port: 4001}, (err) =>
 {
     if(err)

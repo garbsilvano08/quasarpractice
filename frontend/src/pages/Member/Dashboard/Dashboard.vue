@@ -120,16 +120,16 @@
                <q-input v-model="traffic_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div class="dashboard__graph-content">
+            <div v-if="traffic_weekly.data" class="dashboard__graph-content">
                <line-chart style="position: relative; height:250px; width:100%"
                   :data="{
-                     'MON': 250,
-                     'TUES': 150,
-                     'WED': 350,
-                     'THURS': 500,
-                     'FRI': 200,
-                     'SAT': 300,
-                     'SUN': 100,
+                     'MON': traffic_weekly.data.Mon,
+                     'TUES': traffic_weekly.data.Tue,
+                     'WED': traffic_weekly.data.Wed,
+                     'THURS': traffic_weekly.data.Thurs,
+                     'FRI': traffic_weekly.data.Fri,
+                     'SAT': traffic_weekly.data.Sat,
+                     'SUN': traffic_weekly.data.Sun,
                   }"
                >
                </line-chart>
@@ -269,7 +269,7 @@ export default
    ({
       traffic_date: new Date().toISOString().split('T')[0],
       company_details: {},
-      traffic_weekly: [],
+      traffic_weekly: {},
       options: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
       dashboard_class: new DashboardClass(),
       company_list: [],
@@ -296,13 +296,14 @@ export default
       getCompanyData(value)
       {
          this.company_details = value
+         this.getTotalScannedToday(new Date(), value._id)
          console.log(value);
       },
       async getTotalScannedToday()
       {
+         let weekly = {}
          this.traffic_weekly = await this.$_post(postGetWeeklyCount, {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global', key: 'Traffic'}});
          
-         console.log(this.traffic_weekly);
          let data = await this.$_post(postGetDailyLog, {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global'}});
          for (let logs of data.data)
          {
@@ -318,7 +319,7 @@ export default
    },
    async mounted()
    {
-      this.getTotalScannedToday()
+      this.getTotalScannedToday(new Date(), 'global')
       // this.company_list = await this.$_post(postGetCompanies);
       // for (let company of this.company_list.data) {
       //    this.options_company.push(company.company_name) 

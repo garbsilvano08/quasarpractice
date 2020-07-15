@@ -98,6 +98,7 @@ module.exports =
 
         return res.send(true);
     },
+    
     async addPassLog(req, res)
     {
         let date_string = new Date().toISOString().split('T')[0]
