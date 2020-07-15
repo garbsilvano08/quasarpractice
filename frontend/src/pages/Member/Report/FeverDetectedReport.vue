@@ -3,8 +3,8 @@
         <div class="report__header">
             <div class="header__title">FEVER DETECTED REPORTS</div>
             <div class="header__filter">
-                <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select>
-                <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select>
+                <q-input class="select-sm" v-model="select__date" type="date" outlined dense></q-input>
+                <com-picker class="select-lg" @select=getCompanyData></com-picker>
                 <q-btn class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
@@ -41,7 +41,8 @@
 
 <script>
 import './Report.scss';
-import { postGetPersonLogs , postGetPerson}                        from '../../../references/url';
+import { postGetPersonLogs , postGetPerson, postPersonByCateg}                        from '../../../references/url';
+import  ComPicker from "../../../components/companyPicker/ComPicker"
 
 function calculate_age(dob) { 
     var diff_ms = Date.now() - dob.getTime();
@@ -51,6 +52,9 @@ function calculate_age(dob) {
 }
 
 export default {
+    components: { 
+        ComPicker,
+    },
      data: () => ({
         select__date: '',
         select__company: '',
@@ -64,13 +68,22 @@ export default {
     }),
     async mounted()
     {
-        this.getPersonWithFever();
+        let logs = await this.$_post(postPersonByCateg, {find_by_category : {date_logged : (new Date().getFullYear())+ '-' +(new Date().getMonth()+1).toString().padStart(2, "0")+'-'+new Date().getDate().toString().padStart(2, "0")}});
+        this.getPersonWithFever(logs);
+    },
+     watch:
+    {
+        async select__date(val)
+        {
+            if (val)  this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date, company_id: this.company_id}));
+        }
     },
     methods:
     {
-        async getPersonWithFever()
+        async getPersonWithFever(logs)
         {
-            let logs = await this.$_post(postGetPersonLogs);
+            this.personWithFever = [];
+            // let logs = await this.$_post(postGetPersonLogs, );
             logs = logs.data;
             logs.forEach(async person => {   
             if(person.has_fever)
@@ -92,13 +105,19 @@ export default {
                 }
             }
         });
+        },
+        async getCompanyData(value)
+        {
+            this.company_id = value
+            // this.getTotalScannedToday(new Date(), value._id)
+            this.staff_list = await this.getStaffList({date_logged: this.select__date})
+        },
+
+        async getStaffList(params)
+        {
+            return await this.$_post(postPersonByCateg, {find_by_category: params});
         }
     },
-    computed:
-    {
-
-        
-    }
 
 }
 </script>
