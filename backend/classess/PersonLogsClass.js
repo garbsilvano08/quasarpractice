@@ -32,10 +32,12 @@ module.exports = class PersonLogsClass
                 this.frontdesk_person_id = '0' + this.frontdesk_person_id
             }
         }
+        console.log(this.frontdesk_person_id);
         let person_details = await new MDB_PERSON().docs({frontdesk_person_id: this.frontdesk_person_id})
+        console.log(person_details);
         this.category  = person_details.length ? person_details[0].category : 'Stranger'
-        this.person_id = person_details.length ? person_details[0]._id : null
-        console.log(this.person_id, 'person');
+        this.person_id = person_details.length ? person_details[0]._id : new Date().toISOString()
+        
         if (Number(this.temperature) >= 37) this.has_fever = true
         let company = await new MDB_COMPANIES().doc(this.company_id)
         this.company_name = company.company_name
