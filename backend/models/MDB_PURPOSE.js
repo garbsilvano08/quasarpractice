@@ -9,7 +9,8 @@ const schema    = new Schema(
     visit_purpose:  { type: String,  required: true },
     date_saved:     { type: Date,    required: true },
     contact_person: { type: String,  required: true },
-    destination:    { type: String,  required: true }
+    destination:    { type: String,  required: true },
+    date_string:    { type: String,  required: true },
 });
 
 class MDB_PURPOSE extends MODEL

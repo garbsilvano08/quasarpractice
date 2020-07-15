@@ -34,7 +34,8 @@ const schema    = new Schema(
     company_id:         { type: String,  required: false },
 
     frontdesk_person_id:    { type: String,  required: false },
-    frontdesk_person_date:  { type: Date,  required: false }
+    frontdesk_person_date:  { type: Date,  required: false },
+    date_string: { type: String,  required: false },
 });
 
 class MDB_PERSON extends MODEL

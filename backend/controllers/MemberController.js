@@ -355,38 +355,12 @@ module.exports =
 
     async savePerson(req, res)
     {
-        // // await new CounterClass().counterActivities()
-        // let data = await new MDB_PERSON().add(req.body.person_info);
-        
-        // if (req.body.person_info.category == 'Visitors')
-        // {
-        //     // Identification
-        //     let id_info = {
-        //         person_id:  data._id,
-        //         id_image:   req.body.person_info.id_img,
-        //         id_number:  req.body.person_info.id_num,
-        //         id_type:    req.body.person_info.id_type,
-        //         date_saved: new Date()
-        //     }
-
-        //     // Purpose
-        //     let purpose_visit = {
-        //         person_id:          data._id,
-        //         company_id:         'Company 1',
-        //         visit_purpose:      req.body.person_info.visit_purpose,
-        //         contact_person:     req.body.person_info.contact_person,
-        //         destination:        req.body.person_info.destination,
-        //         date_saved:         new Date()
-        //     }
-        //     await new MDB_IDENTIFICATION().add(id_info);
-        //     await new MDB_PURPOSE().add(purpose_visit);
-        // }
         let date_string = new Date().toISOString().split('T')[0]
         await new CounterClass().counterActivities(req.body.person_info.saved_from, req.body.person_info.category, date_string)
-
+        date_string = date_string.split("-")
+        req.body.person_info.date = new Date().toISOString().split('T')[0]
+        req.body.person_info.date_string = date_string[0] + "-" + date_string[1]
         let response = await new PersonClass().submit(req.body, req.body.person_info.saved_from);
-
-
         res.send(response)
     }, 
     async editCompany(req, res)

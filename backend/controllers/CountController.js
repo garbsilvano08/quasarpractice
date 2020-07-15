@@ -3,6 +3,7 @@ const MDB_COUNT_MONTHLY     = require('../models/MDB_COUNT_MONTHLY');
 const MDB_COUNT_OVERALL     = require('../models/MDB_COUNT_OVERALL');
 const MDB_PERSON_LOGS       = require('../models/MDB_PERSON_LOGS');
 const MDB_LOGS              = require('../models/MDB_LOGS');
+const MDB_PURPOSE           = require('../models/MDB_PURPOSE');
 
 const CounterClass          = require('../classess/CounterClass');
 const { get } = require('mongoose');
@@ -24,7 +25,7 @@ module.exports =
 
     async getPersonLogs(req, res)
     {
-        res.send(await new MDB_PERSON_LOGS().docs(req.body.find_by_category));
+        res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).limit(req.body.limit));
     },
 
     async counterLogs(req, res)
@@ -48,6 +49,31 @@ module.exports =
     async getCountMonthly(req, res)
     {
         return res.send(await new MDB_COUNT_MONTHLY().docs(req.body.find_count));
+    },
+
+    async getDailyPurposeVisit(req, res)
+    {
+        let purpose_info = {
+            official_business: 0,
+            collection_pickup: 0,
+            delivery: 0,
+            corporate_meeting: 0,
+            client_customer: 0,
+            guest: 0
+        }
+        let purpose_visit = await new MDB_PURPOSE().docs(req.body.find_all);
+        'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
+
+        for (let purpose of purpose_visit) {
+           if (purpose.visit_purpose == 'Official Business') purpose_info.official_business++
+           else if (purpose.visit_purpose == 'Collection and Pickup') purpose_info.collection_pickup++
+           else if (purpose.visit_purpose == 'Delivery') purpose_info.delivery++
+           else if (purpose.visit_purpose == 'Corporate Meeting') purpose_info.corporate_meeting++
+           else if (purpose.visit_purpose == 'Client/Customer') purpose_info.client_customer++
+           else if (purpose.visit_purpose == 'Guest') purpose_info.guest++
+        }
+        console.log(purpose_visit,'sasass');
+        res.send(purpose_info)
     },
 
     async getOneWeekTrafficCount(req, res)
@@ -77,7 +103,6 @@ module.exports =
             req.body.find_count.date_string = date_string.toISOString().split('T')[0]
             
         }
-        console.log(weekly_count);
         return res.send(weekly_count)
     },
 }

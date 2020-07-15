@@ -81,32 +81,32 @@
             <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Employess</div>
-               <div class="dashboard__total-number">{{company_details.staff ? company_details.staff : 0}}</div>
-               <div class="dashboard__total-date">Since June, 2020</div>
+               <div class="dashboard__total-number">{{this.staff_number}}</div>
+               <div class="dashboard__total-date">Since {{current_month}}</div>
             </div>
          </div>
          <div class="dashboard__overview-total">
             <q-img src="../../../assets/Member/total-visitors.svg" width="45px"></q-img>
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Visitors</div>
-               <div class="dashboard__total-number">75</div>
-               <div class="dashboard__total-date">Since June, 2020</div>
+               <div class="dashboard__total-number">{{this.visitor_number}}</div>
+               <div class="dashboard__total-date">Since {{current_month}}</div>
             </div>
          </div>
          <div class="dashboard__overview-total">
             <q-img src="../../../assets/Member/total-alerts.svg" width="45px"></q-img>
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Alerts</div>
-               <div class="dashboard__total-number">0</div>
-               <div class="dashboard__total-date">Since June, 2020</div>
+               <div class="dashboard__total-number">{{monthly_alert}}</div>
+               <div class="dashboard__total-date">Since {{current_month}}</div>
             </div>
          </div>
          <div class="dashboard__overview-total">
             <q-img src="../../../assets/Member/total-devices.svg" width="30px"></q-img>
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Devices Installed</div>
-               <div class="dashboard__total-number">0</div>
-               <div class="dashboard__total-date">Since June, 2020</div>
+               <div class="dashboard__total-number">{{device_number}}</div>
+               <div class="dashboard__total-date">Since {{current_month}}</div>
             </div>
          </div>
       </div>
@@ -120,7 +120,7 @@
                <q-input v-model="traffic_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div v-if="traffic_weekly" class="dashboard__graph-content">
+            <div v-if="traffic_weekly.data" class="dashboard__graph-content">
                <line-chart style="position: relative; height:250px; width:100%"
                   :data="{
                      'MON': traffic_weekly.data.Mon,
@@ -141,7 +141,7 @@
                <div class="dashboard__graph-title">
                   Employee/Visitor Overview
                </div>
-               <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+               <q-input v-model="employee_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div class="dashboard__graph-content">
@@ -165,19 +165,19 @@
                <div class="dashboard__graph-title">
                   Visitors Purpose
                </div>
-               <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+               <q-input v-model="visitors_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div class="dashboard__graph-content">
                <pie-chart style="position: relative; height:250px; width:100%"
-                  suffix="%"
+                  suffix=""
                   :data="{
-                     'Official Business': 60,
-                     'Collection & Pickup': 25,
-                     'Delivery': 10,
-                     'Corporate Meeting': 0,
-                     'Client/Customer': 0,
-                     'Guest': 0,
+                     'Official Business': purpose_visit.data.official_business,
+                     'Collection & Pickup': purpose_visit.data.collection_pickup,
+                     'Delivery': purpose_visit.data.delivery,
+                     'Corporate Meeting': purpose_visit.data.corporate_meeting,
+                     'Client/Customer': purpose_visit.data.client_customer,
+                     'Guest': purpose_visit.data.guest,
                   }"
                >
                </pie-chart>
@@ -189,58 +189,28 @@
                <div class="dashboard__graph-title">
                   Alert Logs
                </div>
-               <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+               <q-input v-model="alert_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div class="dashboard__graph-content">
-               <div class="visitor-logs__list">
+            <div v-if="this.alert_list.data" class="dashboard__graph-content">
+               <div class="visitor-logs__list"  v-for="(alert, i) in this.alert_list.data" :key="i">
                   <div class="visitor-logs__info">
-                     <q-img src="https://www.thefamouspeople.com/profiles/thumbs/natalie-dormer-1.jpg">
+                     <q-img :src="alert.person_image">
                      </q-img>
                      <div class="visitor-logs__info-user">
-                        <div class="visitor-logs__user-name">Natalie Dormer</div>
-                        <div class="visitor-logs__user-temp">36.5 °C</div>
+                        <div class="visitor-logs__user-name">{{alert.full_name}}</div>
+                        <div class="visitor-logs__user-temp">{{alert.temperature}} °C</div>
                      </div>
                      <div class="visitor-logs__info-visit">
                         <div class="visitor-logs__visit-details">
-                           6/19/2020 9:00 AM<br>
-                           <span>Green Sun Hotel</span>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="visitor-logs__info">
-                     <q-img src="https://images.csmonitor.com/csm/2012/08/sclaflin.jpg?alias=standard_900x600">
-                     </q-img>
-                     <div class="visitor-logs__info-user">
-                        <div class="visitor-logs__user-name">Sam Claflin</div>
-                        <div class="visitor-logs__user-temp">36.5 °C</div>
-                     </div>
-                     <div class="visitor-logs__info-visit">
-                        <div class="visitor-logs__visit-details">
-                           6/17/2020 1:00 PM<br>
-                           <span>My Phone</span>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="visitor-logs__info">
-                     <q-img src="https://www.famousbirthdays.com/headshots/dean-charles-chapman-4.jpg">
-                     </q-img>
-                     <div class="visitor-logs__info-user">
-                        <div class="visitor-logs__user-name">Dean-Charles Chapman</div>
-                        <div class="visitor-logs__user-temp">36.5 °C</div>
-                     </div>
-                     <div class="visitor-logs__info-visit">
-                        <div class="visitor-logs__visit-details">
-                           6/15/2020 4:00 pM<br>
-                           <span>Green Sun Hotel</span>
+                           {{new Date(alert.date_saved).toLocaleString()}}<br>
+                           <span>{{alert.company_name}}</span>
                         </div>
                      </div>
                   </div>
                </div>
                <div class="visitor-logs__btn">
-                  <q-btn flat dense no-caps class="btn-see btn-outline" label="See All"></q-btn>
+                  <q-btn v-if="this.alert_list.data.length == 3" flat dense no-caps class="btn-see btn-outline" label="See All"></q-btn>
                </div>
             </div>
          </div>
@@ -262,7 +232,11 @@ import { postGetCompanies,
    postGetWeeklyCount, 
    postLatestLog, 
    postPersonByCateg,
-   postGetAllLogs
+   postGetAllLogs,
+   postGetPersons,
+   postGetPurposeVisit,
+   postGetAlertCount,
+   postGetDevice
 } from '../../../references/url';
 
 // Classes
@@ -276,7 +250,12 @@ export default
    
    data:() =>
    ({
+      visitors_date: new Date().toISOString().split('T')[0],
       traffic_date: new Date().toISOString().split('T')[0],
+      alert_date: new Date().toISOString().split('T')[0],
+      employee_date: new Date().toISOString().split('T')[0],
+
+      purpose_visit: {},
       company_details: {},
       traffic_weekly: {},
       options: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
@@ -288,40 +267,132 @@ export default
          'July 1, 2019' , 'July 2, 2019', 'July 3, 2019' , 'July 4, 2019', 'July 5, 2019'
       ],
       select_date: '',
-
       traffic_data: {},
       highest_log: {},
-      // dashboard_overview: [
-      //    {
-      //       overview_img  : '../../../assets/Member/dashboard_overview-bg-1.jpg',
-      //       overview_title: 'Total Scanned Today',
-      //       overview_total: '193',
-      //       overview_info : '93% of Registered Users',
-      //       overview_date : 'June 21, 2020'
-      //    }
-      // ]
       current_date: new Date().toUTCString().split(" "),
+      current_month: new Date().toUTCString().split(" "),
       alert_list: {},
-      current_alerts: 0
+      current_alerts: 0,
+      staff_number: 0,
+      visitor_number: 0,
+      monthly_alert: 0,
+      device_number: 0,
+      date_range: new Date().setDate(1)
    }),
-   mounted() { },
+   
+   watch:
+    {
+        async visitors_date(val)
+        {
+            if (val)
+            {
+               await this.getPurposeVisit()
+            }
+        },
+        async alert_date(val)
+        {
+            if (val)
+            {
+               await this.getAlertLogs()
+            }
+        }
+    },
+
    methods: {
-      getCompanyData(value)
+      async getCompanyData(value)
       {
+         let date_string = new Date().toISOString().split('T')[0].split("-")
          this.company_details = value
-         this.getTotalScannedToday(new Date(), value._id)
+         await this.getTotalScannedToday(new Date(), value._id)
+         this.staff_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
+         this.visitor_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Visitors', date_string: date_string[0] + "-" + date_string[1]}})
+         await this.getMonthlyAlert()
+         await this.getDevices()
+         await this.getPurposeVisit()
+         await this.getAlertLogs()
+         await this.getTraffic()
       },
+
+      async personsData(category)
+      {
+         let data = await this.$_post(postGetPersons, category);
+         return data.data.length
+      },
+
+      async getDevices()
+      { 
+         let params = {}
+         if (this.company_details || this.company_details.company_name != "All Company" ){
+            params = {find_device: {company_name: this.company_details.company_name,date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
+         }
+         else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
+
+         let devices =  await this.$_post(postGetDevice, params);
+         this.device_number = devices.data.length
+      },
+
+      async getMonthlyAlert()
+      {
+         let params = {}
+         if (this.company_details || this.company_details.company_name != "All Company" ){
+            params = {find_by_category: {date_saved: { '$gt' : new Date(this.date_range) , '$lt' : new Date() }, 
+            has_fever: true, 
+            company_name: this.company_details.company_name}}
+         }
+         else {
+            params = {find_by_category: {date_saved: { '$gt' : new Date(this.date_range) , '$lt' : new Date() }, has_fever: true}}
+         }
+         let count =  await this.$_post(postPersonByCateg, params);
+         this.monthly_alert = count.data.length
+      },
+
+      async getPurposeVisit()
+      {
+         let params = {}
+         if (this.company_details || this.company_details.company_name != "All Company" ){
+           params = {find_all: {date_string: new Date(this.visitors_date).toISOString().split('T')[0], company_id: this.company_details._id}}
+            
+         }
+         else {
+            params = {find_all: {date_string: new Date().toISOString().split('T')[0]}}
+         }
+         this.purpose_visit =  await this.$_post(postGetPurposeVisit, params);
+      },
+
+      async getAlertLogs()
+      {
+         let params = {}
+         if (this.company_details || this.company_details.company_name != "All Company" ){
+           params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0], company_id: this.company_details._id}, limit: 1}
+            
+         }
+         else {
+            params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0]}, limit: 1}
+         }
+         
+         this.alert_list = await this.$_post(postPersonByCateg, params);
+         this.current_alerts = this.alert_list.data.length
+      },
+      async getTraffic()
+      {
+         this.traffic_weekly = {}
+         let params = {}
+         if (this.company_details || this.company_details.company_name != "All Company" ){
+           params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: 'Traffic'}}
+            
+         }
+         else {
+            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: 'Traffic'}}
+         }
+         this.traffic_weekly = await this.$_post(postGetWeeklyCount, params);
+      },
+      
       async getTotalScannedToday()
       {
-         this.highest_log = await this.$_post(postLatestLog, {find_by: {date_string: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}});
-         // this.highest_log = await this.$_post(postLatestLog, {find_by: {date_string: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{tempratrue: -1}});
-         this.alert_list = await this.$_post(postPersonByCateg, {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0]}});
-         console.log(this.highest_log);
-         this.current_alerts = this.alert_list.data.length
-         let weekly = {}
-         this.traffic_weekly = await this.$_post(postGetWeeklyCount, {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global', key: 'Traffic'}});
+         let date_string = new Date().toISOString().split('T')[0].split("-")
+         this.highest_log = await this.$_post(postLatestLog, {find_by: {date_logged: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}});
          
-         let data = await this.$_post(postGetDailyLog, {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global'}});
+         let data = await this.$_post(postGetDailyLog, {find_count: {date_string: new Date().toISOString().split('T')[0]}});
          for (let logs of data.data)
          {
             if (logs.key == 'Traffic')
@@ -336,8 +407,27 @@ export default
    },
    async mounted()
    {
+      // Getting Devices
+      await this.getDevices()
+      
+      // Alert
+      await this.getMonthlyAlert()
+
+      //Purpose
+      await this.getPurposeVisit()
+
+      // Alert Logs
+      await this.getAlertLogs()
+
+      // Traffic
+      await this.getTraffic()
+      
+      let date_string = new Date().toISOString().split('T')[0].split("-")
       this.getTotalScannedToday(new Date(), 'global')
       this.current_date = this.current_date[0] + " " + this.current_date[1] + " " + this.current_date[2] + " " + this.current_date[3]
+      this.current_month = this.current_month[2] + " " + this.current_month[3]
+      this.staff_number = await this.personsData({find_person: {category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
+      this.visitor_number = await this.personsData({find_person: {category: 'Visitors', date_string: date_string[0] + "-" + date_string[1]}})
    }
 }
 </script>

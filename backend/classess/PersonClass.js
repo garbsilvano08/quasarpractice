@@ -33,7 +33,6 @@ module.exports = class PersonClass
             if (person.person_info.category == 'Visitors') await this.updateOtherDetails(person, data._id, company_id)
         }
 
-        console.log(person.person_info.category);
         if (person.person_info.category == 'Staff') await new MDB_COMPANIES().update(company_id, {$inc: {staff: 1}})
         return true
         
@@ -56,7 +55,8 @@ module.exports = class PersonClass
             visit_purpose:      person.person_info.visit_purpose,
             contact_person:     person.person_info.contact_person,
             destination:        person.person_info.destination,
-            date_saved:         new Date()
+            date_saved:         new Date(),
+            date_string:        person.person_info.date
         }
         await new MDB_IDENTIFICATION().add(id_info);
         await new MDB_PURPOSE().add(purpose_visit);
