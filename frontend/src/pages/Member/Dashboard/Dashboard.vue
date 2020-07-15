@@ -120,7 +120,7 @@
                <q-input v-model="traffic_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div v-if="traffic_weekly.data" class="dashboard__graph-content">
+            <div v-if="traffic_weekly" class="dashboard__graph-content">
                <line-chart style="position: relative; height:250px; width:100%"
                   :data="{
                      'MON': traffic_weekly.data.Mon,
@@ -311,6 +311,7 @@ export default
          await this.getPurposeVisit()
          await this.getAlertLogs()
          await this.getTraffic()
+         await this.getStaffVisitors()
       },
 
       async personsData(category)
@@ -386,6 +387,20 @@ export default
          }
          this.traffic_weekly = await this.$_post(postGetWeeklyCount, params);
       },
+
+      async getStaffVisitors()
+      {
+         let params = {}
+         if (this.company_details || this.company_details.company_name != "All Company" ){
+           params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: {$in: ['Staff', 'Visitors']}}}
+            
+         }
+         else {
+            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitors']}}}
+         }
+         let data = await this.$_post(postGetWeeklyCount, params);
+         console.log(data, 'data');
+      },
       
       async getTotalScannedToday()
       {
@@ -421,6 +436,8 @@ export default
 
       // Traffic
       await this.getTraffic()
+
+      await this.getStaffVisitors()
       
       let date_string = new Date().toISOString().split('T')[0].split("-")
       this.getTotalScannedToday(new Date(), 'global')

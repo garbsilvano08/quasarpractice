@@ -72,12 +72,12 @@ module.exports =
            else if (purpose.visit_purpose == 'Client/Customer') purpose_info.client_customer++
            else if (purpose.visit_purpose == 'Guest') purpose_info.guest++
         }
-        console.log(purpose_visit,'sasass');
         res.send(purpose_info)
     },
 
     async getOneWeekTrafficCount(req, res)
     {
+        console.log(req.body.find_count);
         let day_list = ['Sun','Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat']
         let date_string = new Date(req.body.find_count.date_string)
         date_string.setDate((date_string.getDate() + (day_list.length - date_string.getDay())))
@@ -85,7 +85,7 @@ module.exports =
         for (let index = 0; index < 7; index++) {
             
             req.body.find_count.date_string = new Date(date_string).toISOString().split('T')[0]
-            let daily_log = await new MDB_COUNT_DAILY().docs(req.body.find_count);
+            let daily_log = await new MDB_COUNT_DAILY().collection.find(req.body.find_count);
             
             if (day_list[date_string.getDay()] == 'Mon') weekly_count.Mon = daily_log.length ? daily_log[0].count : 0
             else if (day_list[date_string.getDay()] == 'Tue') weekly_count.Tue = daily_log.length ? daily_log[0].count : 0
