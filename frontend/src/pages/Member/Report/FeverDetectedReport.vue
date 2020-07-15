@@ -24,29 +24,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte, Bulacan</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-red">38.2°C</td>
-                        </tr>
-                        <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte, Bulacan</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-red">38.2°C</td>
-                        </tr>
-                        <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte, Bulacan</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-red">38.2°C</td>
+                        <tr v-for="(person, i) in this.personWithFever" :key="i">
+                            <td class="td-active">{{person.full_name}}</td>
+                            <td>{{person.gender}}</td>
+                            <td>{{person.age}}</td>
+                            <td>{{ person.home_address }}</td>
+                            <td>{{person.date_logged}}</td>
+                            <td class="td-red">{{person.temperature}}°C</td>
                         </tr>
                     </tbody>
                 </table>
@@ -57,6 +41,14 @@
 
 <script>
 import './Report.scss';
+import { postGetPersonLogs , postGetPerson}                        from '../../../references/url';
+
+function calculate_age(dob) { 
+    var diff_ms = Date.now() - dob.getTime();
+    var age_dt = new Date(diff_ms); 
+  
+    return Math.abs(age_dt.getUTCFullYear() - 1970);
+}
 
 export default {
      data: () => ({
@@ -68,7 +60,35 @@ export default {
         options_company: [
             'Green Sun Hotel', 'SM Mall' , 'WalterMart'
         ],
-
+        personWithFever : [],
     }),
+    async mounted()
+    {
+        this.getPersonWithFever();
+    },
+    methods:
+    {
+        async getPersonWithFever()
+        {
+            let logs = await this.$_post(postGetPersonLogs);
+            logs = logs.data;
+            logs.forEach(async person => {   
+            if(person.has_fever)
+            {
+                let det = await this.$_post(postGetPerson, {id: person.person_id});
+                person.gender = det.data.personal_info.gender;
+                person.home_address = det.data.personal_info.home_address;
+                person.age = calculate_age(new Date(det.data.personal_info.birthday))
+                this.personWithFever.push(person);
+            }
+        });
+        }
+    },
+    computed:
+    {
+
+        
+    }
+
 }
 </script>

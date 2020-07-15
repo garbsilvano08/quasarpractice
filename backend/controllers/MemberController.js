@@ -23,6 +23,7 @@ const MDB_DEVICE        = require('../models/MDB_DEVICE');
 const MDB_PERSON        = require('../models/MDB_PERSON');
 const MDB_IDENTIFICATION= require('../models/MDB_IDENTIFICATION');
 const MDB_PURPOSE       = require('../models//MDB_PURPOSE');
+const MDB_PERSON_LOGS     = require('../models/MDB_PERSON_LOGS');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -405,5 +406,9 @@ module.exports =
     {
         console.log(req.user_info);
         console.log(await new MDB_DEVICE.docs());
+    },
+    async getDbPersonLogs(req, res)
+    {
+        res.send(await new MDB_PERSON_LOGS().docs());
     }
 }

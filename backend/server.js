@@ -21,6 +21,7 @@ app.post('/api/front/register',         front_controller.register);
 const member_controller     = require('./controllers/MemberController');
 const count_controller     = require('./controllers/CountController');
 const member_only           = require('./middleware/MemberOnly');
+const MemberController = require('./controllers/MemberController');
 
 app.post('/api/member/add/staff', member_controller.addNewStaff);
 app.post('/api/member/add/blacklist', member_controller.addNewBlacklist);
@@ -71,6 +72,7 @@ app.post('/api/member/get/weekly_count',  member_only, count_controller.getOneWe
 //Logs
 app.post('/api/member/get/logs',  member_only, member_controller.getLogs);
 app.post('/api/member/find/logs',  member_only, member_controller.getFindLogs);
+app.post('/api/member/get/db_person_logs', member_only, MemberController.getDbPersonLogs)
 
 app.post('/api/member/get/logs_by_category',  member_only, count_controller.getPersonLogs);
 
