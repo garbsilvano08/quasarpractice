@@ -67,7 +67,17 @@ export default {
         },
         async syncAll()
         {      
-            this.deleteAllTabletPerson();
+            this.$q.dialog({
+            title: 'Confirm',
+            message: `All Data will be rewrite!`,
+            color: 'negative',
+            ok: `Yes, I'm sure`,
+            cancel: true,
+            default: 'cancel'   // <<<<
+            }).onOk(async () =>{
+                this.deleteAllTabletPerson();
+            });
+            
         },
         sync()
         {
@@ -85,7 +95,7 @@ export default {
         },
         async createAll(personToTablet , device_ip)
         {
-            console.log(personToTablet)
+            // console.log(personToTablet)
             for (let person of personToTablet)
             {
                 let expStart = (new Date(person.frontdesk_person_date).getFullYear()) + '-' + (new Date(person.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + '-' + new Date(person.frontdesk_person_date).getDate().toString().padStart(2, "0") + " " + new Date(person.frontdesk_person_date).getHours().toString().padStart(2, "0") + ":" + new Date(person.frontdesk_person_date).getMinutes().toString().padStart(2, "0");
