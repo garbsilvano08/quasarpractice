@@ -418,5 +418,9 @@ module.exports =
     {
         console.log(req.user_info);
         console.log(await new MDB_DEVICE.docs());
+    },
+    async getDbPersonLogs(req, res)
+    {
+        res.send(await new MDB_PERSON_LOGS().docs());
     }
 }

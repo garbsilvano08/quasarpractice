@@ -56,6 +56,7 @@ export default {
         await this.getAllDevice(this.$user_info.company._id);
         this.persons_list = await this.$_post(postGetPersons);
         this.persons_list = this.persons_list.data;
+        
     },
     methods:
     {
@@ -82,8 +83,9 @@ export default {
                 setTimeout(() => this.createAll(this.persons_list), 2000);
            })
         },
-        async createAll(personToTablet)
+        async createAll(personToTablet , device_ip)
         {
+            console.log(personToTablet)
             for (let person of personToTablet)
             {
                 let expStart = (new Date(person.frontdesk_person_date).getFullYear()) + '-' + (new Date(person.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + '-' + new Date(person.frontdesk_person_date).getDate().toString().padStart(2, "0") + " " + new Date(person.frontdesk_person_date).getHours().toString().padStart(2, "0") + ":" + new Date(person.frontdesk_person_date).getMinutes().toString().padStart(2, "0");
@@ -121,10 +123,9 @@ export default {
                             tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0}");
                         }
 
-                        for (let device of this.device_list)
-                        {
-                            let createRes = await this.$axios.post("http://" + device.device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
-                        }
+                       
+                            let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
+                        
 
                         resolve();
                     });
@@ -139,23 +140,44 @@ export default {
         async singlecreate(){
             this.$q.loading.show();
             let personCloud = this.persons_list;
-            let accountNotSync = [];
+            
+            
             // console.log("cloud",personCloud);
-            let getFormData = new FormData();
-            getFormData.append("pass", "123456");
-            getFormData.append("index", "0");
-            getFormData.append("length", "50");
-            this.device_list.forEach(async (device) => {
-            let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
-            rsp = JSON.parse(rsp.data).records;
-            // console.log("tablet",rsp)
+            
+            for (let device of this.device_list) 
+            {
+            let ctr=0;
+            let totalTabletRecord = [];
+            let totalTabletRecordCount = 0;
+            while(1)
+            {
+                let getFormData = new FormData();
+                getFormData.append("pass", "123456");
+                getFormData.append("index", ""+ctr+"");
+                getFormData.append("length", "50");
+                let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
+                totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
+                // console.log(JSON.parse(rsp.data).pageInfo)
+                rsp = JSON.parse(rsp.data).records;
+                // console.log(rsp)
+                if (ctr===1) rsp.splice(0, 1);
+                totalTabletRecord=totalTabletRecord.concat(rsp);
+                ctr++;
+                if (totalTabletRecord.length===totalTabletRecordCount)
+                {
+                    break;
+                }
+                // console.log( ctr)
+            }
+        // console.log(device.device_ip,totalTabletRecord)
             // let personCloud
+            // console.log("cloud",personCloud)
                 let newRegistered = [];
                 personCloud.forEach(async (person, i) => 
                 {
                     let is = false;
 
-                    rsp.forEach(tabletRegistered => 
+                    totalTabletRecord.forEach(tabletRegistered => 
                     {
                         if (person.frontdesk_person_id == tabletRegistered.vipID) is = true;
                     });
@@ -166,9 +188,18 @@ export default {
                     }
                 });
 
-                // console.log(newRegistered);
-                this.createAll(newRegistered);
-            });
+                // console.log("walang kamuka",newRegistered);
+                if (newRegistered.length >0)
+                {
+                    // console.log(device.device_ip);
+                    // console.log(newRegistered)
+                    this.createAll(newRegistered, device.device_ip);
+                }
+                else 
+                {
+                    this.$q.loading.hide();
+                }
+            };
         },
 
     }
