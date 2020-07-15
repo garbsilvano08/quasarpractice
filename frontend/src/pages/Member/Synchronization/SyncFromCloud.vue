@@ -67,7 +67,17 @@ export default {
         },
         async syncAll()
         {      
-            this.deleteAllTabletPerson();
+            this.$q.dialog({
+            title: 'Confirm',
+            message: `All Data will be rewrite!`,
+            color: 'negative',
+            ok: `Yes, I'm sure`,
+            cancel: true,
+            default: 'cancel'   // <<<<
+            }).onOk(async () =>{
+                this.deleteAllTabletPerson();
+            });
+            
         },
         sync()
         {
