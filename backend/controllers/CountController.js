@@ -1,7 +1,8 @@
 const MDB_COUNT_DAILY       = require('../models/MDB_COUNT_DAILY');
 const MDB_COUNT_MONTHLY     = require('../models/MDB_COUNT_MONTHLY');
 const MDB_COUNT_OVERALL     = require('../models/MDB_COUNT_OVERALL');
-const MDB_PERSON_LOGS     = require('../models/MDB_PERSON_LOGS');
+const MDB_PERSON_LOGS       = require('../models/MDB_PERSON_LOGS');
+const MDB_LOGS              = require('../models/MDB_LOGS');
 
 const CounterClass          = require('../classess/CounterClass');
 const { get } = require('mongoose');
@@ -11,6 +12,16 @@ const day_list = ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
 
 module.exports =
 {
+    async getAllLogs(req, res)
+    {   
+        res.send(await new MDB_LOGS().collection.find(req.body.find_by).limit(req.body.limit).sort(req.body.sort_by))
+    },
+
+    async getLatestLog(req, res)
+    {
+        res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by).limit(req.body.limit).sort(req.body.sort_by))
+    },
+
     async getPersonLogs(req, res)
     {
         res.send(await new MDB_PERSON_LOGS().docs(req.body.find_by_category));
@@ -43,10 +54,11 @@ module.exports =
     {
         let day_list = ['Sun','Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat']
         let date_string = new Date(req.body.find_count.date_string)
-        date_string.setDate((date_string.getDay() + ((day_list.length) - date_string.getDay())))
-        console.log(date_string);
+        date_string.setDate((date_string.getDate() + (day_list.length - date_string.getDay())))
         let weekly_count = {}
         for (let index = 0; index < 7; index++) {
+            
+            req.body.find_count.date_string = new Date(date_string).toISOString().split('T')[0]
             let daily_log = await new MDB_COUNT_DAILY().docs(req.body.find_count);
             
             if (day_list[date_string.getDay()] == 'Mon') weekly_count.Mon = daily_log.length ? daily_log[0].count : 0
@@ -61,7 +73,6 @@ module.exports =
             //     count: daily_log.length ? daily_log[0].count : 0
             // }
             // weekly_count.unshift(daily_info) 
-            console.log(date_string.getDay());
             date_string.setDate(date_string.getDate() - 1)
             req.body.find_count.date_string = date_string.toISOString().split('T')[0]
             

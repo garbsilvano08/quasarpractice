@@ -139,13 +139,14 @@
                             <th>Company/Location Scanned</th>
                         </tr>
                     </thead>
-                    <tbody v-if="this.account_info.logs">
-                        <tr v-for="(logs, index) in this.account_info.logs.data" :key="index">
+                    <tbody v-if="this.person_logs">
+                        <tr v-for="(logs, index) in this.person_logs.data" :key="index">
                             <td>{{new Date(logs.currentTime * 1000).toString()}}</td>
                             <td class="td-green">{{logs.tempratrue}}°C</td>
                             <td>{{logs.device_id}}</td>
                             <td>Green Sun Hotel</td>
                         </tr>
+                        <!-- <tr>More</tr> -->
                     </tbody>
                 </table>
             </div>
@@ -162,7 +163,8 @@ export default {
      data: () => ({
         account_info: {},
         company_device: 0,
-        company_info: {}
+        company_info: {},
+        person_logs: {}
     }),
 
     methods:
@@ -239,9 +241,9 @@ export default {
 
         if (this.account_info.data.personal_info.frontdesk_person_id)
         {
-            this.account_info.logs = await this.$_post(postGetLogs,{ id: this.account_info.data.personal_info.frontdesk_person_id, limit: 3})
+            this.person_logs = await this.$_post(postGetLogs,{ id: this.account_info.data.personal_info.frontdesk_person_id, limit: 3})
         }
-        console.log(this.account_info);
+        console.log(this.person_logs);
         
     }
 

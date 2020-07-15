@@ -43,7 +43,7 @@
 <script>
 import "./AccountDirectory.scss";
 
-import { postGetVisitors, postGetPersons } from '../../../references/url';
+import { postGetVisitors, postGetPersons, postGetDailyLog, postLatestLog } from '../../../references/url';
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 
@@ -60,11 +60,16 @@ export default {
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
-        visitor_lists: []
+        visitor_lists: [],
+        person_logs: []
     }),
 
     methods:
     {
+        async getLatestLog(person_id)
+        {
+            return await this.$_post(postLatestLog, {id: person_id});
+        },
         checkAccount(account_info)
         {
             account_info.type = 'Visitor'
@@ -80,6 +85,7 @@ export default {
     async mounted()
     {
         this.visitor_lists = await this.$_post(postGetPersons, {find_person: {category: 'Visitors'}});
+        console.log(this.visitor_lists);
     }
 }
 </script>

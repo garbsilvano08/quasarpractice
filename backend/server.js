@@ -73,6 +73,8 @@ app.post('/api/member/get/logs',  member_only, member_controller.getLogs);
 app.post('/api/member/find/logs',  member_only, member_controller.getFindLogs);
 
 app.post('/api/member/get/logs_by_category',  member_only, count_controller.getPersonLogs);
+app.post('/api/member/get/latest_log',  member_only, count_controller.getLatestLog);
+app.post('/api/member/get/all_logs',  member_only, count_controller.getAllLogs);
 
 app.listen({port: 4001}, (err) =>
 {

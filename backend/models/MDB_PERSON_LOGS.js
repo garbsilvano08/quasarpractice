@@ -7,7 +7,7 @@ const schema    = new Schema(
     mask:                   { type: String,  required: true },
     temperature:            { type: String,  required: true },
 
-    person_id:              { type: String,  required: true },
+    person_id:              { type: String,  required: false },
     person_img:             { type: String,  required: true },
     full_name:              { type: String,  required: true },
     category:               { type: String,  required: false },

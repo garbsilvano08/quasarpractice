@@ -5,19 +5,19 @@ const Schema    = MONGOOSE.Schema;
 const schema    = new Schema(
 {
 
-    person_img:         { type: String,  required: true },
-    last_name:          { type: String,  required: true },
+    person_img:         { type: String,  required: false },
+    last_name:          { type: String,  required: false },
     middle_name:        { type: String,  required: false },
-    given_name:         { type: String,  required: true },
-    gender:             { type: String,  required: true },
-    birthday:           { type: Date,    required: true },
-    nationality:        { type: String,  required: true },
-    home_address:       { type: String,  required: true },
-    contact_number:     { type: String,  required: true },
-    emergency_contact:  { type: String,  required: true },
-    date_created:       { type: Date  ,  required: true },
-    is_active:          { type: Boolean, required: true },
-    category:           { type: String,  required: true },
+    given_name:         { type: String,  required: false },
+    gender:             { type: String,  required: false },
+    birthday:           { type: Date,    required: false },
+    nationality:        { type: String,  required: false },
+    home_address:       { type: String,  required: false },
+    contact_number:     { type: String,  required: false },
+    emergency_contact:  { type: String,  required: false },
+    date_created:       { type: Date  ,  required: false },
+    is_active:          { type: Boolean, required: false },
+    category:           { type: String,  required: false },
     
     // Staff
     position:           { type: String,  required: false },

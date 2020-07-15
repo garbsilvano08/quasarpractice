@@ -23,6 +23,7 @@ const MDB_DEVICE        = require('../models/MDB_DEVICE');
 const MDB_PERSON        = require('../models/MDB_PERSON');
 const MDB_IDENTIFICATION= require('../models/MDB_IDENTIFICATION');
 const MDB_PURPOSE       = require('../models//MDB_PURPOSE');
+const MDB_PERSON_LOGS   = require('../models//MDB_PERSON_LOGS');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -102,27 +103,31 @@ module.exports =
     async addPassLog(req, res)
     {
         let date_string = new Date().toISOString().split('T')[0]
+        req.body.data.date_string = date_string
+        if (Number(req.body.data.tempratrue) >= 37 ) req.body.data.has_fever = true
+        else req.body.data.has_fever = false
+
+        await new MDB_LOGS().add(req.body.data);
         date_string = date_string.split("-")
-        await new CounterClass().counterActivities(req.body.data.saved_from, "Traffic", date_string)
+        // await new CounterClass().counterActivities(req.body.data.saved_from, "Traffic", date_string)
         
         let person_info = {
             mask:                   req.body.data.mask,
             temperature:            req.body.data.tempratrue,
-
+            
             person_img:             req.body.data.image_path,
             full_name:              req.body.data.name,
 
             company_id:             req.body.data.saved_from,
             device_id:              req.body.data.device_id,
-
+            
             frontdesk_person_id:    req.body.data.idCardNum,
             date_logged:            req.body.data.currentTime,
         }
-
+        
         await new PersonLogsClass(person_info).submit()
-
-        await new MDB_LOGS().add(req.body.data);
         return res.send(true);
+
     },
     async getNearbyPlaces(req, res)
     {
@@ -170,7 +175,7 @@ module.exports =
         let companies = await new MDB_COMPANIES().docs();
         let parentCompany= {};
         let createdCompany = await new MDB_COMPANIES().add(req.body);
-
+        
         if (req.body.parent_id == "No Parent")
         {
 
@@ -308,10 +313,18 @@ module.exports =
 
     async getPersons(req, res)
     {
-        if(req.body.find_person)
-        return res.send(await new MDB_PERSON().docs(req.body.find_person));
-        else
-        return res.send(await new MDB_PERSON().docs());
+        if(req.body.find_person){
+            let person_list = await new MDB_PERSON().docs(req.body.find_person)
+            // console.log(person_list);
+            // for (let index = 0; index < person_list.length; index++) {
+            //     let logs = await new MDB_PERSON_LOGS().collection.find({person_id: person_list[index]._id}).limit(1).sort({date_saved:-1})
+            //     person_list[index].latest_log = logs.length ? logs[0] : null
+            //     console.log(person_list[index]);
+            // }
+            // console.log(person_list);
+            res.send(person_list);
+        }
+        else res.send(await new MDB_PERSON().docs());
     }, 
 
     async getFindLogs(req, res)

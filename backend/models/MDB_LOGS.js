@@ -4,7 +4,7 @@ const Schema    = MONGOOSE.Schema;
 
 const schema    = new Schema(
 {
-    name: { type: String, required: true },
+    name: { type: String, required: false },
     idCardNum: { type: String, required: true },
     currentTime: { type: String, required: true },
     imageFlag: { type: String, required: true },
@@ -14,9 +14,10 @@ const schema    = new Schema(
     mask: { type: String, required: true },
     image_path: { type: String, required: true },
     device_id: { type: String, required: true },
-    id: { type: String, required: true },
+    id: { type: String, required: false },
     syncing: { type: Boolean, required: true },
-    id: { type: String, required: true }
+    id: { type: String, required: true },
+    date_string: { type: String, required: true }
 
 });
 

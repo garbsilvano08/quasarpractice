@@ -34,7 +34,7 @@
                      <div class="desc-separator"></div>
                      <div class="decs-info">93% of Registered Users</div>
                   </div>
-                  <div class="dashboard__overview-date">{{traffic_data.date_string}}</div>
+                  <div class="dashboard__overview-date">{{current_date}}</div>
                </div>
             </q-img>
          </div>
@@ -43,11 +43,11 @@
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-title">Highest Temperature Today</div>
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">36.5 °</div>
+                     <div class="decs-total">{{highest_log.data.length ? highest_log.data[0].temperature + "°" : 'No Logs Yet'}} </div>
                      <div class="desc-separator"></div>
-                     <div class="decs-info">Normal</div>
+                     <div class="decs-info">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div>
                   </div>
-                  <div class="dashboard__overview-date">June 21, 2020</div>
+                  <div class="dashboard__overview-date">{{current_date}}</div>
                </div>
             </q-img>
          </div>
@@ -56,10 +56,10 @@
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-title">Total Alerts Today</div>
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">0</div>
+                     <div class="decs-total">{{current_alerts}}</div>
                      <div class="decs-info"></div>
                   </div>
-                  <div class="dashboard__overview-date">June 21, 2020</div>
+                  <div class="dashboard__overview-date">{{current_date}}</div>
                </div>
             </q-img>
          </div>
@@ -120,7 +120,7 @@
                <q-input v-model="traffic_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div v-if="traffic_weekly.data" class="dashboard__graph-content">
+            <div v-if="traffic_weekly" class="dashboard__graph-content">
                <line-chart style="position: relative; height:250px; width:100%"
                   :data="{
                      'MON': traffic_weekly.data.Mon,
@@ -254,7 +254,16 @@ import "./Dashboard.scss";
 import Vue from 'vue';
 import Chartkick from 'vue-chartkick';
 import "chart.js"
-import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson, postGetDailyLog, postGetWeeklyCount } from '../../../references/url';
+import { postGetCompanies,
+   postAddPerson,
+   postUpdateStaff, 
+   postSavePerson, 
+   postGetDailyLog, 
+   postGetWeeklyCount, 
+   postLatestLog, 
+   postPersonByCateg,
+   postGetAllLogs
+} from '../../../references/url';
 
 // Classes
 import DashboardClass from '../../../classes/DashboardClass';
@@ -280,7 +289,8 @@ export default
       ],
       select_date: '',
 
-      traffic_data: {}
+      traffic_data: {},
+      highest_log: {},
       // dashboard_overview: [
       //    {
       //       overview_img  : '../../../assets/Member/dashboard_overview-bg-1.jpg',
@@ -290,6 +300,9 @@ export default
       //       overview_date : 'June 21, 2020'
       //    }
       // ]
+      current_date: new Date().toUTCString().split(" "),
+      alert_list: {},
+      current_alerts: 0
    }),
    mounted() { },
    methods: {
@@ -297,10 +310,14 @@ export default
       {
          this.company_details = value
          this.getTotalScannedToday(new Date(), value._id)
-         console.log(value);
       },
       async getTotalScannedToday()
       {
+         this.highest_log = await this.$_post(postLatestLog, {find_by: {date_string: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}});
+         // this.highest_log = await this.$_post(postLatestLog, {find_by: {date_string: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{tempratrue: -1}});
+         this.alert_list = await this.$_post(postPersonByCateg, {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0]}});
+         console.log(this.highest_log);
+         this.current_alerts = this.alert_list.data.length
          let weekly = {}
          this.traffic_weekly = await this.$_post(postGetWeeklyCount, {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global', key: 'Traffic'}});
          
@@ -320,10 +337,7 @@ export default
    async mounted()
    {
       this.getTotalScannedToday(new Date(), 'global')
-      // this.company_list = await this.$_post(postGetCompanies);
-      // for (let company of this.company_list.data) {
-      //    this.options_company.push(company.company_name) 
-      // }
+      this.current_date = this.current_date[0] + " " + this.current_date[1] + " " + this.current_date[2] + " " + this.current_date[3]
    }
 }
 </script>

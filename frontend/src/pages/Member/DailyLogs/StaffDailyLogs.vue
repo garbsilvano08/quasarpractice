@@ -6,7 +6,8 @@
                 <q-btn class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select>
+                <com-picker @select=getCompanyData></com-picker>
+                <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
             </div>
         </div>
         <div class="daily-logs__header" style="margin-bottom: 30px !important;">
@@ -21,7 +22,7 @@
                 <!-- <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select> -->
             </div>
         </div>
-        <div v-if(staff_list) class="content__grid-4x4">
+        <div class="content__grid-4x4">
             <div v-for="(staff, index) in this.staff_list.data" :key="index">
             <DailyLogCards :staff_logs="staff"></DailyLogCards>
             <!-- <DailyLogCards></DailyLogCards>
@@ -37,14 +38,17 @@ import "./DailyLogs.scss";
 
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
+import  ComPicker from "../../../components/companyPicker/ComPicker"
+
 import { postGetCompanies, postFindLogs, postPersonByCateg } from '../../../references/url';
 
 export default {
     components: {
-        DailyLogCards
+        DailyLogCards, 
+        ComPicker,
     },
     data: () => ({
-        staff_list: [],
+        staff_list: {},
         company_list: [],
         options_company: ['All Company'],
         select__id_type: 'All Company',
@@ -55,16 +59,34 @@ export default {
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
+        company_id: '',
     }),
+
+     watch:
+    {
+        async select__date(val)
+        {
+            if (val) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: this.company_id})
+        }
+    },
+
+    methods:
+    {
+        async getCompanyData(value)
+        {
+            this.company_id = value
+            // this.getTotalScannedToday(new Date(), value._id)
+            this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: value._id})
+        },
+
+        async getStaffList(params)
+        {
+            return await this.$_post(postPersonByCateg, {find_by_category: params});
+        }
+    },
     async mounted()
     {
-        this.staff_list = await this.$_post(postPersonByCateg, {find_by_category: {category: 'Staff'}});
-        console.log(data, 'data');
-          
-        this.company_list = await this.$_post(postGetCompanies);
-        for (let company of this.company_list.data) {
-            this.options_company.push(company.company_name) 
-        }
+        this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date})
     }
 }
 </script>

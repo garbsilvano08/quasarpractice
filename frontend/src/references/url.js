@@ -36,4 +36,6 @@ exports.postGetDailyLog     = 'member/get/daily_log';
 exports.postGetLogs         = 'member/get/logs';
 exports.postFindLogs        = 'member/find/logs';
 exports.postPersonByCateg   = 'member/get/logs_by_category';
+exports.postLatestLog       = 'member/get/latest_log';
+exports.postGetAllLogs      = 'member/get/all_logs';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';
