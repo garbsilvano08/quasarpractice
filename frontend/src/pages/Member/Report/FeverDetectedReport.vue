@@ -88,7 +88,7 @@ export default {
             logs.forEach(async person => {   
             if(person.has_fever)
             {
-                if (person.person_id == null)
+                if (person.category == "Stranger")
                 {
                     person.gender = "Unknown";
                     person.home_address = "Unknown";
