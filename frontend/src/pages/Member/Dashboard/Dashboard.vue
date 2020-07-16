@@ -147,13 +147,13 @@
             <div class="dashboard__graph-content">
                <bar-chart style="position: relative; height:250px; width:100%"
                   :data="{
-                     'MON': 250,
-                     'TUES': 150,
-                     'WED': 350,
-                     'THURS': 500,
-                     'FRI': 200,
-                     'SAT': 300,
-                     'SUN': 100,
+                     'MON': staff_visitors.data.Mon,
+                     'TUES': staff_visitors.data.Tue,
+                     'WED': staff_visitors.data.Wed,
+                     'THURS': staff_visitors.data.Thurs,
+                     'FRI': staff_visitors.data.Fri,
+                     'SAT': staff_visitors.data.Sat,
+                     'SUN': staff_visitors.data.Sun,
                   }"
                >
                </bar-chart>
@@ -258,6 +258,7 @@ export default
       purpose_visit: {},
       company_details: {},
       traffic_weekly: {},
+      staff_visitors: {},
       options: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
       dashboard_class: new DashboardClass(),
       company_list: [],
@@ -398,8 +399,8 @@ export default
          else {
             params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitors']}}}
          }
-         let data = await this.$_post(postGetWeeklyCount, params);
-         console.log(data, 'data');
+         this.staff_visitors = await this.$_post(postGetWeeklyCount, params);
+         // console.log(data, 'data');
       },
       
       async getTotalScannedToday()

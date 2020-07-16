@@ -33,7 +33,7 @@ module.exports =
         let date_string = new Date().toISOString().split('T')[0]
         let key = 'Traffic'
         date_string = date_string.split('-')
-        await new CounterClass().counterActivities(key, date_string)
+        // await new CounterClass().counterActivities(key, date_string)
     },
 
     async getCountOverall(req, res)
@@ -102,7 +102,6 @@ module.exports =
             req.body.find_count.date_string = date_string.toISOString().split('T')[0]
             
         }
-        console.log(weekly_count);
         return res.send(weekly_count)
     },
 }
