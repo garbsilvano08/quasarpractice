@@ -4,7 +4,7 @@
             <div class="header__title">FEVER DETECTED REPORTS</div>
             <div class="header__filter">
                 <q-input class="select-sm" v-model="select__date" type="date" outlined dense></q-input>
-                <com-picker class="select-lg" @select=getCompanyData></com-picker>
+                <com-picker class="select-lg" @select=getCompanyDatas></com-picker>
                 <q-btn class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
@@ -12,7 +12,7 @@
         </div>
         <div class="report__container content__box">
             <div class="content__table">
-                <table>
+                <!-- <table>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -33,7 +33,8 @@
                             <td class="td-red">{{person.temperature}}°C</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
+                <q-table dense  flat :data="personWithFever" :pagination.sync="pagination" :columns="table_column"></q-table>
             </div>
         </div>
     </div>
@@ -56,15 +57,71 @@ export default {
         ComPicker,
     },
      data: () => ({
-        select__date: '',
+        select__date: new Date().toISOString().split('T')[0],
         select__company: '',
+        pagination: {
+            rowsPerPage: 10,
+        },
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
         options_company: [
             'Green Sun Hotel', 'SM Mall' , 'WalterMart'
         ],
-        personWithFever : [],
+        personWithFever : [{full_name:"asd"}],
+        company_id : "",
+        table_column:
+        [
+            { 
+                name    : 'full_name',
+                label   : 'Name',
+                field   : 'full_name',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'gender',
+                label   : 'Gender',
+                field   : 'gender',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'age',
+                label   : 'Age',
+                field   : 'age',
+                align   : 'let',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'home_address',
+                label   : 'Home Address',
+                field   : 'home_address',
+                align   : 'left',
+                required: true,
+                
+                sortable: true,
+            },
+            { 
+                name    : 'date_logged',
+                label   : 'Last Scanned',
+                field   : 'date_logged',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'temperature',
+                label   : 'Temperature',
+                field   : 'temperature',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            }
+        ],
     }),
     async mounted()
     {
@@ -75,11 +132,23 @@ export default {
     {
         async select__date(val)
         {
-            if (val)  this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date, company_id: this.company_id}));
+            if (val) 
+            {
+                if (this.company_id)
+                this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date, company_id: this.company_id}));
+                else 
+                this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date}));
+            }
         }
     },
     methods:
     {
+        async getCompanyDatas(value)
+        {
+            this.company_id = value
+            // this.getTotalScannedToday(new Date(), value._id)
+            this.getPersonWithFever(await this.getStaffList({category: 'Stranger', date_logged: this.select__date, company_id: value._id}));
+        },
         async getPersonWithFever(logs)
         {
             this.personWithFever = [];
