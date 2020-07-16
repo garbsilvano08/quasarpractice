@@ -26,9 +26,6 @@
         <div class="content__grid-4x4">
             <div v-for="(staff, index) in this.personWithFever" :key="index">
             <DailyLogCards :staff_logs="staff"></DailyLogCards>
-            <!-- <DailyLogCards></DailyLogCards>
-            <DailyLogCards></DailyLogCards>
-            <DailyLogCards></DailyLogCards> -->
             </div>
         </div>
     </div>
