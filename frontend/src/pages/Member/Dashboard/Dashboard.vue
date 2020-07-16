@@ -81,7 +81,7 @@
             <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Employess</div>
-               <div class="dashboard__total-number">{{this.staff_number}}</div>
+               <div class="dashboard__total-number">{{staff_number}}</div>
                <div class="dashboard__total-date">Since {{current_month}}</div>
             </div>
          </div>
@@ -89,7 +89,7 @@
             <q-img src="../../../assets/Member/total-visitors.svg" width="45px"></q-img>
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Visitors</div>
-               <div class="dashboard__total-number">{{this.visitor_number}}</div>
+               <div class="dashboard__total-number">{{visitor_number}}</div>
                <div class="dashboard__total-date">Since {{current_month}}</div>
             </div>
          </div>
@@ -120,7 +120,7 @@
                <q-input v-model="traffic_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div v-if="traffic_weekly" class="dashboard__graph-content">
+            <div v-if="traffic_weekly.data" class="dashboard__graph-content">
                <line-chart style="position: relative; height:250px; width:100%"
                   :data="{
                      'MON': traffic_weekly.data.Mon,
@@ -144,7 +144,7 @@
                <q-input v-model="employee_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div class="dashboard__graph-content">
+            <div v-if="staff_visitors.data" class="dashboard__graph-content">
                <bar-chart style="position: relative; height:250px; width:100%"
                   :data="{
                      'MON': staff_visitors.data.Mon,
@@ -255,10 +255,10 @@ export default
       alert_date: new Date().toISOString().split('T')[0],
       employee_date: new Date().toISOString().split('T')[0],
 
-      purpose_visit: {},
-      company_details: {},
-      traffic_weekly: {},
-      staff_visitors: {},
+      purpose_visit: {data: []},
+      company_details: {data: []},
+      traffic_weekly:{data: []},
+      staff_visitors: {data: []},
       options: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
       dashboard_class: new DashboardClass(),
       company_list: [],
@@ -268,11 +268,11 @@ export default
          'July 1, 2019' , 'July 2, 2019', 'July 3, 2019' , 'July 4, 2019', 'July 5, 2019'
       ],
       select_date: '',
-      traffic_data: {},
-      highest_log: {},
+      traffic_data: {data: []},
+      highest_log: {data: []},
       current_date: new Date().toUTCString().split(" "),
       current_month: new Date().toUTCString().split(" "),
-      alert_list: {},
+      alert_list: {data: []},
       current_alerts: 0,
       staff_number: 0,
       visitor_number: 0,
