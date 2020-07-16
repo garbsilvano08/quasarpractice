@@ -13,7 +13,7 @@
         </div>
         <div class="account-directory__container content__box">
             <div class="content__table">
-                <table>
+                <!-- <table>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -34,7 +34,9 @@
                             <td class="td-green">{{staff.last_temperature ? staff.last_temperature : 'No Temperature Logs Yet'}}</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
+                <q-table dense @row-click="checkAccount"  flat :data="this.staff_list.data" :pagination.sync="pagination" :columns="table_column"></q-table>
+
             </div>
         </div>
     </div>
@@ -54,6 +56,9 @@ export default {
         DailyLogCards
     },
     data: () => ({
+        pagination: {
+            rowsPerPage: 10,
+        },
         select__id_type: '',
         select__date: '',
         options_name: [
@@ -62,12 +67,65 @@ export default {
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
-        staff_list: []
+        staff_list: [],
+        table_column:
+        [
+            { 
+                name    : 'full_name',
+                label   : 'Name',
+                field   : row => row.given_name +" " + row.middle_name +" "+row.last_name,
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'gender',
+                label   : 'Gender',
+                field   : 'gender',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'age',
+                label   : 'Age',
+                field   : row => new Date().getFullYear() - new Date(row.birthday).getFullYear(),
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'home_address',
+                label   : 'Home Address',
+                field   : 'home_address',
+                align   : 'left',
+                required: true,
+                
+                sortable: true,
+            },
+            { 
+                name    : 'last_scanned',
+                label   : 'Last Scanned',
+                field   : row => row.last_scanned ? row.last_scanned : 'No Logs Yet',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'temperature',
+                label   : 'Temperature',
+                field   : row => row.last_temperature ? row.last_temperature : 'No Temperature Logs Yet',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            }
+        ],
     }),
     methods:
     {
-        checkAccount(account_info)
+        checkAccount(evt, account_info)
         {
+            console.log("asd")
             account_info.type = 'Staff'
             this.$router.push({
                 name: "member_personal-information",
