@@ -243,7 +243,6 @@ export default {
         {
             this.person_logs = await this.$_post(postGetLogs,{ id: this.account_info.data.personal_info.frontdesk_person_id, limit: 3})
         }
-        console.log(this.person_logs);
         
     }
 

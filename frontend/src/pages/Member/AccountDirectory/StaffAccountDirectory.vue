@@ -125,7 +125,6 @@ export default {
     {
         checkAccount(evt, account_info)
         {
-            console.log("asd")
             account_info.type = 'Staff'
             this.$router.push({
                 name: "member_personal-information",
