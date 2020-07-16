@@ -4,7 +4,7 @@
             <div class="header__title">FEVER DETECTED REPORTS</div>
             <div class="header__filter">
                 <q-input class="select-sm" v-model="select__date" type="date" outlined dense></q-input>
-                <com-picker class="select-lg" @select=getCompanyData></com-picker>
+                <com-picker class="select-lg" @select=getCompanyDatas></com-picker>
                 <q-btn class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
@@ -34,7 +34,7 @@
                         </tr>
                     </tbody>
                 </table> -->
-                <q-table dense  flat :data="personWithFever" :columns="table_column"></q-table>
+                <q-table dense  flat :data="personWithFever" :pagination.sync="pagination" :columns="table_column"></q-table>
             </div>
         </div>
     </div>
@@ -57,8 +57,11 @@ export default {
         ComPicker,
     },
      data: () => ({
-        select__date: '',
+        select__date: new Date().toISOString().split('T')[0],
         select__company: '',
+        pagination: {
+            rowsPerPage: 10,
+        },
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
@@ -66,6 +69,7 @@ export default {
             'Green Sun Hotel', 'SM Mall' , 'WalterMart'
         ],
         personWithFever : [{full_name:"asd"}],
+        company_id : "",
         table_column:
         [
             { 
@@ -128,11 +132,23 @@ export default {
     {
         async select__date(val)
         {
-            if (val)  this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date, company_id: this.company_id}));
+            if (val) 
+            {
+                if (this.company_id)
+                this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date, company_id: this.company_id}));
+                else 
+                this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date}));
+            }
         }
     },
     methods:
     {
+        async getCompanyDatas(value)
+        {
+            this.company_id = value
+            // this.getTotalScannedToday(new Date(), value._id)
+            this.getPersonWithFever(await this.getStaffList({category: 'Stranger', date_logged: this.select__date, company_id: value._id}));
+        },
         async getPersonWithFever(logs)
         {
             this.personWithFever = [];
