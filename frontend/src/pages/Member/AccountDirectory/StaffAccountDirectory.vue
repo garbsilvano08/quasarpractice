@@ -3,7 +3,7 @@
         <div class="account-directory__header">
             <div class="header__title">ALL STAFF</div>
             <div class="header__filter">
-                <q-input outlined dense placeholder="Search People...">
+                <q-input outlined dense v-model="search" placeholder="Search People...">
                     <template v-slot:append>
                         <q-icon name="mdi-magnify" />
                     </template>
@@ -35,7 +35,7 @@
                         </tr>
                     </tbody>
                 </table> -->
-                <q-table dense @row-click="checkAccount"  flat :data="this.staff_list.data" :pagination.sync="pagination" :columns="table_column"></q-table>
+                <q-table dense @row-click="checkAccount" :filter="search" flat :data="this.staff_list.data" :pagination.sync="pagination" :columns="table_column"></q-table>
 
             </div>
         </div>
@@ -56,6 +56,7 @@ export default {
         DailyLogCards
     },
     data: () => ({
+        search : "",
         pagination: {
             rowsPerPage: 10,
         },
