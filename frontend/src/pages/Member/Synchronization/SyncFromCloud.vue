@@ -90,7 +90,7 @@ export default {
                 let tabletFormData = new FormData();
                 tabletFormData.append("pass", "123456");
                 let rsp = await this.$axios.post("http://"+device.device_ip+":8080/initialization", tabletFormData).then(res => res.data);
-                setTimeout(() => this.createAll(this.persons_list), 2000);
+                setTimeout(() => this.createAll(this.persons_list, device.device_ip), 2000);
            })
         },
         async createAll(personToTablet , device_ip)
