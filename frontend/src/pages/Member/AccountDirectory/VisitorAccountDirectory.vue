@@ -3,7 +3,7 @@
         <div class="account-directory__header">
             <div class="header__title">ALL VISITORS</div>
             <div class="header__filter">
-                <q-input outlined dense placeholder="Search People...">
+                <q-input v-model="search" outlined dense placeholder="Search People...">
                     <template v-slot:append>
                         <q-icon name="mdi-magnify" />
                     </template>
@@ -13,7 +13,7 @@
         </div>
         <div class="account-directory__container content__box">
             <div class="content__table">
-                <table>
+                <!-- <table>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -30,11 +30,10 @@
                             <td>{{visitor.gender}}</td>
                             <td>{{new Date().getFullYear() - new Date(visitor.birthday).getFullYear()}}</td>
                             <td>{{visitor.home_address}}</td>
-                            <!-- <td>{{visitor.last_scanned ? staff.last_scanned : 'No Logs Yet'}}</td>
-                            <td class="td-green">{{visitor.last_temperature ? visitor.last_temperature : 'No Temperature Logs Yet'}}</td> -->
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
+                <q-table dense @row-click="checkAccount" :filter="search" flat :data="visitor_lists.data" :pagination.sync="pagination" :columns="table_column"></q-table>
             </div>
         </div>
     </div>
@@ -52,6 +51,10 @@ export default {
         DailyLogCards
     },
     data: () => ({
+        search : "",
+        pagination: {
+            rowsPerPage: 10,
+        },
         select__id_type: '',
         select__date: '',
         options_name: [
@@ -61,7 +64,59 @@ export default {
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
         visitor_lists: [],
-        person_logs: []
+        person_logs: [],
+        table_column:
+        [
+            { 
+                name    : 'full_name',
+                label   : 'Name',
+                field   : row => row.given_name +" " + row.middle_name +" "+row.last_name,
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'gender',
+                label   : 'Gender',
+                field   : 'gender',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'age',
+                label   : 'Age',
+                field   : row => new Date().getFullYear() - new Date(row.birthday).getFullYear(),
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'home_address',
+                label   : 'Home Address',
+                field   : 'home_address',
+                align   : 'left',
+                required: true,
+                
+                sortable: true,
+            },
+            { 
+                name    : 'last_scanned',
+                label   : 'Last Scanned',
+                field   : row => row.last_scanned ? row.last_scanned : 'No Logs Yet',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'temperature',
+                label   : 'Temperature',
+                field   : row => row.last_temperature ? row.last_temperature : 'No Temperature Logs Yet',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            }
+        ],
     }),
 
     methods:
@@ -70,7 +125,7 @@ export default {
         {
             return await this.$_post(postLatestLog, {id: person_id});
         },
-        checkAccount(account_info)
+        checkAccount(evt,account_info)
         {
             account_info.type = 'Visitor'
             this.$router.push({
@@ -85,7 +140,7 @@ export default {
     async mounted()
     {
         this.visitor_lists = await this.$_post(postGetPersons, {find_person: {category: 'Visitors'}});
-        console.log(this.visitor_lists);
+        // console.log(this.visitor_lists);
     }
 }
 </script>

@@ -3,7 +3,7 @@
         <div class="account-directory__header">
             <div class="header__title">BLACKLIST</div>
             <div class="header__filter">
-                <q-input outlined dense placeholder="Search People...">
+                <q-input v-model="search" outlined dense placeholder="Search People...">
                     <template v-slot:append>
                         <q-icon name="mdi-magnify" />
                     </template>
@@ -13,7 +13,7 @@
         </div>
         <div class="account-directory__container content__box">
             <div class="content__table">
-                <table>
+                <!-- <table>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -33,24 +33,9 @@
                             <td>{{account.last_scanned ? account.last_scanned : 'No Logs Yet'}}</td>
                             <td class="td-green">{{account.last_temperature ? account.last_temperature : 'No Temperature Logs Yet'}}</td>
                         </tr>
-                        <!-- <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-green">36°C</td>
-                        </tr>
-                        <tr>
-                            <td class="td-active">Adda M. Hope</td>
-                            <td>F</td>
-                            <td>22</td>
-                            <td>111 San Jose del Monte</td>
-                            <td>6/24/2020 8:00 AM</td>
-                            <td class="td-red">38.2°C</td>
-                        </tr> -->
                     </tbody>
-                </table>
+                </table> -->
+                <q-table dense @row-click="checkAccount" :filter="search" flat :data="blacklist_account.data" :pagination.sync="pagination" :columns="table_column"></q-table>
             </div>
         </div>
     </div>
@@ -70,20 +55,76 @@ export default {
         DailyLogCards
     },
     data: () => ({
+        search: '',
         select__id_type: '',
         select__date: '',
+        pagination: {
+            rowsPerPage: 10,
+        },
         options_name: [
             'Green Sun Hotel', 'SM Mall' , 'WalterMart'
         ],
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
-        blacklist_account: []
+        blacklist_account: [],
+        table_column:
+        [
+            { 
+                name    : 'full_name',
+                label   : 'Name',
+                field   : row => row.given_name +" " + row.middle_name +" "+row.last_name,
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'gender',
+                label   : 'Gender',
+                field   : 'gender',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'age',
+                label   : 'Age',
+                field   : row => new Date().getFullYear() - new Date(row.birthday).getFullYear(),
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'home_address',
+                label   : 'Home Address',
+                field   : 'home_address',
+                align   : 'left',
+                required: true,
+                
+                sortable: true,
+            },
+            { 
+                name    : 'last_scanned',
+                label   : 'Last Scanned',
+                field   : row => row.last_scanned ? row.last_scanned : 'No Logs Yet',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'temperature',
+                label   : 'Temperature',
+                field   : row => row.last_temperature ? row.last_temperature : 'No Temperature Logs Yet',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            }
+        ],
     }),
 
     methods:
     {
-        checkAccount(account_info)
+        checkAccount(evt, account_info)
         {
             account_info.type = 'Blacklist'
             this.$router.push({
@@ -98,7 +139,7 @@ export default {
     async mounted()
     {
         this.blacklist_account = await this.$_post(postGetPersons, {find_person: {category: 'Blacklist'}});
-        console.log(this.$user_info);
+        // console.log(this.$user_info);
         
         // this.blacklist_account = await this.$_post(postGetBlacklist);
     }

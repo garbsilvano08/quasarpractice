@@ -147,7 +147,7 @@ export default {
         {
             this.company_id = value
             // this.getTotalScannedToday(new Date(), value._id)
-            this.getPersonWithFever(await this.getStaffList({category: 'Stranger', date_logged: this.select__date, company_id: value._id}));
+            this.getPersonWithFever(await this.getStaffList({ date_logged: this.select__date, company_id: value._id}));
         },
         async getPersonWithFever(logs)
         {
@@ -174,12 +174,6 @@ export default {
                 }
             }
         });
-        },
-        async getCompanyData(value)
-        {
-            this.company_id = value
-            // this.getTotalScannedToday(new Date(), value._id)
-            this.staff_list = await this.getStaffList({date_logged: this.select__date})
         },
 
         async getStaffList(params)
