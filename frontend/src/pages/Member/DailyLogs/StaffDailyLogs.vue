@@ -6,7 +6,7 @@
                 <q-btn class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <com-picker @select=getCompanyData></com-picker>
+                <com-picker class="select-lg" @select=getCompanyData></com-picker>
                 <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
             </div>
         </div>

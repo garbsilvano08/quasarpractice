@@ -12,7 +12,7 @@
         </div>
         <div class="report__container content__box">
             <div class="content__table">
-                <table>
+                <!-- <table>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -33,7 +33,8 @@
                             <td class="td-red">{{person.temperature}}°C</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
+                <q-table dense  flat :data="personWithFever" :columns="table_column"></q-table>
             </div>
         </div>
     </div>
@@ -64,7 +65,59 @@ export default {
         options_company: [
             'Green Sun Hotel', 'SM Mall' , 'WalterMart'
         ],
-        personWithFever : [],
+        personWithFever : [{full_name:"asd"}],
+        table_column:
+        [
+            { 
+                name    : 'full_name',
+                label   : 'Name',
+                field   : 'full_name',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'gender',
+                label   : 'Gender',
+                field   : 'gender',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'age',
+                label   : 'Age',
+                field   : 'age',
+                align   : 'let',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'home_address',
+                label   : 'Home Address',
+                field   : 'home_address',
+                align   : 'left',
+                required: true,
+                
+                sortable: true,
+            },
+            { 
+                name    : 'date_logged',
+                label   : 'Last Scanned',
+                field   : 'date_logged',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            { 
+                name    : 'temperature',
+                label   : 'Temperature',
+                field   : 'temperature',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            }
+        ],
     }),
     async mounted()
     {
