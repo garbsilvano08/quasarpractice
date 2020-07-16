@@ -109,7 +109,10 @@ module.exports =
 
         await new MDB_LOGS().add(req.body.data);
         date_string = date_string.split("-")
-        // await new CounterClass().counterActivities(req.body.data.saved_from, "Traffic", date_string)
+
+        let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
+        console.log(person, req.body.data.idCardNum);
+        await new CounterClass().counterActivities(req.body.data.saved_from, "Traffic", date_string)
         
         let person_info = {
             mask:                   req.body.data.mask,

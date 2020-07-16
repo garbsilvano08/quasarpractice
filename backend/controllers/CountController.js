@@ -77,7 +77,6 @@ module.exports =
 
     async getOneWeekTrafficCount(req, res)
     {
-        console.log(req.body.find_count);
         let day_list = ['Sun','Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat']
         let date_string = new Date(req.body.find_count.date_string)
         date_string.setDate((date_string.getDate() + (day_list.length - date_string.getDay())))
@@ -103,6 +102,7 @@ module.exports =
             req.body.find_count.date_string = date_string.toISOString().split('T')[0]
             
         }
+        console.log(weekly_count);
         return res.send(weekly_count)
     },
 }
