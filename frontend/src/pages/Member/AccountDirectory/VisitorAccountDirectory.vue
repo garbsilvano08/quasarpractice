@@ -8,32 +8,15 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <q-select v-model="select__date" :options="options_date" outlined dense></q-select>
+                <q-input class="select-sm" v-model="select__date" type="date" outlined dense></q-input>
+                <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
+                    Export &nbsp;<q-icon name="mdi-export"></q-icon>
+                </q-btn>
             </div>
         </div>
         <div class="account-directory__container content__box">
             <div class="content__table">
-                <!-- <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Gender</th>
-                            <th>Age</th>
-                            <th>Home Address</th>
-                            <th>Last Scanned</th>
-                            <th>Body Temperature</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr @click="checkAccount(visitor)" v-for="(visitor, index) in this.visitor_lists.data" :key="index">
-                            <td class="td-active">{{visitor.given_name}}</td>
-                            <td>{{visitor.gender}}</td>
-                            <td>{{new Date().getFullYear() - new Date(visitor.birthday).getFullYear()}}</td>
-                            <td>{{visitor.home_address}}</td>
-                        </tr>
-                    </tbody>
-                </table> -->
-                <q-table dense @row-click="checkAccount" :filter="search" flat :data="visitor_lists.data" :pagination.sync="pagination" :columns="table_column"></q-table>
+                <q-table id="tblData" dense @row-click="checkAccount" :filter="search" flat :data="visitor_lists.data" :pagination.sync="pagination" :columns="table_column"></q-table>
             </div>
         </div>
     </div>
@@ -78,7 +61,7 @@ export default {
             { 
                 name    : 'gender',
                 label   : 'Gender',
-                field   : 'gender',
+                field   : row => row.gender ? row.gender : 'Unknown',
                 align   : 'left',
                 required: true,
                 sortable: true,
@@ -86,7 +69,7 @@ export default {
             { 
                 name    : 'age',
                 label   : 'Age',
-                field   : row => new Date().getFullYear() - new Date(row.birthday).getFullYear(),
+                field   : row => row.birthday ? new Date().getFullYear() - new Date(row.birthday).getFullYear() : 'Unknown',
                 align   : 'left',
                 required: true,
                 sortable: true,
@@ -94,33 +77,75 @@ export default {
             { 
                 name    : 'home_address',
                 label   : 'Home Address',
-                field   : 'home_address',
+                field   : row => row.home_address ? row.home_address : 'Unknown',
                 align   : 'left',
                 required: true,
                 
                 sortable: true,
             },
             { 
-                name    : 'last_scanned',
-                label   : 'Last Scanned',
-                field   : row => row.last_scanned ? row.last_scanned : 'No Logs Yet',
+                name    : 'contact_person',
+                label   : 'Contact Person',
+                field   : row => row.contact_person ? row.contact_person : 'Unknown',
                 align   : 'left',
                 required: true,
+                
                 sortable: true,
             },
             { 
-                name    : 'temperature',
-                label   : 'Temperature',
-                field   : row => row.last_temperature ? row.last_temperature : 'No Temperature Logs Yet',
+                name    : 'destination',
+                label   : 'Destination',
+                field   : row => row.destination ? row.destination : 'Unknown',
                 align   : 'left',
                 required: true,
+                
                 sortable: true,
-            }
+            },
         ],
     }),
+    watch:
+    {
+        async select__date(val)
+        {
+            let start_date = new Date(val)
+            let end_date = start_date.setDate(start_date.getDate() + 1)
+            start_date = start_date.setDate(start_date.getDate() - 1)
 
+            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start_date, $lt: end_date }}})  
+        }
+    },
     methods:
     {
+        exportTableToExcel(tableID, filename = ''){
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect = document.getElementById(tableID);
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+            
+            // Specify file name
+            filename = filename?filename+'.xls':'excel_data.xls';
+            
+            // Create download link element
+            downloadLink = document.createElement("a");
+            
+            document.body.appendChild(downloadLink);
+            
+            if(navigator.msSaveOrOpenBlob){
+                var blob = new Blob(['\ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob( blob, filename);
+            }else{
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+            
+                // Setting the file name
+                downloadLink.download = filename;
+                
+                //triggering the function
+                downloadLink.click();
+            }
+        },
         async getLatestLog(person_id)
         {
             return await this.$_post(postLatestLog, {id: person_id});
@@ -134,12 +159,17 @@ export default {
                     account_info: account_info
                 }
             })
+        },
+        async getVisitorList(params = {})
+        {
+            this.visitor_lists = await this.$_post(postGetPersons, params);
+            
         }
     }, 
 
     async mounted()
     {
-        this.visitor_lists = await this.$_post(postGetPersons, {find_person: {category: 'Visitors'}});
+        await this.getVisitorList({find_person: {category: 'Visitors'}}) 
         // console.log(this.visitor_lists);
     }
 }

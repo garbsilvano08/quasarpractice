@@ -8,13 +8,13 @@
                 <com-picker @select=getCompanyData></com-picker>
                 <!-- <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select> -->
                 <!-- <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select> -->
-                <q-btn class="btn-outline btn-export" flat dense no-caps>
+                <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
             </div>
         </div>
         <div class="report__container">
-            <div v-for="(person, index) in this.fever_logs" :key="index" class="report__content content__card">
+            <div id="tblData" v-for="(person, index) in this.fever_logs" :key="index" class="report__content content__card">
                 <q-img :src="person.person_img"></q-img>
                 <div class="report__info">
                     <div class="report__info-details">
@@ -78,6 +78,36 @@ export default {
 
     methods:
     {
+        exportTableToExcel(tableID, filename = ''){
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect = document.getElementById(tableID);
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+            
+            // Specify file name
+            filename = filename?filename+'.xls':'excel_data.xls';
+            
+            // Create download link element
+            downloadLink = document.createElement("a");
+            
+            document.body.appendChild(downloadLink);
+            
+            if(navigator.msSaveOrOpenBlob){
+                var blob = new Blob(['\ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob( blob, filename);
+            }else{
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+            
+                // Setting the file name
+                downloadLink.download = filename;
+                
+                //triggering the function
+                downloadLink.click();
+            }
+        },
         getFeverDate(date)
         {
             let current = new Date()
@@ -100,20 +130,24 @@ export default {
 
         async getFeverList()
         {
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+
+            start = start.setDate(start.getDate() - 1)
+            end = end.setDate(end.getDate() + 1)
             let params = {}
             if (this.company_details || this.company_details.company_name == 'All Company') {
-                params = {find_by_category: {date_saved: { '$gte' : new Date(this.start_date) , '$lte' : new Date(this.end_date)}, 
+                params = {find_by_category: {date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}, 
                 has_fever: true, 
                 company_id: this.company_details._id}, 
                 limit: 10}
             }
-            else params = {find_by_category: {date_saved: { '$gte' : new Date(this.start_date) , '$lte' : new Date(this.end_date)}, 
+            else params = {find_by_category: {date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}, 
                 has_fever: true}, 
                 limit: 10}
 
             let data = await this.$_post(postPersonByCateg, params);
             this.fever_logs = data.data
-            console.log(data);
         }
     },
 

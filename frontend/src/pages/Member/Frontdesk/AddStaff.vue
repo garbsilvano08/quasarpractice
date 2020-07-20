@@ -6,7 +6,7 @@
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps :label="this.$route.params.is_edit ? 'Update' : 'Save'"></q-btn>
-                <q-btn @click="test()" class="btn-save btn-primary" flat dense no-caps label='Test'></q-btn>
+                <!-- <q-btn @click="test()" class="btn-save btn-primary" flat dense no-caps label='Test'></q-btn> -->
             </div>
         </div>
         <div class="frontdesk__container content__grid-2x2">
