@@ -109,9 +109,9 @@ module.exports =
 
         await new MDB_LOGS().add(req.body.data);
         date_string = date_string.split("-")
-
-        // let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
-        await new CounterClass().counterActivities(req.body.data.saved_from, 'Traffic', date_string)
+        // console.log(req.body.data);
+        let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
+        await new CounterClass().counterActivities(req.body.data.saved_from, person.length ? person[0].category : 'Traffic', date_string)
         
         let person_info = {
             mask:                   req.body.data.mask,
@@ -315,18 +315,12 @@ module.exports =
 
     async getPersons(req, res)
     {
+        let person_list
         if(req.body.find_person){
-            let person_list = await new MDB_PERSON().docs(req.body.find_person)
-            // console.log(person_list);
-            // for (let index = 0; index < person_list.length; index++) {
-            //     let logs = await new MDB_PERSON_LOGS().collection.find({person_id: person_list[index]._id}).limit(1).sort({date_saved:-1})
-            //     person_list[index].latest_log = logs.length ? logs[0] : null
-            //     console.log(person_list[index]);
-            // }
-            // console.log(person_list);
-            res.send(person_list);
+            person_list = await new MDB_PERSON().docs(req.body.find_person)
         }
         else res.send(await new MDB_PERSON().docs());
+        res.send(person_list);
     }, 
 
     async getFindLogs(req, res)

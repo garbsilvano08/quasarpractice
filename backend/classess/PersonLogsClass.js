@@ -6,6 +6,10 @@ module.exports = class PersonLogsClass
 {
     constructor(data = {})
     {
+        this.gender                 = data.hasOwnProperty('gender') ? data.gender : '';
+        this.birthday               = data.hasOwnProperty('birthday') ? data.birthday : '';
+        this.home_address           = data.hasOwnProperty('home_address') ? data.home_address : '';
+
         this.mask                   = data.hasOwnProperty('mask') ? data.mask : '';
         this.temperature            = data.hasOwnProperty('temperature') ? data.temperature : '';
 
@@ -26,6 +30,7 @@ module.exports = class PersonLogsClass
 
     async submit()
     {
+        console.log(this.gender, this.birthday, this.home_address);
         if (this.frontdesk_person_id.length < 9)
         {
             for (let index = 0; index <= (9 - this.frontdesk_person_id.length); index++) {
@@ -34,8 +39,11 @@ module.exports = class PersonLogsClass
         }
 
         let person_details = await new MDB_PERSON().docs({frontdesk_person_id: this.frontdesk_person_id})
-        this.category  = person_details.length ? person_details[0].category : 'Stranger'
-        this.person_id = person_details.length ? person_details[0]._id : new Date().toISOString()
+        this.category       = person_details.length ? person_details[0].category : 'Stranger'
+        this.person_id      = person_details.length ? person_details[0]._id : new Date().toISOString()
+        this.gender         = person_details.length ? person_details[0].gender : ''
+        this.birthday       = person_details.length ? person_details[0].birthday : ''
+        this.home_address   = person_details.length ? person_details[0].home_address : ''
         
         if (Number(this.temperature) >= 37) this.has_fever = true
         let company = await new MDB_COMPANIES().doc(this.company_id)

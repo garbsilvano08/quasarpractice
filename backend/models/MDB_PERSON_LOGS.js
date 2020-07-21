@@ -22,6 +22,10 @@ const schema    = new Schema(
 
     has_fever:              { type: Boolean, required: true },
 
+    gender:                 { type: String, required: false },
+    birthday:               { type: String, required: false },
+    home_address:           { type: String, required: false },
+
 });
 
 class MDB_PERSON_LOGS extends MODEL

@@ -8,34 +8,15 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <q-select v-model="select__date" :options="options_date" outlined dense></q-select>
+                <q-input class="select-sm" v-model="select__date" type="date" outlined dense></q-input>
+                <q-btn @click="exportTableToExcel('tblData', 'staff-list')" class="btn-outline btn-export" flat dense no-caps>
+                    Export &nbsp;<q-icon name="mdi-export"></q-icon>
+                </q-btn>
             </div>
         </div>
         <div class="account-directory__container content__box">
             <div class="content__table">
-                <!-- <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Gender</th>
-                            <th>Age</th>
-                            <th>Home Address</th>
-                            <th>Last Scanned</th>
-                            <th>Body Temperature</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(staff, index) in this.staff_list.data" :key="index">
-                            <td class="td-active" @click="checkAccount(staff)">{{ staff.given_name + " " + staff.middle_name + " " + staff.last_name}}</td>
-                            <td>{{staff.gender}}</td>
-                            <td>{{new Date().getFullYear() - new Date(staff.birthday).getFullYear()}}</td>
-                            <td>{{staff.home_address}}</td>
-                            <td>{{staff.last_scanned ? staff.last_scanned : 'No Logs Yet'}}</td>
-                            <td class="td-green">{{staff.last_temperature ? staff.last_temperature : 'No Temperature Logs Yet'}}</td>
-                        </tr>
-                    </tbody>
-                </table> -->
-                <q-table dense @row-click="checkAccount" :filter="search" flat :data="this.staff_list.data" :pagination.sync="pagination" :columns="table_column"></q-table>
+                <q-table id="tblData" dense @row-click="checkAccount" :filter="search" flat :data="this.staff_list.data" :pagination.sync="pagination" :columns="table_column"></q-table>
 
             </div>
         </div>
@@ -98,32 +79,75 @@ export default {
             { 
                 name    : 'home_address',
                 label   : 'Home Address',
-                field   : 'home_address',
+                field   : row => row.home_address ? row.home_address : 'Unknown',
                 align   : 'left',
                 required: true,
                 
                 sortable: true,
             },
             { 
-                name    : 'last_scanned',
-                label   : 'Last Scanned',
-                field   : row => row.last_scanned ? row.last_scanned : 'No Logs Yet',
+                name    : 'company_name',
+                label   : 'Company Name',
+                field   : row => row.company_name ? row.company_name : 'Unknown',
                 align   : 'left',
                 required: true,
                 sortable: true,
             },
             { 
-                name    : 'temperature',
-                label   : 'Temperature',
-                field   : row => row.last_temperature ? row.last_temperature : 'No Temperature Logs Yet',
+                name    : 'position',
+                label   : 'Position',
+                field   : row => row.position ? row.position : 'Unknown',
                 align   : 'left',
                 required: true,
                 sortable: true,
             }
         ],
     }),
+    watch:
+    {
+        async select__date(val)
+        {
+            let start_date = new Date(val)
+            let end_date = start_date.setDate(start_date.getDate() + 1)
+            start_date = start_date.setDate(start_date.getDate() - 1)
+
+            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start_date, $lt: end_date }}})  
+        }
+    },
+
     methods:
     {
+        exportTableToExcel(tableID, filename = ''){
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect = document.getElementById(tableID);
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+            
+            // Specify file name
+            filename = filename?filename+'.xls':'excel_data.xls';
+            
+            // Create download link element
+            downloadLink = document.createElement("a");
+            
+            document.body.appendChild(downloadLink);
+            
+            if(navigator.msSaveOrOpenBlob){
+                var blob = new Blob(['\ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob( blob, filename);
+            }else{
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+            
+                // Setting the file name
+                downloadLink.download = filename;
+                
+                //triggering the function
+                downloadLink.click();
+            }
+        },
+
         checkAccount(evt, account_info)
         {
             account_info.type = 'Staff'
@@ -139,11 +163,17 @@ export default {
         {
             let temp_log = await this.$_post(postGetLogs,{ id: person_id, limit: 1})
             return temp_log.data[0]
+        },
+
+        async getStaffList(params = {})
+        {
+            this.staff_list = await this.$_post(postGetPersons, params);
+            
         }
     },
     async mounted()
     {
-        this.staff_list = await this.$_post(postGetPersons, {find_person: {category: 'Staff'}});
+        await this.getStaffList({find_person: {category: 'Staff'}})        
         // console.log(this.staff_list);
         
     }
