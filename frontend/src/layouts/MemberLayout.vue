@@ -124,7 +124,7 @@ export default
         // Irish
         this.getGetTabletLogsSettings();
         await this.getAllDevice(this.$user_info.company._id);
-        await this.getLog();
+        // await this.getLog();
         setInterval(this.getLog, 60000);
     },
     methods:
