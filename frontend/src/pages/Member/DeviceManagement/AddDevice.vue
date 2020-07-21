@@ -110,7 +110,7 @@ export default {
         getCompanyData(value)
         {
             this.select_company = value;
-            console.log(value)
+            // console.log(value)
         },
 
         

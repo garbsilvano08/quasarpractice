@@ -16,3 +16,7 @@ export function storePassLogs(state, passLogs)
 {
     state.passLogs = passLogs.map(passLogs => Object.assign({}, passLogs, { syncing: false }));
 }
+export function storeGetLogsSwitch(state, getLogsSwitch) 
+{
+    state.getLogsSwitch = getLogsSwitch.map(getLogsSwitch => Object.assign({}, getLogsSwitch, { syncing: false }));
+}

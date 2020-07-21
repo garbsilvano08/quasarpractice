@@ -67,6 +67,8 @@ export default {
         },
         async syncAll()
         {      
+            if (this.device_list.length>0)
+            {
             this.$q.dialog({
             title: 'Confirm',
             message: `All Data will be rewrite!`,
@@ -77,6 +79,17 @@ export default {
             }).onOk(async () =>{
                 this.deleteAllTabletPerson();
             });
+            }
+            else
+            {
+                this.$q.dialog({
+                title: 'Alert',
+                message: `No device installed`,
+                color: 'negative',
+                ok: `Ok`,
+                default: 'cancel'   // <<<<
+            })
+            }
             
         },
         sync()
@@ -90,11 +103,18 @@ export default {
                 let tabletFormData = new FormData();
                 tabletFormData.append("pass", "123456");
                 let rsp = await this.$axios.post("http://"+device.device_ip+":8080/initialization", tabletFormData).then(res => res.data);
+                
                 setTimeout(() => this.createAll(this.persons_list, device.device_ip), 2000);
            })
         },
         async createAll(personToTablet , device_ip)
         {
+            this.device_list.forEach(async (device) => {
+                let settingsFormData = new FormData();
+                settingsFormData.append("pass", "123456");
+                settingsFormData.append("config", "{'isBodyTempAlarm': 1 , 'isBodyTempStart' : 1, 'isHighFeverAdopt' : 0, 'isLowFeverAdopt' : 0, 'isLowTempAdopt' : 0, 'isStandardTempAdopt' : 1,  'isWearingMask' : 1, 'standardBodyTemp': '37.3',  'isStrangerRecord' : 1 , 'isStrangerMode' : 0, 'tempCompensation' : 0.3,  'isFan' : 1, }");
+                await this.$axios.post("http://"+device.device_ip+":8080/tempAndMaskSetting", settingsFormData).then(res => res.data);
+            })
             // console.log(personToTablet)
             for (let person of personToTablet)
             {
@@ -148,68 +168,82 @@ export default {
             this.persons_list = this.persons_list.data;
         },
         async singlecreate(){
-            this.$q.loading.show();
-            let personCloud = this.persons_list;
-            
-            
-            // console.log("cloud",personCloud);
-            
-            for (let device of this.device_list) 
+            if (this.device_list.length>0)
             {
-            let ctr=0;
-            let totalTabletRecord = [];
-            let totalTabletRecordCount = 0;
-            while(1)
-            {
-                let getFormData = new FormData();
-                getFormData.append("pass", "123456");
-                getFormData.append("index", ""+ctr+"");
-                getFormData.append("length", "50");
-                let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
-                totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
-                // console.log(JSON.parse(rsp.data).pageInfo)
-                rsp = JSON.parse(rsp.data).records;
-                // console.log(rsp)
-                if (ctr===1) rsp.splice(0, 1);
-                totalTabletRecord=totalTabletRecord.concat(rsp);
-                ctr++;
-                if (totalTabletRecord.length===totalTabletRecordCount)
+                this.$q.loading.show();
+                let personCloud = this.persons_list;
+                
+                
+                // console.log("cloud",personCloud);
+                
+                for (let device of this.device_list) 
                 {
-                    break;
-                }
-                // console.log( ctr)
-            }
-        // console.log(device.device_ip,totalTabletRecord)
-            // let personCloud
-            // console.log("cloud",personCloud)
-                let newRegistered = [];
-                personCloud.forEach(async (person, i) => 
+                let ctr=0;
+                let totalTabletRecord = [];
+                let totalTabletRecordCount = 0;
+                while(1)
                 {
-                    let is = false;
-
-                    totalTabletRecord.forEach(tabletRegistered => 
+                    let getFormData = new FormData();
+                    getFormData.append("pass", "123456");
+                    getFormData.append("index", ""+ctr+"");
+                    getFormData.append("length", "50");
+                    let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
+                    totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
+                    // console.log(JSON.parse(rsp.data).pageInfo)
+                    rsp = JSON.parse(rsp.data).records;
+                    // console.log(rsp)
+                    if (ctr===1) rsp.splice(0, 1);
+                    totalTabletRecord=totalTabletRecord.concat(rsp);
+                    ctr++;
+                    if (totalTabletRecord.length===totalTabletRecordCount)
                     {
-                        if (person.frontdesk_person_id == tabletRegistered.vipID) is = true;
+                        break;
+                    }
+                    // console.log( ctr)
+                }
+            // console.log(device.device_ip,totalTabletRecord)
+                // let personCloud
+                // console.log("cloud",personCloud)
+                    let newRegistered = [];
+                    personCloud.forEach(async (person, i) => 
+                    {
+                        let is = false;
+
+                        totalTabletRecord.forEach(tabletRegistered => 
+                        {
+                            if (person.frontdesk_person_id == tabletRegistered.vipID) is = true;
+                        });
+
+                        if (!is)
+                        {
+                            newRegistered.push(person);
+                        }
                     });
 
-                    if (!is)
+                    // console.log("walang kamuka",newRegistered);
+                    if (newRegistered.length >0)
                     {
-                        newRegistered.push(person);
+                        // console.log(device.device_ip);
+                        // console.log(newRegistered)
+                        this.createAll(newRegistered, device.device_ip);
                     }
-                });
-
-                // console.log("walang kamuka",newRegistered);
-                if (newRegistered.length >0)
-                {
-                    // console.log(device.device_ip);
-                    // console.log(newRegistered)
-                    this.createAll(newRegistered, device.device_ip);
-                }
-                else 
-                {
-                    this.$q.loading.hide();
-                }
-            };
+                    else 
+                    {
+                        this.$q.loading.hide();
+                    }
+                };
+            }
+            else
+            {
+                this.$q.dialog({
+                title: 'Alert',
+                message: `No device installed`,
+                color: 'negative',
+                ok: `Ok`,
+                default: 'cancel'   // <<<<
+            })
+            }
+            
         },
 
     }

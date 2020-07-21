@@ -5,8 +5,9 @@
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
                 <q-img src="../assets/vcop-logo-white.svg"></q-img>
-
+                <q-btn-toggle dense color="red" @input="getTabletLogsSwitch" v-model="getLogsSwitch" :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
                 <div class="btn-sync__container">
+                    
                     <q-btn @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
                         <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
                         <!-- <div class="notification-indicator">100</div> -->
@@ -53,7 +54,7 @@
 import EssentialLink    from 'components/EssentialLink.vue'
 import Layout           from './MemberLayout.scss'
 import navigation       from '../references/nav'
-import { postAddPerson , postSavePerson ,postGetDevice}                        from '../references/url';
+import { postAddPerson , postSavePerson ,postGetDevice,postGetLogsSettings}                        from '../references/url';
 import Model from "../models/Model";
 import { base64StringToBlob } from 'blob-util';
 
@@ -80,6 +81,7 @@ export default
     },
 	data: () =>
 	({
+        getLogsSwitch: "",
 		package_data: { version: '0.0.0' },
 		leftDrawerOpen: false,
         navigation: [],
@@ -99,7 +101,7 @@ export default
         passLogs()
         {
             return this.$store.state.sync.passLogs;
-        }
+        },
     },
     async mounted()
     {
@@ -109,7 +111,7 @@ export default
         }
 
         this.navigation = navigation;
-        await this.getAllDevice(this.$user_info.company._id);
+        
     },
     async created()
     {
@@ -120,11 +122,50 @@ export default
         await this.checkQueueSync();
 
         // Irish
+        this.getGetTabletLogsSettings();
+        await this.getAllDevice(this.$user_info.company._id);
         await this.getLog();
         setInterval(this.getLog, 60000);
     },
     methods:
     {
+        //settings get logs irish**********************
+        async getGetTabletLogsSettings()
+        {
+            this.$store.commit('sync/storeGetLogsSwitch', await this.db.get("getLogsSwitch"));
+            let logsSwitch =this.$store.state.sync.getLogsSwitch
+            if (logsSwitch.length==0) 
+            {
+                await this.db.update(
+                
+                "on"
+                ,
+                'getLogsSwitch', "settings");
+                this.$store.commit('sync/storeGetLogsSwitch', await this.db.get("getLogsSwitch"));
+                // console.log(this.$store.state.sync.getLogsSwitch)  
+                let settings =  this.$store.state.sync.getLogsSwitch;
+                this.getLogsSwitch = settings[0].data;
+            }
+            else 
+            {
+                // console.log(logsSwitch[0].data);
+                this.getLogsSwitch = logsSwitch[0].data;
+
+            }
+        },
+        //switching get logs irish**********************
+        async getTabletLogsSwitch()
+        {
+            // console.log(this.getLogsSwitch);
+            await this.db.update(
+                
+            this.getLogsSwitch
+            ,
+            'getLogsSwitch', "settings");
+            this.$store.commit('sync/storeGetLogsSwitch', await this.db.get("getLogsSwitch"));
+            let settings =  this.$store.state.sync.getLogsSwitch;
+            this.getLogsSwitch = settings[0].data;
+        },
         async getAllDevice(id)
         {
            this.device_list = await this.$_post(postGetDevice, {find_device: {company_id: id}});
@@ -221,6 +262,13 @@ export default
         },
         async getLog()
         {
+            await this.getAllDevice(this.$user_info.company._id);
+            if ((this.device_list.length==0) || (this.getLogsSwitch == "off"))
+            {
+
+            }
+            else
+            {
             let today= new Date()
             let timeToday= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
             let startTime= "";
@@ -255,7 +303,7 @@ export default
                 },
                 'lastRequestTime');
                 this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
-            
+            }
         },
         async saveLogsIndexDb(dat, device)
         {

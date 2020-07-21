@@ -3,5 +3,6 @@ export default function () {
     visitors: [],
     lastRequestTime: [],
     passLogs: [],
+    getLogsSwitch: "",
   }
 }
