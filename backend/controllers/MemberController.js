@@ -102,6 +102,8 @@ module.exports =
     
     async addPassLog(req, res)
     {
+        let key = ['Traffic']
+        let person_log = []
         let date_string = new Date().toISOString().split('T')[0]
         req.body.data.date_string = date_string
         if (Number(req.body.data.tempratrue) >= 37 ) req.body.data.has_fever = true
@@ -111,7 +113,10 @@ module.exports =
         date_string = date_string.split("-")
         // console.log(req.body.data);
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
-        await new CounterClass().counterActivities(req.body.data.saved_from, person.length ? person[0].category : 'Traffic', date_string)
+        key.push(person.length ? person[0].category : null)
+        console.log(person);
+        if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
+        if (person_log.length || person.length == 0) await new CounterClass().counterActivities(req.body.data.saved_from, key, date_string)
         
         let person_info = {
             mask:                   req.body.data.mask,

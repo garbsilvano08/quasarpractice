@@ -3,6 +3,7 @@ const MDB_COUNT_OVERALL = require('../models/MDB_COUNT_OVERALL');
 const MDB_COUNT_DAILY   = require('../models/MDB_COUNT_DAILY')
 const MDB_COUNT_MONTHLY = require('../models/MDB_COUNT_MONTHLY');
 
+
 const FormData = require('form-data');
 const axios = require('axios');
 const fs = require('fs');
@@ -55,7 +56,11 @@ module.exports = class CounterClass
         // console.log(this.company_to_update);
         for ( let company of this.company_to_update )
         {
-            await this.saveCount(company, key, date_string)
+            for(let category of key)
+            {
+
+                if (category) await this.saveCount(company, category, date_string)
+            }
             // if (key) await this.saveCount(company, key, date_string)
         
         }
