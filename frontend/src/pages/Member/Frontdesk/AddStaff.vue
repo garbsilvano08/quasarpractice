@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Position</div>
-                                    <q-select v-model="staff_class.position" :options="options_position" outlined dense></q-select>
+                                    <q-input v-model="staff_class.position"  outlined dense></q-input>
                                 </div>
                             </div>
                         </div>

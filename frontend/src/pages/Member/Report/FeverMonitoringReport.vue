@@ -39,7 +39,7 @@
 <script>
 import './Report.scss';
 import  ComPicker from "../../../components/companyPicker/ComPicker"
-import {postPersonByCateg} from '../../../references/url';
+import {postPersonByCateg, postExpFeverDeteted} from '../../../references/url';
 
 
 export default {
@@ -78,35 +78,56 @@ export default {
 
     methods:
     {
-        exportTableToExcel(tableID, filename = ''){
-            var downloadLink;
-            var dataType = 'application/vnd.ms-excel';
-            var tableSelect = document.getElementById(tableID);
-            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-            
-            // Specify file name
-            filename = filename?filename+'.xls':'excel_data.xls';
-            
-            // Create download link element
-            downloadLink = document.createElement("a");
-            
-            document.body.appendChild(downloadLink);
-            
-            if(navigator.msSaveOrOpenBlob){
-                var blob = new Blob(['\ufeff', tableHTML], {
-                    type: dataType
+        async exportTableToExcel(tableID, filename = ''){
+            let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
+            let params = {}
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+
+            start = start.setDate(start.getDate() - 1)
+            end = end.setDate(end.getDate() + 1)
+
+            let file_name = 'fevermonitoringreport_' + date + '.xlsx'
+            if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Monitoring Report', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
+            else params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Monitoring Report',file_name: file_name, find_data: {has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
+            let is_saved = await this.$_post(postExpFeverDeteted,params);
+
+            if (is_saved) 
+            {
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'File was successfully saved'
                 });
-                navigator.msSaveOrOpenBlob( blob, filename);
-            }else{
-                // Create a link to the file
-                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-            
-                // Setting the file name
-                downloadLink.download = filename;
-                
-                //triggering the function
-                downloadLink.click();
             }
+            // var downloadLink;
+            // var dataType = 'application/vnd.ms-excel';
+            // var tableSelect = document.getElementById(tableID);
+            // var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+            
+            // // Specify file name
+            // filename = filename?filename+'.xls':'excel_data.xls';
+            
+            // // Create download link element
+            // downloadLink = document.createElement("a");
+            
+            // document.body.appendChild(downloadLink);
+            
+            // if(navigator.msSaveOrOpenBlob){
+            //     var blob = new Blob(['\ufeff', tableHTML], {
+            //         type: dataType
+            //     });
+            //     navigator.msSaveOrOpenBlob( blob, filename);
+            // }else{
+            //     // Create a link to the file
+            //     downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+            
+            //     // Setting the file name
+            //     downloadLink.download = filename;
+                
+            //     //triggering the function
+            //     downloadLink.click();
+            // }
         },
         getFeverDate(date)
         {

@@ -77,6 +77,10 @@ app.post('/api/member/get/latest_log',  member_only, count_controller.getLatestL
 app.post('/api/member/get/all_logs',  member_only, count_controller.getAllLogs);
 app.post('/api/member/get/purpose_visit',  member_only, count_controller.getDailyPurposeVisit);
 
+// Excel export
+app.post('/api/member/export/fever_detected',  member_only, member_controller.exportFeverDetected);
+app.post('/api/member/export/person',  member_only, member_controller.exportPerson);
+
 app.listen({port: 4001}, (err) =>
 {
     if(err)

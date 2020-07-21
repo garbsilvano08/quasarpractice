@@ -10,6 +10,7 @@ const client            = new Client({});
 const axios             = require('axios');
 const multer            = require('multer');
 const path              = require('path');
+const excel             = require('exceljs');
 
 // Models
 const MDB_RAW_VISITOR   = require('../models/MDB_RAW_VISITOR');
@@ -62,6 +63,70 @@ function checkFileType(file, cb) {
 }
 module.exports =
 {
+    async exportFeverDetected(req, res)
+    {
+        console.log(req.body);
+        let person_logs = await new MDB_PERSON_LOGS().collection.find(req.body.find_data);
+        let workbook = new excel.Workbook(); //creating workbook
+        workbook.creator = req.body.user_name;
+        workbook.created = new Date();
+        let worksheet = workbook.addWorksheet(req.body.work_sheet); //creating worksheet
+        
+        //  WorkSheet Header
+        worksheet.columns = [
+        { header: 'Id', key: 'person_id', width: 20 },
+        { header: 'Name', key: 'full_name', width: 30 },
+        { header: 'Address', key: 'home_address', width: 30},
+        { header: 'Company Name', key: 'company_name', width: 30},
+        { header: 'Date Logged', key: 'date_logged', width: 30},
+        { header: 'Temperature', key: 'temperature', width: 30},
+        { header: 'Gender', key: 'gender', width: 30},
+        { header: 'Birthday', key: 'birthday', width: 10, outlineLevel: 1}
+
+        ];
+        
+        // Add Array Rows
+        worksheet.addRows(person_logs);
+        // Write to File
+        await workbook.xlsx.writeFile(req.body.file_name)
+        .then(function() {
+            res.send(true)
+        });
+    },
+
+    async exportPerson(req, res)
+    {
+        let person = await new MDB_PERSON().collection.find(req.body.find_data);
+        // console.log(person);
+        let workbook = new excel.Workbook(); //creating workbook
+        workbook.creator = req.body.user_name;
+        workbook.created = new Date();
+        let worksheet = workbook.addWorksheet(req.body.work_sheet); //creating worksheet
+        
+        //  WorkSheet Header
+        worksheet.columns = [
+        { header: 'Id', key: '_id', width: 20 },
+        { header: 'Last Name', key: 'last_name', width: 30 },
+        { header: 'First Name', key: 'given_name', width: 30 },
+        { header: 'Middle Name', key: 'middle_name', width: 30 },
+        { header: 'Address', key: 'home_address', width: 30},
+        { header: 'Company Name', key: 'company_name', width: 30},
+        { header: 'Gender', key: 'gender', width: 30},
+        { header: 'Position', key: 'position', width: 30},
+        { header: 'Contact Number', key: 'contact_number', width: 30},
+        { header: 'Birthday', key: 'birthday', width: 10, outlineLevel: 1}
+
+        ];
+        
+        // Add Array Rows
+        worksheet.addRows(person);
+        // Write to File
+        await workbook.xlsx.writeFile(req.body.file_name)
+        .then(function() {
+            res.send(true)
+        });
+    },
+
     async userList(req, res)
     {
         res.send("user_list");

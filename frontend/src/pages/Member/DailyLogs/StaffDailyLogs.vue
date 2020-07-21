@@ -3,7 +3,7 @@
         <div class="daily-logs__header">
             <div class="header__title">DAILY LOGS</div>
             <div class="header__filter">
-                <q-btn class="btn-outline btn-export" flat dense no-caps>
+                <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
                 <com-picker class="select-lg" @select=getCompanyData></com-picker>
@@ -40,7 +40,7 @@ import "./DailyLogs.scss";
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 import  ComPicker from "../../../components/companyPicker/ComPicker"
 
-import { postGetCompanies, postFindLogs, postPersonByCateg } from '../../../references/url';
+import { postGetCompanies, postFindLogs, postPersonByCateg, postExpFeverDeteted } from '../../../references/url';
 
 export default {
     components: {
@@ -66,15 +66,40 @@ export default {
     {
         async select__date(val)
         {
-            if (val) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: this.company_id})
+            if (val) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: this.company_details._id})
         }
     },
 
     methods:
     {
+        async exportTableToExcel(tableID, filename = ''){
+            let date = new Date(this.select__date).toISOString().split('T')[0].replace(/[^/0-9]/g, '')
+            let params = {}
+            // let start = new Date(this.start_date)
+            // let end = new Date(this.end_date)
+
+            // start = start.setDate(start.getDate() - 1)
+            // end = end.setDate(end.getDate() + 1)
+
+            let file_name = 'staffdailylogs_' + date + '.xlsx'
+            if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Staff Daily Logs', file_name: file_name, find_data: {company_name: this.company_details.company_name, category: 'Staff', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
+            else params = {user_name: this.$user_info.full_name, work_sheet: 'Staff Daily Logs',file_name: file_name, find_data: {category: 'Staff', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
+            let is_saved = await this.$_post(postExpFeverDeteted,params);
+
+            if (is_saved) 
+            {
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'File was successfully saved'
+                });
+            }
+        },
+
         async getCompanyData(value)
         {
-            this.company_id = value
+            this.company_details = value
+            // console.log(this.company_details);
             // this.getTotalScannedToday(new Date(), value._id)
             this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: value._id})
         },

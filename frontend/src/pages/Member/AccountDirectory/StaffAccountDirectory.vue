@@ -8,7 +8,8 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <q-input class="select-sm" v-model="select__date" type="date" outlined dense></q-input>
+                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
+                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
                 <q-btn @click="exportTableToExcel('tblData', 'staff-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
@@ -30,13 +31,16 @@ import "./AccountDirectory.scss";
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 
 // References
-import { postGetStaff, postGetPersons, postGetLogs } from '../../../references/url';
+import { postGetStaff, postGetPersons, postGetLogs, postExpPerson } from '../../../references/url';
+// import { start } from 'repl';
 
 export default {
     components: {
         DailyLogCards
     },
     data: () => ({
+        start_date: new Date().toISOString().split('T')[0],
+        end_date:new Date().toISOString().split('T')[0],
         search : "",
         pagination: {
             rowsPerPage: 10,
@@ -105,46 +109,48 @@ export default {
     }),
     watch:
     {
-        async select__date(val)
+        async start_date(val)
         {
-            let start_date = new Date(val)
-            let end_date = start_date.setDate(start_date.getDate() + 1)
-            start_date = start_date.setDate(start_date.getDate() - 1)
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+            end = end.setDate(end.getDate() + 1)
+            // start = start.setDate(start.getDate() - 1)
 
-            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start_date, $lt: end_date }}})  
+            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}})  
+        },
+        async end_date(val)
+        {
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+            end = end.setDate(end.getDate() + 1)
+            // start = start.setDate(start.getDate() - 1)
+
+            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}})  
         }
     },
 
     methods:
     {
-        exportTableToExcel(tableID, filename = ''){
-            var downloadLink;
-            var dataType = 'application/vnd.ms-excel';
-            var tableSelect = document.getElementById(tableID);
-            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-            
-            // Specify file name
-            filename = filename?filename+'.xls':'excel_data.xls';
-            
-            // Create download link element
-            downloadLink = document.createElement("a");
-            
-            document.body.appendChild(downloadLink);
-            
-            if(navigator.msSaveOrOpenBlob){
-                var blob = new Blob(['\ufeff', tableHTML], {
-                    type: dataType
+        async exportTableToExcel(tableID, filename = ''){
+            let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
+            let params = {}
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+            end = end.setDate(end.getDate() + 1)
+            // start = start.setDate(start.getDate() - 1)
+
+            let file_name = 'staff_' + date + '.xlsx'
+            // if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Staff', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
+            params = {user_name: this.$user_info.full_name, work_sheet: 'Staff',file_name: file_name, find_data: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}}
+            let is_saved = await this.$_post(postExpPerson,params);
+
+            if (is_saved) 
+            {
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'File was successfully saved'
                 });
-                navigator.msSaveOrOpenBlob( blob, filename);
-            }else{
-                // Create a link to the file
-                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-            
-                // Setting the file name
-                downloadLink.download = filename;
-                
-                //triggering the function
-                downloadLink.click();
             }
         },
 
@@ -173,9 +179,10 @@ export default {
     },
     async mounted()
     {
-        await this.getStaffList({find_person: {category: 'Staff'}})        
-        // console.log(this.staff_list);
-        
+        let start = new Date(this.start_date)
+        let end = new Date(this.end_date)
+        end = end.setDate(end.getDate() + 1)
+        await this.getStaffList({find_person: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}})      
     }
 
 }

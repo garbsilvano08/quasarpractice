@@ -3,10 +3,11 @@
         <div class="daily-logs__header">
             <div class="header__title">DAILY LOGS</div>
             <div class="header__filter">
-                <q-btn class="btn-outline btn-export" flat dense no-caps>
+                <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
                 <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
+                <com-picker class="select-lg" @select=getCompanyData></com-picker>
             </div>
         </div>
         <div class="daily-logs__header" style="margin-bottom: 30px !important;">
@@ -18,7 +19,6 @@
                     </template>
                 </q-input> -->
                 <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
-                <com-picker class="select-lg" @select=getCompanyData></com-picker>
 
                 <!-- <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select> -->
             </div>
@@ -38,7 +38,7 @@ import "./DailyLogs.scss";
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 import  ComPicker from "../../../components/companyPicker/ComPicker"
 
-import { postGetCompanies, postFindLogs, postPersonByCateg } from '../../../references/url';
+import { postGetCompanies, postFindLogs, postPersonByCateg, postExpFeverDeteted } from '../../../references/url';
 
 export default {
     components: {
@@ -58,7 +58,7 @@ export default {
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
-        company_id: '',
+        company_details: '',
     }),
 
      watch:
@@ -67,21 +67,46 @@ export default {
         {
             if (val) 
             {
-                if (this.company_id)
-                this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date, company_id: this.company_id}));
+                if (this.company_details)
+                this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}));
                 else 
-                this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date}));
+                this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}));
             }
         }
     },
 
     methods:
     {
+        async exportTableToExcel(tableID, filename = ''){
+            let date = new Date(this.select__date).toISOString().split('T')[0].replace(/[^/0-9]/g, '')
+            let params = {}
+            // let start = new Date(this.start_date)
+            // let end = new Date(this.end_date)
+
+            // start = start.setDate(start.getDate() - 1)
+            // end = end.setDate(end.getDate() + 1)
+
+            let file_name = 'feverdetecteddailylogs_' + date + '.xlsx'
+            if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Logs', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
+            else params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Logs',file_name: file_name, find_data: {has_fever: true, date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
+            let is_saved = await this.$_post(postExpFeverDeteted,params);
+
+            if (is_saved) 
+            {
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'File was successfully saved'
+                });
+            }
+        },
+
         async getCompanyData(value)
         {
-            this.company_id = value
+            this.company_details = value
             // this.getTotalScannedToday(new Date(), value._id)
-            this.getPersonWithFever(await this.getStaffList({ date_logged: this.select__date, company_id: value._id}));
+            if (this.company_details) this.getPersonWithFever(await this.getStaffList({ date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: value._id}));
+            else this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}));
         },
 
         async getStaffList(params)

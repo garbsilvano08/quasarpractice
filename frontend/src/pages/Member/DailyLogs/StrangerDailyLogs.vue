@@ -3,9 +3,10 @@
         <div class="daily-logs__header">
             <div class="header__title">DAILY LOGS</div>
             <div class="header__filter">
-                <q-btn class="btn-outline btn-export" flat dense no-caps>
+                <q-btn  @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
+                <com-picker @select=getCompanyData></com-picker>
                 <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
             </div>
         </div>
@@ -37,12 +38,14 @@ import "./DailyLogs.scss";
 
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
+import  ComPicker from "../../../components/companyPicker/ComPicker"
 
-import { postGetCompanies, postFindLogs, postPersonByCateg } from '../../../references/url';
+import { postGetCompanies, postFindLogs, postPersonByCateg, postExpFeverDeteted } from '../../../references/url';
 
 export default {
     components: {
-        DailyLogCards, 
+        DailyLogCards,
+        ComPicker 
         
     },
     data: () => ({
@@ -57,24 +60,53 @@ export default {
         options_date: [
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
-        company_id: '',
+        company_details: '',
     }),
 
      watch:
     {
         async select__date(val)
         {
-            if (val) this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: this.select__date})
+            if (val)
+            {
+                if (this.company_details) this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id})
+                else this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0]})
+            }
         }
     },
 
     methods:
     {
+        async exportTableToExcel(tableID, filename = ''){
+            let date = new Date(this.select__date).toISOString().split('T')[0].replace(/[^/0-9]/g, '')
+            let params = {}
+            // let start = new Date(this.start_date)
+            // let end = new Date(this.end_date)
+
+            // start = start.setDate(start.getDate() - 1)
+            // end = end.setDate(end.getDate() + 1)
+
+            let file_name = 'strangersdailylogs_' + date + '.xlsx'
+            if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Stranger Daily Logs', file_name: file_name, find_data: {company_name: this.company_details.company_name, category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
+            else params = {user_name: this.$user_info.full_name, work_sheet: 'Stranger Daily Logs',file_name: file_name, find_data: {category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
+            let is_saved = await this.$_post(postExpFeverDeteted,params);
+
+            if (is_saved) 
+            {
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'File was successfully saved'
+                });
+            }
+        },
+
         async getCompanyData(value)
         {
-            this.company_id = value
+            this.company_details = value
             // this.getTotalScannedToday(new Date(), value._id)
-            this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: this.select__date, company_id: value._id})
+            if (value) this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: value._id})
+            else this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0]})
         },
 
         async getStaffList(params)

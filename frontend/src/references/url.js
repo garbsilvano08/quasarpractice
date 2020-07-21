@@ -41,4 +41,6 @@ exports.postPersonByCateg   = 'member/get/logs_by_category';
 exports.postLatestLog       = 'member/get/latest_log';
 exports.postGetAllLogs      = 'member/get/all_logs';
 exports.postGetPurposeVisit = 'member/get/purpose_visit';
+exports.postExpFeverDeteted = 'member/export/fever_detected';
+exports.postExpPerson       = 'member/export/person';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';

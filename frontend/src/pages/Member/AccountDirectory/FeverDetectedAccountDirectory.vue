@@ -9,7 +9,8 @@
                     </template>
                 </q-input>
                 <!-- <q-select v-model="select__date" :options="options_date" outlined dense></q-select> -->
-                <q-input class="select-sm" v-model="select__date" type="date" outlined dense></q-input>
+                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
+                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
                 <q-btn @click="exportTableToExcel('tblData', 'fever_detected-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
@@ -28,13 +29,15 @@ import "./AccountDirectory.scss";
 
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
-import { postGetPersonLogs , postGetPerson, postPersonByCateg} from '../../../references/url';
+import { postGetPersonLogs , postGetPerson, postPersonByCateg, postExpFeverDeteted} from '../../../references/url';
 
 export default {
     components: {
         DailyLogCards
     },
     data: () => ({
+        start_date: new Date().toISOString().split('T')[0],
+        end_date:new Date().toISOString().split('T')[0],
         pagination: {
             rowsPerPage: 10,
         },
@@ -113,50 +116,61 @@ export default {
     }),
     watch:
     {
-        async select__date(val)
+       async start_date(val)
         {
-            await this.getDetectedFever({find_by_category: {has_fever: true, date_logged: new Date(val).toISOString().split('T')[0]}})  
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+            end = end.setDate(end.getDate() + 1)
+            // start = start.setDate(start.getDate() - 1)
+
+            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}})  
+        },
+        async end_date(val)
+        {
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+            end = end.setDate(end.getDate() + 1)
+            // start = start.setDate(start.getDate() - 1)
+
+            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}}) 
         }
     },
     methods:{
-        exportTableToExcel(tableID, filename = ''){
-            var downloadLink;
-            var dataType = 'application/vnd.ms-excel';
-            var tableSelect = document.getElementById(tableID);
-            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-            
-            // Specify file name
-            filename = filename?filename+'.xls':'excel_data.xls';
-            
-            // Create download link element
-            downloadLink = document.createElement("a");
-            
-            document.body.appendChild(downloadLink);
-            
-            if(navigator.msSaveOrOpenBlob){
-                var blob = new Blob(['\ufeff', tableHTML], {
-                    type: dataType
+         async exportTableToExcel(tableID, filename = ''){
+            let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
+            let params = {}
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+            end = end.setDate(end.getDate() + 1)
+            // start = start.setDate(start.getDate() - 1)
+
+            let file_name = 'feverdetected_' + date + '.xlsx'
+            // if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Staff', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
+            params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Detected',file_name: file_name, find_data: {has_fever: true, date_saved: { '$gt' : start , '$lt' : end}}}
+            let is_saved = await this.$_post(postExpFeverDeteted,params);
+
+            if (is_saved) 
+            {
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'File was successfully saved'
                 });
-                navigator.msSaveOrOpenBlob( blob, filename);
-            }else{
-                // Create a link to the file
-                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-            
-                // Setting the file name
-                downloadLink.download = filename;
-                
-                //triggering the function
-                downloadLink.click();
             }
         },
         async getDetectedFever(params = {})
         {
             this.fever_detected = await this.$_post(postPersonByCateg, params);
-            console.log(this.fever_detected);
         }
     },
     async mounted(){
-        await this.getDetectedFever({find_by_category: {has_fever: true}})
+        let start = new Date(this.start_date)
+        let end = new Date(this.end_date)
+        end = end.setDate(end.getDate() + 1)
+        // start = start.setDate(start.getDate() - 1)
+
+        await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}}) 
+        // await this.getDetectedFever({find_by_category: {has_fever: true}})
     }
 }
 </script>
