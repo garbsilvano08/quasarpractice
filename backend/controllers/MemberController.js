@@ -66,7 +66,7 @@ module.exports =
     async exportFeverDetected(req, res)
     {
         console.log(req.body);
-        let person_logs = await new MDB_PERSON_LOGS().collection.find(req.body.find_data);
+        let person_logs = await new MDB_PERSON_LOGS().collection.find(req.body.find_data).sort(req.body.sort);
         let workbook = new excel.Workbook(); //creating workbook
         workbook.creator = req.body.user_name;
         workbook.created = new Date();
@@ -96,8 +96,8 @@ module.exports =
 
     async exportPerson(req, res)
     {
-        let person = await new MDB_PERSON().collection.find(req.body.find_data);
-        // console.log(person);
+        let person = await new MDB_PERSON().collection.find(req.body.find_data).sort(req.body.sort);
+        console.log(req.body, 'sort');
         let workbook = new excel.Workbook(); //creating workbook
         workbook.creator = req.body.user_name;
         workbook.created = new Date();
@@ -179,9 +179,9 @@ module.exports =
         // console.log(req.body.data);
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
         key.push(person.length ? person[0].category : null)
-        console.log(person);
+        // console.log(key);
         if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
-        if (person_log.length || person.length == 0) await new CounterClass().counterActivities(req.body.data.saved_from, key, date_string)
+        await new CounterClass().counterActivities(req.body.data.saved_from, key, date_string)
         
         let person_info = {
             mask:                   req.body.data.mask,
@@ -387,7 +387,7 @@ module.exports =
     {
         let person_list
         if(req.body.find_person){
-            person_list = await new MDB_PERSON().docs(req.body.find_person)
+            person_list = await new MDB_PERSON().collection.find(req.body.find_person).sort(req.body.sort)
         }
         else res.send(await new MDB_PERSON().docs());
         res.send(person_list);

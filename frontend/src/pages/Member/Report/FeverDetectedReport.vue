@@ -8,6 +8,20 @@
                 <q-btn @click="exportTableToExcel('tblData', 'fever-detected')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
+                <q-btn label="Sort">
+                    <q-menu>
+                        <q-list style="min-width: 100px">
+                            <div class="q-gutter-sm">
+                                <q-radio v-model="sort" val="1" label="Ascending" />
+                                <q-radio v-model="sort" val="-1" label="Descending" />
+                            </div>
+                            <q-separator />
+                            <q-item @click="sortItem(option)" v-for="(option, index) in this.sort_options" :key="index" clickable v-close-popup>
+                                <q-item-section>{{option}}</q-item-section>
+                            </q-item>
+                        </q-list>
+                    </q-menu>
+                </q-btn>
             </div>
         </div>
         <div class="report__container content__box">
@@ -69,7 +83,7 @@ export default {
             'Green Sun Hotel', 'SM Mall' , 'WalterMart'
         ],
         personWithFever : [{full_name:"asd"}],
-        company_id : "",
+        company_details : "",
         table_column:
         [
             { 
@@ -122,6 +136,9 @@ export default {
                 sortable: true,
             }
         ],
+        sort_item: 'Date Created',
+        sort_options: ['Date Logged', 'Full Name', 'Temperature'],
+        sort: '1'
     }),
     async mounted()
     {
@@ -134,19 +151,49 @@ export default {
         {
             if (val) 
             {
-                if (this.company_id)
-                this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date, company_id: this.company_id}));
+                let params = this.sortOption()
+                if (this.company_details)
+                this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params));
                 else 
-                this.getPersonWithFever(await this.getStaffList({date_logged: this.select__date}));
+                this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
             }
         }
     },
     methods:
     {
+        sortOption()
+        {
+            let params = {}
+            if (this.sort_item == 'Date Saved') params = {date_saved: Number(this.sort)}
+            else if (this.sort_item == 'Full Name') params = {full_name: Number(this.sort)}
+            else if (this.sort_item == 'Temperature') params = {temperature: Number(this.sort)}
+            return params
+        },
+
+        async sortItem(option)
+        {
+            this.sort_item = option
+            let params = this.sortOption()
+
+            // let params = this.sortOption()
+            // let start = new Date(this.start_date)
+            // let end = new Date(this.end_date)
+            // end = end.setDate(end.getDate() + 1)
+            // start = start.setDate(start.getDate() - 1)
+            // (await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
+            if (this.company_details)
+            this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params));
+            else 
+            this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
+
+            // await this.getPersonWithFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params}) 
+        },
+        
         async exportTableToExcel(tableID, filename = ''){
+            let sort_options = this.sortOption()
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let file_name = 'feverdetectedreport_' + date + '.xlsx'
-            let is_saved = await this.$_post(postExpFeverDeteted,{user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Report', file_name: file_name, find_data: {has_fever: true}});
+            let is_saved = await this.$_post(postExpFeverDeteted,{user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Report', file_name: file_name,sort: sort_options, find_data: {has_fever: true}});
             if (is_saved) 
             {
                 this.$q.notify(
@@ -155,43 +202,18 @@ export default {
                     message: 'File was successfully saved'
                 });
             }
-
-            // // console.log(det);
-            // var downloadLink;
-            // var dataType = 'application/vnd.ms-excel';
-            // var tableSelect = document.getElementById(tableID);
-            // var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-            
-            // // Specify file name
-            // filename = filename?filename+'.xls':'excel_data.xls';
-            
-            // // Create download link element
-            // downloadLink = document.createElement("a");
-            
-            // document.body.appendChild(downloadLink);
-            
-            // if(navigator.msSaveOrOpenBlob){
-            //     var blob = new Blob(['\ufeff', this.personWithFever], {
-            //         type: dataType
-            //     });
-            //     navigator.msSaveOrOpenBlob( blob, filename);
-            // }else{
-            //     // Create a link to the file
-            //     downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-            
-            //     // Setting the file name
-            //     downloadLink.download = filename;
-                
-            //     //triggering the function
-            //     downloadLink.click();
-            // }
         },
 
         async getCompanyDatas(value)
         {
-            this.company_id = value
+            this.company_details = value
             // this.getTotalScannedToday(new Date(), value._id)
-            this.getPersonWithFever(await this.getStaffList({ date_logged: this.select__date, company_id: value._id}));
+            // this.getPersonWithFever(await this.getStaffList({ date_logged: this.select__date, company_id: value._id}));
+            let params = this.sortOption()
+            if (this.company_details)
+            this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params));
+            else 
+            this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
         },
         async getPersonWithFever(logs)
         {
@@ -220,9 +242,9 @@ export default {
         });
         },
 
-        async getStaffList(params)
+        async getStaffList(params, sort)
         {
-            return await this.$_post(postPersonByCateg, {find_by_category: params});
+            return await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort});
         }
     },
 

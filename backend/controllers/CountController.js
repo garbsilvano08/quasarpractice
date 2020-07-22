@@ -25,7 +25,7 @@ module.exports =
 
     async getPersonLogs(req, res)
     {
-        res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).sort({ date_saved: -1 }).limit(req.body.limit));
+        res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).sort(req.body.sort).limit(req.body.limit));
     },
 
     async counterLogs(req, res)

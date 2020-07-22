@@ -24,6 +24,54 @@ export default
     },
     methods:
     {
+        $_timeAgo(sec)
+        {
+            let timeDef = new Date() - new Date(sec * 1000);
+            let seconds = timeDef / 1000;
+            let minutes = seconds / 60;
+            let hours = minutes / 60;
+            let secondsAgo = null;
+            let minutesAgo = null;
+            let daysAgo = null;
+            let monthsAgo = null;
+            let yearsAgo = null;
+            let timeAgo = null;
+            timeAgo = "Just now";
+            if (seconds >= 60) {
+                minutesAgo = seconds / 60;
+                timeAgo =
+                    Math.floor(minutesAgo) +
+                    (Math.floor(minutesAgo) == 1
+                        ? " min"
+                        : " mins");
+            }
+            if (minutesAgo >= 60) {
+                hours = minutesAgo / 60;
+                timeAgo =
+                    Math.floor(hours) +
+                    (Math.floor(hours) == 1 ? " hr" : " hrs");
+            }
+            if (hours >= 24) {
+                daysAgo = hours / 24;
+                timeAgo =
+                    Math.floor(daysAgo) +
+                    (Math.floor(daysAgo) == 1 ? " day" : " days");
+            }
+            if (daysAgo >= 30) {
+                monthsAgo = daysAgo / 30;
+                timeAgo =
+                    Math.floor(monthsAgo) +
+                    (Math.floor(monthsAgo) == 1 ? " month" : " months");
+            }
+            if (monthsAgo >= 12) {
+                yearsAgo = monthsAgo / 12;
+                timeAgo =
+                    Math.floor(yearsAgo) +
+                    (Math.floor(yearsAgo) == 1 ? " yr" : " yrs");
+            }
+
+            return timeAgo;
+        },
         $_parseTabletResponse(res)
         {
             res = res.replace(`data: "`, ``);

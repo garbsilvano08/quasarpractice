@@ -19,12 +19,26 @@
                     </template>
                 </q-input>
                 <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
+                <q-btn label="Filter">
+                    <q-menu>
+                        <q-list style="min-width: 100px">
+                            <div class="q-gutter-sm">
+                                <q-radio v-model="sort" val="1" label="Ascending" />
+                                <q-radio v-model="sort" val="-1" label="Descending" />
+                            </div>
+                            <q-separator />
+                            <q-item @click="sortItem(option)" v-for="(option, index) in this.sort_options" :key="index" clickable v-close-popup>
+                                <q-item-section>{{option}}</q-item-section>
+                            </q-item>
+                        </q-list>
+                    </q-menu>
+                </q-btn>
                 <!-- <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select> -->
             </div>
         </div>
         <div class="content__grid-4x4">
             <div v-for="(staff, index) in this.staff_list.data" :key="index">
-            <DailyLogCards :staff_logs="staff"></DailyLogCards>
+                <DailyLogCards :staff_logs="staff"></DailyLogCards>
             <!-- <DailyLogCards></DailyLogCards>
             <DailyLogCards></DailyLogCards>
             <DailyLogCards></DailyLogCards> -->
@@ -60,18 +74,32 @@ export default {
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
         company_id: '',
+        sort_options: ['Date Logged', 'Full Name', 'Temperature'],
+        sort: '1'
     }),
 
      watch:
     {
         async select__date(val)
         {
-            if (val) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: this.company_details._id})
+            if (val) if (this.company_details) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: this.company_details._id})
+            else this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date})
         }
     },
 
     methods:
     {
+        async sortItem(option)
+        {
+            let params = {}
+            if (option == 'Date Saved') params = {date_saved: Number(this.sort)}
+            else if (option == 'Full Name') params = {full_name: Number(this.sort)}
+            else if (option == 'Temperature') params = {temperature: Number(this.sort)}
+            console.log(option,Number(this.sort));
+
+            if (this.company_details) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: this.company_details._id}, params)
+            else this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date})
+        },
         async exportTableToExcel(tableID, filename = ''){
             let date = new Date(this.select__date).toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let params = {}
@@ -101,12 +129,13 @@ export default {
             this.company_details = value
             // console.log(this.company_details);
             // this.getTotalScannedToday(new Date(), value._id)
-            this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: value._id})
+            if (value) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: value._id})
+            else this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date})
         },
 
-        async getStaffList(params)
+        async getStaffList(params, sort)
         {
-            return await this.$_post(postPersonByCateg, {find_by_category: params});
+            return await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort} );
         }
     },
     async mounted()

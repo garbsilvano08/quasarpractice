@@ -14,6 +14,20 @@
                 <q-btn @click="exportTableToExcel('tblData', 'fever_detected-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
+                <q-btn label="Sort">
+                    <q-menu>
+                        <q-list style="min-width: 100px">
+                            <div class="q-gutter-sm">
+                                <q-radio v-model="sort" val="1" label="Ascending" />
+                                <q-radio v-model="sort" val="-1" label="Descending" />
+                            </div>
+                            <q-separator />
+                            <q-item @click="sortItem(option)" v-for="(option, index) in this.sort_options" :key="index" clickable v-close-popup>
+                                <q-item-section>{{option}}</q-item-section>
+                            </q-item>
+                        </q-list>
+                    </q-menu>
+                </q-btn>
             </div>
         </div>
         <div class="account-directory__container content__box">
@@ -113,30 +127,59 @@ export default {
                 sortable: true,
             },
         ],
+        sort_item: 'Date Created',
+        sort_options: ['Date Logged', 'Full Name', 'Temperature'],
+        sort: '1'
     }),
     watch:
     {
        async start_date(val)
         {
+            let params = this.sortOption()
             let start = new Date(this.start_date)
             let end = new Date(this.end_date)
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}})  
+            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params})  
         },
         async end_date(val)
         {
+            let params = this.sortOption()
             let start = new Date(this.start_date)
             let end = new Date(this.end_date)
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}}) 
+            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params}) 
         }
     },
     methods:{
+        sortOption()
+        {
+            let params = {}
+            if (this.sort_item == 'Date Saved') params = {date_saved: Number(this.sort)}
+            else if (this.sort_item == 'Full Name') params = {full_name: Number(this.sort)}
+            else if (this.sort_item == 'Temperature') params = {temperature: Number(this.sort)}
+            return params
+        },
+
+        async sortItem(option)
+        {
+            this.sort_item = option
+            let params = this.sortOption()
+
+            // let params = this.sortOption()
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+            end = end.setDate(end.getDate() + 1)
+            // start = start.setDate(start.getDate() - 1)
+
+            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params}) 
+        },
+
          async exportTableToExcel(tableID, filename = ''){
+            let sort_options = this.sortOption()
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let params = {}
             let start = new Date(this.start_date)
@@ -146,7 +189,7 @@ export default {
 
             let file_name = 'feverdetected_' + date + '.xlsx'
             // if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Staff', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
-            params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Detected',file_name: file_name, find_data: {has_fever: true, date_saved: { '$gt' : start , '$lt' : end}}}
+            params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Detected',file_name: file_name, sort: sort_options, find_data: {has_fever: true, date_saved: { '$gt' : start , '$lt' : end}}}
             let is_saved = await this.$_post(postExpFeverDeteted,params);
 
             if (is_saved) 

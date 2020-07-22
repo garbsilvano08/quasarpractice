@@ -19,6 +19,7 @@ module.exports = class CounterClass
     {
         this.company_to_update.push(company_id)
         let company_details = await new MDB_COMPANIES().doc(company_id)
+        console.log(company_details);
         if (!company_details || company_details.parent_id != 'No Parent')
         {
             await this.getCompany(company_details.parent_id) 
@@ -50,7 +51,7 @@ module.exports = class CounterClass
 
     async counterActivities(company_id, key, date_string)
     {
-        console.log(company_id);
+        console.log(key, this.company_to_update);
         await this.getCompany(company_id)
         // console.log(this.company_to_update, key, 'checking');
         // console.log(this.company_to_update);
@@ -58,7 +59,7 @@ module.exports = class CounterClass
         {
             for(let category of key)
             {
-
+                console.log(category, 'cat');
                 if (category) await this.saveCount(company, category, date_string)
             }
             // if (key) await this.saveCount(company, key, date_string)

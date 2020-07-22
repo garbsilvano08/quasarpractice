@@ -32,7 +32,7 @@
                   <div class="dashboard__overview-desc">
                      <div class="decs-total">{{traffic_data.count ? traffic_data.count : 0}}</div>
                      <div class="desc-separator"></div>
-                     <div class="decs-info">93% of Registered Users</div>
+                     <div class="decs-info">{{logged_today}}% of Registered Users</div>
                   </div>
                   <div class="dashboard__overview-date">{{current_date}}</div>
                </div>
@@ -278,7 +278,8 @@ export default
       visitor_number: 0,
       monthly_alert: 0,
       device_number: 0,
-      date_range: new Date().setDate(1)
+      date_range: new Date().setDate(1),
+      logged_today: 0,
    }),
    
    watch:
@@ -296,6 +297,15 @@ export default
             {
                await this.getAlertLogs()
             }
+        },
+        async traffic_date(val)
+        {
+           await this.getTraffic()
+        },
+        async employee_date(val)
+        {
+           console.log(val);
+           await this.getStaffVisitors()
         }
     },
 
@@ -304,7 +314,6 @@ export default
       {
          let date_string = new Date().toISOString().split('T')[0].split("-")
          this.company_details = value
-         await this.getTotalScannedToday(new Date(), value._id)
          this.staff_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
          this.visitor_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Visitors', date_string: date_string[0] + "-" + date_string[1]}})
          await this.getMonthlyAlert()
@@ -313,6 +322,8 @@ export default
          await this.getAlertLogs()
          await this.getTraffic()
          await this.getStaffVisitors()
+         await this.getTotalScannedToday(new Date(), value._id)
+         await this.getTotalRegistered()
       },
 
       async personsData(category)
@@ -365,11 +376,11 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-           params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0], company_id: this.company_details._id}, limit: 1}
+           params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0], company_id: this.company_details._id}, limit: 3}
             
          }
          else {
-            params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0]}, limit: 1}
+            params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0]}, limit: 3}
          }
          
          this.alert_list = await this.$_post(postPersonByCateg, params);
@@ -393,7 +404,7 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-           params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: {$in: ['Staff', 'Visitors']}}}
+           params =  {find_count: {date_string: new Date(this.employee_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: {$in: ['Staff', 'Visitors']}}}
             
          }
          else {
@@ -405,10 +416,23 @@ export default
       
       async getTotalScannedToday()
       {
+         let params = {}
+         let filter = {}
+         if (this.company_details)
+         {
+            params = {find_by: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 1, sort_by:{temperature: -1}}
+            filter = {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: this.company_details._id}}
+         }
+         else
+         {
+            params = {find_by: {date_logged: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}}
+            filter = {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global'}}
+         }
+
          let date_string = new Date().toISOString().split('T')[0].split("-")
-         this.highest_log = await this.$_post(postLatestLog, {find_by: {date_logged: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}});
+         this.highest_log = await this.$_post(postLatestLog, params);
          
-         let data = await this.$_post(postGetDailyLog, {find_count: {date_string: new Date().toISOString().split('T')[0]}});
+         let data = await this.$_post(postGetDailyLog, filter);
          for (let logs of data.data)
          {
             if (logs.key == 'Traffic')
@@ -418,8 +442,24 @@ export default
                this.traffic_data.date_string = this.traffic_data.date_string[0] + " " + this.traffic_data.date_string[1] + " " + this.traffic_data.date_string[2] + " " + this.traffic_data.date_string[3]
             }
          }
-      }
+      },
 
+      async getTotalRegistered()
+      {
+         let total = 0
+          let params = {}
+         // if (this.company_details)
+         if (this.company_details) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? this.company_details._id : null, key: {$in: ['Staff', 'Visitors']}}}
+         if (params.find_count.company_id == null) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitors']}}}
+         
+         // console.log(params);
+         let today_logs = await this.$_post(postGetDailyLog, params);
+         for (let log of today_logs.data) {
+            // console.log(log, 'log');
+            total = total + Number(log.count)
+         }
+         this.logged_today = (total/this.traffic_data.count) * 100
+      }
    },
    async mounted()
    {
@@ -439,6 +479,7 @@ export default
       await this.getTraffic()
 
       await this.getStaffVisitors()
+
       
       let date_string = new Date().toISOString().split('T')[0].split("-")
       this.getTotalScannedToday(new Date(), 'global')
@@ -446,6 +487,7 @@ export default
       this.current_month = this.current_month[2] + " " + this.current_month[3]
       this.staff_number = await this.personsData({find_person: {category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
       this.visitor_number = await this.personsData({find_person: {category: 'Visitors', date_string: date_string[0] + "-" + date_string[1]}})
+      await this.getTotalRegistered()
    }
 }
 </script>

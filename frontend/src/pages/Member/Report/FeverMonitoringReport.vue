@@ -11,6 +11,20 @@
                 <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
+                <q-btn label="Sort">
+                    <q-menu>
+                        <q-list style="min-width: 100px">
+                            <div class="q-gutter-sm">
+                                <q-radio v-model="sort" val="1" label="Ascending" />
+                                <q-radio v-model="sort" val="-1" label="Descending" />
+                            </div>
+                            <q-separator />
+                            <q-item @click="sortItem(option)" v-for="(option, index) in this.sort_options" :key="index" clickable v-close-popup>
+                                <q-item-section>{{option}}</q-item-section>
+                            </q-item>
+                        </q-list>
+                    </q-menu>
+                </q-btn>
             </div>
         </div>
         <div class="report__container">
@@ -20,7 +34,7 @@
                     <div class="report__info-details">
                         <span>{{person.full_name}}</span> is on the <span>{{getFeverDate(person.date_saved)}}</span> after abnormal temperature was detected.
                     </div>
-                    <div class="report__info-datetime">3 hrs ago</div>
+                    <div class="report__info-datetime">{{timeAgo(person.date_saved)}}</div>
                 </div>
             </div>
             <!-- <div class="report__content content__card">
@@ -55,7 +69,10 @@ export default {
             'Green Sun Hotel', 'SM Mall' , 'WalterMart'
         ],
         company_details: {},
-        fever_logs: []
+        fever_logs: [],
+        sort_item: 'Date Created',
+        sort_options: ['Date Logged', 'Full Name', 'Temperature'],
+        sort: '1'
     }),
 
     watch:
@@ -78,6 +95,41 @@ export default {
 
     methods:
     {
+        timeAgo(date)
+        {
+            date = new Date(date).getTime();
+            let sec = date / 1000
+            return this.$_timeAgo(sec)
+        },
+
+        sortOption()
+        {
+            let params = {}
+            if (this.sort_item == 'Date Saved') params = {date_saved: Number(this.sort)}
+            else if (this.sort_item == 'Full Name') params = {full_name: Number(this.sort)}
+            else if (this.sort_item == 'Temperature') params = {temperature: Number(this.sort)}
+            return params
+        },
+
+        async sortItem(option)
+        {
+            this.sort_item = option
+            let params = this.sortOption()
+
+            // let params = this.sortOption()
+            // let start = new Date(this.start_date)
+            // let end = new Date(this.end_date)
+            // end = end.setDate(end.getDate() + 1)
+            // start = start.setDate(start.getDate() - 1)
+            // (await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
+            if (this.company_details)
+            this.getFeverList();
+            else 
+            this.getFeverList();
+
+            // await this.getPersonWithFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params}) 
+        },
+
         async exportTableToExcel(tableID, filename = ''){
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let params = {}
@@ -151,6 +203,7 @@ export default {
 
         async getFeverList()
         {
+            let sort_options = this.sortOption()
             let start = new Date(this.start_date)
             let end = new Date(this.end_date)
 
@@ -158,12 +211,12 @@ export default {
             end = end.setDate(end.getDate() + 1)
             let params = {}
             if (this.company_details || this.company_details.company_name == 'All Company') {
-                params = {find_by_category: {date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}, 
+                params = {sort: sort_options, find_by_category: {date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}, 
                 has_fever: true, 
                 company_id: this.company_details._id}, 
                 limit: 10}
             }
-            else params = {find_by_category: {date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}, 
+            else params = {sort: sort_options, find_by_category: {date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}, 
                 has_fever: true}, 
                 limit: 10}
 
