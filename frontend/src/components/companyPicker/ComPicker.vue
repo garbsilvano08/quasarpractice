@@ -1,35 +1,31 @@
 <template>
     <div>
-        <q-btn bordered class="full-width" style="color: #bababa" unelevated outline align="between">
+        <q-btn bordered class="full-width" style="color: #e1e3f0" unelevated outline align="between">
             <span>{{value.company_name ? value.company_name : "Choose"}}</span>
             <q-icon size="small" class="icon" name="fa fa-caret-down"></q-icon>
-                       
-                        <q-menu fit> 
-                            <q-list style="min-width: 200px">
-                                <div v-for="(data, i) in this.parent_companies" :key="i">
-                                    <q-item clickable @click="getValue(data)" v-close-popup>
-                                        <q-item-section>
-                                            <q-item-label>{{data.company_name}}</q-item-label>
-                                        </q-item-section>
-                                    </q-item>
+                <q-menu fit>
+                    <q-list style="min-width: 200px">
+                        <div v-for="(data, i) in this.parent_companies" :key="i">
+                            <q-item clickable @click="getValue(data)" v-close-popup>
+                                <q-item-section>
+                                    <q-item-label>{{data.company_name}}</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                            <div v-for="(membership, a) in getSubCompanies(data.subcompanies)" :key="a">
+                                <q-item clickable v-close-popup @click="getValue(getSubCompanyDetails(membership))" >
+                                    <q-item-section>
+                                        <q-item-label class="q-ml-md" >{{ getSubCompanyDetails(membership).company_name}}</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+                            </div>
+                        </div>
 
-                                    <div v-for="(membership, a) in getSubCompanies(data.subcompanies)" :key="a">
-                                        <q-item clickable v-close-popup @click="getValue(getSubCompanyDetails(membership))" >
-                                            <q-item-section>
-                                                
-                                                <q-item-label class="q-ml-md" >{{ getSubCompanyDetails(membership).company_name}}</q-item-label>
-
-                                            </q-item-section>
-                                        </q-item>
-                                    </div>
-                                </div>
-                                
-                            </q-list>
-                        </q-menu> 
+                    </q-list>
+                </q-menu>
         </q-btn>
     </div>
-    
 </template>
+
 <script>
 import { postGetCompanies }                     from '../../references/url';
 export default {

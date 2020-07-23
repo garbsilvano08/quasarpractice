@@ -5,14 +5,13 @@
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
                 <q-img src="../assets/vcop-logo-white.svg"></q-img>
+
                 <q-btn-toggle dense color="red" @input="getTabletLogsSwitch" v-model="getLogsSwitch" :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
                 <div class="btn-sync__container">
-                    
                     <q-btn @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
                         <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
                         <!-- <div class="notification-indicator">100</div> -->
                     </q-btn>
-
                     <q-btn @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
                 </div>
 
@@ -111,7 +110,7 @@ export default
         }
 
         this.navigation = navigation;
-        
+
     },
     async created()
     {
@@ -134,19 +133,19 @@ export default
         {
             this.$store.commit('sync/storeGetLogsSwitch', await this.db.get("getLogsSwitch"));
             let logsSwitch =this.$store.state.sync.getLogsSwitch
-            if (logsSwitch.length==0) 
+            if (logsSwitch.length==0)
             {
                 await this.db.update(
-                
+
                 "on"
                 ,
                 'getLogsSwitch', "settings");
                 this.$store.commit('sync/storeGetLogsSwitch', await this.db.get("getLogsSwitch"));
-                // console.log(this.$store.state.sync.getLogsSwitch)  
+                // console.log(this.$store.state.sync.getLogsSwitch)
                 let settings =  this.$store.state.sync.getLogsSwitch;
                 this.getLogsSwitch = settings[0].data;
             }
-            else 
+            else
             {
                 // console.log(logsSwitch[0].data);
                 this.getLogsSwitch = logsSwitch[0].data;
@@ -158,7 +157,7 @@ export default
         {
             // console.log(this.getLogsSwitch);
             await this.db.update(
-                
+
             this.getLogsSwitch
             ,
             'getLogsSwitch', "settings");
@@ -233,12 +232,12 @@ export default
                 let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
                 tabletFormData.append("pass", "123456");
                 tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name +"', 'person_id' : '"+ visitor.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+visitor.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ visitor.personal_information.birth_day +"', 'address' : '"+ visitor.personal_information.home_address +"', 'vipId': '"+visitor.personal_information.frontdesk_person_id+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
-                
+
                 this.device_list.forEach(async (device) => {
 
                 let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
                 })
-                
+
                 });
 //*********************************************************************************************************************************
                 await this.$_post(postSavePerson, {person_info: data} );
@@ -336,7 +335,7 @@ export default
             let res = await this.$_post_file(formDatatoBackend);
             return res;
         },
-        
+
     }
 }
 </script>
