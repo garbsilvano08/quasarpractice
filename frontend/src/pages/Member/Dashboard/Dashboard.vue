@@ -375,16 +375,20 @@ export default
       async getAlertLogs()
       {
          let params = {}
+         let current_params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
            params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0], company_id: this.company_details._id}, limit: 3}
-            
+           current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 3}
          }
          else {
             params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0]}, limit: 3}
+            current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0]}, limit: 3}
          }
          
          this.alert_list = await this.$_post(postPersonByCateg, params);
-         this.current_alerts = this.alert_list.data.length
+
+         let current_data = await this.$_post(postPersonByCateg, current_params);
+         this.current_alerts = current_data.data.length
       },
       async getTraffic()
       {

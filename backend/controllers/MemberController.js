@@ -65,7 +65,7 @@ module.exports =
 {
     async exportFeverDetected(req, res)
     {
-        console.log(req.body);
+        // console.log(req.body);
         let person_logs = await new MDB_PERSON_LOGS().collection.find(req.body.find_data).sort(req.body.sort);
         let workbook = new excel.Workbook(); //creating workbook
         workbook.creator = req.body.user_name;
