@@ -184,7 +184,7 @@
             </div>
          </div>
          <!-- VISITOR LOGS -->
-         <div class="dashboard__graph-item">
+         <div class="dashboard__graph-item dashboard__graph-item--alert-logs">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Alert Logs
@@ -192,7 +192,7 @@
                <q-input v-model="alert_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div v-if="this.sample_alert" class="dashboard__graph-content">
+            <div v-if="this.sample_alert" class="dashboard__graph-content dashboard__graph-content--alert-logs">
                <div class="visitor-logs__list"  v-for="(alert, i) in this.sample_alert" :key="i">
                   <div class="visitor-logs__info">
                      <q-img :src="alert.person_image">
