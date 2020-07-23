@@ -3,10 +3,10 @@
         <div class="daily-logs__header">
             <div class="header__title">DAILY LOGS</div>
             <div class="header__filter">
+                <q-select class="select-lg" v-model="select__id_type" :options="options_name" outlined dense></q-select>
                 <q-btn class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <q-select class="select-lg" v-model="select__id_type" :options="options_name" outlined dense></q-select>
             </div>
         </div>
         <div class="daily-logs__header" style="margin-bottom: 30px !important;">

@@ -1,6 +1,6 @@
 <template>
     <div class="account-directory">
-        <div class="account-directory__header">
+        <div class="account-directory__header" style="margin-bottom: 15px !important;">
             <div class="header__title">ALL FEVER DETECTED</div>
             <div class="header__filter">
                 <q-input outlined dense placeholder="Search People...">
@@ -9,12 +9,17 @@
                     </template>
                 </q-input>
                 <!-- <q-select v-model="select__date" :options="options_date" outlined dense></q-select> -->
-                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
-                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
                 <q-btn @click="exportTableToExcel('tblData', 'fever_detected-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <q-btn label="Sort">
+
+            </div>
+        </div>
+        <div class="account-directory__header">
+            <div class="header__filter">
+                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
+                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
+                <q-btn flat dense no-caps class="btn-primary btn-sort" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -66,7 +71,7 @@ export default {
         ],
         table_column:
         [
-            { 
+            {
                 name    : 'full_name',
                 label   : 'Name',
                 field   : row => row.full_name,
@@ -74,7 +79,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'gender',
                 label   : 'Gender',
                 field   : row => row.gender ? row.gender : 'Unknown',
@@ -82,7 +87,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'age',
                 label   : 'Age',
                 field   : row => row.birthday ? new Date().getFullYear() - new Date(row.birthday).getFullYear() : 'Unknown',
@@ -90,40 +95,40 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'home_address',
                 label   : 'Home Address',
                 field   : row => row.home_address ? row.home_address : 'Unknown',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
-            { 
+            {
                 name    : 'company_name',
                 label   : 'Company Name',
                 field   : row => row.company_name ? row.company_name : 'Unknown',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
-            { 
+            {
                 name    : 'date_detected',
                 label   : 'Date Detected',
                 field   : row => row.date_logged ? row.date_logged : 'Unknown',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
-            { 
+            {
                 name    : 'temperature',
                 label   : 'Temperature',
                 field   : row => row.temperature ? row.temperature : 'Unknown',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
         ],
@@ -141,7 +146,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params})  
+            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params})
         },
         async end_date(val)
         {
@@ -151,7 +156,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params}) 
+            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params})
         }
     },
     methods:{
@@ -175,7 +180,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params}) 
+            await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params})
         },
 
          async exportTableToExcel(tableID, filename = ''){
@@ -192,7 +197,7 @@ export default {
             params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Detected',file_name: file_name, sort: sort_options, find_data: {has_fever: true, date_saved: { '$gt' : start , '$lt' : end}}}
             let is_saved = await this.$_post(postExpFeverDeteted,params);
 
-            if (is_saved) 
+            if (is_saved)
             {
                 this.$q.notify(
                 {
@@ -212,7 +217,7 @@ export default {
         end = end.setDate(end.getDate() + 1)
         // start = start.setDate(start.getDate() - 1)
 
-        await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}}) 
+        await this.getDetectedFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}})
         // await this.getDetectedFever({find_by_category: {has_fever: true}})
     }
 }

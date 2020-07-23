@@ -3,11 +3,11 @@
         <div class="daily-logs__header">
             <div class="header__title">DAILY LOGS</div>
             <div class="header__filter">
+                <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
+                <com-picker class="select-lg" @select=getCompanyData></com-picker>
                 <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
-                <com-picker class="select-lg" @select=getCompanyData></com-picker>
             </div>
         </div>
         <div class="daily-logs__header" style="margin-bottom: 30px !important;">
@@ -19,7 +19,7 @@
                     </template>
                 </q-input> -->
                 <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
-                <q-btn label="Filter">
+                <q-btn flat dense no-caps class="btn-primary btn-filter" label="Filter">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -56,7 +56,7 @@ import { postGetCompanies, postFindLogs, postPersonByCateg, postExpFeverDeteted 
 
 export default {
     components: {
-        DailyLogCards, 
+        DailyLogCards,
         ComPicker
     },
     data: () => ({
@@ -82,12 +82,12 @@ export default {
     {
         async select__date(val)
         {
-            if (val) 
+            if (val)
             {
                 let params = this.sortOption()
                 if (this.company_details)
                 this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params));
-                else 
+                else
                 this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
             }
         }
@@ -128,7 +128,7 @@ export default {
             else params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Logs',file_name: file_name, sort: sort_options, find_data: {has_fever: true, date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
             let is_saved = await this.$_post(postExpFeverDeteted,params);
 
-            if (is_saved) 
+            if (is_saved)
             {
                 this.$q.notify(
                 {
@@ -156,11 +156,11 @@ export default {
             this.personWithFever = [];
             // let logs = await this.$_post(postGetPersonLogs, );
             logs = logs.data;
-            logs.forEach(async person => {   
+            logs.forEach(async person => {
             if(person.has_fever)
             {
                 this.personWithFever.push(person);
-                
+
             }
         });
         },

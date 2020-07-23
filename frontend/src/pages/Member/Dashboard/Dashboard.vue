@@ -226,11 +226,11 @@ import Chartkick from 'vue-chartkick';
 import "chart.js"
 import { postGetCompanies,
    postAddPerson,
-   postUpdateStaff, 
-   postSavePerson, 
-   postGetDailyLog, 
-   postGetWeeklyCount, 
-   postLatestLog, 
+   postUpdateStaff,
+   postSavePerson,
+   postGetDailyLog,
+   postGetWeeklyCount,
+   postLatestLog,
    postPersonByCateg,
    postGetAllLogs,
    postGetPersons,
@@ -247,7 +247,7 @@ Vue.use(Chartkick.use(Chart))
 export default
 {
    components: { ComPicker },
-   
+
    data:() =>
    ({
       visitors_date: new Date().toISOString().split('T')[0],
@@ -281,7 +281,7 @@ export default
       date_range: new Date().setDate(1),
       logged_today: 0,
    }),
-   
+
    watch:
     {
         async visitors_date(val)
@@ -333,7 +333,7 @@ export default
       },
 
       async getDevices()
-      { 
+      {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
             params = {find_device: {company_name: this.company_details.company_name,date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
@@ -348,8 +348,8 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-            params = {find_by_category: {date_saved: { '$gt' : new Date(this.date_range) , '$lt' : new Date() }, 
-            has_fever: true, 
+            params = {find_by_category: {date_saved: { '$gt' : new Date(this.date_range) , '$lt' : new Date() },
+            has_fever: true,
             company_name: this.company_details.company_name}}
          }
          else {
@@ -364,7 +364,7 @@ export default
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
            params = {find_all: {date_string: new Date(this.visitors_date).toISOString().split('T')[0], company_id: this.company_details._id}}
-            
+
          }
          else {
             params = {find_all: {date_string: new Date().toISOString().split('T')[0]}}
@@ -384,7 +384,7 @@ export default
             params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0]}, limit: 3}
             current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0]}, limit: 3}
          }
-         
+
          this.alert_list = await this.$_post(postPersonByCateg, params);
 
          let current_data = await this.$_post(postPersonByCateg, current_params);
@@ -396,7 +396,7 @@ export default
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: 'Traffic'}}
-            
+
          }
          else {
             params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: 'Traffic'}}
@@ -409,7 +409,7 @@ export default
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
            params =  {find_count: {date_string: new Date(this.employee_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: {$in: ['Staff', 'Visitors']}}}
-            
+
          }
          else {
             params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitors']}}}
@@ -417,7 +417,7 @@ export default
          this.staff_visitors = await this.$_post(postGetWeeklyCount, params);
          // console.log(data, 'data');
       },
-      
+
       async getTotalScannedToday()
       {
          let params = {}
@@ -435,7 +435,7 @@ export default
 
          let date_string = new Date().toISOString().split('T')[0].split("-")
          this.highest_log = await this.$_post(postLatestLog, params);
-         
+
          let data = await this.$_post(postGetDailyLog, filter);
          for (let logs of data.data)
          {
@@ -455,7 +455,7 @@ export default
          // if (this.company_details)
          if (this.company_details) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? this.company_details._id : null, key: {$in: ['Staff', 'Visitors']}}}
          if (params.find_count.company_id == null) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitors']}}}
-         
+
          // console.log(params);
          let today_logs = await this.$_post(postGetDailyLog, params);
          for (let log of today_logs.data) {
@@ -469,7 +469,7 @@ export default
    {
       // Getting Devices
       await this.getDevices()
-      
+
       // Alert
       await this.getMonthlyAlert()
 
@@ -484,7 +484,7 @@ export default
 
       await this.getStaffVisitors()
 
-      
+
       let date_string = new Date().toISOString().split('T')[0].split("-")
       this.getTotalScannedToday(new Date(), 'global')
       this.current_date = this.current_date[0] + " " + this.current_date[1] + " " + this.current_date[2] + " " + this.current_date[3]

@@ -1,14 +1,18 @@
 <template>
     <div class="report">
-        <div class="report__header">
+        <div class="report__header" style="margin-bottom: 15px !important;">
             <div class="header__title">FEVER DETECTED REPORTS</div>
             <div class="header__filter">
-                <q-input class="select-sm" v-model="select__date" type="date" outlined dense></q-input>
                 <com-picker class="select-lg" @select=getCompanyDatas></com-picker>
                 <q-btn @click="exportTableToExcel('tblData', 'fever-detected')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <q-btn label="Sort">
+            </div>
+        </div>
+        <div class="report__header">
+            <div class="header__filter">
+                <q-input v-model="select__date" type="date" outlined dense></q-input>
+                <q-btn flat dense no-caps class="btn-primary btn-sort" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -59,15 +63,15 @@ import './Report.scss';
 import { postGetPersonLogs , postGetPerson, postPersonByCateg, postExpFeverDeteted}                        from '../../../references/url';
 import  ComPicker from "../../../components/companyPicker/ComPicker"
 
-function calculate_age(dob) { 
+function calculate_age(dob) {
     var diff_ms = Date.now() - dob.getTime();
-    var age_dt = new Date(diff_ms); 
-  
+    var age_dt = new Date(diff_ms);
+
     return Math.abs(age_dt.getUTCFullYear() - 1970);
 }
 
 export default {
-    components: { 
+    components: {
         ComPicker,
     },
      data: () => ({
@@ -86,7 +90,7 @@ export default {
         company_details : "",
         table_column:
         [
-            { 
+            {
                 name    : 'full_name',
                 label   : 'Name',
                 field   : 'full_name',
@@ -94,7 +98,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'gender',
                 label   : 'Gender',
                 field   : 'gender',
@@ -102,7 +106,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'age',
                 label   : 'Age',
                 field   : 'age',
@@ -110,16 +114,16 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'home_address',
                 label   : 'Home Address',
                 field   : 'home_address',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
-            { 
+            {
                 name    : 'date_logged',
                 label   : 'Last Scanned',
                 field   : 'date_logged',
@@ -127,7 +131,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'temperature',
                 label   : 'Temperature',
                 field   : 'temperature',
@@ -226,12 +230,12 @@ export default {
     {
         async select__date(val)
         {
-            if (val) 
+            if (val)
             {
                 let params = this.sortOption()
                 if (this.company_details)
                 this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params));
-                else 
+                else
                 this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
             }
         }
@@ -260,18 +264,18 @@ export default {
             // (await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
             if (this.company_details)
             this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params));
-            else 
+            else
             this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
 
-            // await this.getPersonWithFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params}) 
+            // await this.getPersonWithFever({find_by_category: {has_fever: true, date_saved: {$gt: start, $lt: end}}, sort: params})
         },
-        
+
         async exportTableToExcel(tableID, filename = ''){
             let sort_options = this.sortOption()
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let file_name = 'feverdetectedreport_' + date + '.xlsx'
             let is_saved = await this.$_post(postExpFeverDeteted,{user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Report', file_name: file_name,sort: sort_options, find_data: {has_fever: true}});
-            if (is_saved) 
+            if (is_saved)
             {
                 this.$q.notify(
                 {
@@ -289,7 +293,7 @@ export default {
             let params = this.sortOption()
             if (this.company_details)
             this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params));
-            else 
+            else
             this.getPersonWithFever(await this.getStaffList({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params));
         },
         async getPersonWithFever(logs)
@@ -297,7 +301,7 @@ export default {
             this.personWithFever = [];
             // let logs = await this.$_post(postGetPersonLogs, );
             logs = logs.data;
-            logs.forEach(async person => {   
+            logs.forEach(async person => {
             if(person.has_fever)
             {
                 if (person.category == "Stranger")

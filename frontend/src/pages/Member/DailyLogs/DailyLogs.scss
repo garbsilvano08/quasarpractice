@@ -17,7 +17,7 @@
             margin-left: auto;
 
             .q-select {
-                margin-left: 15px;
+                margin-left: 10px;
                 background-color: #e1e3f0;
 
                 .q-field__native {
@@ -39,6 +39,7 @@
             .q-input {
                 background-color: #ffffff;
                 width: 300px;
+                margin-left: 10px;
 
                 .q-field__native {
                     color: #233b61 !important;
@@ -46,6 +47,10 @@
                     font-weight: 500;
                     padding-left: 10px;
                 }
+            }
+
+            .btn-export, .btn-filter {
+                margin-left: 10px;
             }
         }
     }

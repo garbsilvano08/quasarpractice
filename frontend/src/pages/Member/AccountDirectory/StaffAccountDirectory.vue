@@ -1,6 +1,6 @@
 <template>
     <div class="account-directory">
-        <div class="account-directory__header">
+        <div class="account-directory__header" style="margin-bottom: 15px !important;">
             <div class="header__title">ALL STAFF</div>
             <div class="header__filter">
                 <q-input outlined dense v-model="search" placeholder="Search People...">
@@ -8,12 +8,16 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
-                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
                 <q-btn @click="exportTableToExcel('tblData', 'staff-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <q-btn label="Sort">
+            </div>
+        </div>
+        <div class="account-directory__header">
+            <div class="header__filter">
+                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
+                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
+                <q-btn flat dense no-caps class="btn-primary btn-sort" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -29,6 +33,7 @@
                 </q-btn>
             </div>
         </div>
+
         <div class="account-directory__container content__box">
             <div class="content__table">
                 <q-table id="tblData" dense @row-click="checkAccount" :filter="search" flat :data="this.staff_list.data" :pagination.sync="pagination" :columns="table_column"></q-table>
@@ -70,7 +75,7 @@ export default {
         staff_list: [],
         table_column:
         [
-            { 
+            {
                 name    : 'full_name',
                 label   : 'Name',
                 field   : row => row.given_name +" " + row.middle_name +" "+row.last_name,
@@ -78,7 +83,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'gender',
                 label   : 'Gender',
                 field   : 'gender',
@@ -86,7 +91,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'age',
                 label   : 'Age',
                 field   : row => new Date().getFullYear() - new Date(row.birthday).getFullYear(),
@@ -94,16 +99,16 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'home_address',
                 label   : 'Home Address',
                 field   : row => row.home_address ? row.home_address : 'Unknown',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
-            { 
+            {
                 name    : 'company_name',
                 label   : 'Company Name',
                 field   : row => row.company_name ? row.company_name : 'Unknown',
@@ -111,7 +116,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'position',
                 label   : 'Position',
                 field   : row => row.position ? row.position : 'Unknown',
@@ -134,7 +139,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})  
+            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})
         },
         async end_date(val)
         {
@@ -144,7 +149,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})  
+            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})
         }
     },
 
@@ -171,7 +176,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})  
+            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})
         },
 
         async exportTableToExcel(tableID, filename = ''){
@@ -188,7 +193,7 @@ export default {
             params = {user_name: this.$user_info.full_name, work_sheet: 'Staff',file_name: file_name,sort: sort_options, find_data: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}}
             let is_saved = await this.$_post(postExpPerson,params);
 
-            if (is_saved) 
+            if (is_saved)
             {
                 this.$q.notify(
                 {
@@ -218,7 +223,7 @@ export default {
         async getStaffList(params = {}, sort)
         {
             this.staff_list = await this.$_post(postGetPersons, params);
-            
+
         }
     },
     async mounted()
@@ -226,7 +231,7 @@ export default {
         let start = new Date(this.start_date)
         let end = new Date(this.end_date)
         end = end.setDate(end.getDate() + 1)
-        await this.getStaffList({find_person: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}})      
+        await this.getStaffList({find_person: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}})
     }
 
 }

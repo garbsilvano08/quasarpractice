@@ -1,6 +1,6 @@
 <template>
     <div class="account-directory">
-        <div class="account-directory__header">
+        <div class="account-directory__header" style="margin-bottom: 15px !important;">
             <div class="header__title">ALL VISITORS</div>
             <div class="header__filter">
                 <q-input v-model="search" outlined dense placeholder="Search People...">
@@ -8,12 +8,16 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
-                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
                 <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <q-btn label="Sort">
+            </div>
+        </div>
+        <div class="account-directory__header">
+            <div class="header__filter">
+                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
+                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
+                <q-btn flat dense no-caps class="btn-primary btn-sort" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -28,7 +32,9 @@
                     </q-menu>
                 </q-btn>
             </div>
+
         </div>
+
         <div class="account-directory__container content__box">
             <div class="content__table">
                 <q-table id="tblData" dense @row-click="checkAccount" :filter="search" flat :data="visitor_lists.data" :pagination.sync="pagination" :columns="table_column"></q-table>
@@ -67,7 +73,7 @@ export default {
         person_logs: [],
         table_column:
         [
-            { 
+            {
                 name    : 'full_name',
                 label   : 'Name',
                 field   : row => row.given_name +" " + row.middle_name +" "+row.last_name,
@@ -75,7 +81,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'gender',
                 label   : 'Gender',
                 field   : row => row.gender ? row.gender : 'Unknown',
@@ -83,7 +89,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'age',
                 label   : 'Age',
                 field   : row => row.birthday ? new Date().getFullYear() - new Date(row.birthday).getFullYear() : 'Unknown',
@@ -91,31 +97,31 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'home_address',
                 label   : 'Home Address',
                 field   : row => row.home_address ? row.home_address : 'Unknown',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
-            { 
+            {
                 name    : 'contact_person',
                 label   : 'Contact Person',
                 field   : row => row.contact_person ? row.contact_person : 'Unknown',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
-            { 
+            {
                 name    : 'destination',
                 label   : 'Destination',
                 field   : row => row.destination ? row.destination : 'Unknown',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
         ],
@@ -133,7 +139,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})  
+            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})
         },
         async end_date(val)
         {
@@ -143,7 +149,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})  
+            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})
         }
     },
     methods:
@@ -169,7 +175,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params}) 
+            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})
         },
 
         async exportTableToExcel(tableID, filename = ''){
@@ -186,7 +192,7 @@ export default {
             params = {user_name: this.$user_info.full_name, work_sheet: 'Visitors',file_name: file_name, sort: sort_options, find_data: {category: 'Visitors', date_created: { '$gt' : start , '$lt' : end}}}
             let is_saved = await this.$_post(postExpPerson,params);
 
-            if (is_saved) 
+            if (is_saved)
             {
                 this.$q.notify(
                 {
@@ -212,9 +218,9 @@ export default {
         async getVisitorList(params = {})
         {
             this.visitor_lists = await this.$_post(postGetPersons, params);
-            
+
         }
-    }, 
+    },
 
     async mounted()
     {
@@ -225,7 +231,7 @@ export default {
 
         // console.log(start, end);
 
-        await this.getVisitorList({find_person: {category: 'Visitors', date_created: { '$gt' : start , '$lt' : end}}})        
+        await this.getVisitorList({find_person: {category: 'Visitors', date_created: { '$gt' : start , '$lt' : end}}})
     }
 }
 </script>

@@ -18,7 +18,7 @@
 
             .q-select {
                 width: 300px;
-                margin-left: 15px;
+                margin-left: 10px;
                 background-color: #e1e3f0;
 
                 .q-field__native {
@@ -30,7 +30,7 @@
             }
             .q-input {
                 width: 300px;
-                margin-left: 15px;
+                margin-left: 10px;
                 background-color: #e1e3f0;
 
                 .q-field__native {
@@ -49,8 +49,8 @@
                 width: 200px;
             }
 
-            .btn-export {
-                margin-left: 15px;
+            .btn-export, .btn-sort {
+                margin-left: 10px;
             }
         }
     }

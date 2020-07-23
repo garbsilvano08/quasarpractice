@@ -3,10 +3,10 @@
         <div class="daily-logs__header">
             <div class="header__title">DAILY LOGS</div>
             <div class="header__filter">
-                <q-btn  @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
+                <com-picker class="select-lg" @select=getCompanyData></com-picker>
+                 <q-btn  @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                <com-picker @select=getCompanyData></com-picker>
                 <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
             </div>
         </div>
@@ -19,7 +19,7 @@
                     </template>
                 </q-input> -->
                 <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
-                <q-btn label="Filter">
+                <q-btn flat dense no-caps class="btn-primary btn-filter" label="Filter">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -59,8 +59,8 @@ import { postGetCompanies, postFindLogs, postPersonByCateg, postExpFeverDeteted 
 export default {
     components: {
         DailyLogCards,
-        ComPicker 
-        
+        ComPicker
+
     },
     data: () => ({
         staff_list: {},
@@ -126,7 +126,7 @@ export default {
             else params = {user_name: this.$user_info.full_name, work_sheet: 'Stranger Daily Logs',file_name: file_name, find_data: {category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
             let is_saved = await this.$_post(postExpFeverDeteted,params);
 
-            if (is_saved) 
+            if (is_saved)
             {
                 this.$q.notify(
                 {
