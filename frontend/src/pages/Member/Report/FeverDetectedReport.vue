@@ -52,7 +52,7 @@
                         </tr>
                     </tbody>
                 </table> -->
-                <q-table id="tblData" dense  flat :data="sample_data" :pagination.sync="pagination" :columns="table_column"></q-table>
+                <q-table id="tblData" dense  flat :data="personWithFever" :pagination.sync="pagination" :columns="table_column"></q-table>
             </div>
         </div>
     </div>

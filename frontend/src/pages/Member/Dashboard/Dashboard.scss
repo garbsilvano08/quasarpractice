@@ -221,14 +221,36 @@
                                 font-weight: 500;
                                 line-height: 1.6rem;
 
-                                span {
-                                    color: #ffffff;
-                                    font-size: 12px;
-                                    font-weight: 700;
-                                    background-color: #464de4;
-                                    padding: 3px 15px;
-                                    border-radius: 4px;
-                                }
+                                // span {
+                                //     color: #ffffff;
+                                //     font-size: 12px;
+                                //     font-weight: 700;
+                                //     background-color: #464de4;
+                                //     padding: 3px 15px;
+                                //     border-radius: 4px;
+                                //     display: -webkit-box;
+                                //     -webkit-line-clamp: 1;
+                                //     -webkit-box-orient: vertical;
+                                //     overflow: hidden;
+                                //     text-overflow: ellipsis;
+                                // }
+                            }
+
+                            .visitor-logs__visit-company {
+                                text-align: center;
+                                color: #ffffff;
+                                font-size: 12px;
+                                font-weight: 700;
+                                background-color: #464de4;
+                                padding: 3px 15px;
+                                border-radius: 4px;
+                                display: -webkit-box;
+                                -webkit-line-clamp: 1;
+                                -webkit-box-orient: vertical;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                width: 150px;
+                                margin-left: auto;
                             }
                         }
                     }
