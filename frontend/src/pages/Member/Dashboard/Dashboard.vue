@@ -213,7 +213,7 @@
                   </div>
                </div>
                <div class="visitor-logs__btn">
-                  <q-btn v-if="this.alert_list.data.length == 3" flat dense no-caps class="btn-see btn-outline" label="See All"></q-btn>
+                  <!-- <q-btn v-if="this.alert_list.data.length == 3" flat dense no-caps class="btn-see btn-outline" label="See All"></q-btn> -->
                </div>
             </div>
          </div>
@@ -254,6 +254,20 @@ export default
    data:() =>
    ({
       sample_alert: [
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
          {
             person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
             full_name: 'Juan Dela Cruz',
@@ -433,11 +447,11 @@ export default
          let current_params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
            params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0], company_id: this.company_details._id}, limit: 3}
-           current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 3}
+           current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}}
          }
          else {
             params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0]}, limit: 3}
-            current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0]}, limit: 3}
+            current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0]}}
          }
 
          this.alert_list = await this.$_post(postPersonByCateg, params);
