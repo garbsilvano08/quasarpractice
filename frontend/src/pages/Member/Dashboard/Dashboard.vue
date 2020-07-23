@@ -192,8 +192,8 @@
                <q-input v-model="alert_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div v-if="this.sample_alert" class="dashboard__graph-content dashboard__graph-content--alert-logs">
-               <div class="visitor-logs__list"  v-for="(alert, i) in this.sample_alert" :key="i">
+            <div v-if="this.alert_list.data" class="dashboard__graph-content dashboard__graph-content--alert-logs">
+               <div class="visitor-logs__list"  v-for="(alert, i) in this.alert_list.data" :key="i">
                   <div class="visitor-logs__info">
                      <q-img :src="alert.person_image">
                      </q-img>
