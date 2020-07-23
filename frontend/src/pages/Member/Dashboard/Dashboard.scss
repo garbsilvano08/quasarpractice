@@ -276,5 +276,10 @@
                 }
             }
         }
+
+        .dashboard__graph-item--alert-logs {
+            height: 380px;
+            overflow-y: auto;
+        }
     }
 }
