@@ -192,8 +192,8 @@
                <q-input v-model="alert_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div v-if="this.alert_list.data" class="dashboard__graph-content">
-               <div class="visitor-logs__list"  v-for="(alert, i) in this.alert_list.data" :key="i">
+            <div v-if="this.sample_alert" class="dashboard__graph-content">
+               <div class="visitor-logs__list"  v-for="(alert, i) in this.sample_alert" :key="i">
                   <div class="visitor-logs__info">
                      <q-img :src="alert.person_image">
                      </q-img>
@@ -250,6 +250,58 @@ export default
    
    data:() =>
    ({
+      sample_alert: [
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
+         
+      ],
       visitors_date: new Date().toISOString().split('T')[0],
       traffic_date: new Date().toISOString().split('T')[0],
       alert_date: new Date().toISOString().split('T')[0],
@@ -463,6 +515,7 @@ export default
             total = total + Number(log.count)
          }
          this.logged_today = (total/this.traffic_data.count) * 100
+         this.logged_today = this.logged_today.toFixed(0);
       }
    },
    async mounted()

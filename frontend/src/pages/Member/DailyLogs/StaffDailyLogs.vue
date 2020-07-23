@@ -109,19 +109,11 @@ export default {
             // start = start.setDate(start.getDate() - 1)
             // end = end.setDate(end.getDate() + 1)
 
-            var dataType = 'application/vnd.ms-excel';
             let file_name = 'staffdailylogs_' + date + '.xlsx'
             if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Staff Daily Logs', file_name: file_name, find_data: {company_name: this.company_details.company_name, category: 'Staff', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
             else params = {user_name: this.$user_info.full_name, work_sheet: 'Staff Daily Logs',file_name: file_name, find_data: {category: 'Staff', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
-            let data = await this.$_post(postExpFeverDeteted,params);
-    console.log(data);
-            // let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            var blob = new Blob([data.data], {
-                    type: dataType
-                });
-                navigator.msSaveOrOpenBlob( blob, file_name);
-            // fs.saveAs(blob, 'CarData.xlsx');
-
+            let is_saved = await this.$_post(postExpFeverDeteted,params);
+            
             if (is_saved) 
             {
                 this.$q.notify(
