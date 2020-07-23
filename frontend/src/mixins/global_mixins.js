@@ -117,8 +117,9 @@ export default
         {
             let res = null;
             
-
-            await axios.post('http://157.245.55.109:4000/', data,{
+            // http://128.199.130.24:81/
+            // http://157.245.55.109:4000/
+            await axios.post('http://128.199.130.24:81/', data,{
                 headers: {
                 'content-type': 'multipart/form-data',
                 }
