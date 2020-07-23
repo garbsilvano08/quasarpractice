@@ -48,7 +48,7 @@
                         </tr>
                     </tbody>
                 </table> -->
-                <q-table id="tblData" dense  flat :data="personWithFever" :pagination.sync="pagination" :columns="table_column"></q-table>
+                <q-table id="tblData" dense  flat :data="sample_data" :pagination.sync="pagination" :columns="table_column"></q-table>
             </div>
         </div>
     </div>
@@ -135,6 +135,83 @@ export default {
                 required: true,
                 sortable: true,
             }
+        ],
+
+        sample_data:
+        [
+            {
+                full_name: 'Jayjay Helterbrand',
+                gender: 'Male',
+                age: 25,
+                home_address: 'Balagtas Bulacan',
+                date_logged: new Date().toISOString().split('T')[0],
+                temperature: '26'
+            },
+            {
+                full_name: 'Juan',
+                gender: 'Male',
+                age: 23,
+                home_address: 'Pandi Bulacan',
+                date_logged: new Date().toISOString().split('T')[0],
+                temperature: '27'
+            },
+            {
+                full_name: 'Kobe Bryant',
+                gender: 'Male',
+                age: 41,
+                home_address: 'Malolos Bulacan',
+                date_logged: new Date().toISOString().split('T')[0],
+                temperature: '26'
+            },
+            {
+                full_name: 'Lebron James',
+                gender: 'Male',
+                age: 39,
+                home_address: 'Bocaue Bulacan',
+                date_logged: new Date().toISOString().split('T')[0],
+                temperature: '26'
+            },
+            {
+                full_name: 'Paul George',
+                gender: 'Male',
+                age: 25,
+                home_address: 'Baliuag Bulacan',
+                date_logged: new Date().toISOString().split('T')[0],
+                temperature: '26'
+            },
+            {
+                full_name: 'Kawhi Leonard',
+                gender: 'Male',
+                age: 25,
+                home_address: 'Meycauayan Bulacan',
+                date_logged: new Date().toISOString().split('T')[0],
+                temperature: '26'
+            },
+            {
+                full_name: 'Michael Jordan',
+                gender: 'Male',
+                age: 25,
+                home_address: 'Marilao Bulacan',
+                date_logged: new Date().toISOString().split('T')[0],
+                temperature: '26'
+            },
+            {
+                full_name: 'Jason Mraz',
+                gender: 'Male',
+                age: 25,
+                home_address: 'Sta Maria Bulacan',
+                date_logged: new Date().toISOString().split('T')[0],
+                temperature: '26'
+            },
+            {
+                full_name: 'Chester Bennington',
+                gender: 'Male',
+                age: 25,
+                home_address: 'Guiguinto Bulacan',
+                date_logged: new Date().toISOString().split('T')[0],
+                temperature: '26'
+            },
+
         ],
         sort_item: 'Date Created',
         sort_options: ['Date Logged', 'Full Name', 'Temperature'],

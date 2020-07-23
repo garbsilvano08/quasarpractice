@@ -28,7 +28,7 @@ module.exports = class CounterClass
 
     async saveCount(company_id, category, date_string)
     {
-        console.log(category, 'checking');
+        // console.log(category, 'checking');
         //Overall counter
         let count_overall = await new MDB_COUNT_OVERALL().docs({company_id: company_id, key: category})
         // console.log(count_overall.length);
@@ -51,19 +51,13 @@ module.exports = class CounterClass
 
     async counterActivities(company_id, key, date_string)
     {
-        console.log(key, this.company_to_update);
         await this.getCompany(company_id)
-        // console.log(this.company_to_update, key, 'checking');
-        // console.log(this.company_to_update);
         for ( let company of this.company_to_update )
         {
             for(let category of key)
             {
-                console.log(category, 'cat');
                 if (category) await this.saveCount(company, category, date_string)
             }
-            // if (key) await this.saveCount(company, key, date_string)
-        
         }
     }
     
