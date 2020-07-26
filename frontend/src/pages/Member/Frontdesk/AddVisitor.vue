@@ -15,9 +15,11 @@
                     <div class="frontdesk__content-info">
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
-                            <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img>
-                            <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" @click="openFilemanager()"></q-btn>
+                            <canvas v-show="!is_carturing" class="content__img"  border icon="mdi-camera" id="canvas" width="640" height="480"></canvas>
+                            <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video>
+                            <!-- <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img> -->
+                            <!-- <input style="display:none" capture="camera" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file"> -->
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" id="snap" @click="openFilemanager()"></q-btn>
                         </div>
                     </div>
                     <!-- BODY TEMPERATURE -->
@@ -33,8 +35,10 @@
                             <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
-                            <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '/img/placeholder-img.jpg'"></q-img>
-                            <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file">
+                            <canvas v-show="!is_carturing" class="content__img"  border icon="mdi-camera" id="id_canvas" width="640" height="480"></canvas>
+                            <video v-show="is_carturing" class="content__img" id="id_video" width="500" height="500" autoplay></video>
+                            <!-- <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '/img/placeholder-img.jpg'"></q-img>
+                            <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file"> -->
                             <q-btn @click="openFilemanager('id')" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
                     </div>
@@ -212,10 +216,14 @@ function toDataUrl(url, callback) {
 // Classes
 import OpticalReadClass from '../../../classes/OpticalReadClass';
 import { postGetDevice } from '../../../references/url';
+import { log } from 'util';
+import {base64StringToBlob} from 'blob-util';
 
 export default {
     data:() =>
     ({
+        is_carturing: true,
+        image: '',
         captured_pic: "",
         id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
         visitor_class: new OpticalReadClass(),
@@ -232,7 +240,7 @@ export default {
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
         ],
         options_location: [],
-
+        open_camera: false,
         // Submit Data
         personal_information:
         {
@@ -262,6 +270,34 @@ export default {
 
         db: new Model()
     }),
+    watch:
+    {
+        open_camera(val)
+        {
+            if (val)
+            {
+                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    // Not adding `{ audio: true }` since we only want video now
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                    //video.src = window.URL.createObjectURL(stream);
+                    video.srcObject = stream;
+                    video.play();
+                });
+                }
+            }
+            else{
+                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    // Not adding `{ audio: true }` since we only want video now
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                    //video.src = window.URL.createObjectURL(stream);
+                    video.srcObject = stream;
+                    video.play();
+                });
+                }
+            }
+        },
+        
+    },
     async mounted()
     {
         await this.getAllDevice(this.$user_info.company._id);
@@ -443,27 +479,40 @@ export default {
                 });
             }
         },
-        async uploadImage()
+        async uploadImage(image_url)
         {  
-            this.$q.loading.show();
-            this.personal_information.account_img = await this.getImageURL();
+            console.log(image_url);
+            if (image_url)
+            {
+                this.$q.loading.show();
+                const contentType = 'image/png';
+                const blobb = base64StringToBlob(image_url, contentType)
+                blobb.lastModifiedDate = new Date()
+                // const blobUrl = URL.createObjectURL(blob);
+    
+                // this.personaluploader_information.account_img = await this.getImageURL();
+                console.log(Date.now().toString());
+                this.personal_information.account_img = image_url
+    
+                let oFReader = new FileReader();
+                let formData = new FormData();
+    
+                // formData.append('image',document.getElementById("uploadImage").files[0]); 
+                formData.append('image', blobb, 'person' + Date.now().toString() + '.png'); 
+                this.face_pic_path = await this.$_post_file(formData);
+    
+                this.$q.loading.hide();
+            }
+           var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            video.autoplay = false;
 
-            let oFReader = new FileReader();
-            let formData = new FormData();
-
-            formData.append('image',document.getElementById("uploadImage").files[0]); 
-               
-
-            this.face_pic_path = await this.$_post_file(formData);
-
-            
-
-
-
-            this.$q.loading.hide();
-           
+            this.open_camera = false
 
         },
+
+        
 
         async getImageURL(type)
         {
@@ -475,15 +524,45 @@ export default {
             return await this.$_post_file(formData);
         },
 
-        openFilemanager(type)
+        async openFilemanager(type)
         {
-            if (type) this.$refs.idUploader.click();
-            else this.$refs.uploader.click();
-        }
+            var canvas = type == 'id' ? document.getElementById('id_canvas') : document.getElementById('canvas');
+            var context =   canvas.getContext('2d');
+            // var canvas = document.getElementById('canvas');
+            // var context = canvas.getContext('2d');
+            var video = type == 'id' ? document.getElementById('id_video') :  document.getElementById('video');;
+
+            let image_data = null
+
+            document.getElementById("snap").addEventListener("click", () => {
+                context.drawImage(video, 0, 0, 640, 480);
+
+            this.image = canvas.toDataURL("image/png")
+            image_data = this.image
+            // window.location.href=image;
+            this.is_carturing = false
+            console.log(image_data);
+            // data:image/png;base64,
+            image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
+             this.uploadImage(image_data)
+            });
+            // if (type) this.$refs.idUploader.click();
+            // else this.$refs.uploader.click();
+        },
+        check()
+        {
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            // var video = document.getElementById('video');
+            var id_canvas = document.getElementById('id_canvas');
+            var id_video = document.getElementById('id_video');
+            this.open_camera = true
+        },
     },
     async created()
     {
         await this.db.initialize();
+        this.check()
     }
 }
 </script>
