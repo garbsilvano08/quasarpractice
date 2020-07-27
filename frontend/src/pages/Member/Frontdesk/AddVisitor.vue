@@ -15,11 +15,11 @@
                     <div class="frontdesk__content-info">
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
-                            <canvas v-show="!is_carturing" class="content__img"  border icon="mdi-camera" id="canvas" width="640" height="480"></canvas>
-                            <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video>
+                            <canvas class="content__img"  border icon="mdi-camera" id="canvas" width="640" height="480"></canvas>
+                            <!-- <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video> -->
                             <!-- <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img> -->
                             <!-- <input style="display:none" capture="camera" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file"> -->
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face" id="snap" @click="openFilemanager()"></q-btn>
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face"  @click="openCamera('face')"></q-btn>
                         </div>
                     </div>
                     <!-- BODY TEMPERATURE -->
@@ -35,11 +35,11 @@
                             <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
-                            <canvas v-show="!is_carturing" class="content__img"  border icon="mdi-camera" id="id_canvas" width="640" height="480"></canvas>
-                            <video v-show="is_carturing" class="content__img" id="id_video" width="500" height="500" autoplay></video>
+                            <canvas class="content__img"  border icon="mdi-camera" id="id_canvas" width="640" height="480"></canvas>
+                            <!-- <video v-show="is_carturing" class="content__img" id="id_video" width="500" height="500" autoplay></video> -->
                             <!-- <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '/img/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file"> -->
-                            <q-btn @click="openFilemanager('id')" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
+                            <q-btn @click="openCamera('id')" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
                     </div>
                 </div>
@@ -193,6 +193,22 @@
                 </div>
             </q-card>
         </q-dialog>
+         <q-dialog v-model="open_camera">
+                <q-card>
+                    <q-card-section class="row items-center q-pb-none">
+                    <div class="text-h6">Capture Image</div>
+                    <q-space />
+                    <q-btn icon="close" flat round dense v-close-popup />
+                    </q-card-section>
+
+                    <q-card-section>
+                        <div class="text-center">
+                            <video id="video" width="500" height="500" autoplay></video>
+                            <q-btn icon="mdi-camera" @click="openFilemanager()" id="snap"></q-btn>
+                        </div>
+                    </q-card-section>
+                </q-card>
+            </q-dialog>
     </div>
 </template>
 
@@ -239,6 +255,7 @@ export default {
         options_visit_purpose: [
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
         ],
+        image_type: '',
         options_location: [],
         open_camera: false,
         // Submit Data
@@ -276,16 +293,6 @@ export default {
         {
             if (val)
             {
-                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    // Not adding `{ audio: true }` since we only want video now
-                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-                    //video.src = window.URL.createObjectURL(stream);
-                    video.srcObject = stream;
-                    video.play();
-                });
-                }
-            }
-            else{
                 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                     // Not adding `{ audio: true }` since we only want video now
                 navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
@@ -370,10 +377,11 @@ export default {
         async checkImage(image)
         {   
             this.$q.loading.show();
-            let img = await this.getImageURL('id')
-            this.personal_information.id_image = img
+            console.log(image);
+            // let img = await this.getImageURL('id')
+            this.personal_information.id_image = image
             // this.$q.loading.show();
-            if (img) await this.visitor_class.ocrUnirest(this.personal_information.id_type, img )
+            if (image) await this.visitor_class.ocrUnirest(this.personal_information.id_type, image )
             this.personal_information.id_number = this.visitor_class.id_num
             this.personal_information.first_name = this.visitor_class.given_name
             this.personal_information.last_name = this.visitor_class.last_name
@@ -481,7 +489,6 @@ export default {
         },
         async uploadImage(image_url)
         {  
-            console.log(image_url);
             if (image_url)
             {
                 this.$q.loading.show();
@@ -491,7 +498,6 @@ export default {
                 // const blobUrl = URL.createObjectURL(blob);
     
                 // this.personaluploader_information.account_img = await this.getImageURL();
-                console.log(Date.now().toString());
                 this.personal_information.account_img = image_url
     
                 let oFReader = new FileReader();
@@ -500,13 +506,10 @@ export default {
                 // formData.append('image',document.getElementById("uploadImage").files[0]); 
                 formData.append('image', blobb, 'person' + Date.now().toString() + '.png'); 
                 this.face_pic_path = await this.$_post_file(formData);
-    
+                console.log(this.face_pic_path);
+                
                 this.$q.loading.hide();
             }
-           var canvas = document.getElementById('canvas');
-            var context = canvas.getContext('2d');
-            var video = document.getElementById('video');
-            video.autoplay = false;
 
             this.open_camera = false
 
@@ -524,45 +527,49 @@ export default {
             return await this.$_post_file(formData);
         },
 
-        async openFilemanager(type)
+        async openFilemanager()
         {
-            var canvas = type == 'id' ? document.getElementById('id_canvas') : document.getElementById('canvas');
+            this.$q.loading.show();
+            var canvas = this.image_type == 'id' ? document.getElementById('id_canvas') : document.getElementById('canvas');
             var context =   canvas.getContext('2d');
-            // var canvas = document.getElementById('canvas');
-            // var context = canvas.getContext('2d');
-            var video = type == 'id' ? document.getElementById('id_video') :  document.getElementById('video');;
-
+            var video = document.getElementById('video');;
+            console.log(canvas, 'checking');
             let image_data = null
 
-            document.getElementById("snap").addEventListener("click", () => {
+            await document.getElementById("snap").addEventListener("click", async() => {
                 context.drawImage(video, 0, 0, 640, 480);
 
             this.image = canvas.toDataURL("image/png")
             image_data = this.image
             // window.location.href=image;
             this.is_carturing = false
-            console.log(image_data);
+            console.log(image_data, 'image');
             // data:image/png;base64,
             image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
-             this.uploadImage(image_data)
+
+              await this.uploadImage(image_data)
+              if (this.image_type == 'id') await this.checkImage(this.face_pic_path)
             });
+            // this.open_camera = false
             // if (type) this.$refs.idUploader.click();
             // else this.$refs.uploader.click();
+            this.$q.loading.hide();
         },
-        check()
+        openCamera(type)
         {
+            this.image_type = type
             var canvas = document.getElementById('canvas');
             var context = canvas.getContext('2d');
-            // var video = document.getElementById('video');
-            var id_canvas = document.getElementById('id_canvas');
-            var id_video = document.getElementById('id_video');
+            var video = document.getElementById('video');
+            // var id_canvas = document.getElementById('id_canvas');
+            // var id_video = document.getElementById('id_video');
             this.open_camera = true
         },
     },
     async created()
     {
         await this.db.initialize();
-        this.check()
+        // this.check()
     }
 }
 </script>

@@ -22,7 +22,8 @@
     "vue-chartjs": "^3.5.0",
     "vue-chartkick": "^0.6.0",
     "vue-google-heatmap": "^1.0.1",
-    "vue-material-design-icons": "^4.7.1"
+    "vue-material-design-icons": "^4.7.1",
+    "webcam-easy": "^1.0.5"
   },
   "devDependencies": {
     "@quasar/app": "^2.0.1",
