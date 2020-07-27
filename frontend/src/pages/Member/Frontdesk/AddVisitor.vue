@@ -193,22 +193,22 @@
                 </div>
             </q-card>
         </q-dialog>
-         <q-dialog v-model="open_camera">
-                <q-card>
-                    <q-card-section class="row items-center q-pb-none">
-                    <div class="text-h6">Capture Image</div>
-                    <q-space />
-                    <q-btn icon="close" flat round dense v-close-popup />
-                    </q-card-section>
+        <q-dialog v-model="open_camera">
+            <q-card>
+                <q-card-section class="row items-center q-pb-none">
+                <div class="text-h6">Capture Image</div>
+                <q-space />
+                <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
 
-                    <q-card-section>
-                        <div class="text-center">
-                            <video id="video" width="500" height="500" autoplay></video>
-                            <q-btn icon="mdi-camera" @click="openFilemanager()" id="snap"></q-btn>
-                        </div>
-                    </q-card-section>
-                </q-card>
-            </q-dialog>
+                <q-card-section>
+                    <div class="text-center">
+                        <video id="video" width="500" height="450" autoplay></video>
+                        <q-btn icon="mdi-camera" @click="openFilemanager()" id="snap"></q-btn>
+                    </div>
+                </q-card-section>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 
@@ -289,18 +289,27 @@ export default {
     }),
     watch:
     {
-        open_camera(val)
+        async open_camera(val)
         {
             if (val)
             {
                 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                     // Not adding `{ audio: true }` since we only want video now
-                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                await navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
                     //video.src = window.URL.createObjectURL(stream);
                     video.srcObject = stream;
                     video.play();
                 });
                 }
+            }
+            else
+            {
+                let check = await navigator.mediaDevices.getUserMedia({ video: true });
+                // await check.removeTrack()
+                let tracks = check.getTracks()
+                tracks.forEach(function(track) {
+                    track.stop();
+                });
             }
         },
         
@@ -377,7 +386,6 @@ export default {
         async checkImage(image)
         {   
             this.$q.loading.show();
-            console.log(image);
             // let img = await this.getImageURL('id')
             this.personal_information.id_image = image
             // this.$q.loading.show();
@@ -433,7 +441,20 @@ export default {
                     if (field === 'id_number') field = "ID Number";
                     else field = capitalize(field.replace('_', ' '));
 
-                    if (!this.personal_information[validate]) throw new Error(field + ' is required.');
+                    if (
+                        !this.personal_information.id_number ||
+                        !this.personal_information.first_name ||
+                        !this.personal_information.last_name ||
+                        !this.personal_information.middle_name ||
+                        !this.personal_information.home_address ||
+                        !this.personal_information.contact_number ||
+                        !this.personal_information.birth_date || 
+                        !this.personal_information.account_img ||
+                        !this.personal_information.id_image                     
+                    )
+                    {
+                        if (!this.personal_information[validate]) throw new Error(field + ' is required.');
+                    }
                 }
 
                 for (let validate in this.visitor_purpose)
@@ -498,15 +519,21 @@ export default {
                 // const blobUrl = URL.createObjectURL(blob);
     
                 // this.personaluploader_information.account_img = await this.getImageURL();
-                this.personal_information.account_img = image_url
     
                 let oFReader = new FileReader();
                 let formData = new FormData();
     
                 // formData.append('image',document.getElementById("uploadImage").files[0]); 
                 formData.append('image', blobb, 'person' + Date.now().toString() + '.png'); 
-                this.face_pic_path = await this.$_post_file(formData);
-                console.log(this.face_pic_path);
+                if (this.image_type == 'id') 
+                {
+                    this.personal_information.id_image = this.face_pic_path
+                }
+                else
+                {
+                    this.personal_information.account_img = this.face_pic_path
+                    this.face_pic_path = await this.$_post_file(formData);
+                }
                 
                 this.$q.loading.hide();
             }
@@ -533,7 +560,6 @@ export default {
             var canvas = this.image_type == 'id' ? document.getElementById('id_canvas') : document.getElementById('canvas');
             var context =   canvas.getContext('2d');
             var video = document.getElementById('video');;
-            console.log(canvas, 'checking');
             let image_data = null
 
             await document.getElementById("snap").addEventListener("click", async() => {
@@ -543,7 +569,6 @@ export default {
             image_data = this.image
             // window.location.href=image;
             this.is_carturing = false
-            console.log(image_data, 'image');
             // data:image/png;base64,
             image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
 
@@ -553,6 +578,7 @@ export default {
             // this.open_camera = false
             // if (type) this.$refs.idUploader.click();
             // else this.$refs.uploader.click();
+            // await video.pause()
             this.$q.loading.hide();
         },
         openCamera(type)

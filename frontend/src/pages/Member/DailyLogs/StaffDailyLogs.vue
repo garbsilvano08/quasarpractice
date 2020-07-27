@@ -19,7 +19,7 @@
                     </template>
                 </q-input>
                 <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
-                <q-btn flat dense no-caps label="Filter" class="btn-primary btn-filter">
+                <q-btn flat dense no-caps label="Sort" class="btn-primary btn-filter">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -75,15 +75,16 @@ export default {
         ],
         company_id: '',
         sort_options: ['Date Logged', 'Full Name', 'Temperature'],
-        sort: '1'
+        sort: '-1'
     }),
 
      watch:
     {
         async select__date(val)
         {
-            if (val) if (this.company_details) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: this.company_details._id})
-            else this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date})
+            let params = this.sortOption()
+            if (val) if (this.company_details) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: this.company_details._id}, params)
+            else this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date}, params)
         }
     },
 
@@ -95,7 +96,6 @@ export default {
             if (option == 'Date Saved') params = {date_saved: Number(this.sort)}
             else if (option == 'Full Name') params = {full_name: Number(this.sort)}
             else if (option == 'Temperature') params = {temperature: Number(this.sort)}
-            console.log(option,Number(this.sort));
 
             if (this.company_details) this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date, company_id: this.company_details._id}, params)
             else this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date})
@@ -140,7 +140,7 @@ export default {
     },
     async mounted()
     {
-        this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date})
+        this.staff_list = await this.getStaffList({category: 'Staff', date_logged: this.select__date}, {date_saved: -1})
     }
 }
 </script>

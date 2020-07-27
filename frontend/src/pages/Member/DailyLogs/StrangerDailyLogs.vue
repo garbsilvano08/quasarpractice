@@ -19,7 +19,7 @@
                     </template>
                 </q-input> -->
                 <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
-                <q-btn flat dense no-caps class="btn-primary btn-filter" label="Filter">
+                <q-btn flat dense no-caps class="btn-primary btn-filter" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -76,8 +76,8 @@ export default {
         ],
         company_details: '',
         sort_item: 'Date Saved',
-        sort_options: ['Date Logged', 'Full Name', 'Temperature'],
-        sort: '1'
+        sort_options: ['Date Saved', 'Full Name', 'Temperature'],
+        sort: '-1'
     }),
 
      watch:
@@ -86,8 +86,9 @@ export default {
         {
             if (val)
             {
-                if (this.company_details) this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id})
-                else this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0]})
+                let params = this.sortOption()
+                if (this.company_details) this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params)
+                else this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params)
             }
         }
     },
@@ -152,7 +153,7 @@ export default {
     },
     async mounted()
     {
-        this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: (new Date().getFullYear())+ '-' +(new Date().getMonth()+1).toString().padStart(2, "0")+'-'+new Date().getDate().toString().padStart(2, "0")})
+        this.staff_list = await this.getStaffList({category: 'Stranger', date_logged: this.select__date}, {date_saved: -1})
     }
 }
 </script>

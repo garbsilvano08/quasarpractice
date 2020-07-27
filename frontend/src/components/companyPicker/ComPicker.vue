@@ -27,8 +27,9 @@
 </template>
 
 <script>
-import { postGetCompanies }                     from '../../references/url';
+import { postGetCompanies, postGetCompany }                     from '../../references/url';
 export default {
+    
     data: () => ({
         company_list: [],
         parent_companies: [],
@@ -36,7 +37,7 @@ export default {
     }),
     async mounted()
     {
-
+        if (this.$user_info.company || !this.$user_info.user_type == 'Super Admin') this.value = this.$user_info.company
         this.company_list = await this.$_post(postGetCompanies);
         // console.log(this.company_list.data)
         this.getParentCompanies();

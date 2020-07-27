@@ -20,10 +20,16 @@
                     <q-input v-model="input_device_id" outlined dense></q-input>
                 </div>
             </div>
-            <div class="content__input">
+            <div class="device-add__content-info device-add__content-grid">
+                <div class="content__input">
                     <div class="content__input-label">Device IP Address</div>
                     <q-input v-model="input_device_ip" outlined dense></q-input>
                 </div>
+                <div class="content__input">
+                    <div class="content__input-label">Device Log Type</div>
+                    <q-select v-model="log_type" :options="log_type_options" outlined dense></q-select>
+                </div>
+            </div>
             <div class="device-add__btn">
                 <q-btn @click="submit" class="btn-install btn-primary" flat dense no-caps label="Install"></q-btn>
             </div>
@@ -53,6 +59,8 @@ export default {
             input_device_id: '',
             select_company: '',
             input_device_ip: '',
+            log_type_options: ['Public', 'In', 'Out'],
+            log_type: 'Public'
     }),
 
     methods:
@@ -86,6 +94,7 @@ export default {
                         date_created: new Date(),
                         company_name: this.select_company.company_name,
                         company_id: this.select_company._id,
+                        log_type: this.log_type
                     }
                     await this.$_post(postAddDevice, {device_info: device_info});
                     this.select_company = ''

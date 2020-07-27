@@ -19,7 +19,7 @@
                     </template>
                 </q-input> -->
                 <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
-                <q-btn flat dense no-caps class="btn-primary btn-filter" label="Filter">
+                <q-btn flat dense no-caps class="btn-primary btn-filter" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -167,7 +167,7 @@ export default {
     },
     async mounted()
     {
-        this.getPersonWithFever(await this.getStaffList({date_logged: (new Date().getFullYear())+ '-' +(new Date().getMonth()+1).toString().padStart(2, "0")+'-'+new Date().getDate().toString().padStart(2, "0")}));
+        this.getPersonWithFever(await this.getStaffList({date_logged: (new Date().getFullYear())+ '-' +(new Date().getMonth()+1).toString().padStart(2, "0")+'-'+new Date().getDate().toString().padStart(2, "0")}), {date_saved: -1});
     }
 }
 </script>

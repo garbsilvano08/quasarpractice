@@ -15,6 +15,7 @@
                         <tr>
                             <th>Device ID</th>
                             <th>Company</th>
+                            <th>IP Address</th>
                             <th>Date Installed</th>
                             <th>Device Removal</th>
                         </tr>
@@ -23,8 +24,10 @@
                         <tr v-for="(device, index) in this.device_list.data" :key="index">
                             <td>{{ device.device_id }}</td>
                             <td>{{ device.company_name }}</td>
+                            <td>{{ device.device_ip }}</td>
                             <td>{{ convertToDate(device.date_installed)}}</td>
                             <td @click="deleteDevice(device._id)" class="td-active">Uninstall</td>
+
                         </tr>
                     </tbody>
                 </table>

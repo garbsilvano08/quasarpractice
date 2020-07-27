@@ -4,9 +4,17 @@
             <q-toolbar>
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
-                <q-img src="../assets/vcop-logo-white.svg"></q-img>
+                <q-img @click="showToggle()" src="../assets/vcop-logo-white.svg"></q-img>
 
-                <q-btn-toggle dense color="red" @input="getTabletLogsSwitch" v-model="getLogsSwitch" :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
+                <q-btn-toggle 
+                v-show="show_toggle"
+                dense 
+                toggle-color="green"
+                color="primary"
+                text-color="green" 
+                @input="getTabletLogsSwitch" 
+                v-model="getLogsSwitch" 
+                :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
                 <div class="btn-sync__container">
                     <q-btn @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
                         <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
@@ -14,16 +22,15 @@
                     </q-btn>
                     <q-btn @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
                 </div>
-
             </q-toolbar>
         </q-header>
 
         <q-drawer v-model="leftDrawerOpen"  behavior="mobile" show-if-above bordered overlay content-class="bg-grey-1">
             <div class="nav-profile">
-                <q-img class="nav-profile__img" src="https://i.pinimg.com/originals/81/63/38/816338c56ba717f875bf612782737165.jpg"></q-img>
+                <q-img class="nav-profile__img" :src="this.$user_info.user_picture"></q-img>
                 <div class="nav-profile__info">
-                    <div class="nav-profile__name">Abegail Orille</div>
-                    <div class="nav-profile__position">Receptionist</div>
+                    <div class="nav-profile__name">{{this.$user_info.full_name}}</div>
+                    <div class="nav-profile__position">{{this.$user_info.user_type}}</div>
                 </div>
             </div>
 			<div class="nav-title">MY ACCOUNT</div>
@@ -86,6 +93,8 @@ export default
         navigation: [],
         db: new Model(),
         device_list: [],
+        user_info: {},
+        show_toggle: false
     }),
     computed:
     {
@@ -122,12 +131,16 @@ export default
 
         // Irish
         this.getGetTabletLogsSettings();
-        await this.getAllDevice(this.$user_info.company._id);
+        if (!this.$user_info.user_type == 'Super Admin') await this.getAllDevice(this.$user_info.company._id);
         // await this.getLog();
         setInterval(this.getLog, 60000);
     },
     methods:
     {
+        showToggle()
+        {
+            this.show_toggle = !this.show_toggle
+        },
         //settings get logs irish**********************
         async getGetTabletLogsSettings()
         {
@@ -199,6 +212,9 @@ export default
                     company_name: visitor.personal_information.company_name,
                     frontdesk_person_id: visitor.personal_information.frontdesk_person_id,
                     frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
+                    frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
+                    location: visitor.personal_information.location,
+                    location_coordinates: visitor.personal_information.location_coordinates,
                     is_active: true,
 
                     saved_from: this.$user_info.company._id ? this.$user_info.company._id : '',
@@ -249,7 +265,6 @@ export default
             // Logs
             for (let log of this.passLogs)
             {
-                console.log(log, this.$user_info.company._id);
                 log.saved_from = this.$user_info.company._id ? this.$user_info.company._id : '';
 
                 await this.$_post('member/add/pass_log', { data: log });

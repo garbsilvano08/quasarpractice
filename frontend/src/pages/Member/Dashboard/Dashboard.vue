@@ -373,7 +373,6 @@ export default
         },
         async employee_date(val)
         {
-           console.log(val);
            await this.getStaffVisitors()
         }
     },
@@ -527,12 +526,19 @@ export default
 
          // console.log(params);
          let today_logs = await this.$_post(postGetDailyLog, params);
-         for (let log of today_logs.data) {
-            // console.log(log, 'log');
-            total = total + Number(log.count)
+         if (today_logs.data.length)
+         {
+            for (let log of today_logs.data) {
+               // console.log(log, 'log');
+               total = total + Number(log.count)
+            }
+            this.logged_today = (total/this.traffic_data.count) * 100
+            this.logged_today = this.logged_today.toFixed(0);
          }
-         this.logged_today = (total/this.traffic_data.count) * 100
-         this.logged_today = this.logged_today.toFixed(0);
+         else
+         {
+             this.logged_today = 0
+         }
       }
    },
    async mounted()

@@ -72,10 +72,11 @@ export default {
         {
             if (val)
             {
+                let params = this.sortOption()
                 if (this.company_details)
-                this.daily_logs = await this.getLogs({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id});
+                this.daily_logs = await this.getLogs({date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params);
                 else
-                this.daily_logs = await this.getLogs({date_logged: new Date(this.select__date).toISOString().split('T')[0]});
+                this.daily_logs = await this.getLogs({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params);
             }
         }
     },
@@ -138,7 +139,7 @@ export default {
     },
     async mounted()
     {
-         this.daily_logs = await this.getLogs({date_logged: new Date(this.select__date).toISOString().split('T')[0]});
+         this.daily_logs = await this.getLogs({date_logged: new Date(this.select__date).toISOString().split('T')[0]}, {date_saved: -1});
         // this.daily_logs = data.data
     }
 }
