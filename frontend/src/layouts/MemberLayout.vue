@@ -36,13 +36,13 @@
 			<div class="nav-title">MY ACCOUNT</div>
 			<q-list class="nav-list">
 				<template v-for="nav of navigation">
-					<q-item class="nav" v-if="!nav.hasOwnProperty('sub')" @click="$router.push({ name: nav.route })" clickable v-ripple :active="$route.name == nav.route">
+					<q-item class="nav" v-if="!nav.hasOwnProperty('sub') && userAccess(nav.key)" @click="$router.push({ name: nav.route })" clickable v-ripple :active="$route.name == nav.route">
 						<q-item-section avatar>
 							<q-icon :name="nav.icon" />
 						</q-item-section>
 						<q-item-section>{{ nav.label }}</q-item-section>
 					</q-item>
-					<q-expansion-item group="sidenav" v-if="nav.hasOwnProperty('sub')" expand-separator class="nav" :icon="nav.icon" :label="nav.label">
+					<q-expansion-item group="sidenav" v-if="nav.hasOwnProperty('sub') && userAccess(nav.key)" expand-separator class="nav" :icon="nav.icon" :label="nav.label">
 						<q-card class="nav-sub">
 							<div v-for="sub in nav.sub" class="nav-item" :class="$route.name == sub.route ? 'active' : ''" @click="$router.push({ name: sub.route })">{{ sub.label }}</div>
 						</q-card>
@@ -137,6 +137,22 @@ export default
     },
     methods:
     {
+        userAccess(key)
+        {
+            if (this.$user_info.user_type == 'Super Admin')
+            {
+                return true
+            }
+            else
+            {
+                if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'personnel_management' || key == 'daily')
+                {
+                    return true
+                }
+                else return false
+            }
+        },
+
         showToggle()
         {
             this.show_toggle = !this.show_toggle

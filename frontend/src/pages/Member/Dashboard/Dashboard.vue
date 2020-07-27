@@ -3,9 +3,9 @@
       <div class="dashboard__header">
          <div class="header__title">DASHBOARD OVERVIEW</div>
          <div class="header__filter">
-            <q-btn class="btn-outline btn-export" flat dense no-caps>
+            <!-- <q-btn class="btn-outline btn-export" flat dense no-caps>
                Export &nbsp;<q-icon name="mdi-export"></q-icon>
-            </q-btn>
+            </q-btn> -->
             <com-picker @select=getCompanyData></com-picker>
             <!-- <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select> -->
          </div>
@@ -543,6 +543,9 @@ export default
    },
    async mounted()
    {
+      this.company_details = this.$user_info.user_type != 'Super Admin' ? this.$user_info.company : {data: []}
+
+      // console.log(this.company_details);
       // Getting Devices
       await this.getDevices()
 
