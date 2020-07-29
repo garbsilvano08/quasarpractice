@@ -38,7 +38,7 @@
                     <div class="report__info-details">
                         <span>{{person.full_name}}</span> is on the <span>{{getFeverDate(person.date_saved)}}</span> after abnormal temperature was detected.
                     </div>
-                    <div class="report__info-datetime">{{timeAgo(person.date_saved)}}</div>
+                    <!-- <div class="report__info-datetime">{{timeAgo(person.date_saved)}}</div> -->
                 </div>
             </div>
             <!-- <div class="report__content content__card">

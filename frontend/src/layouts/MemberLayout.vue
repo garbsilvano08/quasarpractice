@@ -16,28 +16,27 @@
                     </q-btn>
                     <q-btn class="btn-sync" @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
                 </div>
-
             </q-toolbar>
         </q-header>
 
         <q-drawer v-model="leftDrawerOpen"  behavior="mobile" show-if-above bordered overlay content-class="bg-grey-1">
             <div class="nav-profile">
-                <q-img class="nav-profile__img" src="https://i.pinimg.com/originals/81/63/38/816338c56ba717f875bf612782737165.jpg"></q-img>
+                <q-img class="nav-profile__img" :src="this.$user_info.user_picture"></q-img>
                 <div class="nav-profile__info">
-                    <div class="nav-profile__name">Abegail Orille</div>
-                    <div class="nav-profile__position">Receptionist</div>
+                    <div class="nav-profile__name">{{this.$user_info.full_name}}</div>
+                    <div class="nav-profile__position">{{this.$user_info.user_type}}</div>
                 </div>
             </div>
 			<div class="nav-title">MY ACCOUNT</div>
 			<q-list class="nav-list">
 				<template v-for="nav of navigation">
-					<q-item class="nav" v-if="!nav.hasOwnProperty('sub')" @click="$router.push({ name: nav.route })" clickable v-ripple :active="$route.name == nav.route">
+					<q-item class="nav" v-if="!nav.hasOwnProperty('sub') && userAccess(nav.key)" @click="$router.push({ name: nav.route })" clickable v-ripple :active="$route.name == nav.route">
 						<q-item-section avatar>
 							<q-icon :name="nav.icon" />
 						</q-item-section>
 						<q-item-section>{{ nav.label }}</q-item-section>
 					</q-item>
-					<q-expansion-item group="sidenav" v-if="nav.hasOwnProperty('sub')" expand-separator class="nav" :icon="nav.icon" :label="nav.label">
+					<q-expansion-item group="sidenav" v-if="nav.hasOwnProperty('sub') && userAccess(nav.key)" expand-separator class="nav" :icon="nav.icon" :label="nav.label">
 						<q-card class="nav-sub">
 							<div v-for="sub in nav.sub" class="nav-item" :class="$route.name == sub.route ? 'active' : ''" @click="$router.push({ name: sub.route })">{{ sub.label }}</div>
 						</q-card>
@@ -88,6 +87,8 @@ export default
         navigation: [],
         db: new Model(),
         device_list: [],
+        user_info: {},
+        show_toggle: false
     }),
     computed:
     {
@@ -124,12 +125,32 @@ export default
 
         // Irish
         this.getGetTabletLogsSettings();
-        await this.getAllDevice(this.$user_info.company._id);
+        if (!this.$user_info.user_type == 'Super Admin') await this.getAllDevice(this.$user_info.company._id);
         // await this.getLog();
         setInterval(this.getLog, 60000);
     },
     methods:
     {
+        userAccess(key)
+        {
+            if (this.$user_info.user_type == 'Super Admin')
+            {
+                return true
+            }
+            else
+            {
+                if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'personnel_management' || key == 'daily')
+                {
+                    return true
+                }
+                else return false
+            }
+        },
+
+        showToggle()
+        {
+            this.show_toggle = !this.show_toggle
+        },
         //settings get logs irish**********************
         async getGetTabletLogsSettings()
         {
@@ -201,6 +222,9 @@ export default
                     company_name: visitor.personal_information.company_name,
                     frontdesk_person_id: visitor.personal_information.frontdesk_person_id,
                     frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
+                    frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
+                    location: visitor.personal_information.location,
+                    location_coordinates: visitor.personal_information.location_coordinates,
                     is_active: true,
 
                     saved_from: this.$user_info.company._id ? this.$user_info.company._id : '',
@@ -251,7 +275,6 @@ export default
             // Logs
             for (let log of this.passLogs)
             {
-                console.log(log, this.$user_info.company._id);
                 log.saved_from = this.$user_info.company._id ? this.$user_info.company._id : '';
 
                 await this.$_post('member/add/pass_log', { data: log });

@@ -5,22 +5,24 @@ const Schema    = MONGOOSE.Schema;
 const schema    = new Schema(
 {
 
-    person_img:         { type: String,  required: false },
-    last_name:          { type: String,  required: false },
-    middle_name:        { type: String,  required: false },
-    given_name:         { type: String,  required: false },
-    gender:             { type: String,  required: false },
-    birthday:           { type: Date,    required: false },
-    nationality:        { type: String,  required: false },
-    home_address:       { type: String,  required: false },
-    contact_number:     { type: String,  required: false },
-    emergency_contact:  { type: String,  required: false },
-    date_created:       { type: Date  ,  required: false },
-    is_active:          { type: Boolean, required: false },
-    category:           { type: String,  required: false },
+    person_img:         { type: String,  required: true },
+    last_name:          { type: String,  required: true },
+    middle_name:        { type: String,  required: true },
+    given_name:         { type: String,  required: true },
+    gender:             { type: String,  required: false, default: 'Unknown'},
+    birthday:           { type: Date,    required: true},
+    nationality:        { type: String,  required: false, default: 'Unknown' },
+    home_address:       { type: String,  required: true },
+    contact_number:     { type: String,  required: true },
+    emergency_contact:  { type: String,  required: false, default: 'Unknown' },
+    date_created:       { type: Date  ,  required: true },
+    is_active:          { type: Boolean, required: false, default: true },
+    category:           { type: String,  required: true, default: 'Visitors' },
     
     // Staff
-    position:           { type: String,  required: false },
+    position:           { type: String, required: false },
+    location:           { type: Object, required: false},
+    location_coordinates:{ type: Object, required: false},
     
     // Visitor
     purpose_visit:      { type: String,  required: false },
@@ -30,8 +32,8 @@ const schema    = new Schema(
     // Blacklist
     reason_blacklist:   { type: String,  required: false },
 
-    company_name:       { type: String,  required: false },
-    company_id:         { type: String,  required: false },
+    company_name:       { type: String,  required: false, default: 'none' },
+    company_id:         { type: String,  required: false, default: 'none' },
 
     frontdesk_person_id:    { type: String,  required: false },
     frontdesk_person_date:  { type: Date,  required: false },

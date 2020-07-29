@@ -19,7 +19,7 @@
                     </template>
                 </q-input>
                 <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
-                <q-btn flat dense no-caps class="btn-primary btn-filter" label="Filter">
+                <q-btn flat dense no-caps class="btn-primary btn-filter" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -82,8 +82,9 @@ export default {
         {
             if (val)
             {
-                if (this.company_details) this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id})
-                else this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]})
+                let params = this.sortOption()
+                if (this.company_details) this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params)
+                else this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params)
             }
         }
     },
@@ -149,7 +150,7 @@ export default {
     },
     async mounted()
     {
-        this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]})
+        this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, {date_saved: -1})
     }
 }
 </script>

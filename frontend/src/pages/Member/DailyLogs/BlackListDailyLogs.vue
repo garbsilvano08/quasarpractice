@@ -68,12 +68,13 @@ export default {
         },
         async getBlacklist(params, sort)
         {
+            console.log(params);
             return await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort} );
         }
     },
     async mounted()
     {
-        this.blacklist = await this.getBlacklist({category: 'Blacklist', date_logged: this.select__date})
+        this.blacklist = await this.getBlacklist({category: 'Blacklist', date_logged: new Date(this.select__date).toISOString().split('T')[0]})
         console.log(this.blacklist);
     }
 }

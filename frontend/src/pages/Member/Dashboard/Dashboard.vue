@@ -3,9 +3,9 @@
       <div class="dashboard__header">
          <div class="header__title">DASHBOARD OVERVIEW</div>
          <div class="header__filter">
-            <q-btn class="btn-outline btn-export" flat dense no-caps>
+            <!-- <q-btn class="btn-outline btn-export" flat dense no-caps>
                Export &nbsp;<q-icon name="mdi-export"></q-icon>
-            </q-btn>
+            </q-btn> -->
             <com-picker @select=getCompanyData></com-picker>
             <!-- <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select> -->
          </div>
@@ -192,8 +192,8 @@
                <q-input v-model="alert_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div v-if="this.sample_alert" class="dashboard__graph-content dashboard__graph-content--alert-logs">
-               <div class="visitor-logs__list"  v-for="(alert, i) in this.sample_alert" :key="i">
+            <div v-if="this.alert_list.data" class="dashboard__graph-content dashboard__graph-content--alert-logs">
+               <div class="visitor-logs__list"  v-for="(alert, i) in this.alert_list.data" :key="i">
                   <div class="visitor-logs__info">
                      <q-img :src="alert.person_image">
                      </q-img>
@@ -213,7 +213,7 @@
                   </div>
                </div>
                <div class="visitor-logs__btn">
-                  <q-btn v-if="this.alert_list.data.length == 3" flat dense no-caps class="btn-see btn-outline" label="See All"></q-btn>
+                  <!-- <q-btn v-if="this.alert_list.data.length == 3" flat dense no-caps class="btn-see btn-outline" label="See All"></q-btn> -->
                </div>
             </div>
          </div>
@@ -254,6 +254,20 @@ export default
    data:() =>
    ({
       sample_alert: [
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
+         {
+            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
+            full_name: 'Juan Dela Cruz',
+            date_saved: new Date(),
+            company_name: 'San Miguel Corp',
+            temperature: 27
+         },
          {
             person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
             full_name: 'Juan Dela Cruz',
@@ -359,7 +373,6 @@ export default
         },
         async employee_date(val)
         {
-           console.log(val);
            await this.getStaffVisitors()
         }
     },
@@ -433,11 +446,11 @@ export default
          let current_params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
            params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0], company_id: this.company_details._id}, limit: 3}
-           current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 3}
+           current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}}
          }
          else {
             params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0]}, limit: 3}
-            current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0]}, limit: 3}
+            current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0]}}
          }
 
          this.alert_list = await this.$_post(postPersonByCateg, params);
@@ -513,16 +526,26 @@ export default
 
          // console.log(params);
          let today_logs = await this.$_post(postGetDailyLog, params);
-         for (let log of today_logs.data) {
-            // console.log(log, 'log');
-            total = total + Number(log.count)
+         if (today_logs.data.length)
+         {
+            for (let log of today_logs.data) {
+               // console.log(log, 'log');
+               total = total + Number(log.count)
+            }
+            this.logged_today = (total/this.traffic_data.count) * 100
+            this.logged_today = this.logged_today.toFixed(0);
          }
-         this.logged_today = (total/this.traffic_data.count) * 100
-         this.logged_today = this.logged_today.toFixed(0);
+         else
+         {
+             this.logged_today = 0
+         }
       }
    },
    async mounted()
    {
+      this.company_details = this.$user_info.user_type != 'Super Admin' ? this.$user_info.company : {data: []}
+
+      // console.log(this.company_details);
       // Getting Devices
       await this.getDevices()
 

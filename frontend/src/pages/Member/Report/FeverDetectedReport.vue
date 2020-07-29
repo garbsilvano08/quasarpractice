@@ -245,7 +245,7 @@ export default {
         sortOption()
         {
             let params = {}
-            if (this.sort_item == 'Date Saved') params = {date_saved: Number(this.sort)}
+            if (this.sort_item == 'Date Saved') params = {date_logged: Number(this.sort)}
             else if (this.sort_item == 'Full Name') params = {full_name: Number(this.sort)}
             else if (this.sort_item == 'Temperature') params = {temperature: Number(this.sort)}
             return params

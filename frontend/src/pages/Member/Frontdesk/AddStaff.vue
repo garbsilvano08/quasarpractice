@@ -16,9 +16,15 @@
                     <div class="frontdesk__content-info">
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
-                            <q-img class="content__img" :src="staff_class.account_img ? staff_class.account_img : '/img/placeholder-img.jpg'"></q-img>
+                            <canvas class="content__img"  border icon="mdi-camera" id="canvas" width="640" height="480"></canvas>
+                            <!-- <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video> -->
+                            <!-- <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img> -->
+                            <!-- <input style="display:none" capture="camera" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file"> -->
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face"  @click="openCamera()"></q-btn>
+
+                            <!-- <q-img class="content__img" :src="staff_class.account_img ? staff_class.account_img : '/img/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file">
-                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="openFilemanager()"></q-btn>
+                            <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="openFilemanager()"></q-btn> -->
                         </div>
                     </div>
                      <!-- EMPLOYMENT INFORMATION -->
@@ -171,6 +177,22 @@
                 </div>
             </q-card>
         </q-dialog>
+        <q-dialog v-model="open_camera">
+            <q-card>
+                <q-card-section class="row items-center q-pb-none">
+                <div class="text-h6">Capture Image</div>
+                <q-space />
+                <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+
+                <q-card-section>
+                    <div class="text-center">
+                        <video id="video" width="500" height="500" autoplay></video>
+                        <q-btn icon="mdi-camera" @click="openFilemanager()" id='snap'></q-btn>
+                    </div>
+                </q-card-section>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 
@@ -186,10 +208,12 @@ import position_reference from '../../../references/position';
 
 import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson} from '../../../references/url';
 import LoginVue from '../../Front/Login.vue';
+import {base64StringToBlob} from 'blob-util';
 
 export default {
     data:() =>
     ({
+        open_camera: false,
         position_input: '',
         id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
         img: '',
@@ -209,12 +233,37 @@ export default {
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
         ],
         options_company: [],
-        staff_class: new OpticalReadClass(),
+        staff_class: {account_img: null,
+                given_name: '',
+                middle_name: '',
+                last_name: '',
+                gender: 'Male',
+                birthday: '',
+                nationality: '',
+                home_address: '',
+                contact_number: '',
+                emergency_contact: '',
+                company_name: '',
+                position : ''},
         is_done: false,
         company_list: [],
     }),
     watch:
     {
+        open_camera(val)
+        {
+            if (val)
+            {
+                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    // Not adding `{ audio: true }` since we only want video now
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                    //video.src = window.URL.createObjectURL(stream);
+                    video.srcObject = stream;
+                    video.play();
+                });
+                }
+            }
+        },
         is_done(val)
         {
             if (val)
@@ -260,9 +309,31 @@ export default {
             }
         },
 
-        async uploadImage()
+        async uploadImage(image_url)
         {  
-            this.staff_class.account_img = await this.getImageURL()
+            if (image_url)
+            {
+                this.$q.loading.show();
+                const contentType = 'image/png';
+                const blobb = base64StringToBlob(image_url, contentType)
+                blobb.lastModifiedDate = new Date()
+                // const blobUrl = URL.createObjectURL(blob);
+    
+                // this.personaluploader_information.account_img = await this.getImageURL();
+                this.staff_class.account_img = image_url
+    
+                let oFReader = new FileReader();
+                let formData = new FormData();
+    
+                // formData.append('image',document.getElementById("uploadImage").files[0]); 
+                formData.append('image', blobb, 'person' + Date.now().toString() + '.png'); 
+                this.staff_class.account_img = await this.$_post_file(formData);
+                
+                this.$q.loading.hide();
+            }
+
+            this.open_camera = false
+            // this.staff_class.account_img = await this.getImageURL()
         },
 
         async getImageURL(type)
@@ -274,10 +345,29 @@ export default {
 
             return await this.$_post_file(formData);
         },
-        openFilemanager(type)
+        async openFilemanager(type)
         {
-            if (type) this.$refs.idUploader.click();
-            else this.$refs.uploader.click();
+            this.$q.loading.show();
+            var canvas = document.getElementById('canvas');
+            var context =   canvas.getContext('2d');
+            var video = document.getElementById('video');;
+            let image_data = null
+
+            await document.getElementById("snap").addEventListener("click", async() => {
+                context.drawImage(video, 0, 0, 640, 480);
+
+            this.image = canvas.toDataURL("image/png")
+            image_data = this.image
+            this.is_carturing = false
+            image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
+
+              await this.uploadImage(image_data)
+            //   if (this.image_type == 'id') await this.checkImage(this.face_pic_path)
+            });
+            this.$q.loading.hide();
+
+            // if (type) this.$refs.idUploader.click();
+            // else this.$refs.uploader.click();
 
         },
 
@@ -293,6 +383,48 @@ export default {
 
         async submit()
         {
+            const capitalize = (str) =>
+            {
+                str = str.split(" ");
+
+                for (var i = 0, x = str.length; i < x; i++) 
+                {
+                    str[i] = str[i][0].toUpperCase() + str[i].substr(1);
+                }
+
+                return str.join(" ");
+                }
+            for (let validate in this.staff_class)
+            {
+                let field = validate;
+
+                // if (field === 'id_type') field = "ID Card Type";
+                // if (field === 'id_number') field = "ID Number";
+                // else field = capitalize(field.replace('_', ' '));
+
+                if (
+                    !this.staff_class.first_name ||
+                    !this.staff_class.last_name ||
+                    !this.staff_class.middle_name ||
+                    !this.staff_class.home_address ||
+                    !this.staff_class.contact_number ||
+                    !this.staff_class.birthday || 
+                    !this.staff_class.account_img ||
+                    !this.staff_class.company_name || 
+                    !this.staff_class.position                    
+                )
+                {
+                    if (!this.staff_class[validate]) {
+                        this.$q.notify(
+                        {
+                            color: 'red',
+                            message: field + ' is required'
+                        });
+                        return
+                    }
+                }
+            }
+
             let result           = '';
             let characters       = '0123456789';
             let charactersLength = characters.length;
@@ -377,7 +509,14 @@ export default {
                 }); 
             }
             this.$q.loading.hide();
-        }
+        },
+        openCamera()
+        {
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            this.open_camera = true
+        },
     },
     async mounted()
     {

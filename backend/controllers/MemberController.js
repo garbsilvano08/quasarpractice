@@ -65,7 +65,7 @@ module.exports =
 {
     async exportFeverDetected(req, res)
     {
-        console.log(req.body);
+        // console.log(req.body);
         let person_logs = await new MDB_PERSON_LOGS().collection.find(req.body.find_data).sort(req.body.sort);
         let workbook = new excel.Workbook(); //creating workbook
         workbook.creator = req.body.user_name;
@@ -88,7 +88,7 @@ module.exports =
         // Add Array Rows
         worksheet.addRows(person_logs);
         // Write to File
-        await workbook.xlsx.writeFile(req.body.file_name, '/uploads')
+        await workbook.xlsx.writeFile(req.body.file_name)
         .then(function() {
             res.send(true)
         });
@@ -97,7 +97,6 @@ module.exports =
     async exportPerson(req, res)
     {
         let person = await new MDB_PERSON().collection.find(req.body.find_data).sort(req.body.sort);
-        console.log(req.body, 'sort');
         let workbook = new excel.Workbook(); //creating workbook
         workbook.creator = req.body.user_name;
         workbook.created = new Date();
@@ -171,7 +170,7 @@ module.exports =
         let person_log = []
         let date_string = new Date().toISOString().split('T')[0]
         req.body.data.date_string = date_string
-        if (Number(req.body.data.tempratrue) >= 37 ) req.body.data.has_fever = true
+        if (Number(req.body.data.tempratrue) >= 37.3 ) req.body.data.has_fever = true
         else req.body.data.has_fever = false
 
         await new MDB_LOGS().add(req.body.data);
@@ -422,7 +421,7 @@ module.exports =
     async savePerson(req, res)
     {
         let date_string = new Date().toISOString().split('T')[0]
-        await new CounterClass().counterActivities(req.body.person_info.saved_from, req.body.person_info.category, date_string)
+        // await new CounterClass().counterActivities(req.body.person_info.saved_from, req.body.person_info.category, date_string)
         date_string = date_string.split("-")
         req.body.person_info.date = new Date().toISOString().split('T')[0]
         req.body.person_info.date_string = date_string[0] + "-" + date_string[1]

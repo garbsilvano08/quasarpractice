@@ -17,6 +17,8 @@ if (process.env.PROD) {
 let mainWindow
 
 function createWindow () {
+  app.commandLine.appendSwitch('--disable-web-security');
+  
   /**
    * Initial window options
    */
@@ -32,6 +34,8 @@ function createWindow () {
 
       // More info: /quasar-cli/developing-electron-apps/electron-preload-script
       // preload: path.resolve(__dirname, 'electron-preload.js')
+
+      webSecurity: false
     }
   })
 

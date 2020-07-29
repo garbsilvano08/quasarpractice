@@ -40,6 +40,7 @@ module.exports = class PersonClass
 
     async updateOtherDetails(person, perseon_id, company_id)
     {
+        console.log(person);
         let id_info = {
             person_id:  perseon_id,
             id_image:   person.person_info.id_img,
