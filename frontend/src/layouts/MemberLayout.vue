@@ -143,6 +143,14 @@ export default
             {
                 return true
             }
+            else if (this.$user_info.user_type == 'Admin')
+            {
+                if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'personnel_management' || key == 'daily')
+                {
+                    return true
+                }
+                else return false
+            }
             else
             {
                 if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'personnel_management' || key == 'daily')
