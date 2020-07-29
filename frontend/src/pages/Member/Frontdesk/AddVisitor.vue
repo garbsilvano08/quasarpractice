@@ -43,112 +43,108 @@
             <div class="content__grid-right">
                 <div class="frontdesk__content content__box">
                     <!-- PERSONAL INFORMATION -->
-                    <div class="frontdesk__content">
-                        <div class="frontdesk__content-info">
-                            <div class="content__title">Personal Information</div>
-                            <!-- ID Information -->
-                            <div class="frontdesk__content-grid">
-                                <div class="content__select">
-                                    <div class="content__select-label">Identification Card Type</div>
-                                    <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
-                                </div>
-                                <div class="content__input">
-                                    <div class="content__input-label">ID Number</div>
-                                    <q-input v-model="personal_information.id_number" outlined dense></q-input>
-                                </div>
+                    <div class="frontdesk__content-info">
+                        <div class="content__title">Personal Information</div>
+                        <!-- ID Information -->
+                        <div class="frontdesk__content-grid">
+                            <div class="content__select">
+                                <div class="content__select-label">Identification Card Type</div>
+                                <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                             </div>
-                            <!-- Firstname -->
                             <div class="content__input">
-                                <div class="content__input-label">First Name</div>
-                                <q-input v-model="personal_information.first_name" outlined dense></q-input>
+                                <div class="content__input-label">ID Number</div>
+                                <q-input v-model="personal_information.id_number" outlined dense></q-input>
                             </div>
-                            <!-- Lastname -->
+                        </div>
+                        <!-- Firstname -->
+                        <div class="content__input">
+                            <div class="content__input-label">First Name</div>
+                            <q-input v-model="personal_information.first_name" outlined dense></q-input>
+                        </div>
+                        <!-- Lastname -->
+                        <div class="content__input">
+                            <div class="content__input-label">Last Name</div>
+                            <q-input v-model="personal_information.last_name" outlined dense></q-input>
+                        </div>
+                        <!-- Middlename -->
+                        <div class="content__input">
+                            <div class="content__input-label">Middle Name</div>
+                            <q-input v-model="personal_information.middle_name" outlined dense></q-input>
+                        </div>
+                        <!-- Gender and Birthdate -->
+                        <div class="frontdesk__content-grid">
+                            <div class="content__select">
+                                <div class="content__select-label">Gender</div>
+                                <q-select v-model="personal_information.gender" :options="options_gender" outlined dense></q-select>
+                            </div>
                             <div class="content__input">
-                                <div class="content__input-label">Last Name</div>
-                                <q-input v-model="personal_information.last_name" outlined dense></q-input>
+                                <div class="content__input-label">Birth Date</div>
+                                <q-input type="date" v-model="personal_information.birth_date" outlined dense></q-input>
                             </div>
-                            <!-- Middlename -->
+                        </div>
+                        <!-- Nationality -->
+                        <div class="content__input">
+                            <div class="content__input-label">Nationality</div>
+                            <q-input v-model="personal_information.nationality" outlined dense></q-input>
+                        </div>
+                        <!-- Home Address -->
+                        <div class="content__input">
+                            <div class="content__input-label">Home Address</div>
+                            <q-input v-model="personal_information.home_address" outlined dense></q-input>
+                        </div>
+                        <!-- Location -->
+                        <div class="content__input">
+                            <div class="content__input-label">Location</div>
+                            <q-select
+                                outlined
+                                dense
+                                v-model="personal_information.location"
+                                use-input
+                                input-debounce="1000"
+                                :options="options_location"
+                                @filter="getNearbyPlaces"
+                                option-value="place_id"
+                                option-label="description"
+                            >
+                                <template v-slot:no-option>
+                                    <q-item>
+                                        <q-item-section class="text-grey">
+                                        No results
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
+                            </q-select>
+                        </div>
+                        <!-- Contact -->
+                        <div class="frontdesk__content-grid">
                             <div class="content__input">
-                                <div class="content__input-label">Middle Name</div>
-                                <q-input v-model="personal_information.middle_name" outlined dense></q-input>
+                                <div class="content__input-label">Contact Number</div>
+                                <q-input v-model="personal_information.contact_number" outlined dense></q-input>
                             </div>
-                            <!-- Gender and Birthdate -->
-                            <div class="frontdesk__content-grid">
-                                <div class="content__select">
-                                    <div class="content__select-label">Gender</div>
-                                    <q-select v-model="personal_information.gender" :options="options_gender" outlined dense></q-select>
-                                </div>
-                                <div class="content__input">
-                                    <div class="content__input-label">Birth Date</div>
-                                    <q-input type="date" v-model="personal_information.birth_date" outlined dense></q-input>
-                                </div>
-                            </div>
-                            <!-- Nationality -->
                             <div class="content__input">
-                                <div class="content__input-label">Nationality</div>
-                                <q-input v-model="personal_information.nationality" outlined dense></q-input>
-                            </div>
-                            <!-- Home Address -->
-                            <div class="content__input">
-                                <div class="content__input-label">Home Address</div>
-                                <q-input v-model="personal_information.home_address" outlined dense></q-input>
-                            </div>
-                            <!-- Location -->
-                            <div class="content__input">
-                                <div class="content__input-label">Location</div>
-                                <q-select
-                                    outlined 
-                                    dense
-                                    v-model="personal_information.location"
-                                    use-input
-                                    input-debounce="1000"
-                                    :options="options_location"
-                                    @filter="getNearbyPlaces"
-                                    option-value="place_id"
-                                    option-label="description"
-                                >
-                                    <template v-slot:no-option>
-                                        <q-item>
-                                            <q-item-section class="text-grey">
-                                            No results
-                                            </q-item-section>
-                                        </q-item>
-                                    </template>
-                                </q-select>
-                            </div>
-                            <!-- Contact -->
-                            <div class="frontdesk__content-grid">
-                                <div class="content__input">
-                                    <div class="content__input-label">Contact Number</div>
-                                    <q-input v-model="personal_information.contact_number" outlined dense></q-input>
-                                </div>
-                                <div class="content__input">
-                                    <div class="content__input-label">Emergency Contact Number</div>
-                                    <q-input v-model="personal_information.emergency_contact_number" outlined dense></q-input>
-                                </div>
+                                <div class="content__input-label">Emergency Contact Number</div>
+                                <q-input v-model="personal_information.emergency_contact_number" outlined dense></q-input>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="frontdesk__content content__box" style="margin-top: 30px;">
-                    <div class="frontdesk__content">
-                        <div class="frontdesk__content-info">
-                            <div class="content__title">Visitor's Purpose</div>
-                            <!-- Purpose of Visit -->
-                            <div class="content__select">
-                                <div class="content__select-label">Purpose of Visit</div>
-                                <q-select v-model="visitor_purpose.purpose_visit" :options="options_visit_purpose" outlined dense></q-select>
+                    <div class="frontdesk__content-info">
+                        <div class="content__title">Visitor's Purpose</div>
+                        <!-- Purpose of Visit -->
+                        <div class="content__select">
+                            <div class="content__select-label">Purpose of Visit</div>
+                            <q-select v-model="visitor_purpose.purpose_visit" :options="options_visit_purpose" outlined dense></q-select>
+                        </div>
+                        <!-- Visitor Details -->
+                        <div class="frontdesk__content-grid">
+                            <div class="content__input">
+                                <div class="content__input-label">Contact Person</div>
+                                <q-input v-model="visitor_purpose.contact_person" outlined dense></q-input>
                             </div>
-                            <!-- Visitor Details -->
-                            <div class="frontdesk__content-grid">
-                                <div class="content__input">
-                                    <div class="content__input-label">Contact Person</div>
-                                    <q-input v-model="visitor_purpose.contact_person" outlined dense></q-input>
-                                </div>
-                                <div class="content__input">
-                                    <div class="content__input-label">Destination</div>
-                                    <q-input v-model="visitor_purpose.destination" outlined dense></q-input>
-                                </div>
+                            <div class="content__input">
+                                <div class="content__input-label">Destination</div>
+                                <q-input v-model="visitor_purpose.destination" outlined dense></q-input>
                             </div>
                         </div>
                     </div>
@@ -332,7 +328,7 @@ export default {
             }
         },
         async checkImage(image)
-        {   
+        {
             this.$q.loading.show();
             let img = await this.getImageURL('id')
             this.personal_information.id_image = img
@@ -348,9 +344,9 @@ export default {
             this.personal_information.nationality = this.visitor_class.nationality
             this.$q.loading.hide();
         },
-        async getNearbyPlaces(val, update) 
+        async getNearbyPlaces(val, update)
         {
-            if (val === '') 
+            if (val === '')
             {
                 update();
                 return;
@@ -373,7 +369,7 @@ export default {
                 {
                     str = str.split(" ");
 
-                    for (var i = 0, x = str.length; i < x; i++) 
+                    for (var i = 0, x = str.length; i < x; i++)
                     {
                         str[i] = str[i][0].toUpperCase() + str[i].substr(1);
                     }
@@ -425,13 +421,13 @@ export default {
                     this.visitor_purpose = {}
                     this.personal_information = {}
                 });
-                
+
                 this.$q.notify(
                 {
                     color: 'green',
                     message: 'Account was successfully created'
                 });
-                
+
                 });
             }
             catch (e)
@@ -444,24 +440,24 @@ export default {
             }
         },
         async uploadImage()
-        {  
+        {
             this.$q.loading.show();
             this.personal_information.account_img = await this.getImageURL();
 
             let oFReader = new FileReader();
             let formData = new FormData();
 
-            formData.append('image',document.getElementById("uploadImage").files[0]); 
-               
+            formData.append('image',document.getElementById("uploadImage").files[0]);
+
 
             this.face_pic_path = await this.$_post_file(formData);
 
-            
+
 
 
 
             this.$q.loading.hide();
-           
+
 
         },
 
@@ -469,8 +465,8 @@ export default {
         {
             let oFReader = new FileReader();
             const formData = new FormData();
-            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]); 
-            else formData.append('image',document.getElementById("uploadImage").files[0]); 
+            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]);
+            else formData.append('image',document.getElementById("uploadImage").files[0]);
 
             return await this.$_post_file(formData);
         },
