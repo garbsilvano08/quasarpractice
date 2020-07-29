@@ -414,14 +414,12 @@ export default {
                     !this.staff_class.position                    
                 )
                 {
-                    if (!this.staff_class[validate]) {
-                        this.$q.notify(
-                        {
-                            color: 'red',
-                            message: field + ' is required'
-                        });
-                        return
-                    }
+                    this.$q.notify(
+                    {
+                        color: 'red',
+                        message: field + ' is required'
+                    });
+                    return
                 }
             }
 

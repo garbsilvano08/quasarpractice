@@ -9,6 +9,7 @@ exports.postCreateAdmin     = 'front/create_admin';
 exports.postGetCompany      = 'member/get/company';
 exports.postUserList        = 'member/user/list';
 exports.postAddPerson       = 'member/add/person';
+exports.postAddReportLog    = 'member/add/report_log';
 exports.postGetCompanies    = 'member/get/companies';
 exports.postDeleteCompany   = 'member/delete/company';
 

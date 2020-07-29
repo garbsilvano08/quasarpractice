@@ -28,6 +28,7 @@ app.post('/api/member/user/list', member_only, member_controller.userList);
 app.post('/api/member/add/person',  member_only, member_controller.addPerson);
 app.post('/api/member/add/visitor',  member_only, member_controller.addVisitor);
 app.post('/api/member/add/pass_log',  member_only, member_controller.addPassLog);
+app.post('/api/member/add/report_log',  member_only, member_controller.saveReportLog);
 app.post('/api/member/get/nearby_places',  member_only, member_controller.getNearbyPlaces);
 app.post('/api/member/get/coordinates',  member_only, member_controller.getCoordinates);
 app.post('/api/member/get/visitors', member_only, member_controller.getVisitors);

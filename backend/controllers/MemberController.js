@@ -200,6 +200,13 @@ module.exports =
         return res.send(true);
 
     },
+
+    async saveReportLog(req, res)
+    {
+        await new MDB_PERSON_LOGS().add(req.body.person_info)
+        return res.send(true);
+    },
+
     async getNearbyPlaces(req, res)
     {
         let locations = null;

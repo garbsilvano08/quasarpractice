@@ -385,15 +385,21 @@ export default {
             // let img = await this.getImageURL('id')
             this.personal_information.id_image = image
             // this.$q.loading.show();
-            if (image) await this.visitor_class.ocrUnirest(this.personal_information.id_type, image )
-            this.personal_information.id_number = this.visitor_class.id_num
-            this.personal_information.first_name = this.visitor_class.given_name
-            this.personal_information.last_name = this.visitor_class.last_name
-            this.personal_information.middle_name = this.visitor_class.middle_name
-            this.personal_information.home_address = this.visitor_class.home_address
-            this.personal_information.gender = this.visitor_class.gender
-            this.personal_information.birth_date = this.visitor_class.birthday ? this.visitor_class.birthday : null
-            this.personal_information.nationality = this.visitor_class.nationality
+            if (image) 
+            {
+                let is_converted = await this.visitor_class.ocrUnirest(this.personal_information.id_type, image )
+                if (is_converted)
+                {
+                    this.personal_information.id_number = this.visitor_class.id_num
+                    this.personal_information.first_name = this.visitor_class.given_name
+                    this.personal_information.last_name = this.visitor_class.last_name
+                    this.personal_information.middle_name = this.visitor_class.middle_name
+                    this.personal_information.home_address = this.visitor_class.home_address
+                    this.personal_information.gender = this.visitor_class.gender
+                    this.personal_information.birth_date = this.visitor_class.birthday ? this.visitor_class.birthday : null
+                    this.personal_information.nationality = this.visitor_class.nationality
+                }
+            }
             this.$q.loading.hide();
         },
         async getNearbyPlaces(val, update)
@@ -537,9 +543,6 @@ export default {
             this.open_camera = false
 
         },
-
-
-
         async getImageURL(type)
         {
             let oFReader = new FileReader();
@@ -569,6 +572,7 @@ export default {
             image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
 
               await this.uploadImage(image_data)
+              console.log(this.image_type);
               if (this.image_type == 'id') await this.checkImage(this.face_pic_path)
             });
             // this.open_camera = false

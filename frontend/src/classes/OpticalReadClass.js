@@ -71,7 +71,7 @@ export default class OpticalReadClass
 
     getIDInformation(type, image_text)
     {
-        this.eraseAll()
+        // this.eraseAll()
         switch (type)
         {
             case 'Drivers License':
@@ -182,6 +182,7 @@ export default class OpticalReadClass
                 color: 'green',
                 message: 'Successful'
             }); 
+            return true
         }
         else
         {
@@ -189,6 +190,7 @@ export default class OpticalReadClass
                 color: 'red',
                 message: 'Please try again'
             }); 
+            return false
         }  
     }
     
@@ -207,10 +209,11 @@ export default class OpticalReadClass
         // this.checkImage(image_data.data.regions)
         try
         {
-            this.getIDInformation(type, image_data.data.regions)
+            return this.getIDInformation(type, image_data.data.regions)
         }
         catch(e)
         {
+            // return false
             Notify.create({
                 color: 'red',
                 message: 'Please try again'
@@ -253,8 +256,5 @@ export default class OpticalReadClass
                 
             }
         }
-
-        console.log(this.id_words, 'words');
-        
     }
 }
