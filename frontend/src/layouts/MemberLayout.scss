@@ -19,14 +19,17 @@ body {
             margin-right: auto;
         }
 
-        .q-btn-toggle {
-            margin-right: 20px;
-        }
+        .header__content {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
 
-        .btn-sync__container {
-            .q-btn {
+            .q-btn-toggle {
+                margin-right: 20px;
+            }
+
+            .btn-sync {
                 position: relative;
-                margin-left: auto;
                 margin-right: 20px;
 
                 .notification-indicator {
@@ -43,6 +46,10 @@ body {
                     top: 3px;
                     right: -10px;
                 }
+            }
+
+            .btn-sync:last-child {
+                margin-right: 0px !important;
             }
         }
     }
