@@ -81,7 +81,8 @@ export default {
         options_user_type: [
             'Admin',
             'Receptionist',
-            'Technician'
+            'Technician',
+            'Officer'
         ],  
         options_tag_company: [
             'Green Sun Hotel'

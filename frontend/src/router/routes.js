@@ -22,7 +22,7 @@ const routes = [
             { name: 'member_frontdesk_staff', path: '/frontdesk/add-staff', component: () => import('pages/Member/Frontdesk/AddStaff.vue') },
             { name: 'member_frontdesk_feverlogs', path: '/frontdesk/add-fever-logs', component: () => import('pages/Member/Frontdesk/AddFeverLogs.vue') },
             { name: 'member_frontdesk_blacklist', path: '/frontdesk/blacklist', component: () => import('pages/Member/Frontdesk/BlackList.vue') },
-            { name: 'member_frontdesk_addvisitormobile', path: '/frontdesk/add-visitor-mobile', component: () => import('pages/Member/Frontdesk/AddVisitorMobile.vue') },
+            { name: 'member_frontdesk_addreport', path: '/frontdesk/add-report', component: () => import('pages/Member/Frontdesk/AddReport') },
             // DAILY LOGS ROUTES
             { name: 'member_dailylogs_staff', path: '/dailylogs/staff', component: () => import('pages/Member/DailyLogs/StaffDailyLogs.vue') },
             { name: 'member_dailylogs_visitor', path: '/dailylogs/visitor', component: () => import('pages/Member/DailyLogs/VisitorDailyLogs.vue') },

@@ -543,6 +543,10 @@ export default
    },
    async mounted()
    {
+      if (this.$user_info.user_type == 'Officer') 
+      {
+         this.$router.push({ name: 'member_frontdesk_addreport' });
+      }
       this.company_details = this.$user_info.user_type != 'Super Admin' ? this.$user_info.company : {data: []}
 
       // console.log(this.company_details);

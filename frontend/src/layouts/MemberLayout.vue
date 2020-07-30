@@ -4,17 +4,17 @@
             <q-toolbar>
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
-                <q-img src="../assets/vcop-logo-white.svg"></q-img>
+                <q-img @click="showToggle" src="../assets/vcop-logo-white.svg"></q-img>
 
                 <div class="header__content">
 
-                    <q-btn-toggle color="red" dense @input="getTabletLogsSwitch" v-model="getLogsSwitch" :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
+                    <q-btn-toggle v-show="show_toggle" color="red" dense @input="getTabletLogsSwitch" v-model="getLogsSwitch" :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
 
-                    <q-btn class="btn-sync" @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
+                    <q-btn v-show="is_app" class="btn-sync" @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
                         <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
                         <!-- <div class="notification-indicator">100</div> -->
                     </q-btn>
-                    <q-btn class="btn-sync" @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
+                    <q-btn v-show="is_app" class="btn-sync" @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
                 </div>
             </q-toolbar>
         </q-header>
@@ -88,7 +88,8 @@ export default
         db: new Model(),
         device_list: [],
         user_info: {},
-        show_toggle: false
+        show_toggle: false,
+        is_app: true
     }),
     computed:
     {
@@ -117,6 +118,7 @@ export default
     },
     async created()
     {
+        this.is_app = this.$user_info.user_type == 'Officer' ? false : true
         // Edward
         await this.db.initialize();
         await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
@@ -136,6 +138,14 @@ export default
             if (this.$user_info.user_type == 'Super Admin')
             {
                 return true
+            }
+            else if (this.$user_info.user_type == 'Officer')
+            {
+                if ( key == 'member_logout')
+                {
+                    return true
+                }
+                else return false
             }
             else if (this.$user_info.user_type == 'Admin')
             {
@@ -283,6 +293,7 @@ export default
             // Logs
             for (let log of this.passLogs)
             {
+                console.log(log);
                 log.saved_from = this.$user_info.company._id ? this.$user_info.company._id : '';
 
                 await this.$_post('member/add/pass_log', { data: log });

@@ -1,7 +1,7 @@
 <template>
     <div class="frontdesk">
         <div class="frontdesk__header">
-            <div class="header__title">ADD FEVER REPORT</div>
+            <div class="header__title">ADD REPORT</div>
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn @click="submit" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
@@ -20,23 +20,16 @@
                         </div>
                     </div>
 
-                    <!-- BODY TEMPERATURE -->
-                    <div class="frontdesk__content-info">
-                        <div class="content__title">Body Temperature</div>
-                        <!-- <div class="frontdesk__content-temperature">36°C</div> -->
-                        <q-input v-model="personal_information.temperature" outlined dense></q-input>
-                    </div>
-
                     <div class="frontdesk__content-info">
                         <div class="content__title">Choose ID</div>
                         <div class="content__select">
                             <div class="content__select-label">Identification Card Type</div>
-                            <q-select v-model="personal_information" :options="options_id" outlined dense></q-select>
+                            <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
                         <div class="content__img-holder img-holder__sm">
                             <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '/img/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file">
-                            <q-btn @click="openFilemanager" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
+                            <q-btn @click="openFilemanager('id')" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
                     </div>
                 </div>
@@ -45,6 +38,17 @@
                 <div class="frontdesk__content content__box">
                     <div class="frontdesk__content-info">
                         <div class="content__title">Personal Information</div>
+                        <!-- BODY TEMPERATURE -->
+                        <div class="frontdesk__content-grid">
+                            <div class="content__input">
+                                <div class="content__select-label">Body Temperature</div>
+                                <!-- <div class="frontdesk__content-temperature">36°C</div> -->
+                                <q-input v-model="personal_information.temperature" outlined dense></q-input>
+                            </div>
+                            <div class="content__input">
+                                <q-checkbox v-model="has_mask" label="Person is wearing a mask" />
+                            </div>
+                        </div>
                          <!-- ID Information -->
                         <div class="frontdesk__content-grid">
                             <div class="content__select">
@@ -144,11 +148,14 @@
 <script>
 import { Notify } from 'quasar';
 import "./Frontdesk.scss";
+import OpticalReadClass from '../../../classes/OpticalReadClass';
 import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson, postAddReportLog} from '../../../references/url';
 
 export default {
     data:() =>
     ({
+        has_mask: true,
+        ocr_class: new OpticalReadClass(),
         input_id_number: '',
         input_first_name: '',
         input_last_name: '',
@@ -219,7 +226,6 @@ export default {
 
         async submit()
         {
-            console.log(this.personal_information);
             const capitalize = (str) =>
             {
                 str = str.split(" ");
@@ -244,7 +250,8 @@ export default {
                     !this.personal_information.birth_date || 
                     !this.personal_information.account_img ||
                     !this.personal_information.id_image ||
-                    !this.personal_information.id_number        
+                    !this.personal_information.id_number ||
+                    !this.personal_information.temperature         
                 )
                 {
                     this.$q.notify(
@@ -299,7 +306,7 @@ export default {
                 let save = await this.$_post(postSavePerson, {person_info: data});
 
                 let person_log = {
-                    mask:                   1,
+                    mask:                   has_mask ? 1 : 0,
                     temperature:            this.personal_information.temperature,
                     person_img:             this.personal_information.account_img,
                     full_name:              this.personal_information.first_name + " " + this.personal_information.middle_name + " " + this.personal_information.last_name,
@@ -340,54 +347,38 @@ export default {
             }
             this.$q.loading.hide();
         },
-        async uploadImage(image_url)
+        async getImageURL(type)
         {
-            if (image_url)
-            {
-                this.$q.loading.show();
-                const contentType = 'image/png';
-                const blobb = base64StringToBlob(image_url, contentType)
-                blobb.lastModifiedDate = new Date()
-                // const blobUrl = URL.createObjectURL(blob);
+            let oFReader = new FileReader();
+            const formData = new FormData();
+            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]); 
+            else formData.append('image',document.getElementById("uploadImage").files[0]); 
 
-                // this.personaluploader_information.account_img = await this.getImageURL();
+            return await this.$_post_file(formData);
+        },
 
-                let oFReader = new FileReader();
-                let formData = new FormData();
-
-                // formData.append('image',document.getElementById("uploadImage").files[0]);
-                formData.append('image', blobb, 'person' + Date.now().toString() + '.png');
-                if (this.image_type == 'id')
-                {
-                    this.personal_information.id_image = this.face_pic_path
-                }
-                else
-                {
-                    this.personal_information.account_img = this.face_pic_path
-                    this.face_pic_path = await this.$_post_file(formData);
-                }
-
-                this.$q.loading.hide();
-            }
-
-            // this.open_camera = false
+        async uploadImage()
+        {
+            this.$q.loading.show();
+            this.personal_information.account_img = await this.getImageURL();
+            this.$q.loading.hide();
 
         },
         async openFilemanager(type)
         {
-            if (type) this.$refs.idUploader.click();
+            if (type == 'id') this.$refs.idUploader.click();
             else this.$refs.uploader.click();
 
         },
         async checkImage(image)
         {
             this.$q.loading.show();
-            // let img = await this.getImageURL('id')
-            this.personal_information.id_image = image
+            let img = await this.getImageURL('id')
+            this.personal_information.id_image = img
             // this.$q.loading.show();
-            if (image) 
+            if (img) 
             {
-                let is_converted = await this.ocr_class.ocrUnirest(this.personal_information.id_type, image )
+                let is_converted = await this.ocr_class.ocrUnirest(this.personal_information.id_type, img )
                 if (is_converted)
                 {
                     this.personal_information.id_number = this.ocr_class.id_num
