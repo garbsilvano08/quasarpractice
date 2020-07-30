@@ -11,7 +11,7 @@
             <div class="content__grid-left">
                 <div class="frontdesk__content content__box">
                     <div class="frontdesk__content-info">
-                        <q-btn @click="test" class="btn-save btn-primary" flat dense no-caps label="Test"></q-btn>
+                        <!-- <q-btn @click="test" class="btn-save btn-primary" flat dense no-caps label="Test"></q-btn> -->
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
                             <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img>
