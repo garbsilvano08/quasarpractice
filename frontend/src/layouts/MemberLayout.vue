@@ -149,11 +149,11 @@ export default
             }
             else if (this.$user_info.user_type == 'Admin')
             {
-                if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'personnel_management' || key == 'daily')
+                if ( key == 'user_management' )
                 {
-                    return true
+                    return false
                 }
-                else return false
+                else return true
             }
             else
             {
@@ -312,40 +312,56 @@ export default
             }
             else
             {
-            let today= new Date()
-            let timeToday= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
-            let startTime= "";
-            var formData = new FormData();
-            if(this.$store.state.sync.lastRequestTime.length<=0){
-                startTime = (today.getFullYear()-1)+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
-            }
-            else {
-                startTime = this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime;
-            }
-
-            formData.append("pass", "123456");
-            formData.append("startTime", startTime)// number 123456 is immediately converted to a string "123456"
-            formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
-            let logs= [];
-            var request = new XMLHttpRequest();
-
-            this.device_list.forEach((device) => {
-            var request = new XMLHttpRequest();
-            request.open("POST", "http://"+device.device_ip+":8080/newFindRecords");
-            request.onreadystatechange = () => {
-                if (request.readyState == XMLHttpRequest.DONE) {
-                    let resp = request.responseText;
-                    this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
+                let today= new Date()
+                let timeToday= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+                let startTime= "";
+                var formData = new FormData();
+                if(this.$store.state.sync.lastRequestTime.length<=0){
+                    startTime = (today.getFullYear()-1)+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
                 }
-            }
-            request.send(formData);
-            })
-                await this.db.add(
-                {
-                    lastRequestTime: timeToday
-                },
-                'lastRequestTime');
-                this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
+                else {
+                    startTime = this.lastRequestTime[this.lastRequestTime.length-1].lastRequestTime;
+                }
+
+                formData.append("pass", "123456");
+                formData.append("startTime", startTime)// number 123456 is immediately converted to a string "123456"
+                formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
+                let logs= [];
+                var request = new XMLHttpRequest();
+
+                this.device_list.forEach(async (device) => {
+                    var request = new XMLHttpRequest();
+                    request.open("POST", "http://"+device.device_ip+":8080/newFindRecords");
+                    request.onreadystatechange = () => {
+                        if (request.readyState == XMLHttpRequest.DONE) {
+                            let resp = request.responseText;
+                            try
+                            {
+                                this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
+                            }
+                            catch(e)
+                            {}
+                        }
+                    }
+                    request.send(formData);
+                    await this.db.add(
+                    {
+                        lastRequestTime: timeToday
+                    },
+                    'lastRequestTime');
+                    try
+                    {
+                        this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
+                    }
+                    catch(e)
+                    {
+                        this.$q.notify(
+                        {
+                            color: 'red',
+                            message: e.message
+                        });
+                    }
+                })
             }
         },
         async saveLogsIndexDb(dat, device)
