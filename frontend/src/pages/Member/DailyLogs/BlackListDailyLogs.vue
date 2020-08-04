@@ -3,7 +3,8 @@
         <div class="daily-logs__header">
             <div class="header__title">DAILY LOGS</div>
             <div class="header__filter">
-                <q-select class="select-lg" v-model="select__id_type" :options="options_name" outlined dense></q-select>
+                <com-picker class="select-lg" @select=getCompanyData></com-picker>
+                <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_name" outlined dense></q-select> -->
                 <q-btn class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
@@ -68,13 +69,12 @@ export default {
         },
         async getBlacklist(params, sort)
         {
-            console.log(params);
             return await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort} );
         }
     },
     async mounted()
     {
-        this.blacklist = await this.getBlacklist({category: 'Blacklist', date_logged: new Date(this.select__date).toISOString().split('T')[0]})
+        this.blacklist = await this.getBlacklist({category: 'Blacklist', date_created: new Date(this.select__date).toISOString().split('T')[0]})
         console.log(this.blacklist);
     }
 }
