@@ -149,11 +149,11 @@ export default
             }
             else if (this.$user_info.user_type == 'Admin')
             {
-                if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'personnel_management' || key == 'daily')
+            if ( key == 'user_management')
                 {
-                    return true
+                    return false
                 }
-                else return false
+                else return true
             }
             else
             {
