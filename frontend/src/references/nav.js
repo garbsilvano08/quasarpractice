@@ -38,7 +38,7 @@ module.exports =
             { label: 'Staff', route: 'member_dailylogs_staff' },
             { label: 'Visitors', route: 'member_dailylogs_visitor' },
             { label: 'Stranger', route: 'member_dailylogs_stranger' },
-            { label: 'Body Temp. Logs', route: 'member_dailylogs_bodytemperature' },
+            // { label: 'Body Temp. Logs', route: 'member_dailylogs_bodytemperature' },
             { label: 'Fever Detected', route: 'member_dailylogs_feverdetected' },
             { label: 'Blacklist', route: 'member_dailylogs_blacklist' },
         ]
@@ -56,14 +56,13 @@ module.exports =
         ]
     },
     {
-        key: '',
-        label: 'Reports',
-        icon: 'mdi-clipboard-text',
+        key: 'company_management',
+        label: 'Company Management',
+        icon: 'mdi-briefcase',
         sub:
         [
-            { label: 'Fever Detected', route: 'member_feverdetected_report' },
-            { label: 'Fever Monitoring', route: 'member_fevermonitoring_report' },
-            { label: 'Fever Heatmap', route: 'member_feverheatmap_report' },
+            { label: 'All Companies', route: 'member_allcompany' },
+            { label: '+ Add Company', route: 'member_addcompany' },
         ]
     },
     {
@@ -72,18 +71,8 @@ module.exports =
         icon: 'mdi-account-multiple',
         sub:
         [
-            { label: 'All User', route: 'member_alluser' },
+            { label: 'All Users', route: 'member_alluser' },
             { label: '+ Add User', route: 'member_adduser' },
-        ]
-    },
-    {
-        key: 'company_management',
-        label: 'Company Management',
-        icon: 'mdi-briefcase',
-        sub:
-        [
-            { label: 'All Company', route: 'member_allcompany' },
-            { label: '+ Add Company', route: 'member_addcompany' },
         ]
     },
     {
@@ -94,6 +83,17 @@ module.exports =
         [
             { label: 'All Devices', route: 'member_alldevice' },
             { label: '+ Add Device', route: 'member_adddevice' },
+        ]
+    },
+    {
+        key: '',
+        label: 'Reports',
+        icon: 'mdi-clipboard-text',
+        sub:
+        [
+            { label: 'Fever Detected', route: 'member_feverdetected_report' },
+            { label: 'Fever Monitoring', route: 'member_fevermonitoring_report' },
+            { label: 'Fever Heatmap', route: 'member_feverheatmap_report' },
         ]
     },
     {

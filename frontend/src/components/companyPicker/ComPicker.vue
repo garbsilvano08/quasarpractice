@@ -1,6 +1,6 @@
 <template>
     <div>
-        <q-btn bordered class="full-width" style="color: #e1e3f0" unelevated outline align="between">
+        <q-btn bordered class="full-width" align="between">
             <span>{{value.company_name ? value.company_name : "Choose"}}</span>
             <q-icon size="small" class="icon" name="fa fa-caret-down"></q-icon>
                 <q-menu fit>

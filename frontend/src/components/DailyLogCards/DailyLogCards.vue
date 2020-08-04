@@ -2,7 +2,7 @@
     <div class="content__card">
         <q-img :src="staff_logs.person_img"></q-img>
         <div class="content__info">
-            <div class="content__name">{{staff_logs.full_name}}</div>
+            <div v-if="type == 'Staff'" class="content__name">{{staff_logs.full_name}}</div>
             <div class="content__datetime"><span>Date: </span>{{new Date(staff_logs.date_saved).toLocaleString()}}</div>
             <div class="content__details">
                 {{staff_logs.temperature}}°C <br>
@@ -18,7 +18,8 @@ import "./DailyLogCards.scss";
 export default {
     props:
     {
-        staff_logs: Object
+        staff_logs: Object,
+        type: String
     },
 
 }

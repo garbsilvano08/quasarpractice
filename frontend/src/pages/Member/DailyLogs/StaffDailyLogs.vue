@@ -38,7 +38,7 @@
         </div>
         <div class="content__grid-4x4">
             <div v-for="(staff, index) in this.staff_list.data" :key="index">
-                <DailyLogCards :staff_logs="staff"></DailyLogCards>
+                <DailyLogCards :staff_logs="staff" :type="'Staff'"></DailyLogCards>
             <!-- <DailyLogCards></DailyLogCards>
             <DailyLogCards></DailyLogCards>
             <DailyLogCards></DailyLogCards> -->

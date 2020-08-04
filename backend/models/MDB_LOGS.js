@@ -17,7 +17,8 @@ const schema    = new Schema(
     id: { type: String, required: false },
     syncing: { type: Boolean, required: true },
     id: { type: String, required: true },
-    date_string: { type: String, required: true }
+    date_string: { type: String, required: true },
+    company_id: { type: String, required: false }
 
 });
 

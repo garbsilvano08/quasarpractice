@@ -30,7 +30,7 @@ module.exports = class PersonClass
         else
         {
             let data = await new MDB_PERSON().add(person.person_info);
-            if (person.person_info.category == 'Visitors') await this.updateOtherDetails(person, data._id, company_id)
+            if (person.person_info.category == 'Visitors' || person.person_info.category == 'Report') await this.updateOtherDetails(person, data._id, company_id)
         }
 
         if (person.person_info.category == 'Staff') await new MDB_COMPANIES().update(company_id, {$inc: {staff: 1}})
@@ -38,11 +38,11 @@ module.exports = class PersonClass
         
     }
 
-    async updateOtherDetails(person, perseon_id, company_id)
+    async updateOtherDetails(person, person_id, company_id)
     {
         console.log(person);
         let id_info = {
-            person_id:  perseon_id,
+            person_id:  person_id,
             id_image:   person.person_info.id_img,
             id_number:  person.person_info.id_num,
             id_type:    person.person_info.id_type,
@@ -51,7 +51,7 @@ module.exports = class PersonClass
 
         // Purpose
         let purpose_visit = {
-            person_id:          perseon_id,
+            person_id:          person_id,
             company_id:         company_id,
             visit_purpose:      person.person_info.visit_purpose,
             contact_person:     person.person_info.contact_person,
@@ -60,6 +60,6 @@ module.exports = class PersonClass
             date_string:        person.person_info.date
         }
         await new MDB_IDENTIFICATION().add(id_info);
-        await new MDB_PURPOSE().add(purpose_visit);
+        if (person.person_info.category == 'Visitors') await new MDB_PURPOSE().add(purpose_visit);
     }
 }

@@ -30,7 +30,6 @@ module.exports = class PersonLogsClass
 
     async submit()
     {
-        console.log(this.gender, this.birthday, this.home_address);
         if (this.frontdesk_person_id.length < 9)
         {
             for (let index = 0; index <= (9 - this.frontdesk_person_id.length); index++) {
@@ -45,7 +44,7 @@ module.exports = class PersonLogsClass
         this.birthday       = person_details.length ? person_details[0].birthday : ''
         this.home_address   = person_details.length ? person_details[0].home_address : ''
         
-        if (Number(this.temperature) >= 37) this.has_fever = true
+        if (Number(this.temperature) >= 37.3) this.has_fever = true
         let company = await new MDB_COMPANIES().doc(this.company_id)
         this.company_name = company.company_name
 

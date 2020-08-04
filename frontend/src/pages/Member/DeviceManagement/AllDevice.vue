@@ -72,11 +72,11 @@ export default {
             await this.$_post(postDeleteDevice, {id: id});
             // if (this.select__company == 'All Companies') await this.getAllDevice()
             // else await this.getAllDevice(this.select__company)
-            await this.getAllDevice(this.$user_info.company._id)
+            await this.getAllDevice()
         },
         async getAllDevice(company)
         {
-           this.device_list = await this.$_post(postGetDevice, {find_device: {company_id: company}});
+           this.device_list = await this.$_post(postGetDevice);
         },
         convertToDate(timestamp){
             let date = new Date(timestamp);
@@ -86,15 +86,7 @@ export default {
 
     async mounted()
     {
-        await this.getAllDevice(this.$user_info.company._id);
-        // this.company_list = await this.$_post(postGetCompanies);
-        // for (let company of this.company_list.data) {
-        //     console.log(this.$user_info.company._id, company._id)
-        //     if(this.$user_info.company._id == company._id)
-        //     this.options_company.push(company.company_name)
-        // }
-        // this.company_list = await this.$_post(postGetCompanies);
-        // console.log(this.company_list)
+        await this.getAllDevice();
     }
 }
 </script>

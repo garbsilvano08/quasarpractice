@@ -10,11 +10,11 @@
 
                     <q-btn-toggle v-show="show_toggle" color="red" dense @input="getTabletLogsSwitch" v-model="getLogsSwitch" :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
 
-                    <q-btn v-show="is_app" class="btn-sync" @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
+                    <q-btn v-show="checkUser()" class="btn-sync" @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
                         <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
                         <!-- <div class="notification-indicator">100</div> -->
                     </q-btn>
-                    <q-btn v-show="is_app" class="btn-sync" @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
+                    <q-btn v-show="checkUser()" class="btn-sync" @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
                 </div>
             </q-toolbar>
         </q-header>
@@ -133,6 +133,13 @@ export default
     },
     methods:
     {
+        checkUser()
+        {
+            if (this.$user_info && this.$user_info.user_type == 'Super Admin' || this.$user_info.user_type == 'Officer') return false
+
+            else return true
+        },
+
         userAccess(key)
         {
             if (this.$user_info.user_type == 'Super Admin')
@@ -213,95 +220,99 @@ export default
         },
         async checkQueueSync()
         {
-            this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
-            // Info
-            for (let visitor of this.visitors)
+            if (this.$user_info.user_type != 'Super Admin')
             {
-                let data = {
-                    visit_purpose:      visitor.visitor_purpose.purpose_visit,
-                    contact_person:     visitor.visitor_purpose.contact_person,
-                    destination:        visitor.visitor_purpose.destination,
-
-                    id_img: visitor.personal_information.id_image,
-                    id_num: visitor.personal_information.id_number,
-                    id_type: visitor.personal_information.id_type,
-
-                    person_img: visitor.personal_information.account_img,
-                    last_name: visitor.personal_information.last_name,
-                    middle_name: visitor.personal_information.middle_name,
-                    given_name: visitor.personal_information.first_name,
-                    gender: visitor.personal_information.gender,
-                    birthday: new Date(visitor.personal_information.birth_day),
-                    nationality: visitor.personal_information.nationality,
-                    home_address: visitor.personal_information.home_address,
-                    contact_number: visitor.personal_information.contact_number,
-                    emergency_contact: visitor.personal_information.emergency_contact_number,
-                    date_created: new Date(),
-                    company_name: visitor.personal_information.company_name,
-                    frontdesk_person_id: visitor.personal_information.frontdesk_person_id,
-                    frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
-                    frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
-                    location: visitor.personal_information.location,
-                    location_coordinates: visitor.personal_information.location_coordinates,
-                    is_active: true,
-
-                    saved_from: this.$user_info.company._id ? this.$user_info.company._id : '',
-
-                    category: 'Visitors'
-                }
-
-//***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
-                toDataUrl(visitor.personal_information.account_img, async (myBase64)=> {
-                let result           = '';
-                let characters       = '0123456789';
-                let charactersLength = characters.length;
-                for ( let i = 0; i < 9; i++ ) {
-                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-                }
-
-                let sex="";
-                if (visitor.personal_information.gender=="Female")
-                {
-                    sex=0;
-                }
-                else if (visitor.personal_information.gender=="Male")
-                {
-                    sex=1;
-                }
-                let today= new Date()
-                let expStartTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
-                let expEndTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+(today.getDate()+1).toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
-
-                let tabletFormData = new FormData();
-                let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                tabletFormData.append("pass", "123456");
-                tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name +"', 'person_id' : '"+ visitor.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+visitor.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ visitor.personal_information.birth_day +"', 'address' : '"+ visitor.personal_information.home_address +"', 'vipId': '"+visitor.personal_information.frontdesk_person_id+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
-
-                this.device_list.forEach(async (device) => {
-
-                let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
-                })
-
-                });
-//*********************************************************************************************************************************
-                await this.$_post(postSavePerson, {person_info: data} );
-
-                await this.db.delete(visitor.id, "visitors");
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+                // Info
+    
+                for (let visitor of this.visitors)
+                {
+                    let data = {
+                        visit_purpose:      visitor.visitor_purpose.purpose_visit,
+                        contact_person:     visitor.visitor_purpose.contact_person,
+                        destination:        visitor.visitor_purpose.destination,
+    
+                        id_img: visitor.personal_information.id_image,
+                        id_num: visitor.personal_information.id_number,
+                        id_type: visitor.personal_information.id_type,
+    
+                        person_img: visitor.personal_information.account_img,
+                        last_name: visitor.personal_information.last_name,
+                        middle_name: visitor.personal_information.middle_name,
+                        given_name: visitor.personal_information.first_name,
+                        gender: visitor.personal_information.gender,
+                        birthday: new Date(visitor.personal_information.birth_day),
+                        nationality: visitor.personal_information.nationality,
+                        home_address: visitor.personal_information.home_address,
+                        contact_number: visitor.personal_information.contact_number,
+                        emergency_contact: visitor.personal_information.emergency_contact_number,
+                        date_created: new Date(),
+                        company_name: visitor.personal_information.company_name,
+                        frontdesk_person_id: visitor.personal_information.frontdesk_person_id,
+                        frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
+                        frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
+                        location: visitor.personal_information.location,
+                        location_coordinates: visitor.personal_information.location_coordinates,
+                        is_active: true,
+    
+                        saved_from: this.$user_info.company._id ? this.$user_info.company._id : '',
+    
+                        category: 'Visitors'
+                    }
+    
+    //***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
+                    toDataUrl(visitor.personal_information.account_img, async (myBase64)=> {
+                    let result           = '';
+                    let characters       = '0123456789';
+                    let charactersLength = characters.length;
+                    for ( let i = 0; i < 9; i++ ) {
+                        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                    }
+    
+                    let sex="";
+                    if (visitor.personal_information.gender=="Female")
+                    {
+                        sex=0;
+                    }
+                    else if (visitor.personal_information.gender=="Male")
+                    {
+                        sex=1;
+                    }
+                    let today= new Date()
+                    let expStartTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+today.getDate().toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+                    let expEndTime= (today.getFullYear())+ '-' +(today.getMonth()+1).toString().padStart(2, "0")+'-'+(today.getDate()+1).toString().padStart(2, "0")+ " "+ today.getHours().toString().padStart(2, "0")+":"+today.getMinutes().toString().padStart(2, "0");
+    
+                    let tabletFormData = new FormData();
+                    let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
+                    tabletFormData.append("pass", "123456");
+                    tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name +"', 'person_id' : '"+ visitor.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+visitor.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ visitor.personal_information.birth_day +"', 'address' : '"+ visitor.personal_information.home_address +"', 'vipId': '"+visitor.personal_information.frontdesk_person_id+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
+    
+                    this.device_list.forEach(async (device) => {
+    
+                    let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
+                    })
+    
+                    });
+    //*********************************************************************************************************************************
+                    await this.$_post(postSavePerson, {person_info: data} );
+    
+                    await this.db.delete(visitor.id, "visitors");
+                    this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+                }
+    
+                // Logs
+                for (let log of this.passLogs)
+                {
+                    console.log(log);
+                    log.company_id = this.$user_info.company ? this.$user_info.company._id : '';
+    
+                    await this.$_post('member/add/pass_log', { data: log });
+                    await this.db.delete(log.id, "passLogs");
+                    this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
+                }
+                // await this.$_post('member/count/logs');
+                setTimeout(() => this.checkQueueSync(), 1000);
             }
-
-            // Logs
-            for (let log of this.passLogs)
-            {
-                console.log(log);
-                log.saved_from = this.$user_info.company._id ? this.$user_info.company._id : '';
-
-                await this.$_post('member/add/pass_log', { data: log });
-                await this.db.delete(log.id, "passLogs");
-                this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
-            }
-            // await this.$_post('member/count/logs');
-            setTimeout(() => this.checkQueueSync(), 1000);
         },
         async getLog()
         {
@@ -335,12 +346,7 @@ export default
                     request.onreadystatechange = () => {
                         if (request.readyState == XMLHttpRequest.DONE) {
                             let resp = request.responseText;
-                            try
-                            {
-                                this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
-                            }
-                            catch(e)
-                            {}
+                            this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
                         }
                     }
                     request.send(formData);
@@ -349,19 +355,14 @@ export default
                         lastRequestTime: timeToday
                     },
                     'lastRequestTime');
-                    try
-                    {
-                        this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
-                    }
-                    catch(e)
-                    {
-                        this.$q.notify(
-                        {
-                            color: 'red',
-                            message: e.message
-                        });
-                    }
                 })
+                try
+                {
+                    this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
+                }
+                catch(e)
+                {
+                }
             }
         },
         async saveLogsIndexDb(dat, device)

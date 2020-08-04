@@ -180,7 +180,7 @@ module.exports =
         key.push(person.length ? person[0].category : null)
         // console.log(key);
         if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
-        await new CounterClass().counterActivities(req.body.data.saved_from, key, date_string)
+        await new CounterClass().counterActivities(req.body.data.company_id, key, date_string)
         
         let person_info = {
             mask:                   req.body.data.mask,
@@ -189,11 +189,11 @@ module.exports =
             person_img:             req.body.data.image_path,
             full_name:              req.body.data.name,
 
-            company_id:             req.body.data.saved_from,
+            company_id:             req.body.data.company_id,
             device_id:              req.body.data.device_id,
             
             frontdesk_person_id:    req.body.data.idCardNum,
-            date_logged:            req.body.data.currentTime,
+            date_logged:            req.body.data.currentTime
         }
         
         await new PersonLogsClass(person_info).submit()
@@ -406,7 +406,7 @@ module.exports =
     
     async getLogs(req, res)
     {
-        res.send(await new MDB_LOGS().collection.find({idCardNum: req.body.id}).limit(req.body.limit).sort({currentTime:-1}))
+        res.send(await new MDB_LOGS().collection.find(req.body.find_logs).limit(req.body.limit).sort({currentTime:-1}))
     },
 
     async getPerson(req, res)
