@@ -2,6 +2,7 @@ const MDB_COMPANIES     = require('../models/MDB_COMPANIES');
 const MDB_COUNT_OVERALL = require('../models/MDB_COUNT_OVERALL');
 const MDB_COUNT_DAILY   = require('../models/MDB_COUNT_DAILY')
 const MDB_COUNT_MONTHLY = require('../models/MDB_COUNT_MONTHLY');
+const MDB_DEVICE        = require('../models/MDB_DEVICE');
 
 
 const FormData = require('form-data');
@@ -44,7 +45,7 @@ module.exports = class CounterClass
         return
     }
 
-    async counterActivities(company_id, key, date_string)
+    async counterActivities(company_id, key, date_string, device_id)
     {
         await this.getCompany(company_id)
         for ( let company of this.company_to_update )
@@ -54,6 +55,7 @@ module.exports = class CounterClass
                 if (category) await this.saveCount(company, category, date_string)
             }
         }
+        await new MDB_DEVICE().collection.where({device_id: device_id}).updateMany({$inc: {count_logs: 1}})
     }
     
 }

@@ -5,9 +5,7 @@
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
                 <q-img @click="showToggle" src="../assets/vcop-logo-white.svg"></q-img>
-
                 <div class="header__content">
-
                     <q-btn-toggle v-show="show_toggle" color="red" dense @input="getTabletLogsSwitch" v-model="getLogsSwitch" :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
 
                     <q-btn v-show="checkUser()" class="btn-sync" @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
@@ -48,13 +46,28 @@
         <q-page-container>
             <router-view />
         </q-page-container>
+        <q-dialog v-model="alert">
+            <q-card>
+                <q-card-section>
+                <div class="text-h6">Alert</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                    A scanner device with DEVICE ID {{device_id}} has reached {{count}} logs. Please delete images from the device gallery to get. 
+                </q-card-section>
+
+                <q-card-actions align="right">
+                <q-btn @click="getDevices" flat label="OK" color="primary" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </q-layout>
 </template>
 <script>
 import EssentialLink    from 'components/EssentialLink.vue'
 import Layout           from './MemberLayout.scss'
 import navigation       from '../references/nav'
-import { postAddPerson , postSavePerson ,postGetDevice,postGetLogsSettings}                        from '../references/url';
+import { postAddPerson , postSavePerson , postGetDevice, postGetLogsSettings}                        from '../references/url';
 import Model from "../models/Model";
 import { base64StringToBlob } from 'blob-util';
 
@@ -89,7 +102,11 @@ export default
         device_list: [],
         user_info: {},
         show_toggle: false,
-        is_app: true
+        is_app: true,
+        device_list: [],
+        alert: false,
+        device_id: null,
+        count: 0,
     }),
     computed:
     {
@@ -118,6 +135,8 @@ export default
     },
     async created()
     {
+        await this.getDevices()
+
         this.is_app = this.$user_info.user_type == 'Officer' ? false : true
         // Edward
         await this.db.initialize();
@@ -133,6 +152,31 @@ export default
     },
     methods:
     {
+        async getDevices()
+        {
+            if (this.$user_info && this.$user_info.company)
+            {
+                let devices = await this.$_post(postGetDevice, {find_device: {company_id: this.$user_info.company._id}});
+                this.device_list = devices.data
+
+            this.checkDevice()
+                // console.log(this.device_list);
+            }
+        },
+        
+        checkDevice()
+        {
+            for (let device of this.device_list)
+            {
+                if (device.count_logs >= 20000)
+                {
+                    this.alert = true
+                    this.device_id = device.device_id
+                    this.count = device.count_logs
+                }
+            }
+        },
+
         checkUser()
         {
             if (this.$user_info && this.$user_info.user_type == 'Super Admin' || this.$user_info.user_type == 'Officer') return false
@@ -220,6 +264,7 @@ export default
         },
         async checkQueueSync()
         {
+            // console.log(this.visitors);
             if (this.$user_info.user_type != 'Super Admin')
             {
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
@@ -294,7 +339,10 @@ export default
     
                     });
     //*********************************************************************************************************************************
-                    await this.$_post(postSavePerson, {person_info: data} );
+                    if (this.visitors.length) 
+                    {
+                        await this.$_post(postSavePerson, {person_info: data} );
+                    }
     
                     await this.db.delete(visitor.id, "visitors");
                     this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
@@ -303,13 +351,24 @@ export default
                 // Logs
                 for (let log of this.passLogs)
                 {
-                    console.log(log);
+                    console.log(new Date(log.currentTime));
                     log.company_id = this.$user_info.company ? this.$user_info.company._id : '';
     
                     await this.$_post('member/add/pass_log', { data: log });
                     await this.db.delete(log.id, "passLogs");
                     this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
+
+                    for (let index = 0; index < this.device_list.length; index++) {
+                        if (log.device_id == this.device_list[index].device_id)
+                        {
+                            console.log(this.device_list[index].count_logs);
+                            this.device_list[index].count_logs = this.device_list[index].count_logs + 1
+                            
+                        }
+                    }
+                    this.checkDevice()
                 }
+
                 // await this.$_post('member/count/logs');
                 setTimeout(() => this.checkQueueSync(), 1000);
             }

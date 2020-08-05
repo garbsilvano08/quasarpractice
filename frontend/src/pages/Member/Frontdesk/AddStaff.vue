@@ -403,7 +403,7 @@ export default {
                 // else field = capitalize(field.replace('_', ' '));
 
                 if (
-                    !this.staff_class.first_name ||
+                    !this.staff_class.given_name ||
                     !this.staff_class.last_name ||
                     !this.staff_class.middle_name ||
                     !this.staff_class.home_address ||

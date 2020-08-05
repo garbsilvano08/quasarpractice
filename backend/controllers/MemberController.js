@@ -168,7 +168,7 @@ module.exports =
     {
         let key = ['Traffic']
         let person_log = []
-        let date_string = new Date().toISOString().split('T')[0]
+        let date_string = new Date(new Date(req.body.data.currentTime)).toISOString().split('T')[0]
         req.body.data.date_string = date_string
         if (Number(req.body.data.tempratrue) >= 37.3 ) req.body.data.has_fever = true
         else req.body.data.has_fever = false
@@ -180,7 +180,7 @@ module.exports =
         key.push(person.length ? person[0].category : null)
         // console.log(key);
         if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
-        await new CounterClass().counterActivities(req.body.data.company_id, key, date_string)
+        await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
             mask:                   req.body.data.mask,

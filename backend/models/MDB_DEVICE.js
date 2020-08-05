@@ -12,6 +12,7 @@ const schema    = new Schema(
     device_ip:          { type: String,  required: true },
     company_id:         { type: String,  required: true },
     log_type:           { type: String,  required: true },
+    count_logs:         { type: Number,  required: false, default: 0},
 });
 
 class MDB_DEVICE extends MODEL
