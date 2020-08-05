@@ -398,30 +398,31 @@ export default
                 formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
                 let logs= [];
                 var request = new XMLHttpRequest();
-
-                this.device_list.forEach(async (device) => {
-                    var request = new XMLHttpRequest();
-                    request.open("POST", "http://"+device.device_ip+":8080/newFindRecords");
-                    request.onreadystatechange = () => {
-                        if (request.readyState == XMLHttpRequest.DONE) {
-                            let resp = request.responseText;
-                            this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
-                        }
-                    }
-                    request.send(formData);
-                    await this.db.add(
-                    {
-                        lastRequestTime: timeToday
-                    },
-                    'lastRequestTime');
-                })
                 try
                 {
-                    this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
+                    this.device_list.forEach(async (device) => {
+                        var request = new XMLHttpRequest();
+                        request.open("POST", "http://"+device.device_ip+":8080/newFindRecords");
+                        request.onreadystatechange = () => {
+                            if (request.readyState == XMLHttpRequest.DONE) {
+                                let resp = request.responseText;
+                                this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
+                            }
+                        }
+                        request.send(formData);
+                        await this.db.add(
+                        {
+                            lastRequestTime: timeToday
+                        },
+                        'lastRequestTime');
+                    })
+
                 }
                 catch(e)
                 {
                 }
+                    this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
+                
             }
         },
         async saveLogsIndexDb(dat, device)
