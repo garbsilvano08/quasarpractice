@@ -46,10 +46,10 @@
                     margin-bottom: 30px;
                 }
 
-                .img-holder__sm {
-                    .img__sm {
-                        width: 150px !important;
-                        height: 150px;
+                .img-holder__id {
+                    .img__id {
+                        width: 350px !important;
+                        height: 250px;
 
                         @media screen and (max-width: 425px) {
                             width: 100% !important;

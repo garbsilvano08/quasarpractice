@@ -120,6 +120,11 @@
                <q-input v-model="traffic_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
+
+            <!-- <div class="dashboard__graph-content">
+               <line-chart :data="data_line_graph" />
+            </div> -->
+
             <div v-if="traffic_weekly.data" class="dashboard__graph-content">
                <line-chart style="position: relative; height:250px; width:100%"
                   :data="{
@@ -144,7 +149,12 @@
                <q-input v-model="employee_date" type='date' outlined dense></q-input>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
-            <div v-if="staff_visitors.data" class="dashboard__graph-content">
+
+            <div class="dashboard__graph-content">
+               <bar-chart :data="data_bar_graph"></bar-chart>
+            </div>
+
+            <!-- <div v-if="staff_visitors.data" class="dashboard__graph-content">
                <bar-chart style="position: relative; height:250px; width:100%"
                   :data="{
                      'MON': staff_visitors.data.Mon,
@@ -157,7 +167,7 @@
                   }"
                >
                </bar-chart>
-            </div>
+            </div> -->
          </div>
          <!-- VISITORS PURPOSE -->
          <div class="dashboard__graph-item">
@@ -253,6 +263,14 @@ export default
 
    data:() =>
    ({
+      data_bar_graph: [
+         {
+            name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
+         },
+         {
+            name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
+         }
+      ],
       sample_alert: [
          {
             person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
@@ -543,7 +561,7 @@ export default
    },
    async mounted()
    {
-      if (this.$user_info.user_type == 'Officer') 
+      if (this.$user_info.user_type == 'Officer')
       {
          this.$router.push({ name: 'member_frontdesk_addreport' });
       }

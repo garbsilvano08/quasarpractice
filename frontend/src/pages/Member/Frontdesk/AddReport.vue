@@ -26,8 +26,8 @@
                             <div class="content__select-label">Identification Card Type</div>
                             <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
-                        <div class="content__img-holder img-holder__sm">
-                            <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '/img/placeholder-img.jpg'"></q-img>
+                        <div class="content__img-holder img-holder__id">
+                            <q-img class="content__img img__id" :src="personal_information.id_image ? personal_information.id_image : '/img/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file">
                             <q-btn @click="openFilemanager('id')" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                         </div>
@@ -201,7 +201,7 @@ export default {
             'Official Business','Collection and Pickup','Delivery','Corporate Meeting','Client/Customer','Guest'
         ]
     }),
-    methods: 
+    methods:
     {
         test()
         {
@@ -230,7 +230,7 @@ export default {
             {
                 str = str.split(" ");
 
-                for (var i = 0, x = str.length; i < x; i++) 
+                for (var i = 0, x = str.length; i < x; i++)
                 {
                     str[i] = str[i][0].toUpperCase() + str[i].substr(1);
                 }
@@ -247,11 +247,11 @@ export default {
                     !this.personal_information.middle_name ||
                     !this.personal_information.home_address ||
                     !this.personal_information.contact_number ||
-                    !this.personal_information.birth_date || 
+                    !this.personal_information.birth_date ||
                     !this.personal_information.account_img ||
                     !this.personal_information.id_image ||
                     !this.personal_information.id_number ||
-                    !this.personal_information.temperature         
+                    !this.personal_information.temperature
                 )
                 {
                     this.$q.notify(
@@ -274,7 +274,7 @@ export default {
                 // id_img: this.personal_information.id_img,
                 // id_num: this.personal_information.id_num,
                 // id_type: this.personal_information.id_type,
-                
+
                 // company_details: this.getCompany( this.personal_information.company_name),
                 person_img: this.personal_information.account_img,
                 last_name: this.personal_information.last_name,
@@ -298,8 +298,8 @@ export default {
 
                 saved_from: this.$user_info.company._id ? this.$user_info.company._id : ''
             }
-            
-            
+
+
             this.$q.loading.show();
             try
             {
@@ -327,14 +327,14 @@ export default {
                     Notify.create({
                         color: 'green',
                         message: 'This person was succesfully saved'
-                    }); 
+                    });
                 }
                 else
                 {
                     Notify.create({
                         color: 'red',
                         message: 'This account is already existing'
-                    }); 
+                    });
                 }
                 this.personal_information = {}
             }
@@ -343,7 +343,7 @@ export default {
                 Notify.create({
                     color: 'red',
                     message: 'Try again' + e.message
-                }); 
+                });
             }
             this.$q.loading.hide();
         },
@@ -351,8 +351,8 @@ export default {
         {
             let oFReader = new FileReader();
             const formData = new FormData();
-            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]); 
-            else formData.append('image',document.getElementById("uploadImage").files[0]); 
+            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]);
+            else formData.append('image',document.getElementById("uploadImage").files[0]);
 
             return await this.$_post_file(formData);
         },
@@ -376,7 +376,7 @@ export default {
             let img = await this.getImageURL('id')
             this.personal_information.id_image = img
             // this.$q.loading.show();
-            if (img) 
+            if (img)
             {
                 let is_converted = await this.ocr_class.ocrUnirest(this.personal_information.id_type, img )
                 if (is_converted)

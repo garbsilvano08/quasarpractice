@@ -34,8 +34,8 @@
                             <div class="content__select-label">Identification Card Type</div>
                             <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
-                        <div class="content__img-holder img-holder__sm">
-                            <canvas class="content__img"  border icon="mdi-camera" id="id_canvas" width="640" height="480"></canvas>
+                        <div class="content__img-holder img-holder__id">
+                            <canvas class="content__img img__id"  border icon="mdi-camera" id="id_canvas" width="640" height="480"></canvas>
                             <!-- <video v-show="is_carturing" class="content__img" id="id_video" width="500" height="500" autoplay></video> -->
                             <!-- <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '/img/placeholder-img.jpg'"></q-img>
                             <input style="display:none" id="uploadIDImage" accept="image/*" @change="checkImage()" ref="idUploader" type="file"> -->
@@ -101,7 +101,7 @@
                             <div class="content__input">
                                 <div class="content__input-label">Location</div>
                                 <q-select
-                                    outlined 
+                                    outlined
                                     dense
                                     v-model="personal_information.location"
                                     use-input
@@ -312,7 +312,7 @@ export default {
                 });
             }
         },
-        
+
     },
     async mounted()
     {
@@ -384,7 +384,7 @@ export default {
             }
         },
         async checkImage(image)
-        {   
+        {
             this.$q.loading.show();
             // let img = await this.getImageURL('id')
             this.personal_information.id_image = image
@@ -400,9 +400,9 @@ export default {
             this.personal_information.nationality = this.visitor_class.nationality
             this.$q.loading.hide();
         },
-        async getNearbyPlaces(val, update) 
+        async getNearbyPlaces(val, update)
         {
-            if (val === '') 
+            if (val === '')
             {
                 update();
                 return;
@@ -425,7 +425,7 @@ export default {
                 {
                     str = str.split(" ");
 
-                    for (var i = 0, x = str.length; i < x; i++) 
+                    for (var i = 0, x = str.length; i < x; i++)
                     {
                         str[i] = str[i][0].toUpperCase() + str[i].substr(1);
                     }
@@ -448,9 +448,9 @@ export default {
                         !this.personal_information.middle_name ||
                         !this.personal_information.home_address ||
                         !this.personal_information.contact_number ||
-                        !this.personal_information.birth_date || 
+                        !this.personal_information.birth_date ||
                         !this.personal_information.account_img ||
-                        !this.personal_information.id_image                     
+                        !this.personal_information.id_image
                     )
                     {
                         if (!this.personal_information[validate]) throw new Error(field + ' is required.');
@@ -490,13 +490,13 @@ export default {
                     this.visitor_purpose = {}
                     this.personal_information = {}
                 });
-                
+
                 this.$q.notify(
                 {
                     color: 'green',
                     message: 'Account was successfully created'
                 });
-                
+
                 });
             }
             catch (e)
@@ -509,7 +509,7 @@ export default {
             }
         },
         async uploadImage(image_url)
-        {  
+        {
             if (image_url)
             {
                 this.$q.loading.show();
@@ -517,15 +517,15 @@ export default {
                 const blobb = base64StringToBlob(image_url, contentType)
                 blobb.lastModifiedDate = new Date()
                 // const blobUrl = URL.createObjectURL(blob);
-    
+
                 // this.personaluploader_information.account_img = await this.getImageURL();
-    
+
                 let oFReader = new FileReader();
                 let formData = new FormData();
-    
-                // formData.append('image',document.getElementById("uploadImage").files[0]); 
-                formData.append('image', blobb, 'person' + Date.now().toString() + '.png'); 
-                if (this.image_type == 'id') 
+
+                // formData.append('image',document.getElementById("uploadImage").files[0]);
+                formData.append('image', blobb, 'person' + Date.now().toString() + '.png');
+                if (this.image_type == 'id')
                 {
                     this.personal_information.id_image = this.face_pic_path
                 }
@@ -534,7 +534,7 @@ export default {
                     this.personal_information.account_img = this.face_pic_path
                     this.face_pic_path = await this.$_post_file(formData);
                 }
-                
+
                 this.$q.loading.hide();
             }
 
@@ -542,14 +542,14 @@ export default {
 
         },
 
-        
+
 
         async getImageURL(type)
         {
             let oFReader = new FileReader();
             const formData = new FormData();
-            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]); 
-            else formData.append('image',document.getElementById("uploadImage").files[0]); 
+            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]);
+            else formData.append('image',document.getElementById("uploadImage").files[0]);
 
             return await this.$_post_file(formData);
         },

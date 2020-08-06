@@ -31,8 +31,8 @@
                             <div class="content__select-label">Identification Card Type</div>
                             <q-select v-model="personal_information.id_type" :options="options_id" outlined dense></q-select>
                         </div>
-                        <div class="content__img-holder img-holder__sm">
-                            <canvas class="content__img"  border icon="mdi-camera" id="canvas" width="640" height="480"></canvas>
+                        <div class="content__img-holder img-holder__id">
+                            <canvas class="content__img img__id"  border icon="mdi-camera" id="canvas" width="640" height="480"></canvas>
                             <q-btn @click="openCamera()" class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn>
                             <!-- <q-img class="content__img img__sm" :src="personal_information.id_image ? personal_information.id_image : '../../../assets/Member/placeholder-img.jpg'"></q-img>
                             <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture ID"></q-btn> -->
@@ -97,7 +97,7 @@
                                 <div class="content__input">
                                     <div class="content__input-label">Location</div>
                                     <q-select
-                                        outlined 
+                                        outlined
                                         dense
                                         v-model="personal_information.location"
                                         use-input
@@ -244,11 +244,11 @@ export default {
         company_details: {},
         options_location: []
     }),
-    
+
      watch:
     {
-        
-        
+
+
         async open_camera(val)
         {
             if (val)
@@ -272,7 +272,7 @@ export default {
                 });
             }
         },
-        
+
     },
 
     methods:
@@ -340,7 +340,7 @@ export default {
                 {
                     str = str.split(" ");
 
-                    for (var i = 0, x = str.length; i < x; i++) 
+                    for (var i = 0, x = str.length; i < x; i++)
                     {
                         str[i] = str[i][0].toUpperCase() + str[i].substr(1);
                     }
@@ -363,9 +363,9 @@ export default {
                         !this.personal_information.middle_name ||
                         !this.personal_information.home_address ||
                         !this.personal_information.contact_number ||
-                        !this.personal_information.birthday || 
+                        !this.personal_information.birthday ||
                         !this.personal_information.person_img ||
-                        !this.personal_information.id_image                     
+                        !this.personal_information.id_image
                     )
                     {
                         if (!this.personal_information[validate]) throw new Error(field + ' is required.');
@@ -391,7 +391,7 @@ export default {
                 this.personal_information.frontdesk_person_id = result,
                 this.personal_information.frontdesk_person_date = new Date(),
                 this.personal_information.saved_from = this.$user_info.company ? this.$user_info.company._id : ''
-                    
+
                 let save = await this.$_post(postSavePerson, {person_info: this.personal_information});
                     if (save.data == true)
                     {
@@ -399,7 +399,7 @@ export default {
                         {
                             color: 'green',
                             message: 'Successfully added Report'
-                        }); 
+                        });
                     }
                     else
                     {
@@ -407,9 +407,9 @@ export default {
                         {
                             color: 'red',
                             message: 'This account is already existing'
-                        }); 
+                        });
                     }
-                
+
                 });
             }
             catch (e)
@@ -427,9 +427,9 @@ export default {
             this.company_details = value
         },
 
-        async getNearbyPlaces(val, update) 
+        async getNearbyPlaces(val, update)
         {
-            if (val === '') 
+            if (val === '')
             {
                 update();
                 return;
@@ -444,7 +444,7 @@ export default {
             })
         },
         async checkImage(image)
-        {   
+        {
             this.$q.loading.show();
             if (image) await this.visitor_class.ocrUnirest(this.personal_information.id_type, this.personal_information.id_image )
             this.personal_information.id_num = this.visitor_class.id_num
@@ -459,7 +459,7 @@ export default {
             this.$q.loading.hide();
         },
         async uploadImage(image_url)
-        {  
+        {
             console.log(image_url);
             if (image_url)
             {
@@ -468,11 +468,11 @@ export default {
                 const blobb = base64StringToBlob(image_url, contentType)
                 blobb.lastModifiedDate = new Date()
                 this.personal_information.id_image = image_url
-    
+
                 let oFReader = new FileReader();
                 let formData = new FormData();
-    
-                formData.append('image', blobb, 'person' + Date.now().toString() + '.png'); 
+
+                formData.append('image', blobb, 'person' + Date.now().toString() + '.png');
                 this.personal_information.id_image = await this.$_post_file(formData);
                 this.$q.loading.hide();
             }
@@ -497,7 +497,7 @@ export default {
                 await this.uploadImage(image_data)
                 await this.checkImage()
             });
-            
+
             this.$q.loading.hide();
         },
         openCamera(type)
@@ -525,8 +525,8 @@ export default {
     },
     async created()
     {
-       
-        
+
+
     }
 }
 </script>
