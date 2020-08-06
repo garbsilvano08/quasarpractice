@@ -404,9 +404,9 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-            params = {find_device: {company_name: this.company_details.company_name,date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
+            params = {find_device: {company_name: this.company_details.company_name}}
          }
-         else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
+         // else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
 
          let devices =  await this.$_post(postGetDevice, params);
          this.device_number = devices.data.length
