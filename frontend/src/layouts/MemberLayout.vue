@@ -398,31 +398,28 @@ export default
                 formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
                 let logs= [];
                 var request = new XMLHttpRequest();
-                try
-                {
-                    this.device_list.forEach(async (device) => {
-                        var request = new XMLHttpRequest();
-                        request.open("POST", "http://"+device.device_ip+":8080/newFindRecords");
-                        request.onreadystatechange = () => {
-                            if (request.readyState == XMLHttpRequest.DONE) {
+                this.device_list.forEach(async (device) => {
+                    var request = new XMLHttpRequest();
+                    request.open("POST", "http://"+device.device_ip+":8080/newFindRecords");
+                    request.onreadystatechange = () => {
+                        if (request.readyState === 4) {
+                            if (request.status === 200) {
                                 let resp = request.responseText;
                                 this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
+                            } else {
+                                console.log("Error", request.statusText);
                             }
                         }
-                        request.send(formData);
-                        await this.db.add(
-                        {
-                            lastRequestTime: timeToday
-                        },
-                        'lastRequestTime');
-                    })
-
-                }
-                catch(e)
-                {
-                }
+                    }
+                    request.send(formData);
+                    await this.db.add(
+                    {
+                        lastRequestTime: timeToday
+                    },
+                    'lastRequestTime');
                     this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
-                
+                })
+
             }
         },
         async saveLogsIndexDb(dat, device)
@@ -436,7 +433,7 @@ export default
                 formData.append("imgName", data.imageName);
 
                 let getImgRes = await this.$axios.post("http://"+device.device_ip+":8080/getRecordImg", formData).then(res => res.data);
-               let imgPath= await this.savePicsLocal(getImgRes, data.imageName).then( rest => rest);
+                let imgPath= await this.savePicsLocal(getImgRes, data.imageName)
                 data.image_path = imgPath;
                 data.device_id = device.device_id;
                 await this.db.add(data, "passLogs");
@@ -453,7 +450,13 @@ export default
             blob = base64StringToBlob(respImage.data, contentType);
             blob.lastModifiedDate = new Date();
             formDatatoBackend.append('image', blob, imageName);
-            let res = await this.$_post_file(formDatatoBackend);
+            let res
+            try
+            {
+                res = await this.$_post_file(formDatatoBackend);
+            }
+            catch(e){}
+
             return res;
         },
 
