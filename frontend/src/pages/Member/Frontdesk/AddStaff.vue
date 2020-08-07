@@ -27,20 +27,16 @@
                             <q-btn class="btn-upload btn-primary" flat dense no-caps label="Take a Photo" @click="openFilemanager()"></q-btn> -->
                         </div>
                     </div>
-                     <!-- EMPLOYMENT INFORMATION -->
-                    <div class="frontdesk__content content__box" style="margin-top: 30px;">
-                        <div class="frontdesk__content">
-                            <div class="frontdesk__content-info">
-                                <div class="content__title">Employment Information</div>
-                                <div class="content__select">
-                                    <div class="content__select-label">Tag a Company</div>
-                                    <q-select v-model="staff_class.company_name" :options="options_company" outlined dense></q-select>
-                                </div>
-                                <div class="content__input">
-                                    <div class="content__input-label">Position</div>
-                                    <q-input v-model="staff_class.position"  outlined dense></q-input>
-                                </div>
-                            </div>
+                    <!-- EMPLOYMENT INFORMATION -->
+                    <div class="frontdesk__content-info">
+                        <div class="content__title">Employment Information</div>
+                        <div class="content__select">
+                            <div class="content__select-label">Tag a Company</div>
+                            <q-select v-model="staff_class.company_name" :options="options_company" outlined dense></q-select>
+                        </div>
+                        <div class="content__input">
+                            <div class="content__input-label">Position</div>
+                            <q-input v-model="staff_class.position"  outlined dense></q-input>
                         </div>
                     </div>
                     <!-- CHOOSE ID -->
@@ -272,7 +268,7 @@ export default {
 
             }
         },
-        
+
     },
 
     methods:
@@ -310,7 +306,7 @@ export default {
         },
 
         async uploadImage(image_url)
-        {  
+        {
             if (image_url)
             {
                 this.$q.loading.show();
@@ -318,17 +314,17 @@ export default {
                 const blobb = base64StringToBlob(image_url, contentType)
                 blobb.lastModifiedDate = new Date()
                 // const blobUrl = URL.createObjectURL(blob);
-    
+
                 // this.personaluploader_information.account_img = await this.getImageURL();
                 this.staff_class.account_img = image_url
-    
+
                 let oFReader = new FileReader();
                 let formData = new FormData();
-    
-                // formData.append('image',document.getElementById("uploadImage").files[0]); 
-                formData.append('image', blobb, 'person' + Date.now().toString() + '.png'); 
+
+                // formData.append('image',document.getElementById("uploadImage").files[0]);
+                formData.append('image', blobb, 'person' + Date.now().toString() + '.png');
                 this.staff_class.account_img = await this.$_post_file(formData);
-                
+
                 this.$q.loading.hide();
             }
 
@@ -340,8 +336,8 @@ export default {
         {
             let oFReader = new FileReader();
             const formData = new FormData();
-            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]); 
-            else formData.append('image',document.getElementById("uploadImage").files[0]); 
+            if (type == 'id') formData.append('image',document.getElementById("uploadIDImage").files[0]);
+            else formData.append('image',document.getElementById("uploadImage").files[0]);
 
             return await this.$_post_file(formData);
         },
@@ -387,7 +383,7 @@ export default {
             {
                 str = str.split(" ");
 
-                for (var i = 0, x = str.length; i < x; i++) 
+                for (var i = 0, x = str.length; i < x; i++)
                 {
                     str[i] = str[i][0].toUpperCase() + str[i].substr(1);
                 }
@@ -408,10 +404,10 @@ export default {
                     !this.staff_class.middle_name ||
                     !this.staff_class.home_address ||
                     !this.staff_class.contact_number ||
-                    !this.staff_class.birthday || 
+                    !this.staff_class.birthday ||
                     !this.staff_class.account_img ||
-                    !this.staff_class.company_name || 
-                    !this.staff_class.position                    
+                    !this.staff_class.company_name ||
+                    !this.staff_class.position
                 )
                 {
                     this.$q.notify(
@@ -434,7 +430,7 @@ export default {
                 // id_img: this.staff_class.id_img,
                 // id_num: this.staff_class.id_num,
                 // id_type: this.staff_class.id_type,
-                
+
                 // company_details: this.getCompany( this.staff_class.company_name),
                 person_img: this.staff_class.account_img,
                 last_name: this.staff_class.last_name,
@@ -458,8 +454,8 @@ export default {
 
                 saved_from: this.$user_info.company._id ? this.$user_info.company._id : ''
             }
-            
-            
+
+
             this.$q.loading.show();
             try
             {
@@ -470,7 +466,7 @@ export default {
                     Notify.create({
                         color: 'green',
                         message: 'Successfully updated Staff'
-                    }); 
+                    });
                     data.type = 'Staff'
                     this.$router.push({
                         name: 'member_personal-information',
@@ -487,14 +483,14 @@ export default {
                         Notify.create({
                             color: 'green',
                             message: 'Successfully added Staff'
-                        }); 
+                        });
                     }
                     else
                     {
                        Notify.create({
                             color: 'red',
                             message: 'This account is already existing'
-                        }); 
+                        });
                     }
                 }
                 this.staff_class = {}
@@ -504,7 +500,7 @@ export default {
                 Notify.create({
                     color: 'red',
                     message: 'Try again' + e.message
-                }); 
+                });
             }
             this.$q.loading.hide();
         },
@@ -518,17 +514,17 @@ export default {
     },
     async mounted()
     {
-        if (this.$route.params.is_edit) 
+        if (this.$route.params.is_edit)
         {
             this.staff_class = new OpticalReadClass(this.$route.params.account_info)
         }
-        
+
         this.company_list = await this.$_post(postGetCompanies);
         for (let company of this.company_list.data) {
-            this.options_company.push(company.company_name) 
+            this.options_company.push(company.company_name)
         }
-        
-        
+
+
     }
 }
 </script>

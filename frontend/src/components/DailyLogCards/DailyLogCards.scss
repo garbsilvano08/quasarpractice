@@ -3,11 +3,20 @@
     grid-template-columns: auto 1fr;
     grid-gap: 15px;
 
+    @media screen and (max-width: 768px) {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
     .q-img {
         height: 60px;
         width: 60px;
         border-radius: 100%;
         border: solid 1px rgba(#000000, .2);
+
+        @media screen and (max-width: 768px) {
+            margin: auto;
+        }
     }
 
     .content__info {
