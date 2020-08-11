@@ -1,6 +1,13 @@
 <template>
     <div class="user-management">
-        <div class="header__title">ALL USERS</div>
+        <div class="user-management__header">
+            <div class="header__title">ALL USERS</div>
+            <div class="header__filter">
+                <q-btn class="btn-primary btn-add" flat dense no-caps>
+                    Add User
+                </q-btn>
+            </div>
+        </div>
         <div class="user-management__container content__box">
             <div  v-for="(user, i) in this.users_list.data" :key="i" class="user-management__info-content">
                 <q-img :src="user.user_picture"></q-img>
@@ -41,7 +48,7 @@ export default {
     async mounted(){
         this.users_list = await this.$_post('member/get/user');
     },
-    methods: 
+    methods:
     {
         async deleteUser(index){
             this.$q.dialog({
@@ -60,7 +67,7 @@ export default {
         {
             this.$q.loading.show();
             await this.$_post('member/delete/user', this.users_list.data[index] );
-            this.users_list.data.splice(index, 1);  
+            this.users_list.data.splice(index, 1);
             this.$q.loading.hide();
         },
         async editUser(index)

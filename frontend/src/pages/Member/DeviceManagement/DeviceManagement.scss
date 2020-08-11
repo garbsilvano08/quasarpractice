@@ -34,6 +34,14 @@
                     padding-left: 10px;
                 }
             }
+
+            .btn-add {
+                margin-left: 10px;
+
+                @media screen and (max-width: 425px) {
+                    margin-left: 0px !important;
+                }
+            }
         }
     }
 }

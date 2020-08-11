@@ -8,6 +8,9 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
+                <q-btn class="btn-primary btn-add" flat dense no-caps>
+                    Add Company
+                </q-btn>
             </div>
         </div>
         <div class="company-management__container content__grid-3x3">
@@ -72,7 +75,7 @@ export default {
                 console.log(this.company_list.data)
                 this.company_list.data.splice(index, 1);
             });
-            
+
             // let asd = await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id});
         },
         editCompany(index)
@@ -81,7 +84,7 @@ export default {
             // console.log(this.company_list.data[index]);
             this.pasData = this.company_list.data[index];
             return this.company_list.data[index];
-            
+
         }
     }
 

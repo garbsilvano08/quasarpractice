@@ -5,7 +5,9 @@
                 DEVICE MANAGEMENT <br>
                 <span>300 DEVICES INSTALLED</span></div>
             <div class="header__filter">
-                <!-- <q-select v-model="select__company" :options="options_company" outlined dense></q-select> -->
+                <q-btn class="btn-primary btn-add" flat dense no-caps>
+                    Add Device
+                </q-btn>
             </div>
         </div>
         <div class="device-management__container content__box">
