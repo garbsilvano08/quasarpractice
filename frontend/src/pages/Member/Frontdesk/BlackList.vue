@@ -50,54 +50,54 @@
                             </div> -->
                             <!-- Firstname -->
                             <div class="content__input">
-                                <div class="content__input-label">First Name</div>
+                                <div class="content__input-label">First Name *</div>
                                 <q-input v-model="blacklist_class.given_name" outlined dense></q-input>
                             </div>
                             <!-- Lastname -->
                             <div class="content__input">
-                                <div class="content__input-label">Last Name</div>
+                                <div class="content__input-label">Last Name *</div>
                                 <q-input v-model="blacklist_class.last_name" outlined dense></q-input>
                             </div>
                             <!-- Middlename -->
                             <div class="content__input">
-                                <div class="content__input-label">Middle Name</div>
+                                <div class="content__input-label">Middle Name *</div>
                                 <q-input v-model="blacklist_class.middle_name" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
-                                    <div class="content__select-label">Gender</div>
+                                    <div class="content__select-label">Gender *</div>
                                     <q-select v-model="blacklist_class.gender" :options="options_gender" outlined dense></q-select>
                                 </div>
                                 <div class="content__input">
-                                    <div class="content__input-label">Birth Date</div>
+                                    <div class="content__input-label">Birth Date *</div>
                                     <q-input type="date" v-model="blacklist_class.birthday" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->
                             <div class="content__input">
-                                <div class="content__input-label">Nationality</div>
+                                <div class="content__input-label">Nationality *</div>
                                 <q-input v-model="blacklist_class.nationality" outlined dense></q-input>
                             </div>
                             <!-- Home Address -->
                             <div class="content__input">
-                                <div class="content__input-label">Home Address</div>
+                                <div class="content__input-label">Home Address *</div>
                                 <q-input v-model="blacklist_class.home_address" outlined dense></q-input>
                             </div>
                             <!-- Contact Information -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
-                                    <div class="content__input-label">Contact Number</div>
+                                    <div class="content__input-label">Contact Number *</div>
                                     <q-input type="number" v-model="blacklist_class.contact_number" outlined dense></q-input>
                                 </div>
                                 <div class="content__input">
-                                    <div class="content__input-label">Emergency Contact Number</div>
+                                    <div class="content__input-label">Emergency Contact Number *</div>
                                     <q-input type="number" v-model="blacklist_class.emergency_contact" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Choose Type -->
                             <div class="content__select">
-                                <div class="content__select-label">Tag a Company</div>
+                                <div class="content__select-label">Tag a Company *</div>
                                 <q-select v-model="blacklist_class.company_name" :options="options_company" outlined dense></q-select>
                             </div>
                         </div>
@@ -223,7 +223,7 @@ export default {
         },
 
         async uploadImage()
-        {  
+        {
             this.blacklist_class.account_img = await this.getImageURL()
         },
 
@@ -231,7 +231,7 @@ export default {
         {
             let oFReader = new FileReader();
             const formData = new FormData();
-            formData.append('image',document.getElementById("uploadImage").files[0]); 
+            formData.append('image',document.getElementById("uploadImage").files[0]);
 
             return await this.$_post_file(formData);
         },
@@ -253,13 +253,13 @@ export default {
                 date_created: new Date(),
                 company_name: this.blacklist_class.company_name,
                 is_active: true,
-                
+
                 reason_blacklist: this.blacklist_class.reason_blacklist,
                 category: 'Blacklist',
 
                 saved_from: this.$user_info.company._id ? this.$user_info.company._id : ''
             }
-            
+
             this.$q.loading.show();
             try
             {
@@ -270,7 +270,7 @@ export default {
                     Notify.create({
                         color: 'green',
                         message: 'Successfully updated Blacklist'
-                    }); 
+                    });
                     data.type = 'Blacklist'
                     this.$router.push({
                         name: 'member_personal-information',
@@ -289,14 +289,14 @@ export default {
                         Notify.create({
                         color: 'green',
                         message: 'Successfully added blacklist'
-                    }); 
+                    });
                     }
                     else
                     {
                        Notify.create({
                             color: 'red',
                             message: 'This account is already existing'
-                        }); 
+                        });
                     }
                 }
                 this.blacklist_class = {}
@@ -306,14 +306,14 @@ export default {
                 Notify.create({
                     color: 'red',
                     message: 'Try again'
-                }); 
+                });
             }
             this.$q.loading.hide();
         }
     },
    async mounted()
     {
-        if (this.$route.params.is_edit) 
+        if (this.$route.params.is_edit)
         {
             this.blacklist_class = new OpticalReadClass(this.$route.params.account_info)
         }

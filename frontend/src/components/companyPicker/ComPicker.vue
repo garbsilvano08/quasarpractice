@@ -1,6 +1,6 @@
 <template>
     <div>
-        <q-btn dense no-caps flat class="full-width btn-outline btn-choose" align="between" style="padding: 3px 10px !important;">
+        <q-btn dense no-caps flat class="btn-outline btn-choose" align="between">
             <span>{{value.company_name ? value.company_name : "Choose"}}</span>
             <q-icon size="small" class="icon" name="fa fa-caret-down"></q-icon>
             <q-menu fit>
@@ -84,3 +84,10 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.btn-choose {
+    padding: 3px 10px !important;
+    width: 200px !important;
+}
+</style>

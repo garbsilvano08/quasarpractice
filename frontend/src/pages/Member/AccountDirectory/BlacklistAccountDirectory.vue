@@ -8,7 +8,31 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <q-select v-model="select__date" :options="options_date" outlined dense></q-select>
+                <com-picker class="btn-choose" @select=getCompanyData></com-picker>
+                <!-- <q-select v-model="select__date" :options="options_date" outlined dense></q-select> -->
+            </div>
+        </div>
+        <div class="account-directory__header">
+            <div class="header__filter">
+                <q-input class="select-sm" type="date" outlined dense></q-input>
+                <q-input class="select-sm" type="date" outlined dense></q-input>
+                <q-btn flat dense no-caps class="btn-outline btn-sort" label="Sort">
+                    <q-menu>
+                        <q-list style="min-width: 100px">
+                            <div class="q-gutter-sm">
+                                <q-radio label="Ascending" />
+                                <q-radio label="Descending" />
+                            </div>
+                            <q-separator />
+                            <q-item clickable v-close-popup>
+                                <q-item-section></q-item-section>
+                            </q-item>
+                        </q-list>
+                    </q-menu>
+                </q-btn>
+                <q-btn class="btn-primary btn-export" flat dense no-caps>
+                    Export &nbsp;<q-icon name="mdi-export"></q-icon>
+                </q-btn>
             </div>
         </div>
         <div class="account-directory__container content__box">
@@ -46,15 +70,19 @@ import "./AccountDirectory.scss";
 
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
+import  ComPicker from "../../../components/companyPicker/ComPicker"
 
 // References
 import { postGetBlacklist, postGetPersons } from '../../../references/url';
 
 export default {
     components: {
-        DailyLogCards
+        DailyLogCards,
+        ComPicker
     },
     data: () => ({
+        start_date: new Date().toISOString().split('T')[0],
+        end_date:new Date().toISOString().split('T')[0],
         search: '',
         select__id_type: '',
         select__date: '',
@@ -70,7 +98,7 @@ export default {
         blacklist_account: [],
         table_column:
         [
-            { 
+            {
                 name    : 'full_name',
                 label   : 'Name',
                 field   : row => row.given_name +" " + row.middle_name +" "+row.last_name,
@@ -78,7 +106,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'gender',
                 label   : 'Gender',
                 field   : 'gender',
@@ -86,7 +114,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'age',
                 label   : 'Age',
                 field   : row => new Date().getFullYear() - new Date(row.birthday).getFullYear(),
@@ -94,16 +122,16 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'home_address',
                 label   : 'Home Address',
                 field   : 'home_address',
                 align   : 'left',
                 required: true,
-                
+
                 sortable: true,
             },
-            { 
+            {
                 name    : 'last_scanned',
                 label   : 'Last Scanned',
                 field   : row => row.last_scanned ? row.last_scanned : 'No Logs Yet',
@@ -111,7 +139,7 @@ export default {
                 required: true,
                 sortable: true,
             },
-            { 
+            {
                 name    : 'temperature',
                 label   : 'Temperature',
                 field   : row => row.last_temperature ? row.last_temperature : 'No Temperature Logs Yet',
@@ -140,7 +168,7 @@ export default {
     {
         this.blacklist_account = await this.$_post(postGetPersons, {find_person: {category: 'Blacklist'}});
         // console.log(this.$user_info);
-        
+
         // this.blacklist_account = await this.$_post(postGetBlacklist);
     }
 }

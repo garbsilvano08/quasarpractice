@@ -8,16 +8,14 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <q-btn @click="exportTableToExcel('tblData', 'staff-list')" class="btn-outline btn-export" flat dense no-caps>
-                    Export &nbsp;<q-icon name="mdi-export"></q-icon>
-                </q-btn>
+                <com-picker class="btn-choose" @select=getCompanyData></com-picker>
             </div>
         </div>
         <div class="account-directory__header">
             <div class="header__filter">
                 <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
                 <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
-                <q-btn flat dense no-caps class="btn-primary btn-sort" label="Sort">
+                <q-btn flat dense no-caps class="btn-outline btn-sort" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -30,6 +28,9 @@
                             </q-item>
                         </q-list>
                     </q-menu>
+                </q-btn>
+                <q-btn @click="exportTableToExcel('tblData', 'staff-list')" class="btn-primary btn-export" flat dense no-caps>
+                    Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
             </div>
         </div>
@@ -48,6 +49,7 @@ import "./AccountDirectory.scss";
 
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
+import  ComPicker from "../../../components/companyPicker/ComPicker"
 
 // References
 import { postGetStaff, postGetPersons, postGetLogs, postExpPerson } from '../../../references/url';
@@ -55,7 +57,8 @@ import { postGetStaff, postGetPersons, postGetLogs, postExpPerson } from '../../
 
 export default {
     components: {
-        DailyLogCards
+        DailyLogCards,
+        ComPicker
     },
     data: () => ({
         start_date: new Date().toISOString().split('T')[0],

@@ -3,8 +3,8 @@
         <div class="daily-logs__header">
             <div class="header__title">DAILY LOGS</div>
             <div class="header__filter">
-                <com-picker class="select-sm" @select=getCompanyData></com-picker>
-                <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>
+                <com-picker @select=getCompanyData></com-picker>
+                <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export width-md" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
                 <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
@@ -19,7 +19,7 @@
                     </template>
                 </q-input>
                 <q-input type='date' class="select-sm" v-model="select__date" outlined dense></q-input>
-                <q-btn flat dense no-caps label="Sort" class="btn-primary btn-filter">
+                <q-btn flat dense no-caps label="Sort" class="btn-primary btn-filter width-md">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
