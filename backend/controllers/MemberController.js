@@ -25,7 +25,7 @@ const MDB_PERSON        = require('../models/MDB_PERSON');
 const MDB_IDENTIFICATION= require('../models/MDB_IDENTIFICATION');
 const MDB_PURPOSE       = require('../models//MDB_PURPOSE');
 const MDB_PERSON_LOGS   = require('../models//MDB_PERSON_LOGS');
-var FormData = require('form-data');
+const parseJson         = require('parse-json');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -168,7 +168,7 @@ module.exports =
     async addPassLog(req, res)
     {
         let key = ['Traffic']
-        let person_log = []
+        // let person_log = []
         let date_string = new Date(new Date(req.body.data.currentTime)).toISOString().split('T')[0]
         req.body.data.date_string = date_string
         if (Number(req.body.data.tempratrue) >= 37.3 ) req.body.data.has_fever = true
@@ -178,9 +178,9 @@ module.exports =
         date_string = date_string.split("-")
         // console.log(req.body.data);
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
-        key.push(person.length ? person[0].category : null)
+        if (person.length) key.push(person[0].category)
         // console.log(key);
-        if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
+        // if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
         await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
@@ -252,15 +252,41 @@ module.exports =
     {
         if (req.body.personId)
         {
-            // console.log('jhjhjhjhj');
+            let key = ['Traffic']
+            let person_log = []
+            let date_string = new Date(new Date(req.body.time)).toISOString().split('T')[0]
+
+            date_string = date_string.split("-")
+            let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.personId})
+            let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey})
+            if (person.length) key.push(person[0].category)
+
+            if (device.length > 0)
+            {
+                await new CounterClass().counterActivities(device[0].company_id, key, date_string, req.body.deviceKey)
+                let extra = parseJson(req.body.extra)
+    
+                let person_info = {
+                    mask:                   1,
+                    temperature:            extra.bodyTemp,
+                    person_img:             req.body.path,
+                    full_name:              person.length ? person[0].given_name + " " + person[0].middle_name + " " + person[0].last_name : "Stranger",
+                    device_id:              req.body.deviceKey,
+                    frontdesk_person_id:    req.body.personId,
+                    date_logged:            req.body.time
+                }
+                
+                await new PersonLogsClass(person_info).submit()
+                // console.log(req.body.personId, req.body.type);
+                return res.send(true);
+            }
         }
 
-        return res.send(true);
+        // return res.send(true);
     },
 
     async addCompany(req, res)
     {
-        
         req.body.subcompanies = [];
         let companies = await new MDB_COMPANIES().docs();
         let parentCompany= {};

@@ -53,9 +53,9 @@ module.exports = class PersonLogsClass
         this.location_coordinates   = company.location_coordinates
         this.company_name           = company.company_name
 
-        let person_logs = await new MDB_PERSON_LOGS().docs({person_id: this.person_id, date_logged: this.date_logged})
-        if (person_logs.length) await new MDB_PERSON_LOGS().update(person_logs[0]._id ,this.convertObject())
-        else await new MDB_PERSON_LOGS().add(this.convertObject())
+        // let person_logs = await new MDB_PERSON_LOGS().docs({person_id: this.person_id, date_logged: this.date_logged})
+        // if (person_logs.length) await new MDB_PERSON_LOGS().update(person_logs[0]._id ,this.convertObject())
+        await new MDB_PERSON_LOGS().add(this.convertObject())
     }
 
     convertObject()

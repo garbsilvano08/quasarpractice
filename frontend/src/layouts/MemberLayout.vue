@@ -112,7 +112,8 @@ export default
         count: 0,
         person_uploads: 30020,
         total: 40000,
-        image: null
+        image: null,
+        
     }),
     computed:
     {
@@ -174,15 +175,6 @@ export default
         {
             for (let device of this.device_list)
             {
-                if(device.device_type == 'vision_sky')
-                {
-                    let data = new FormData();
-                    data.append('pass', 'abc123');
-                    data.append('callbackUrl', 'http://192.168.254.126:4001/api/member/visionsky/logs');
-                    let logs = await this.$axios.post("http://" + device.device_ip + ":8090/setIdentifyCallBack", data).then(res => res.data);
-                    // console.log(logs);
-                }
-
                 if (device.count_logs >= 20000)
                 {
                     this.alert = true
