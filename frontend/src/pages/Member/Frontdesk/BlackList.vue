@@ -229,6 +229,7 @@ export default {
 
          async getImageURL(type)
         {
+            console.log(document.getElementById("uploadImage").files[0]);
             let oFReader = new FileReader();
             const formData = new FormData();
             formData.append('image',document.getElementById("uploadImage").files[0]); 

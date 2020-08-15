@@ -26,8 +26,19 @@
                     <q-input v-model="input_device_ip" outlined dense></q-input>
                 </div>
                 <div class="content__input">
+                    <div class="content__input-label">Device Name</div>
+                    <q-input v-model="device_name" outlined dense></q-input>
+                </div>
+            </div>
+            <div class="device-add__content-info device-add__content-grid">
+                <div class="content__input">
                     <div class="content__input-label">Device Log Type</div>
                     <q-select v-model="log_type" :options="log_type_options" outlined dense></q-select>
+                </div>
+                <div class="content__input">
+                    <div class="content__input-label">Device Type</div>
+                    <q-radio class="content__input-label" v-model="device_type" val="vision_sky" label="Vision Sky" />
+                    <q-radio class="content__input-label" v-model="device_type" val="smart_pass" label="Smart Pass" />
                 </div>
             </div>
             <div class="device-add__btn">
@@ -60,7 +71,8 @@ export default {
             select_company: '',
             input_device_ip: '',
             log_type_options: ['Public', 'In', 'Out'],
-            log_type: 'Public'
+            log_type: 'Public',
+            device_type: 'vision_sky'
     }),
 
     methods:
@@ -87,6 +99,8 @@ export default {
                     this.$q.loading.show();
             
                     let device_info = {
+                        device_name: this.device_name,
+                        device_type: this.device_type,
                         company_info: this.select_company,
                         device_id: this.input_device_id,
                         device_ip: this.input_device_ip,

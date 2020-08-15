@@ -82,6 +82,10 @@ app.post('/api/member/get/purpose_visit',  member_only, count_controller.getDail
 app.post('/api/member/export/fever_detected',  member_only, member_controller.exportFeverDetected);
 app.post('/api/member/export/person',  member_only, member_controller.exportPerson);
 
+app.post('/api/member/visionsky/logs', member_controller.visionSkyLogs);
+
+
+
 app.listen({port: 4001}, (err) =>
 {
     if(err)

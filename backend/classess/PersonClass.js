@@ -20,7 +20,7 @@ module.exports = class PersonClass
         
         if (already_existed.length)
         {
-            if (already_existed[0].category == 'Visitors')
+            if (already_existed[0].category == 'Visitors' || already_existed[0].category == 'Report' )
             {
                 await new MDB_PERSON().collection.where({contact_number: person.person_info.contact_number}).where({birthday: person.person_info.birthday}).updateMany(person.person_info)
                 await this.updateOtherDetails(person, already_existed[0]._id, company_id)

@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-
+            <q-btn class="company-add__btn" flat dense no-caps label="Add Company" @click="addCompany"></q-btn>
         </div>
     <q-dialog full-width full-height v-model="is_edit_company_dialog_open">
         <edit-company :company_info="pasData" @closePopup="is_edit_company_dialog_open = false"></edit-company>
@@ -56,6 +56,11 @@ export default {
         this.company_list = await this.$_post(postGetCompanies);
     },
     methods:{
+        addCompany()
+        {
+            this.$router.push({ name: 'member_addcompany' });
+        },
+
         async deleteCompany(index)
         {
             this.$q.dialog({

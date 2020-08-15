@@ -6,12 +6,13 @@ const schema    = new Schema(
 {
     // company_info: { type: Object, required: true }
     company_name:    { type: String  , required:   true },
-    company_location:    { type: String  , required:   true },
+    company_location:    { type: Object  , required:   true },
     company_type:    { type: String  , required:   true },
     company_logo_url:    { type: String  , required:   true },
     parent_id:    { type: String  , required:   true },
     subcompanies: { type: Array , required: true},
-    staff: {type: Number , required: true , default: 0}
+    staff: {type: Number , required: true , default: 0},
+    location_coordinates: {type: Object , required: true , default: 0}
     
 });
 

@@ -178,29 +178,29 @@ export default {
                 
                 for (let device of this.device_list) 
                 {
-                let ctr=0;
-                let totalTabletRecord = [];
-                let totalTabletRecordCount = 0;
-                while(1)
-                {
-                    let getFormData = new FormData();
-                    getFormData.append("pass", "123456");
-                    getFormData.append("index", ""+ctr+"");
-                    getFormData.append("length", "50");
-                    let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
-                    totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
-                    // console.log(JSON.parse(rsp.data).pageInfo)
-                    rsp = JSON.parse(rsp.data).records;
-                    // console.log(rsp)
-                    if (ctr===1) rsp.splice(0, 1);
-                    totalTabletRecord=totalTabletRecord.concat(rsp);
-                    ctr++;
-                    if (totalTabletRecord.length===totalTabletRecordCount)
+                    let ctr=0;
+                    let totalTabletRecord = [];
+                    let totalTabletRecordCount = 0;
+                    while(1)
                     {
-                        break;
+                        let getFormData = new FormData();
+                        getFormData.append("pass", "123456");
+                        getFormData.append("index", ""+ctr+"");
+                        getFormData.append("length", "50");
+                        let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
+                        totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
+                        // console.log(JSON.parse(rsp.data).pageInfo)
+                        rsp = JSON.parse(rsp.data).records;
+                        // console.log(rsp)
+                        if (ctr===1) rsp.splice(0, 1);
+                        totalTabletRecord=totalTabletRecord.concat(rsp);
+                        ctr++;
+                        if (totalTabletRecord.length===totalTabletRecordCount)
+                        {
+                            break;
+                        }
+                        // console.log( ctr)
                     }
-                    // console.log( ctr)
-                }
             // console.log(device.device_ip,totalTabletRecord)
                 // let personCloud
                 // console.log("cloud",personCloud)

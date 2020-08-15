@@ -25,6 +25,7 @@ const MDB_PERSON        = require('../models/MDB_PERSON');
 const MDB_IDENTIFICATION= require('../models/MDB_IDENTIFICATION');
 const MDB_PURPOSE       = require('../models//MDB_PURPOSE');
 const MDB_PERSON_LOGS   = require('../models//MDB_PERSON_LOGS');
+var FormData = require('form-data');
 
 const storage = multer.diskStorage({
   destination: './uploads/images/',
@@ -173,7 +174,7 @@ module.exports =
         if (Number(req.body.data.tempratrue) >= 37.3 ) req.body.data.has_fever = true
         else req.body.data.has_fever = false
 
-        await new MDB_LOGS().add(req.body.data);
+        // await new MDB_LOGS().add(req.body.data);
         date_string = date_string.split("-")
         // console.log(req.body.data);
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
@@ -246,6 +247,17 @@ module.exports =
     {
         return res.send(await new MDB_RAW_VISITOR().docs());
     },
+
+    async visionSkyLogs(req, res)
+    {
+        if (req.body.personId)
+        {
+            // console.log('jhjhjhjhj');
+        }
+
+        return res.send(true);
+    },
+
     async addCompany(req, res)
     {
         

@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 export default
 {
     data: () =>
@@ -122,7 +123,7 @@ export default
 
             // http://128.199.130.24:81/
             // http://157.245.55.109:4000/
-            await axios.post('https://vcop-image.geer.solutions', data,{
+            await axios.post('http://157.245.55.109:4000/', data,{
                 headers: {
                 'content-type': 'multipart/form-data',
                 }
