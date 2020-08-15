@@ -53,49 +53,49 @@
                                     <q-select v-model="select__id_type" :options="options_id" outlined dense></q-select>
                                 </div> -->
                                 <div class="content__input">
-                                    <div class="content__input-label">ID Number</div>
+                                    <div class="content__input-label">ID Number *</div>
                                     <q-input v-model="personal_information.id_num" outlined dense></q-input>
                                 </div>
                             <!-- </div> -->
                             <!-- Firstname -->
                             <div class="content__input">
-                                <div class="content__input-label">First Name</div>
+                                <div class="content__input-label">First Name *</div>
                                 <q-input v-model="personal_information.given_name" outlined dense></q-input>
                             </div>
                             <!-- Lastname -->
                             <div class="content__input">
-                                <div class="content__input-label">Last Name</div>
+                                <div class="content__input-label">Last Name *</div>
                                 <q-input v-model="personal_information.last_name" outlined dense></q-input>
                             </div>
                             <!-- Middlename -->
                             <div class="content__input">
-                                <div class="content__input-label">Middle Name</div>
+                                <div class="content__input-label">Middle Name *</div>
                                 <q-input v-model="personal_information.middle_name" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
-                                    <div class="content__select-label">Gender</div>
+                                    <div class="content__select-label">Gender *</div>
                                     <q-select v-model="personal_information.gender" :options="options_gender" outlined dense></q-select>
                                 </div>
                                 <div class="content__input">
-                                    <div class="content__input-label">Birth Date</div>
+                                    <div class="content__input-label">Birth Date *</div>
                                     <q-input type="date" v-model="personal_information.birthday" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->
                             <div class="content__input">
-                                <div class="content__input-label">Nationality</div>
+                                <div class="content__input-label">Nationality *</div>
                                 <q-input v-model="personal_information.nationality" outlined dense></q-input>
                             </div>
                             <!-- Home Address -->
                             <div class="content__input">
-                                <div class="content__input-label">Home Address</div>
+                                <div class="content__input-label">Home Address *</div>
                                 <q-input v-model="personal_information.home_address" outlined dense></q-input>
                             </div>
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
-                                    <div class="content__input-label">Location</div>
+                                    <div class="content__input-label">Location *</div>
                                     <q-select
                                         outlined
                                         dense
@@ -117,7 +117,7 @@
                                     </q-select>
                                 </div>
                                 <div class="content__input">
-                                    <div class="content__input-label">Tag a Company</div>
+                                    <div class="content__input-label">Tag a Company *</div>
                                      <com-picker @select=getCompanyData></com-picker>
                                     <!-- <q-select v-model="personal_information.company_name" :options="options_company" outlined dense></q-select> -->
                                 </div>
@@ -126,11 +126,11 @@
                             <!-- Contact -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
-                                    <div class="content__input-label">Contact Number</div>
+                                    <div class="content__input-label">Contact Number *</div>
                                     <q-input v-model="personal_information.contact_number" outlined dense></q-input>
                                 </div>
                                 <div class="content__input">
-                                    <div class="content__input-label">Emergency Contact Number</div>
+                                    <div class="content__input-label">Emergency Contact Number *</div>
                                     <q-input v-model="personal_information.emergency_contact" outlined dense></q-input>
                                 </div>
                             </div>

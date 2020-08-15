@@ -42,8 +42,6 @@
                     <!-- <q-select v-model="user_information.select_tag_company" :options="options_tag_company" outlined dense></q-select> -->
 
                     <com-picker @select=getCompanyData></com-picker>
-                
-
                 </div>
             </div>
             <div class="user-add__btn">
@@ -83,7 +81,7 @@ export default {
             'Receptionist',
             'Technician',
             'Officer'
-        ],  
+        ],
         options_tag_company: [
             'Green Sun Hotel'
         ]
@@ -98,7 +96,7 @@ export default {
         async submit()
         {
 
-            
+
             try
             {
                 if (this.user_information.full_name <= 2 ){
@@ -177,7 +175,7 @@ export default {
 
         }
 
-        
+
 
     }
 }

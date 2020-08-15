@@ -73,48 +73,48 @@
                             </div> -->
                             <!-- Firstname -->
                             <div class="content__input">
-                                <div class="content__input-label">First Name</div>
+                                <div class="content__input-label">First Name *</div>
                                 <q-input v-model="staff_class.given_name" outlined dense></q-input>
                             </div>
                             <!-- Lastname -->
                             <div class="content__input">
-                                <div class="content__input-label">Last Name</div>
+                                <div class="content__input-label">Last Name *</div>
                                 <q-input v-model="staff_class.last_name" outlined dense></q-input>
                             </div>
                             <!-- Middlename -->
                             <div class="content__input">
-                                <div class="content__input-label">Middle Name</div>
+                                <div class="content__input-label">Middle Name *</div>
                                 <q-input v-model="staff_class.middle_name" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
-                                    <div class="content__select-label">Gender</div>
+                                    <div class="content__select-label">Gender *</div>
                                     <q-select v-model="staff_class.gender" :options="options_gender" outlined dense></q-select>
                                 </div>
                                 <div class="content__input">
-                                    <div class="content__input-label">Birth Date</div>
+                                    <div class="content__input-label">Birth Date *</div>
                                     <q-input type="date" v-model="staff_class.birthday" outlined dense></q-input>
                                 </div>
                             </div>
                             <!-- Nationality -->
                             <div class="content__input">
-                                <div class="content__input-label">Nationality</div>
+                                <div class="content__input-label">Nationality *</div>
                                 <q-input v-model="staff_class.nationality" outlined dense></q-input>
                             </div>
                             <!-- Home Address -->
                             <div class="content__input">
-                                <div class="content__input-label">Home Address</div>
+                                <div class="content__input-label">Home Address *</div>
                                 <q-input  v-model="staff_class.home_address" outlined dense></q-input>
                             </div>
                             <!-- Contact -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
-                                    <div class="content__input-label">Contact Number</div>
+                                    <div class="content__input-label">Contact Number *</div>
                                     <q-input type="number" v-model="staff_class.contact_number" outlined dense></q-input>
                                 </div>
                                 <div class="content__input">
-                                    <div class="content__input-label">Emergency Contact Number</div>
+                                    <div class="content__input-label">Emergency Contact Number *</div>
                                     <q-input type="number" v-model="staff_class.emergency_contact" outlined dense></q-input>
                                 </div>
                             </div>
