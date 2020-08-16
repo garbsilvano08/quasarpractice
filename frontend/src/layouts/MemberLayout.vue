@@ -110,8 +110,8 @@ export default
         alert: false,
         device_id: null,
         count: 0,
-        person_uploads: 30020,
-        total: 40000,
+        person_uploads: 30000,
+        total: 60000,
         image: null,
         
     }),
@@ -273,7 +273,7 @@ export default
         {
             // console.log(this.visitors);
             // if (this.$user_info.user_type != 'Super Admin')
-                let image_data = await this.$_post(postGetDevice, {find_device: {_id: '5f324060a1fcdaf3224747a6'}});
+                let image_data = await this.$_post(postGetDevice, {find_device: {_id: '5f380cb46966e21cd82dd2b7'}});
 
                 // let image = new FormData();
                 // image.append('pass', 'abc123');
@@ -690,12 +690,31 @@ export default
     
                     let tabletFormData = new FormData();
                     let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    tabletFormData.append("pass", "123456");
-                    tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name +"', 'person_id' : '"+ visitor.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+visitor.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ visitor.personal_information.birth_day +"', 'address' : '"+ visitor.personal_information.home_address +"', 'vipId': '"+visitor.personal_information.frontdesk_person_id+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
+                    
     
                     this.device_list.forEach(async (device) => {
-    
-                    let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
+                        if (device.device_type == 'vision_sky')
+                        {
+                            let date = new Date().getFullYear() + "-" + new Date().getMonth() + "-" + new Date().getDate() + " 23.59.59"
+                            console.log(date);
+                            let image = new FormData();
+                            image.append('pass', 'abc123');
+                            image.append("personId", visitor.personal_information.id_number );
+                            image.append("idcardNum", "" );
+                            image.append("name",  visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name );
+                            image.append("imgBase64", b64 );
+                            image.append("passTime", expEndTime );
+                            image.append("permissionTime", date);
+                            image.append("type", 1 );
+                            
+                            let img = await this.$axios.post("http://"+ device.device_ip +":8090/person/quickCreate", image).then(res => res.data);
+                        }
+                        else
+                        {
+                            tabletFormData.append("pass", "123456");
+                            tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name +"', 'person_id' : '"+ visitor.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+visitor.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ visitor.personal_information.birth_day +"', 'address' : '"+ visitor.personal_information.home_address +"', 'vipId': '"+visitor.personal_information.frontdesk_person_id+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
+                            let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
+                        }
                     })
     
                     });

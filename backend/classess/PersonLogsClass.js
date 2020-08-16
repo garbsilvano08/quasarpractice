@@ -20,7 +20,8 @@ module.exports = class PersonLogsClass
         this.company_id             = data.hasOwnProperty('company_id') ? data.company_id : '';
         this.company_name           = data.hasOwnProperty('company_name') ? data.company_name : ''; 
         this.device_id              = data.hasOwnProperty('device_id') ? data.device_id : '';;
-        this.frontdesk_person_id    = data.hasOwnProperty('frontdesk_person_id') ? data.frontdesk_person_id : '';;
+        this.frontdesk_person_id    = data.hasOwnProperty('frontdesk_person_id') ? data.frontdesk_person_id : '';
+        this.record_id              = data.hasOwnProperty('record_id') ? data.record_id : '';
         
         this.category               = data.hasOwnProperty('category') ? data.category : '';
         this.date_logged            = data.hasOwnProperty('date_logged') ? new Date(data.date_logged).toISOString().split('T')[0] : ''; 

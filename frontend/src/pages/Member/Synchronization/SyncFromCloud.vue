@@ -100,20 +100,30 @@ export default {
         {
             this.$q.loading.show();
             this.device_list.forEach(async (device) => {
-                let tabletFormData = new FormData();
-                tabletFormData.append("pass", "123456");
-                let rsp = await this.$axios.post("http://"+device.device_ip+":8080/initialization", tabletFormData).then(res => res.data);
-                
-                setTimeout(() => this.createAll(this.persons_list, device.device_ip), 2000);
+                if (device.device_type == 'vision_sky' )
+                {
+
+                }
+                else
+                {
+                    let tabletFormData = new FormData();
+                    tabletFormData.append("pass", "123456");
+                    let rsp = await this.$axios.post("http://"+device.device_ip+":8080/initialization", tabletFormData).then(res => res.data);
+                }
+                    
+                setTimeout(() => this.createAll(this.persons_list, device.device_ip, device.device_type), 2000);
            })
         },
-        async createAll(personToTablet , device_ip)
+        async createAll(personToTablet , device_ip, device_type)
         {
             this.device_list.forEach(async (device) => {
-                let settingsFormData = new FormData();
-                settingsFormData.append("pass", "123456");
-                settingsFormData.append("config", "{'isBodyTempAlarm': 1 , 'isBodyTempStart' : 1, 'isHighFeverAdopt' : 0, 'isLowFeverAdopt' : 0, 'isLowTempAdopt' : 0, 'isStandardTempAdopt' : 1,  'isWearingMask' : 1, 'standardBodyTemp': '37.3',  'isStrangerRecord' : 1 , 'isStrangerMode' : 0, 'tempCompensation' : 0.3,  'isFan' : 1, }");
-                await this.$axios.post("http://"+device.device_ip+":8080/tempAndMaskSetting", settingsFormData).then(res => res.data);
+                if (device.device_type != 'vision_sky')
+                {
+                    let settingsFormData = new FormData();
+                    settingsFormData.append("pass", "123456");
+                    settingsFormData.append("config", "{'isBodyTempAlarm': 1 , 'isBodyTempStart' : 1, 'isHighFeverAdopt' : 0, 'isLowFeverAdopt' : 0, 'isLowTempAdopt' : 0, 'isStandardTempAdopt' : 1,  'isWearingMask' : 1, 'standardBodyTemp': '37.3',  'isStrangerRecord' : 1 , 'isStrangerMode' : 0, 'tempCompensation' : 0.3,  'isFan' : 1, }");
+                    await this.$axios.post("http://"+device.device_ip+":8080/tempAndMaskSetting", settingsFormData).then(res => res.data);
+                }
             })
             // console.log(personToTablet)
             for (let person of personToTablet)
@@ -139,22 +149,63 @@ export default {
                         }
                         let tabletFormData = new FormData();
                         let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                        tabletFormData.append("pass", "123456");
 
                         if (person.category == "Visitors")
                         {
                             prescription = "'" + expStart + "," + expEnd + "'";
-                            type = 1.1;
-                            tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0, 'prescription' : " + prescription + "}");
+                            if (device_type == 'vision_sky')
+                            {
+                                let date = new Date().getFullYear() + "-" + (new Date(person.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + "-" + new Date(person.frontdesk_person_date).getDate().toString().padStart(2, "0") + " 23:59:59"
+                                console.log(date, 'jhghjgjhgjhg');
+                                let image = new FormData();
+                                image.append('pass', 'abc123');
+                                image.append("personId", person.frontdesk_person_id );
+                                image.append("idcardNum", 1 );
+                                image.append("name", person.given_name + " " + person.middle_name + " " + person.last_name );
+                                image.append("imgBase64", b64 );
+                                image.append("passTime", '01:00:00, 23:59:59' );
+                                image.append("permissionTime", date);
+                                image.append("type", 1 );
+                                
+                                let img = await this.$axios.post("http://"+ device_ip +":8090/person/quickCreate", image).then(res => res.data);
+                                console.log(img);
+                            }
+                            else
+                            {
+                                type = 1.1;
+                                tabletFormData.append("pass", "123456");
+                                tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0, 'prescription' : " + prescription + "}");
+                                let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
+                            }
                         }
                         else if (person.category == "Staff")
                         {
-                            type = 3;
-                            tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0}");
+                            if (device_type == 'vision_sky')
+                            {
+                                let data = new FormData();
+                                data.append('pass', 'abc123');
+                                data.append("person", "{'id': '"+ person.frontdesk_person_id +"', 'name': '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'idcardNum': '', 'departmentId': '1'}" );
+                
+                                let upload = await this.$axios.post("http://"+ device_ip +":8090/person/create", data).then(res => res.data);
+
+                                let image = new FormData();
+                                image.append('pass', 'abc123');
+                                image.append("personId", person.frontdesk_person_id );
+                                image.append("faceId", "" );
+                                image.append("imgBase64", b64 );
+                                let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data);
+                            }
+                            else
+                            {
+                                type = 3;
+                                tabletFormData.append("pass", "123456");
+                                tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0}");
+                                let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
+                            }
                         }
 
                        
-                            let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
+                            
                         
 
                         resolve();
@@ -178,27 +229,31 @@ export default {
                 
                 for (let device of this.device_list) 
                 {
+                    console.log(device.device_type)
                     let ctr=0;
                     let totalTabletRecord = [];
                     let totalTabletRecordCount = 0;
                     while(1)
                     {
-                        let getFormData = new FormData();
-                        getFormData.append("pass", "123456");
-                        getFormData.append("index", ""+ctr+"");
-                        getFormData.append("length", "50");
-                        let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
-                        totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
-                        // console.log(JSON.parse(rsp.data).pageInfo)
-                        rsp = JSON.parse(rsp.data).records;
-                        // console.log(rsp)
-                        if (ctr===1) rsp.splice(0, 1);
-                        totalTabletRecord=totalTabletRecord.concat(rsp);
-                        ctr++;
-                        if (totalTabletRecord.length===totalTabletRecordCount)
+                        let rsp = null
+                        if (device.device_type != "vision_sky")
                         {
-                            break;
+                            let getFormData = new FormData();
+                            getFormData.append("pass", "123456");
+                            getFormData.append("index", ""+ctr+"");
+                            getFormData.append("length", "50");
+                            rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
+                            totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
+                            // console.log(JSON.parse(rsp.data).pageInfo)
+                            rsp = JSON.parse(rsp.data).records;
+                            if (ctr===1) rsp.splice(0, 1);
+                            totalTabletRecord=totalTabletRecord.concat(rsp);
+                            ctr++;
                         }
+                            if (totalTabletRecord.length===totalTabletRecordCount)
+                            {
+                                break;
+                            }
                         // console.log( ctr)
                     }
             // console.log(device.device_ip,totalTabletRecord)
@@ -208,10 +263,24 @@ export default {
                     personCloud.forEach(async (person, i) => 
                     {
                         let is = false;
-
-                        totalTabletRecord.forEach(tabletRegistered => 
+                        totalTabletRecord.forEach(async tabletRegistered => 
                         {
-                            if (person.frontdesk_person_id == tabletRegistered.vipID) is = true;
+                            if (device.device_type == 'vision_sky')
+                            {
+                                let VisionData = new FormData();
+                                VisionData.append("pass", "abc123");
+                                VisionData.append("id", person.frontdesk_person_id);
+                                let vision = await this.$axios.post("http://"+device.device_ip+":8090/person/find", VisionData).then(res => res.data);
+                                // vision = JSON.parse(vision)
+
+                                // console.log(vision.msg);
+                                if (vision.msg != 'personId does not exist') is = true;
+                            }
+                            
+                            else
+                            {
+                                if (person.frontdesk_person_id == tabletRegistered.vipID) is = true;
+                            }
                         });
 
                         if (!is)
@@ -225,7 +294,7 @@ export default {
                     {
                         // console.log(device.device_ip);
                         // console.log(newRegistered)
-                        this.createAll(newRegistered, device.device_ip);
+                        this.createAll(newRegistered, device.device_ip, device.device_type);
                     }
                     else 
                     {

@@ -29,6 +29,8 @@ const schema    = new Schema(
     location:               { type: Object, required: false },
     location_coordinates:   { type: Object, required: false },
 
+    record_id:              { type: String, required: false },
+
 });
 
 class MDB_PERSON_LOGS extends MODEL
