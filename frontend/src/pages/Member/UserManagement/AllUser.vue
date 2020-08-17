@@ -11,7 +11,7 @@
         <div class="user-management__container content__box">
             <div  v-for="(user, i) in this.users_list.data" :key="i" class="user-management__info-content">
                 <q-img :src="user.user_picture"></q-img>
-                <div class="user-management__info-user">
+                <div class="user-management_ _info-user">
                     <div class="user-management__info-name">{{user.full_name}}</div>
                     <div class="user-management__info-email">{{user.email}}</div>
                 </div>

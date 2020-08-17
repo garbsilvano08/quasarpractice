@@ -5,7 +5,7 @@
                 DEVICE MANAGEMENT <br>
                 <span>300 DEVICES INSTALLED</span></div>
             <div class="header__filter">
-                <q-btn class="btn-primary btn-add" flat dense no-caps>
+                <q-btn @click="addDevice" class="btn-primary btn-add" flat dense no-caps>
                     Add Device
                 </q-btn>
             </div>
@@ -69,6 +69,10 @@ export default {
 
     methods:
     {
+        addDevice()
+        {
+            this.$router.push({ name: 'member_adddevice' });
+        },
         async deleteDevice(id)
         {
             await this.$_post(postDeleteDevice, {id: id});
