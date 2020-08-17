@@ -139,7 +139,7 @@
 
     .dashboard__graph {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
         grid-gap: 20px;
         margin-bottom: 30px;
 
@@ -162,16 +162,34 @@
                     font-weight: 700;
                 }
 
-                .q-input {
-                    width: 200px;
+                .dashboard__graph-filter {
+                    display: flex;
+                    align-items: center;
                     margin-left: auto;
-                    background-color: #f4f4f4;
 
-                    .q-field__native {
-                        color: #233b61 !important;
-                        font-size: 12px;
-                        font-weight: 500;
-                        padding-left: 10px;
+                    .q-input {
+                        width: 200px;
+                        background-color: #f4f4f4;
+
+                        .q-field__native {
+                            color: #233b61 !important;
+                            font-size: 12px;
+                            font-weight: 500;
+                            padding-left: 10px;
+                        }
+                    }
+
+                    .q-select {
+                        width: 200px;
+                        background-color: #f4f4f4;
+                        margin-left: 10px;
+
+                        .q-field__native {
+                            color: #233b61 !important;
+                            font-size: 12px;
+                            font-weight: 500;
+                            padding-left: 10px;
+                        }
                     }
                 }
             }
