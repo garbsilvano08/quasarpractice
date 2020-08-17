@@ -22,6 +22,7 @@
                 <div class="content__input">
                     <div class="content__input-label">Location</div>
                     <q-input v-model="input_location" outlined dense></q-input>
+                </div>
                 <div class="company-add__content-info company-add__content-grid">
                     <div class="content__input">
                         <div class="content__input-label">Company Name</div>
