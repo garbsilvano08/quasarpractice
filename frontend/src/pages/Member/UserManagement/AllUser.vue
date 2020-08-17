@@ -3,7 +3,7 @@
         <div class="user-management__header">
             <div class="header__title">ALL USERS</div>
             <div class="header__filter">
-                <q-btn class="btn-primary btn-add" flat dense no-caps>
+                <q-btn @click="addUser" class="btn-primary btn-add" flat dense no-caps>
                     Add User
                 </q-btn>
             </div>
@@ -50,6 +50,10 @@ export default {
     },
     methods:
     {
+        addUser()
+        {
+            this.$router.push({ name: 'member_adduser' });
+        },
         async deleteUser(index){
             this.$q.dialog({
             title: 'Confirm',
