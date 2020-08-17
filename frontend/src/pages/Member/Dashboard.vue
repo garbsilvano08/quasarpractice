@@ -195,6 +195,7 @@ export default
         },
         async testUploader()
         {
+            console.log(this.pic);
            const formData = new FormData();
             formData.append('image',this.pic[0]); 
             

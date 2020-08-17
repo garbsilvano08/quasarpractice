@@ -44,4 +44,6 @@ exports.postGetAllLogs      = 'member/get/all_logs';
 exports.postGetPurposeVisit = 'member/get/purpose_visit';
 exports.postExpFeverDeteted = 'member/export/fever_detected';
 exports.postExpPerson       = 'member/export/person';
+
+exports.postVisionSky       = 'member/visionsky/logs';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';

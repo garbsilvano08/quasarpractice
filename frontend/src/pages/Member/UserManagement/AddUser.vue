@@ -155,7 +155,17 @@ export default {
                     }
                     document.getElementById("userImage").value = "";
                     document.getElementById("imagePreview").src = "/img/placeholder-img.jpg";
+
+
                     this.$q.loading.hide();
+
+                    this.$q.notify(
+                    {
+                        color: 'green',
+                        message: 'User successfully created!'
+                    });
+
+                    this.$router.push({ name: 'member_alluser' });
                 }
             }
             catch (e)

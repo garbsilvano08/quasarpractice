@@ -3,7 +3,7 @@
         <div class="user-management__header">
             <div class="header__title">ALL USERS</div>
             <div class="header__filter">
-                <q-btn class="btn-primary btn-add" flat dense no-caps>
+                <q-btn @click="addUser" class="btn-primary btn-add" flat dense no-caps>
                     Add User
                 </q-btn>
             </div>
@@ -11,7 +11,7 @@
         <div class="user-management__container content__box">
             <div  v-for="(user, i) in this.users_list.data" :key="i" class="user-management__info-content">
                 <q-img :src="user.user_picture"></q-img>
-                <div class="user-management__info-user">
+                <div class="user-management_ _info-user">
                     <div class="user-management__info-name">{{user.full_name}}</div>
                     <div class="user-management__info-email">{{user.email}}</div>
                 </div>
@@ -50,6 +50,10 @@ export default {
     },
     methods:
     {
+        addUser()
+        {
+            this.$router.push({ name: 'member_adduser' });
+        },
         async deleteUser(index){
             this.$q.dialog({
             title: 'Confirm',

@@ -58,6 +58,7 @@ export default
 
             if(res)
             {
+                console.log(res);
                 this.$store.commit('user/updateUser', res.data)
                 localStorage.setItem("auth", JSON.stringify(res.data));
                 this.$router.push({ name: 'member_dashboard' });

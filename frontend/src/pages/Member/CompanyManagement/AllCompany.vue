@@ -8,7 +8,7 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <q-btn class="btn-primary btn-add" flat dense no-caps>
+                <q-btn @click="addCompany" class="btn-primary btn-add" flat dense no-caps>
                     Add Company
                 </q-btn>
             </div>
@@ -33,8 +33,7 @@
                         300 People Registered Here
                     </div>
                 </div>
-            </div>
-
+            </div> 
         </div>
     <q-dialog full-width full-height v-model="is_edit_company_dialog_open">
         <edit-company :company_info="pasData" @closePopup="is_edit_company_dialog_open = false"></edit-company>
@@ -59,6 +58,11 @@ export default {
         this.company_list = await this.$_post(postGetCompanies);
     },
     methods:{
+        addCompany()
+        {
+            this.$router.push({ name: 'member_addcompany' });
+        },
+
         async deleteCompany(index)
         {
             this.$q.dialog({
