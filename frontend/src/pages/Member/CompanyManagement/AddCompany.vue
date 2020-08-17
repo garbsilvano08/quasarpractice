@@ -21,16 +21,34 @@
                 </div>
                 <div class="content__input">
                     <div class="content__input-label">Location</div>
-                    <q-input v-model="input_location" outlined dense></q-input>
+                     <q-select
+                            outlined
+                            dense
+                            v-model="input_location"
+                            use-input
+                            input-debounce="1000"
+                            :options="options_location"
+                            @filter="getNearbyPlaces"
+                            option-value="place_id"
+                            option-label="description"
+                        >
+                            <template v-slot:no-option>
+                                <q-item>
+                                    <q-item-section class="text-grey">
+                                    No results
+                                    </q-item-section>
+                                </q-item>
+                            </template>
+                        </q-select>
+                    <!-- <q-input v-model="input_location" outlined dense></q-input> -->
                 </div>
-                <div class="company-add__content-info company-add__content-grid">
+                <!-- <div class="company-add__content-info company-add__content-grid">
                     <div class="content__input">
                         <div class="content__input-label">Company Name</div>
                         <q-input v-model="input_company_name" outlined dense></q-input>
                     </div>
                     <div class="content__input">
                         <div class="content__input-label">Location</div>
-                        <!-- <q-input v-model="input_location" outlined dense></q-input> -->
                         <q-select
                             outlined
                             dense
@@ -51,7 +69,7 @@
                             </template>
                         </q-select>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <div class="company-add__content-info">
@@ -125,6 +143,7 @@ export default {
     },
     data: () =>
     ({
+        is_success_dialog: false,
         options_location: [],
         company_type: '',
         input_company_name: '',

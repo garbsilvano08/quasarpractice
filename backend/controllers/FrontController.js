@@ -7,7 +7,6 @@ module.exports =
 {
     async login(req, res)
     {  
-        console.log('dadad');
         let email       = req.body.email;
         let password    = req.body.password;
         let response    = await new AccountClass().authenticate(email, password);

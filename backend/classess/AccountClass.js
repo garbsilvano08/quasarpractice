@@ -23,7 +23,6 @@ module.exports = class AccountClass
      */
     async authenticate(email, password)
     {
-        console.log(email, password);
         let res             = {};
         let check_account   = await this.mdb_user.findByEmail(email);
 
