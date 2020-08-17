@@ -48,11 +48,11 @@ module.exports = class PersonLogsClass
         this.birthday               = person_details.length ? person_details[0].birthday : ''
         this.home_address           = person_details.length ? person_details[0].home_address : ''
         
-        if (Number(this.temperature) >= 37.3) this.has_fever = true
         let company                 = await new MDB_COMPANIES().doc(this.company_id)
         this.location               = company.company_location
         this.location_coordinates   = company.location_coordinates
         this.company_name           = company.company_name
+        if (Number(this.temperature) >= 37.3) this.has_fever = true
 
         // let person_logs = await new MDB_PERSON_LOGS().docs({person_id: this.person_id, date_logged: this.date_logged})
         // if (person_logs.length) await new MDB_PERSON_LOGS().update(person_logs[0]._id ,this.convertObject())
