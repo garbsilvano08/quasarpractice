@@ -54,7 +54,7 @@
          <div class="dashboard__overview-item">
             <q-img cover src="../../../assets/Member/dashboard_overview-bg-3.jpg">
                <div class="dashboard__overview-info">
-                  <div class="dashboard__overview-title">Total Alerts Today</div>
+                  <div class="dashboard__overview-title">Total Visitors</div>
                   <div class="dashboard__overview-desc">
                      <div class="decs-total">{{current_alerts}}</div>
                      <div class="decs-info"></div>
@@ -66,7 +66,7 @@
          <div class="dashboard__overview-item">
             <q-img cover src="../../../assets/Member/dashboard_overview-bg-4.jpg">
                <div class="dashboard__overview-info">
-                  <div class="dashboard__overview-title">COVID Cases Confirmed</div>
+                  <div class="dashboard__overview-title">Fever Cases Today</div>
                   <div class="dashboard__overview-desc">
                      <div class="decs-total">0</div>
                      <div class="decs-info"></div>
@@ -82,7 +82,7 @@
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Employess</div>
                <div class="dashboard__total-number">{{staff_number}}</div>
-               <div class="dashboard__total-date">Since {{current_month}}</div>
+               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
          </div>
          <div class="dashboard__overview-total">
@@ -90,23 +90,31 @@
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Visitors</div>
                <div class="dashboard__total-number">{{visitor_number}}</div>
-               <div class="dashboard__total-date">Since {{current_month}}</div>
+               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
          </div>
-         <div class="dashboard__overview-total">
+         <!-- <div class="dashboard__overview-total">
             <q-img src="../../../assets/Member/total-alerts.svg" width="45px"></q-img>
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Alerts</div>
                <div class="dashboard__total-number">{{monthly_alert}}</div>
                <div class="dashboard__total-date">Since {{current_month}}</div>
             </div>
-         </div>
+         </div> -->
          <div class="dashboard__overview-total">
             <q-img src="../../../assets/Member/total-devices.svg" width="30px"></q-img>
             <div class="dashboard__total-info">
                <div class="dashboard__total-title">Total Devices Installed</div>
                <div class="dashboard__total-number">{{device_number}}</div>
-               <div class="dashboard__total-date">Since {{current_month}}</div>
+               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
+            </div>
+         </div>
+         <div class="dashboard__overview-total">
+            <q-img src="../../../assets/Member/total-cases.svg" width="25px"></q-img>
+            <div class="dashboard__total-info">
+               <div class="dashboard__total-title">Total Fever Cases</div>
+               <div class="dashboard__total-number">0</div>
+               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
          </div>
       </div>
@@ -117,15 +125,17 @@
                <div class="dashboard__graph-title">
                   Foot Traffic
                </div>
-               <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+               <div class="dashboard__graph-filter">
+                  <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+               </div>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
 
-            <!-- <div class="dashboard__graph-content">
+            <div class="dashboard__graph-content">
                <line-chart :data="data_line_graph" />
-            </div> -->
+            </div>
 
-            <div v-if="traffic_weekly.data" class="dashboard__graph-content">
+            <!-- <div v-if="traffic_weekly.data" class="dashboard__graph-content">
                <line-chart style="position: relative; height:250px; width:100%"
                   :data="{
                      'MON': traffic_weekly.data.Mon,
@@ -138,23 +148,47 @@
                   }"
                >
                </line-chart>
-            </div>
+            </div> -->
          </div>
+
          <!-- EMPLOYEE/VISITOR OVERVIEW -->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Employee/Visitor Overview
                </div>
+
+               <div class="dashboard__graph-filter">
+                  <!-- <q-input v-model="employee_date" type='date' outlined dense></q-input> -->
+                  <q-select v-model="select_people" :options="options_people" outlined dense></q-select>
+                  <q-select v-model="select_date" :options="options_date" outlined dense></q-select>
+               </div>
+            </div>
+
+            <div class="dashboard__graph-content">
+               <column-chart :data="data_bar_graph"></column-chart>
+            </div>
+         </div>
+
+         <!-- EMPLOYEE/VISITOR OVERVIEW -->
+         <!-- <div class="dashboard__graph-item">
+            <div class="dashboard__graph-header">
+               <div class="dashboard__graph-title">
+                  Employee/Visitor Overview
+               </div>
                <q-input v-model="employee_date" type='date' outlined dense></q-input>
-               <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
+               <q-select v-model="select_date" :options="options" outlined dense></q-select>
+            </div>
+
+            <div class="dashboard__graph-content">
+               <column-chart :data="data_bar_graph"></column-chart>
             </div>
 
             <div class="dashboard__graph-content">
                <bar-chart :data="data_bar_graph"></bar-chart>
             </div>
 
-            <!-- <div v-if="staff_visitors.data" class="dashboard__graph-content">
+            <div v-if="staff_visitors.data" class="dashboard__graph-content">
                <bar-chart style="position: relative; height:250px; width:100%"
                   :data="{
                      'MON': staff_visitors.data.Mon,
@@ -167,18 +201,33 @@
                   }"
                >
                </bar-chart>
-            </div> -->
-         </div>
+            </div>
+         </div> -->
+
          <!-- VISITORS PURPOSE -->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Visitors Purpose
                </div>
-               <q-input v-model="visitors_date" type='date' outlined dense></q-input>
+               <div class="dashboard__graph-filter">
+                  <q-input v-model="visitors_date" type='date' outlined dense></q-input>
+               </div>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div class="dashboard__graph-content">
+               <pie-chart :data="{
+                  'Official Business': 50,
+                  'Collection & Pickup': 20,
+                  'Delivery': 10,
+                  'Corporate Meeting': 10,
+                  'Client/Customer': 5,
+                  'Guest': 5
+               }">
+               </pie-chart>
+            </div>
+
+            <!-- <div class="dashboard__graph-content">
                <pie-chart style="position: relative; height:250px; width:100%"
                   suffix=""
                   :data="{
@@ -191,15 +240,18 @@
                   }"
                >
                </pie-chart>
-            </div>
+            </div> -->
          </div>
+
          <!-- VISITOR LOGS -->
          <div class="dashboard__graph-item dashboard__graph-item--alert-logs">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Alert Logs
                </div>
-               <q-input v-model="alert_date" type='date' outlined dense></q-input>
+               <div class="dashboard__graph-filter">
+                  <q-input v-model="alert_date" type='date' outlined dense></q-input>
+               </div>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div v-if="this.alert_list.data" class="dashboard__graph-content dashboard__graph-content--alert-logs">
@@ -264,6 +316,14 @@ export default
    data:() =>
    ({
       data_bar_graph: [
+         {
+            name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
+         },
+         {
+            name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
+         }
+      ],
+      data_line_graph: [
          {
             name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
          },
@@ -351,8 +411,12 @@ export default
       company_list: [],
       select__company: 'All Caompanies',
       options_company: ['All Caompanies'],
-      options: [
-         'July 1, 2019' , 'July 2, 2019', 'July 3, 2019' , 'July 4, 2019', 'July 5, 2019'
+      options_date: [
+         'Daily' , 'Weekly', 'Monthly' , 'Yearly', 'Custom Date'
+      ],
+      select_people: '',
+      options_people: [
+         'All' , 'Employees', 'Visitor'
       ],
       select_date: '',
       traffic_data: {data: []},

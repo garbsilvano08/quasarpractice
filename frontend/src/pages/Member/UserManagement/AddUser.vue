@@ -46,13 +46,24 @@
             </div>
             <div class="user-add__btn">
                 <q-btn class="btn-save btn-primary" flat dense @click="submit()" no-caps label="Save"></q-btn>
+                <q-btn class="btn-save btn-primary" flat dense no-caps label="Success" @click="is_success_dialog = true"></q-btn>
             </div>
         </div>
+
+        <!-- SUCCESS DIALOG -->
+        <q-dialog v-model="is_success_dialog">
+            <div>
+                <SuccessDialog></SuccessDialog>
+            </div>
+        </q-dialog>
     </div>
 </template>
 
 <script>
 import "./UserManagement.scss";
+
+// Component
+import  SuccessDialog from "../../../components/SuccessDialog/SuccessDialog"
 import  ComPicker from "../../../components/companyPicker/ComPicker"
 
 function isEmpty(obj) {
@@ -65,9 +76,12 @@ function isEmpty(obj) {
 }
 
 export default {
-    components: { ComPicker },
-
+    components: {
+        ComPicker,
+        SuccessDialog
+        },
     data: () => ({
+        is_success_dialog: false,
         user_information:{
             full_name: '',
             email: '',

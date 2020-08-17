@@ -32,14 +32,25 @@
             </div>
             <div class="device-add__btn">
                 <q-btn @click="submit" class="btn-install btn-primary" flat dense no-caps label="Install"></q-btn>
+                <q-btn class="btn-save btn-primary" flat dense no-caps label="Success" @click="is_success_dialog = true"></q-btn>
             </div>
         </div>
+
+        <!-- SUCCESS DIALOG -->
+        <q-dialog v-model="is_success_dialog">
+            <div>
+                <SuccessDialog></SuccessDialog>
+            </div>
+        </q-dialog>
     </div>
 </template>
 
 <script>
 import "./DeviceManagement.scss";
 import { postGetCompanies, postAddDevice} from '../../../references/url';
+
+// Component
+import  SuccessDialog from "../../../components/SuccessDialog/SuccessDialog"
 import  ComPicker from "../../../components/companyPicker/ComPicker"
 
 function isEmpty(obj) {
@@ -52,9 +63,12 @@ function isEmpty(obj) {
 }
 
 export default {
-    components: { ComPicker },
+    components: {
+        ComPicker,
+        SuccessDialog
+    },
     data: () => ({
-        
+            is_success_dialog: 'false',
             input_date_installed: '',
             input_device_id: '',
             select_company: '',
@@ -73,7 +87,7 @@ export default {
                 if (isEmpty(this.select_company)){
                     throw new Error("Company is required.");
                 }
-                
+
                 else if (isNaN(Date.parse(this.input_date_installed)) == true ){
                     throw new Error("Install Date is required.");
                 }
@@ -85,7 +99,7 @@ export default {
                 }
                 else{
                     this.$q.loading.show();
-            
+
                     let device_info = {
                         company_info: this.select_company,
                         device_id: this.input_device_id,
@@ -101,7 +115,7 @@ export default {
                     this.input_device_id = ''
                     this.input_date_installed = ''
                     this.input_device_ip = ''
-                    this.$q.loading.hide();     
+                    this.$q.loading.hide();
 
                 }
             }
@@ -114,7 +128,7 @@ export default {
                     message: e.message
                 });
             }
-                   
+
         },
         getCompanyData(value)
         {
@@ -122,7 +136,7 @@ export default {
             // console.log(value)
         },
 
-        
+
     },
 
     async mounted()
