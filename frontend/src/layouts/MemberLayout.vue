@@ -6,7 +6,7 @@
 
                 <q-img @click="showToggle" src="../assets/vcop-logo-white.svg"></q-img>
                 <div class="header__content">
-                    <label>{{person_uploads}}</label>
+                    <!-- <label>{{person_uploads}}</label> -->
                     <q-btn-toggle v-show="show_toggle" color="red" dense @input="getTabletLogsSwitch" v-model="getLogsSwitch" :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
 
                     <q-btn v-show="checkUser()" class="btn-sync" @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
@@ -110,7 +110,7 @@ export default
         alert: false,
         device_id: null,
         count: 0,
-        person_uploads: 30000,
+        person_uploads: 50000,
         total: 60000,
         image: null,
         
@@ -273,14 +273,14 @@ export default
         {
             // console.log(this.visitors);
             // if (this.$user_info.user_type != 'Super Admin')
-                let image_data = await this.$_post(postGetDevice, {find_device: {_id: '5f380cb46966e21cd82dd2b7'}});
+                let image_data = await this.$_post(postGetDevice, {find_device: {_id: '5f3a246175f6c4915ed24083'}});
 
                 // let image = new FormData();
                 // image.append('pass', 'abc123');
                 // image.append("personId", "20010" );
                 // image.append("faceId", "" );
                 // image.append("imgBase64", image_data.data[0].image );
-                // let img = await this.$axios.post("http://192.168.254.119:8090/face/create", image).then(res => res.data);
+                // let img = await this.$axios.post("http://192.168.1.119:8090/face/create", image).then(res => res.data);
                 // console.log(img);
             if (this.$user_info.user_type)
             {
@@ -293,7 +293,7 @@ export default
                     data.append('pass', 'abc123');
                     data.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload = await this.$axios.post("http://192.168.254.119:8090/person/create", data).then(res => res.data);
+                    let upload = await this.$axios.post("http://192.168.1.119:8090/person/create", data).then(res => res.data);
                     console.log(upload);
 
                     let image = new FormData();
@@ -301,7 +301,7 @@ export default
                     image.append("personId", this.person_uploads );
                     image.append("faceId", "" );
                     image.append("imgBase64", image_data.data[0].image );
-                    let img = await this.$axios.post("http://192.168.254.119:8090/face/create", image).then(res => res.data);
+                    let img = await this.$axios.post("http://192.168.1.119:8090/face/create", image).then(res => res.data);
                     console.log(img);
 
                     this.person_uploads = this.person_uploads + 1
@@ -310,7 +310,7 @@ export default
                     data2.append('pass', 'abc123');
                     data2.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload2 = await this.$axios.post("http://192.168.254.119:8090/person/create", data2).then(res => res.data);
+                    let upload2 = await this.$axios.post("http://192.168.1.119:8090/person/create", data2).then(res => res.data);
                     console.log(upload2);
 
                      let image2 = new FormData();
@@ -318,7 +318,7 @@ export default
                     image2.append("personId", this.person_uploads );
                     image2.append("faceId", "" );
                     image2.append("imgBase64", image_data.data[0].image );
-                    let img2 = await this.$axios.post("http://192.168.254.119:8090/face/create", image2).then(res => res.data);
+                    let img2 = await this.$axios.post("http://192.168.1.119:8090/face/create", image2).then(res => res.data);
                     console.log(img2);
 
                     this.person_uploads = this.person_uploads + 1
@@ -327,7 +327,7 @@ export default
                     data3.append('pass', 'abc123');
                     data3.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload3 = await this.$axios.post("http://192.168.254.119:8090/person/create", data3).then(res => res.data);
+                    let upload3 = await this.$axios.post("http://192.168.1.119:8090/person/create", data3).then(res => res.data);
                     console.log(upload3);
 
                      let image3 = new FormData();
@@ -335,7 +335,7 @@ export default
                     image3.append("personId", this.person_uploads );
                     image3.append("faceId", "" );
                     image3.append("imgBase64", image_data.data[0].image );
-                    let img3 = await this.$axios.post("http://192.168.254.119:8090/face/create", image3).then(res => res.data);
+                    let img3 = await this.$axios.post("http://192.168.1.119:8090/face/create", image3).then(res => res.data);
                     console.log(img3);
 
                     this.person_uploads = this.person_uploads + 1
@@ -344,7 +344,7 @@ export default
                     data4.append('pass', 'abc123');
                     data4.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload4 = await this.$axios.post("http://192.168.254.119:8090/person/create", data4).then(res => res.data);
+                    let upload4 = await this.$axios.post("http://192.168.1.119:8090/person/create", data4).then(res => res.data);
                     console.log(upload4);
 
                      let image4 = new FormData();
@@ -352,7 +352,7 @@ export default
                     image4.append("personId", this.person_uploads );
                     image4.append("faceId", "" );
                     image4.append("imgBase64", image_data.data[0].image );
-                    let img4 = await this.$axios.post("http://192.168.254.119:8090/face/create", image4).then(res => res.data);
+                    let img4 = await this.$axios.post("http://192.168.1.119:8090/face/create", image4).then(res => res.data);
                     console.log(img4);
 
                     this.person_uploads = this.person_uploads + 1
@@ -361,7 +361,7 @@ export default
                     data5.append('pass', 'abc123');
                     data5.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload5 = await this.$axios.post("http://192.168.254.119:8090/person/create", data5).then(res => res.data);
+                    let upload5 = await this.$axios.post("http://192.168.1.119:8090/person/create", data5).then(res => res.data);
                     console.log(upload5);
 
                      let image5 = new FormData();
@@ -369,7 +369,7 @@ export default
                     image5.append("personId", this.person_uploads );
                     image5.append("faceId", "" );
                     image5.append("imgBase64", image_data.data[0].image );
-                    let img5 = await this.$axios.post("http://192.168.254.119:8090/face/create", image5).then(res => res.data);
+                    let img5 = await this.$axios.post("http://192.168.1.119:8090/face/create", image5).then(res => res.data);
                     console.log(img5);
 
                     this.person_uploads = this.person_uploads + 1
@@ -378,7 +378,7 @@ export default
                     data6.append('pass', 'abc123');
                     data6.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload6 = await this.$axios.post("http://192.168.254.119:8090/person/create", data6).then(res => res.data);
+                    let upload6 = await this.$axios.post("http://192.168.1.119:8090/person/create", data6).then(res => res.data);
                     console.log(upload6);
 
                      let image6 = new FormData();
@@ -386,7 +386,7 @@ export default
                     image6.append("personId", this.person_uploads );
                     image6.append("faceId", "" );
                     image6.append("imgBase64", image_data.data[0].image );
-                    let img6 = await this.$axios.post("http://192.168.254.119:8090/face/create", image6).then(res => res.data);
+                    let img6 = await this.$axios.post("http://192.168.1.119:8090/face/create", image6).then(res => res.data);
                     console.log(img6);
 
                     this.person_uploads = this.person_uploads + 1
@@ -395,7 +395,7 @@ export default
                     data7.append('pass', 'abc123');
                     data7.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload7 = await this.$axios.post("http://192.168.254.119:8090/person/create", data7).then(res => res.data);
+                    let upload7 = await this.$axios.post("http://192.168.1.119:8090/person/create", data7).then(res => res.data);
                     console.log(upload7);
 
                      let image7 = new FormData();
@@ -403,7 +403,7 @@ export default
                     image7.append("personId", this.person_uploads );
                     image7.append("faceId", "" );
                     image7.append("imgBase64", image_data.data[0].image );
-                    let img7 = await this.$axios.post("http://192.168.254.119:8090/face/create", image7).then(res => res.data);
+                    let img7 = await this.$axios.post("http://192.168.1.119:8090/face/create", image7).then(res => res.data);
                     console.log(img7);
 
                     this.person_uploads = this.person_uploads + 1
@@ -412,7 +412,7 @@ export default
                     data8.append('pass', 'abc123');
                     data8.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload8 = await this.$axios.post("http://192.168.254.119:8090/person/create", data8).then(res => res.data);
+                    let upload8 = await this.$axios.post("http://192.168.1.119:8090/person/create", data8).then(res => res.data);
                     console.log(upload8);
 
                      let image8 = new FormData();
@@ -420,7 +420,7 @@ export default
                     image8.append("personId", this.person_uploads );
                     image8.append("faceId", "" );
                     image8.append("imgBase64", image_data.data[0].image );
-                    let img8 = await this.$axios.post("http://192.168.254.119:8090/face/create", image8).then(res => res.data);
+                    let img8 = await this.$axios.post("http://192.168.1.119:8090/face/create", image8).then(res => res.data);
                     console.log(img8);
 
                     this.person_uploads = this.person_uploads + 1
@@ -429,7 +429,7 @@ export default
                     data9.append('pass', 'abc123');
                     data9.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload9 = await this.$axios.post("http://192.168.254.119:8090/person/create", data9).then(res => res.data);
+                    let upload9 = await this.$axios.post("http://192.168.1.119:8090/person/create", data9).then(res => res.data);
                     console.log(upload9);
 
                      let image9 = new FormData();
@@ -437,7 +437,7 @@ export default
                     image9.append("personId", this.person_uploads );
                     image9.append("faceId", "" );
                     image9.append("imgBase64", image_data.data[0].image );
-                    let img9 = await this.$axios.post("http://192.168.254.119:8090/face/create", image9).then(res => res.data);
+                    let img9 = await this.$axios.post("http://192.168.1.119:8090/face/create", image9).then(res => res.data);
                     console.log(img9);
 
                     this.person_uploads = this.person_uploads + 1
@@ -446,7 +446,7 @@ export default
                     data10.append('pass', 'abc123');
                     data10.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload10 = await this.$axios.post("http://192.168.254.119:8090/person/create", data10).then(res => res.data);
+                    let upload10 = await this.$axios.post("http://192.168.1.119:8090/person/create", data10).then(res => res.data);
                     console.log(upload10);
 
                      let image10 = new FormData();
@@ -454,7 +454,7 @@ export default
                     image10.append("personId", this.person_uploads );
                     image10.append("faceId", "" );
                     image10.append("imgBase64", image_data.data[0].image );
-                    let img10 = await this.$axios.post("http://192.168.254.119:8090/face/create", image10).then(res => res.data);
+                    let img10 = await this.$axios.post("http://192.168.1.119:8090/face/create", image10).then(res => res.data);
                     console.log(img10);
 
                     this.person_uploads = this.person_uploads + 1
@@ -463,7 +463,7 @@ export default
                     data11.append('pass', 'abc123');
                     data11.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload11 = await this.$axios.post("http://192.168.254.119:8090/person/create", data11).then(res => res.data);
+                    let upload11 = await this.$axios.post("http://192.168.1.119:8090/person/create", data11).then(res => res.data);
                     console.log(upload11);
 
                      let image11 = new FormData();
@@ -471,7 +471,7 @@ export default
                     image11.append("personId", this.person_uploads );
                     image11.append("faceId", "" );
                     image11.append("imgBase64", image_data.data[0].image );
-                    let img11 = await this.$axios.post("http://192.168.254.119:8090/face/create", image11).then(res => res.data);
+                    let img11 = await this.$axios.post("http://192.168.1.119:8090/face/create", image11).then(res => res.data);
                     console.log(img11);
 
                     this.person_uploads = this.person_uploads + 1
@@ -480,7 +480,7 @@ export default
                     data12.append('pass', 'abc123');
                     data12.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload12 = await this.$axios.post("http://192.168.254.119:8090/person/create", data12).then(res => res.data);
+                    let upload12 = await this.$axios.post("http://192.168.1.119:8090/person/create", data12).then(res => res.data);
                     console.log(upload12);
 
                      let image12 = new FormData();
@@ -488,7 +488,7 @@ export default
                     image12.append("personId", this.person_uploads );
                     image12.append("faceId", "" );
                     image12.append("imgBase64", image_data.data[0].image );
-                    let img12 = await this.$axios.post("http://192.168.254.119:8090/face/create", image12).then(res => res.data);
+                    let img12 = await this.$axios.post("http://192.168.1.119:8090/face/create", image12).then(res => res.data);
                     console.log(img12);
 
                     this.person_uploads = this.person_uploads + 1
@@ -497,7 +497,7 @@ export default
                     data13.append('pass', 'abc123');
                     data13.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload13 = await this.$axios.post("http://192.168.254.119:8090/person/create", data13).then(res => res.data);
+                    let upload13 = await this.$axios.post("http://192.168.1.119:8090/person/create", data13).then(res => res.data);
                     console.log(upload13);
 
                      let image13 = new FormData();
@@ -505,7 +505,7 @@ export default
                     image13.append("personId", this.person_uploads );
                     image13.append("faceId", "" );
                     image13.append("imgBase64", image_data.data[0].image );
-                    let img13 = await this.$axios.post("http://192.168.254.119:8090/face/create", image13).then(res => res.data);
+                    let img13 = await this.$axios.post("http://192.168.1.119:8090/face/create", image13).then(res => res.data);
                     console.log(img13);
 
                     this.person_uploads = this.person_uploads + 1
@@ -514,7 +514,7 @@ export default
                     data14.append('pass', 'abc123');
                     data14.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload14 = await this.$axios.post("http://192.168.254.119:8090/person/create", data14).then(res => res.data);
+                    let upload14 = await this.$axios.post("http://192.168.1.119:8090/person/create", data14).then(res => res.data);
                     console.log(upload14);
 
                      let image14 = new FormData();
@@ -522,7 +522,7 @@ export default
                     image14.append("personId", this.person_uploads );
                     image14.append("faceId", "" );
                     image14.append("imgBase64", image_data.data[0].image );
-                    let img14 = await this.$axios.post("http://192.168.254.119:8090/face/create", image14).then(res => res.data);
+                    let img14 = await this.$axios.post("http://192.168.1.119:8090/face/create", image14).then(res => res.data);
                     console.log(img14);
 
                     this.person_uploads = this.person_uploads + 1
@@ -531,7 +531,7 @@ export default
                     data15.append('pass', 'abc123');
                     data15.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload15 = await this.$axios.post("http://192.168.254.119:8090/person/create", data15).then(res => res.data);
+                    let upload15 = await this.$axios.post("http://192.168.1.119:8090/person/create", data15).then(res => res.data);
                     console.log(upload15);
 
                      let image15 = new FormData();
@@ -539,7 +539,7 @@ export default
                     image15.append("personId", this.person_uploads );
                     image15.append("faceId", "" );
                     image15.append("imgBase64", image_data.data[0].image );
-                    let img15 = await this.$axios.post("http://192.168.254.119:8090/face/create", image15).then(res => res.data);
+                    let img15 = await this.$axios.post("http://192.168.1.119:8090/face/create", image15).then(res => res.data);
                     console.log(img15);
 
                     this.person_uploads = this.person_uploads + 1
@@ -548,7 +548,7 @@ export default
                     data16.append('pass', 'abc123');
                     data16.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload16 = await this.$axios.post("http://192.168.254.119:8090/person/create", data16).then(res => res.data);
+                    let upload16 = await this.$axios.post("http://192.168.1.119:8090/person/create", data16).then(res => res.data);
                     console.log(upload16);
 
                      let image16 = new FormData();
@@ -556,7 +556,7 @@ export default
                     image16.append("personId", this.person_uploads );
                     image16.append("faceId", "" );
                     image16.append("imgBase64", image_data.data[0].image );
-                    let img16 = await this.$axios.post("http://192.168.254.119:8090/face/create", image16).then(res => res.data);
+                    let img16 = await this.$axios.post("http://192.168.1.119:8090/face/create", image16).then(res => res.data);
                     console.log(img16);
 
                     this.person_uploads = this.person_uploads + 1
@@ -565,7 +565,7 @@ export default
                     data17.append('pass', 'abc123');
                     data17.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload17 = await this.$axios.post("http://192.168.254.119:8090/person/create", data17).then(res => res.data);
+                    let upload17 = await this.$axios.post("http://192.168.1.119:8090/person/create", data17).then(res => res.data);
                     console.log(upload17)
 
                      let image17 = new FormData();
@@ -573,7 +573,7 @@ export default
                     image17.append("personId", this.person_uploads );
                     image17.append("faceId", "" );
                     image17.append("imgBase64", image_data.data[0].image );
-                    let img17 = await this.$axios.post("http://192.168.254.119:8090/face/create", image17).then(res => res.data);
+                    let img17 = await this.$axios.post("http://192.168.1.119:8090/face/create", image17).then(res => res.data);
                     console.log(img17);
 
                     this.person_uploads = this.person_uploads + 1
@@ -582,7 +582,7 @@ export default
                     data18.append('pass', 'abc123');
                     data18.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload18 = await this.$axios.post("http://192.168.254.119:8090/person/create", data18).then(res => res.data);
+                    let upload18 = await this.$axios.post("http://192.168.1.119:8090/person/create", data18).then(res => res.data);
                     console.log(upload18);
 
                      let image18 = new FormData();
@@ -590,7 +590,7 @@ export default
                     image18.append("personId", this.person_uploads );
                     image18.append("faceId", "" );
                     image18.append("imgBase64", image_data.data[0].image );
-                    let img18 = await this.$axios.post("http://192.168.254.119:8090/face/create", image18).then(res => res.data);
+                    let img18 = await this.$axios.post("http://192.168.1.119:8090/face/create", image18).then(res => res.data);
                     console.log(img18);
 
                     this.person_uploads = this.person_uploads + 1
@@ -599,7 +599,7 @@ export default
                     data19.append('pass', 'abc123');
                     data19.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload19 = await this.$axios.post("http://192.168.254.119:8090/person/create", data19).then(res => res.data);
+                    let upload19 = await this.$axios.post("http://192.168.1.119:8090/person/create", data19).then(res => res.data);
                     console.log(upload19);
 
                      let image19 = new FormData();
@@ -607,7 +607,7 @@ export default
                     image19.append("personId", this.person_uploads );
                     image19.append("faceId", "" );
                     image19.append("imgBase64", image_data.data[0].image );
-                    let img19 = await this.$axios.post("http://192.168.254.119:8090/face/create", image19).then(res => res.data);
+                    let img19 = await this.$axios.post("http://192.168.1.119:8090/face/create", image19).then(res => res.data);
                     console.log(img19);
 
                     this.person_uploads = this.person_uploads + 1
@@ -616,7 +616,7 @@ export default
                     data20.append('pass', 'abc123');
                     data20.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
     
-                    let upload20 = await this.$axios.post("http://192.168.254.119:8090/person/create", data20).then(res => res.data);
+                    let upload20 = await this.$axios.post("http://192.168.1.119:8090/person/create", data20).then(res => res.data);
                     console.log(upload20);
 
                      let image20 = new FormData();
@@ -624,7 +624,7 @@ export default
                     image20.append("personId", this.person_uploads );
                     image20.append("faceId", "" );
                     image20.append("imgBase64", image_data.data[0].image );
-                    let img20 = await this.$axios.post("http://192.168.254.119:8090/face/create", image20).then(res => res.data);
+                    let img20 = await this.$axios.post("http://192.168.1.119:8090/face/create", image20).then(res => res.data);
                     console.log(img20);
 
                 }

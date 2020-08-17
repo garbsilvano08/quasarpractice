@@ -167,6 +167,7 @@ module.exports =
     
     async addPassLog(req, res)
     {
+        console.log(req.body);
         let key = ['Traffic']
         // let person_log = []
         let date_string = new Date(new Date(req.body.data.currentTime)).toISOString().split('T')[0]
@@ -250,10 +251,10 @@ module.exports =
 
     async visionSkyLogs(req, res)
     {
+        console.log(req.body.personId, req.body.type);
         if (req.body.personId)
         {
             let extra = parseJson(req.body.extra)
-            console.log(req.body.personId, req.body.type);
 
             // let person_logs = await new MDB_PERSON_LOGS().docs({record_id: req.body.id})
             // if (!person_logs.length)

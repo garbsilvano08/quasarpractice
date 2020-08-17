@@ -102,7 +102,18 @@ export default {
             this.device_list.forEach(async (device) => {
                 if (device.device_type == 'vision_sky' )
                 {
+                    this.persons_list.forEach(async (person) =>{
+                        let tabletFormData = new FormData();
+                        tabletFormData.append("pass", "abc123");
+                        tabletFormData.append("id", person.frontdesk_person_id);
+                        let rsp = await this.$axios.post("http://"+device.device_ip+":8090/person/delete", tabletFormData).then(res => res.data);
 
+                        let personImage = new FormData();
+                        personImage.append("pass", "abc123");
+                        personImage.append("faceId", person.frontdesk_person_id);
+                        let img = await this.$axios.post("http://"+device.device_ip+":8090/face/delete", personImage).then(res => res.data);
+                        console.log(rsp, img);
+                    })
                 }
                 else
                 {
@@ -191,7 +202,7 @@ export default {
                                 let image = new FormData();
                                 image.append('pass', 'abc123');
                                 image.append("personId", person.frontdesk_person_id );
-                                image.append("faceId", "" );
+                                image.append("faceId", person.frontdesk_person_id );
                                 image.append("imgBase64", b64 );
                                 let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data);
                             }

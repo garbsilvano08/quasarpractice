@@ -52,6 +52,7 @@
 import "./DeviceManagement.scss";
 import { postGetCompanies, postAddDevice} from '../../../references/url';
 import  ComPicker from "../../../components/companyPicker/ComPicker"
+import LoginVue from '../../Front/Login.vue';
 
 function isEmpty(obj) {
     for(var prop in obj) {
@@ -111,13 +112,19 @@ export default {
                         company_id: this.select_company._id,
                         log_type: this.log_type
                     }
-                    await this.$_post(postAddDevice, {device_info: device_info});
-                    if (this.log_type == 'vision_sky')
+                    let req = await this.$_post(postAddDevice, {device_info: device_info});
+                    // let logs = await this.$_post('member/visionsky/logs');
+                    // console.log(logs);
+                    console.log(req);
+                    // console.log(this.log_type);
+                    if (this.device_type == 'vision_sky')
                     {
+                        // console.log(this.input_device_ip);
                         let data = new FormData();
                         data.append('pass', 'abc123');
-                        data.append('callbackUrl', 'http://192.168.254.126:4001/api/member/visionsky/logs');
+                        data.append('callbackUrl', 'http://192.168.254.120:4001/api/member/visionsky/logs');
                         let logs = await this.$axios.post("http://" + this.input_device_ip + ":8090/setIdentifyCallBack", data).then(res => res.data);
+                        console.log(logs);
                     }
 
                     this.$q.loading.hide();     
@@ -156,9 +163,9 @@ export default {
         
     },
 
-    async mounted()
+    async created()
     {
-
+        this.select_company = this.$user_info.company ? this.$user_info.company : {};
     },
 
 }

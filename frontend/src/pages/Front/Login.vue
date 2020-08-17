@@ -37,7 +37,7 @@ export default
     ({
         form_data:
         {
-            email: 'guillermotabligan@gmail.com',
+            email: '',
             password: '',
         },
     }),

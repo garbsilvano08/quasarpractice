@@ -4,12 +4,12 @@
         <div class="login__content">
             <div class="login__title">
                 <div class="login__title-primary">
-                    <q-img src="../../../assets/vcop-logo.svg"></q-img>
+                    <q-img @dblclick="createAdmin()" src="../../../assets/vcop-logo.svg"></q-img>
                 </div>
                 <div class="login__title-sub">Client Login</div>
             </div>
             <div class="login__input">
-                <q-input v-model="form_data.username" placeholder="Username" dense borderless>
+                <q-input v-model="form_data.email" placeholder="Username" dense borderless>
                     <template v-slot:prepend>
                         <q-icon name="mdi-account-outline" />
                     </template>
@@ -21,7 +21,7 @@
                 </q-input>
             </div>
             <div class="login__btn">
-                <q-btn flat dense no-caps label="Login" @click="$router.push('/myhealth-dashboard')"></q-btn>
+                <q-btn flat dense no-caps label="Login" @click="submitLogin"></q-btn>
             </div>
             <div class="login__footer">
                 Copyright © 2020 VCOP, All Rights Reserved.
@@ -59,7 +59,7 @@
 // EXTERNAL CSS
 import "./Login.scss";
 
-import { postLoginUser } from '../../../references/url';
+import { postLoginUser, postCreateAdmin } from '../../../references/url';
 
 export default
 {
@@ -67,17 +67,33 @@ export default
     ({
         form_data:
         {
-            username: '',
+            email: '',
             password: '',
         },
     }),
     mounted() {},
     methods:
     {
+        async createAdmin()
+        {
+            this.$q.loading.show();
+            await this.$_post(postCreateAdmin);
+            this.$q.loading.hide();
+        },
         async submitLogin()
         {
             this.$q.loading.show();
-            await this.$axios.post(postLoginUser, this.form_data);
+
+            let res = await this.$_post(postLoginUser, this.form_data);
+
+            if(res)
+            {
+                console.log(res);
+                this.$store.commit('user/updateUser', res.data)
+                localStorage.setItem("auth", JSON.stringify(res.data));
+                this.$router.push({ name: 'member_dashboard' });
+            }
+
             this.$q.loading.hide();
         }
     },
