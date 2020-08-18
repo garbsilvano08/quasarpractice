@@ -55,6 +55,8 @@ import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 import  ComPicker from "../../../components/companyPicker/ComPicker"
 
 import { postGetCompanies, postFindLogs, postPersonByCateg, postExpFeverDeteted } from '../../../references/url';
+import { log } from 'util';
+import { base64StringToBlob } from 'blob-util';
 
 export default {
     components: {
@@ -148,7 +150,37 @@ export default {
 
         async getStaffList(params, sort)
         {
-            return await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort});
+            let index = 0
+            let log_list = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort});
+            for (let index = 0; index < log_list.data.length; index++) {                
+                log_list.data.forEach(async log => {
+                    if (!log.person_img.startsWith('http')) 
+                    {
+                        let imageName = 'vision-' + Date.now().toString() + ".png"
+                        let blob = "";
+                        var formDatatoBackend = new FormData();
+                        let contentType = 'image/png';
+                        blob = "";
+                        blob = base64StringToBlob(log.person_img, contentType);
+                        blob.lastModifiedDate = new Date();
+                        formDatatoBackend.append('image', blob, imageName);
+                        let res
+                        try
+                        {
+                            res = await this.$_post_file(formDatatoBackend);
+                            log_list.data[index].person_img = res
+                            await this.$_post('member/save/image', {info: {id: log._id, image: res}});
+                        }
+                        catch(e){}
+
+                        console.log(res);
+                    }
+                    index++
+                    // console.log(element);
+                });
+            }
+            // log_list
+            return log_list
         }
     },
     async mounted()

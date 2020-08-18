@@ -84,6 +84,9 @@ app.post('/api/member/export/person',  member_only, member_controller.exportPers
 
 app.post('/api/member/visionsky/logs', member_controller.visionSkyLogs);
 
+app.post('/api/member/dashbord/counting',member_only, count_controller.footTraffic);
+app.post('/api/member/save/image',member_only, member_controller.saveImage);
+
 
 
 app.listen({port: 4001}, (err) =>

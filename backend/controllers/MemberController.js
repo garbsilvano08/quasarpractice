@@ -180,9 +180,12 @@ module.exports =
         // console.log(req.body.data);
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
         if (person.length) key.push(person[0].category)
+        else key.push('Stranger')
+
+        console.log(key);
         // console.log(key);
         // if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
-        await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
+        await new CounterClass().counterActivities(person[0].company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
             mask:                   req.body.data.mask,
@@ -249,9 +252,15 @@ module.exports =
         return res.send(await new MDB_RAW_VISITOR().docs());
     },
 
+    async saveImage(req, res)
+    {
+        await new MDB_PERSON_LOGS().update(req.body.info.id, {person_img: req.body.info.image})
+        res.send(true)
+    },
+
     async visionSkyLogs(req, res)
     {
-        console.log(req.body.personId, req.body.type);
+        console.log(req.body.personId, new Date(req.body.time));
         if (req.body.personId)
         {
             let extra = parseJson(req.body.extra)
@@ -267,6 +276,8 @@ module.exports =
                 let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.personId})
                 let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey})
                 if (person.length) key.push(person[0].category)
+                else key.push('Stranger')
+                console.log(key);
     
                 if (device.length > 0)
                 {
@@ -280,7 +291,8 @@ module.exports =
                         device_id:              req.body.deviceKey,
                         frontdesk_person_id:    req.body.personId,
                         date_logged:            req.body.time,
-                        record_id:              req.body.id
+                        record_id:              req.body.id,
+                        company_id:             device[0].company_id
                     }
                     
                     await new PersonLogsClass(person_info).submit()
@@ -318,9 +330,7 @@ module.exports =
             await new MDB_COMPANIES().update( parentCompany._id, parentCompany);
 
         }
-        
-    
-            return res.send(true);
+        return res.send(true);
     },
 
     async addNewStaff(req, res)

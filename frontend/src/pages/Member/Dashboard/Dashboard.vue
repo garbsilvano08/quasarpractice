@@ -44,10 +44,10 @@
                   <div class="dashboard__overview-title">Highest Temperature Today</div>
                   <div class="dashboard__overview-desc">
                      <div class="decs-total">{{highest_log.data.length ? highest_log.data[0].temperature + "°" : 'No Logs Yet'}} </div>
-                     <div class="desc-separator"></div>
-                     <div class="decs-info">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div>
+                     <!-- <div class="desc-separator"></div>
+                     <div class="decs-info">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                   </div>
-                  <div class="dashboard__overview-date">{{current_date}}</div>
+                  <div class="dashboard__overview-date">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div>
                </div>
             </q-img>
          </div>
@@ -126,13 +126,15 @@
                   Foot Traffic
                </div>
                <div class="dashboard__graph-filter">
-                  <q-input v-model="traffic_date" type='date' outlined dense></q-input>
+                  <q-select v-model="select_people" :options="options_people" outlined dense></q-select>
+                  <q-select v-model="select_date" :options="options_date" outlined dense></q-select>
+                  <!-- <q-input v-model="traffic_date" type='date' outlined dense></q-input> -->
                </div>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
 
             <div class="dashboard__graph-content">
-               <line-chart :data="data_line_graph" />
+               <line-chart :data="data_line_graph.data" />
             </div>
 
             <!-- <div v-if="traffic_weekly.data" class="dashboard__graph-content">
@@ -160,7 +162,7 @@
 
                <div class="dashboard__graph-filter">
                   <!-- <q-input v-model="employee_date" type='date' outlined dense></q-input> -->
-                  <q-select v-model="select_people" :options="options_people" outlined dense></q-select>
+                  <!-- <q-select v-model="select_people" :options="options_people" outlined dense></q-select> -->
                   <q-select v-model="select_date" :options="options_date" outlined dense></q-select>
                </div>
             </div>
@@ -301,7 +303,8 @@ import { postGetCompanies,
    postGetPersons,
    postGetPurposeVisit,
    postGetAlertCount,
-   postGetDevice
+   postGetDevice,
+   postDashboard
 } from '../../../references/url';
 
 // Classes
@@ -323,14 +326,15 @@ export default
             name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
          }
       ],
-      data_line_graph: [
+      data_line_graph:
+       {data: [
          {
             name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
          },
          {
             name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
          }
-      ],
+      ]},
       sample_alert: [
          {
             person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
@@ -414,11 +418,11 @@ export default
       options_date: [
          'Daily' , 'Weekly', 'Monthly' , 'Yearly', 'Custom Date'
       ],
-      select_people: '',
+      select_people: 'All',
       options_people: [
-         'All' , 'Employees', 'Visitor'
+         'All' , 'Staff', 'Visitors', 'Stranger'
       ],
-      select_date: '',
+      select_date: 'Daily',
       traffic_data: {data: []},
       highest_log: {data: []},
       current_date: new Date().toUTCString().split(" "),
@@ -435,6 +439,19 @@ export default
 
    watch:
     {
+       async select_date(val)
+        {
+           console.log(this.company_details);
+           if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+           else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
+        },
+        async select_people(val)
+        {
+           console.log(this.company_details);
+           if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+           else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
+         //   await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
+        },
         async visitors_date(val)
         {
             if (val)
@@ -598,6 +615,11 @@ export default
          }
       },
 
+      async getTrafficData(params = {})
+      {
+         this.data_line_graph = await this.$_post('member/dashbord/counting', params);
+      },
+
       async getTotalRegistered()
       {
          let total = 0
@@ -611,7 +633,7 @@ export default
          if (today_logs.data.length)
          {
             for (let log of today_logs.data) {
-               // console.log(log, 'log');
+               console.log(log, 'log');
                total = total + Number(log.count)
             }
             this.logged_today = (total/this.traffic_data.count) * 100
@@ -623,8 +645,13 @@ export default
          }
       }
    },
+
    async mounted()
    {
+      let params = {}
+      if (this.company_details._id) params = {filter: {company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
+      else params = {filter: {date_filter: this.select_date, person: this.select_people}}
+      await this.getTrafficData(params)
       if (this.$user_info.user_type == 'Officer')
       {
          this.$router.push({ name: 'member_frontdesk_addreport' });

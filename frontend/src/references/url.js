@@ -46,4 +46,8 @@ exports.postExpFeverDeteted = 'member/export/fever_detected';
 exports.postExpPerson       = 'member/export/person';
 
 exports.postVisionSky       = 'member/visionsky/logs';
+
+exports.postDashboard       = 'member/dashboard/counting';
+
+
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';
