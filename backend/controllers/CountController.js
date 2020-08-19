@@ -39,12 +39,12 @@ module.exports =
 
     async footTraffic(req, res)
     {
-        console.log(new Date().getDay());
         let options_people = ['All' , 'Staff', 'Visitors', 'Stranger'];
 
         let startDate = ''
         let endDate = ''
         let traffic_data = []
+        console.log(req.body.filter.date_filter);
         for (let x = 0; x < options_people.length; x++) {
             let traffic = {}
 
@@ -83,7 +83,6 @@ module.exports =
                     for (let index = 0; index < 7; index++) {
                         
                         date_string = new Date(date_string).toISOString().split('T')[0]
-                        console.log(date_string);
                         if (req.body.filter.person === 'All'){
                             if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
                             else params = {company_id: 'global',key: 'Traffic', date_string: date_string}
@@ -93,25 +92,86 @@ module.exports =
                             params = {company_id: 'global', key: req.body.filter.person, date_string:date_string}
 
                         }
-
-                        let daily_log = await new MDB_COUNT_DAILY().collection.find(params);
-                        // let total_count = 0
-                        // for (let count = 0; count < daily_log.length; count++) {
-                        //     // const element = array[index];
-                        //     total_count = total_count + daily_log[count].count
-                        //     console.log(daily_log[count].count, 'log');
-                        // }
-                        console.log(daily_log);
-                        traffic[day_list[index]] = daily_log.length ? daily_log[0].count : 0
+                        let weekly = await new MDB_COUNT_DAILY().collection.find(params);
+                        
+                        traffic[day_list[index]] = weekly.length ? weekly[0].count : 0
                         
                         date_string = new Date (date_string)
-                        date_string.setDate(date_string.getDate() + 1)
-                        // req.body.find_count.date_string = date_string.toISOString().split('T')[0]
-                        
+                        date_string.setDate(date_string.getDate() + 1)                        
                     }
                 }
+                else if (req.body.filter.date_filter == 'Monthly' )
+                {
+                    let date = new Date().setDate(1)
+                    for (let index = 0; new Date(date).getMonth() <= new Date().getMonth(); index++) {
+                        if (req.body.filter.person === 'All'){
+                            if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
+                            else params = {company_id: 'global',key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
+                        }
+                        else {
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: req.body.filter.person, date_string: new Date(date).toISOString().split('T')[0]}
+                            params = {company_id: 'global', key: req.body.filter.person, date_string: new Date(date).toISOString().split('T')[0]}
+
+                        }
+
+                        let monthly = await new MDB_COUNT_DAILY().collection.find(params);
+                        traffic[new Date(date).getDate()] = monthly.length ? monthly[0].count : 0
+                        date = new Date().setDate(new Date(date).getDate() + 1)
+                    }
+                }
+                else if (req.body.filter.date_filter == 'Yearly' )
+                {
+                    let date = new Date()
+                    let month_list = ['Jan','Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+
+                    for (let index = 0; index < month_list.length; index++) {
+                        // date_string = new Date(date_string).toISOString().split('T')[0]
+                        date = new Date(date.setMonth(index))
+                        let date_string = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, "0")
+
+                        console.log(date_string, date);
+                        if (req.body.filter.person === 'All'){
+                            if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
+                            else params = {company_id: 'global',key: 'Traffic', date_string: date_string}
+                        }
+                        else {
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: req.body.filter.person, date_string:date_string}
+                            params = {company_id: 'global', key: req.body.filter.person, date_string:date_string}
+
+                        }
+                        let yearly = await new MDB_COUNT_MONTHLY().collection.find(params);
+                        
+                        traffic[month_list[index]] = yearly.length ? yearly[0].count : 0
+                        
+                        date_string = new Date (date_string)
+                        date_string.setDate(date_string.getDate() + 1)                        
+                    }
+                }
+                else if (req.body.filter.date_filter == 'Custom Date' )
+                {
+                    // console.log(new Date(date) <= new Date(req.body.filter.end_date));
+                    let date = new Date(req.body.filter.start_date)
+                    let month_list = ['Jan','Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+
+                    for (let index = 0; new Date(date) <= new Date(req.body.filter.end_date); index++) {
+
+                        if (req.body.filter.person === 'All'){
+                            if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
+                            else params = {company_id: 'global',key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
+                        }
+                        else {
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: req.body.filter.person, date_string: new Date(date).toISOString().split('T')[0]}
+                            params = {company_id: 'global', key: req.body.filter.person, date_string:new Date(date).toISOString().split('T')[0]}
+
+                        }
+
+                        let daily = await new MDB_COUNT_DAILY().collection.find(params);
+                        traffic[ month_list[new Date(date).getMonth()] + " " + new Date(date).getDate()] = daily.length ? daily[0].count : 0
+                        date = new Date(date).setDate(new Date(date).getDate() + 1)
+                    }   
+                }
             }
-            console.log(traffic, 'traffic');
+            console.log(traffic, options_people[x], 'traffic');
             traffic_data.push({name: options_people[x], data: traffic})
         }
         res.send(traffic_data)

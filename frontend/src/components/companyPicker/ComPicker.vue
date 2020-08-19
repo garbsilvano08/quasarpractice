@@ -28,7 +28,10 @@
 <script>
 import { postGetCompanies, postGetCompany }                     from '../../references/url';
 export default {
-
+    props:
+    {
+        user: Object
+    },
     data: () => ({
         company_list: [],
         parent_companies: [],
@@ -48,16 +51,24 @@ export default {
     {
         getParentCompanies()
         {
-            this.company_list.data.forEach((com) => {
-                if(com.parent_id == "No Parent")
-                {
-                    this.parent_companies.push(com);
-                }
-            })
+            console.log(this.user);
+            if (this.user.user_type == "Super Admin")
+            {
+                this.company_list.data.forEach((com) => {
+                    if(com.parent_id == "No Parent")
+                    {
+                        this.parent_companies.push(com);
+                    }
+                })
+            }
+            else if (this.user.user_type == 'Admin')
+            {
+                this.parent_companies.push(this.user.company);
+            }
         },
         getSubCompanies(subCom)
         {
-                // console.log(subCom)
+                console.log(subCom)
                 return subCom
 
         },

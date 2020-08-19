@@ -8,7 +8,7 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <com-picker class="btn-choose" @select=getCompanyData></com-picker>
+                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyData></com-picker>
                 <!-- <q-select v-model="select__date" :options="options_date" outlined dense></q-select> -->
             </div>
         </div>

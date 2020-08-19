@@ -563,7 +563,7 @@ export default {
             let image_data = null
 
             await document.getElementById("snap").addEventListener("click", async() => {
-                context.drawImage(video, 0, 0, 640, 480);
+                context.drawImage(video, 0, 0, 640, 500);
 
             this.image = canvas.toDataURL("image/png")
             image_data = this.image

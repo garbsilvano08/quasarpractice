@@ -118,7 +118,7 @@
                                 </div>
                                 <div class="content__input">
                                     <div class="content__input-label">Tag a Company *</div>
-                                     <com-picker @select=getCompanyData></com-picker>
+                                     <com-picker :user="this.$user_info" @select=getCompanyData></com-picker>
                                     <!-- <q-select v-model="personal_information.company_name" :options="options_company" outlined dense></q-select> -->
                                 </div>
                             </div>

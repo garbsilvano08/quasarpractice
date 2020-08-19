@@ -708,6 +708,7 @@ export default
                             image.append("type", 1 );
                             
                             let img = await this.$axios.post("http://"+ device.device_ip +":8090/person/quickCreate", image).then(res => res.data);
+                            console.log(img);
                         }
                         else
                         {
@@ -731,7 +732,7 @@ export default
                 // Logs
                 for (let log of this.passLogs)
                 {
-                    console.log(log);
+                    console.log(log, this.$user_info.company);
                     log.company_id = this.$user_info.company ? this.$user_info.company._id : '';
     
                     await this.$_post('member/add/pass_log', { data: log });
