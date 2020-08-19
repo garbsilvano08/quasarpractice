@@ -21,7 +21,7 @@
                 </q-input>
             </div>
             <div class="login__btn">
-                <q-btn flat dense no-caps label="Login" @click="submitLogin"></q-btn>
+                <q-btn flat dense no-caps class="btn-primary" label="Login" @click="submitLogin"></q-btn>
             </div>
             <div class="login__footer">
                 Copyright © 2020 VCOP, All Rights Reserved.

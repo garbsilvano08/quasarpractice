@@ -6,7 +6,7 @@
             <!-- <q-btn class="btn-outline btn-export" flat dense no-caps>
                Export &nbsp;<q-icon name="mdi-export"></q-icon>
             </q-btn> -->
-            <com-picker @select=getCompanyData></com-picker>
+            <com-picker @select=getCompanyData class="btn-choose"></com-picker>
             <!-- <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select> -->
          </div>
       </div>
@@ -320,10 +320,10 @@ export default
    ({
       data_bar_graph: [
          {
-            name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
+            name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8, 'Saturday': 4, 'Sunday': 8,}
          },
          {
-            name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
+            name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5, 'Saturday': 3, 'Sunday': 7,}
          }
       ],
       data_line_graph:

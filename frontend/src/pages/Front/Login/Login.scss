@@ -8,10 +8,18 @@
     width: 100%;
     height: 100vh;
 
+    @media screen and (max-width: 768px) {
+        grid-template-columns: 1fr !important;
+    }
+
     .login__banner {
         background-image: url('../../../assets/myhealth-login-banner.jpg');
         background-size: cover;
         background-repeat: no-repeat;
+
+        @media screen and (max-width: 768px) {
+            display: none !important;
+        }
     }
 
     .login__content {
@@ -19,8 +27,17 @@
         width: 100%;
         padding: 0px 100px;
 
+        @media screen and (max-width: 425px) {
+            padding: 0px 30px;
+        }
+
         .login__title {
             margin-bottom: 30px;
+
+            @media screen and (max-width: 768px) {
+                margin-bottom: 50px !important;
+                text-align: center;
+            }
 
             .login__title-primary {
                 margin-bottom: 10px;
@@ -40,18 +57,22 @@
         .login__input {
             width: 60%;
 
+            @media screen and (max-width: 768px) {
+                width: 100% !important;
+            }
+
             .q-input {
-                border: solid 1px #00b050;
-                border-radius: 8px !important;
-                font-weight: 500;
+                border: solid 1px #464de4;
+                border-radius: 4px !important;
                 margin-bottom: 20px;
-                font-size: 14px;
-                font-weight: 500;
                 padding: 0px 3px;
                 outline: none !important;
 
                 .q-field__native {
-                    padding: 0px 15px;
+                    padding: 0px 10px;
+                    color: #233b61 !important;
+                    font-size: 14px;
+                    font-weight: 500;
                 }
 
                 .q-icon {
@@ -64,12 +85,11 @@
         .login__btn {
             .q-btn {
                 color: #ffffff;
-                background-color: #00b050;
                 width: 200px;
-                height: 40px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
+
+                @media screen and (max-width: 768px) {
+                    width: 100% !important;
+                }
             }
         }
 
@@ -78,6 +98,10 @@
             font-size: 12px;
             font-weight: 500;
             margin-top: 30px;
+
+            // @media screen and (max-width: 768px) {
+            //     margin-top: 50px !important;
+            // }
         }
     }
 }
