@@ -33,16 +33,22 @@ module.exports =
         key: 'daily',
         label: 'Daily Logs',
         icon: 'mdi-face-recognition',
-        sub:
-        [
-            { label: 'Staff', route: 'member_dailylogs_staff' },
-            { label: 'Visitors', route: 'member_dailylogs_visitor' },
-            { label: 'Stranger', route: 'member_dailylogs_stranger' },
-            // { label: 'Body Temp. Logs', route: 'member_dailylogs_bodytemperature' },
-            { label: 'Fever Detected', route: 'member_dailylogs_feverdetected' },
-            { label: 'Blacklist', route: 'member_dailylogs_blacklist' },
-        ]
+        route: 'member_dailylogs',
     },
+    // {
+    //     key: 'daily',
+    //     label: 'Daily Logs',
+    //     icon: 'mdi-face-recognition',
+    //     sub:
+    //     [
+    //         { label: 'Staff', route: 'member_dailylogs_staff' },
+    //         { label: 'Visitors', route: 'member_dailylogs_visitor' },
+    //         { label: 'Stranger', route: 'member_dailylogs_stranger' },
+    //         { label: 'Body Temp. Logs', route: 'member_dailylogs_bodytemperature' },
+    //         { label: 'Fever Detected', route: 'member_dailylogs_feverdetected' },
+    //         { label: 'Blacklist', route: 'member_dailylogs_blacklist' },
+    //     ]
+    // },
     {
         key: 'account_directory',
         label: 'Account Directory',

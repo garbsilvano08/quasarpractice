@@ -293,3 +293,28 @@
         margin-bottom: 15px !important;
     }
 }
+
+// BUTTON DROPDOWN STYLE
+.btn-dropdown__primary {
+    background-color: #464de4;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    width: 150px;
+    padding: 3px 0px;
+    border: solid 1px #464de4;
+    // box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.2);
+    transition: .2s all ease-in-out;
+
+    @media screen and (max-width: 425px) {
+        width: 100% !important;
+    }
+
+    .q-icon {
+        margin-left: 10px;
+    }
+
+    &:hover {
+        background-color: #222ce3;
+    }
+}
