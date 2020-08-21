@@ -452,7 +452,7 @@ export default {
                 frontdesk_person_id: result,
                 frontdesk_person_date: new Date(),
 
-                saved_from: this.$user_info.company._id ? this.$user_info.company._id : ''
+                saved_from: this.staff_class.company_name._id
             }
 
 

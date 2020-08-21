@@ -839,8 +839,10 @@ export default
          let today_logs = await this.$_post(postGetDailyLog, params);
          if (today_logs.data.length)
          {
+            this.today_visitors = 0
             for (let log of today_logs.data) {
                total = total + Number(log.count)
+               console.log(log, 'kjkjkjkjk');
                if (log.key == 'Visitors') this.today_visitors = this.today_visitors + 1
             }
             this.logged_today = (total/this.traffic_data.count) * 100

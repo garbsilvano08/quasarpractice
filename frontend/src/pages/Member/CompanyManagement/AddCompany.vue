@@ -71,12 +71,14 @@
                     </div>
                 </div> -->
             </div>
-
-            <div class="company-add__content-info">
-                <div class="content__select">
+            <div class="company-add__content-info company-add__content-grid">
+                <div class="company-add__content-info">
                     <div class="content__select-label">Parent</div>
-                    <!-- <q-select v-model="parent"  map-options emit-value  option-label="company_name" option-value="_id" :options="company_list" outlined dense></q-select> -->
-                        <com-picker :user="this.$user_info" @select=getCompanyData></com-picker>
+                    <q-checkbox v-model="has_no_parent" label="No Parent"/>
+                    <!-- <com-picker v-show="is_open" :user="this.$user_info" @select=getCompanyData></com-picker> -->
+                </div>
+                <div class="company-add__content-info">
+                    <com-picker v-show="is_open" :user="this.$user_info" @select=getCompanyData></com-picker>
                 </div>
             </div>
 
@@ -157,20 +159,29 @@ export default {
         ],
         company_pic: "",
         company_list: [{company_name: 'No Parent'}],
-        company_details: {}
+        company_details: {},
+        has_no_parent: false,
+        is_open: true
     }),
     async mounted()
     {
 
         this.company_type = "public";
         await this.getCompanies();
-
-        console.log(this.parent, 'jkhjhjhjhg');
     },
+    
+    watch:
+    {
+        has_no_parent(val)
+        {
+            this.is_open = !this.is_open
+        }
+    },
+
     methods:{
         getCompanyData(value)
         {
-            console.log(value);
+            this.company_details = value
         },
         getValue()
         {
@@ -223,7 +234,7 @@ export default {
 
             try
             {
-                if (this.input_company_name.length <= 2 ){
+                if (!this.has_no_parent && this.company_details ){
                     throw new Error("Company Name is required.");
                 }
                 else if (!this.input_location){
@@ -233,6 +244,7 @@ export default {
                     throw new Error("Logo is required.");
                 }
                 else{
+                    console.log(this.company_details);
                     let location_coordinates = null
                     if (this.input_location) location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.input_location.place_id }).then(res => res.data);
                     const formData = new FormData();
@@ -242,7 +254,7 @@ export default {
                         company_location: this.input_location, 
                         company_type:this.company_type, 
                         company_logo_url: res, 
-                        parent_id: this.parent, 
+                        parent_id: this.has_no_parent ? 'No Parent' : this.company_details._id, 
                         location_coordinates: location_coordinates,
                         date_created: new Date()
                         });

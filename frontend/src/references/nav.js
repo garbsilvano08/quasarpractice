@@ -93,7 +93,7 @@ module.exports =
         [
             { label: 'Fever Detected', route: 'member_feverdetected_report' },
             { label: 'Fever Monitoring', route: 'member_fevermonitoring_report' },
-            { label: 'Fever Heatmap', route: 'member_feverheatmap_report' },
+            { label: 'Fever Heatmap', route: 'member_heatmap' },
         ]
     },
     {

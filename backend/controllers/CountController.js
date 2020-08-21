@@ -65,8 +65,8 @@ module.exports =
                             else params = {date_saved: {'$gte' : startDate , '$lt' : endDate}}
                         }
                         else {
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category: req.body.filter.person, date_saved: {'$gte' : startDate , '$lt' : endDate}}
-                            else params = {category: req.body.filter.person, date_saved: {'$gte' : startDate , '$lt' : endDate}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gte' : startDate , '$lt' : endDate}}
+                            else params = {category: options_people[x], date_saved: {'$gte' : startDate , '$lt' : endDate}}
                         }
                         let data = await new DashboardClass().getTraffic(params)
                         if (index < 12)traffic[index == 0 ? 12 + "AM" : index + "AM"] = data.length

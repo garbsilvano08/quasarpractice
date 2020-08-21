@@ -557,28 +557,29 @@ export default {
         async openFilemanager()
         {
             this.$q.loading.show();
-            var canvas = this.image_type == 'id' ? document.getElementById('id_canvas') : document.getElementById('canvas');
-            var context =   canvas.getContext('2d');
-            var video = document.getElementById('video');;
-            let image_data = null
-
-            await document.getElementById("snap").addEventListener("click", async() => {
-                context.drawImage(video, 0, 0, 640, 500);
-
-            this.image = canvas.toDataURL("image/png")
-            image_data = this.image
-            // window.location.href=image;
-            this.is_carturing = false
-            // data:image/png;base64,
-            image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
-
-              await this.uploadImage(image_data)
-              if (this.image_type == 'id') await this.checkImage(this.face_pic_path)
-            });
-            // this.open_camera = false
-            // if (type) this.$refs.idUploader.click();
-            // else this.$refs.uploader.click();
-            // await video.pause()
+                
+                var canvas = this.image_type == 'id' ? document.getElementById('id_canvas') : document.getElementById('canvas');
+                var context =   canvas.getContext('2d');
+                var video = document.getElementById('video');;
+                let image_data = null
+    
+                await document.getElementById("snap").addEventListener("click", async() => {
+                    context.drawImage(video, 0, 0, 640, 480);
+    
+                this.image = canvas.toDataURL("image/png")
+                image_data = this.image
+                // window.location.href=image;
+                this.is_carturing = false
+                // data:image/png;base64,
+                image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
+    
+                  await this.uploadImage(image_data)
+                  if (this.image_type == 'id') await this.checkImage(this.face_pic_path)
+                });
+                // this.open_camera = false
+                // if (type) this.$refs.idUploader.click();
+                // else this.$refs.uploader.click();
+                // await video.pause()
             this.$q.loading.hide();
         },
         openCamera(type)
