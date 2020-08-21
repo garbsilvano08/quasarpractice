@@ -16,52 +16,52 @@
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img src="https://images.unsplash.com/photo-1484515991647-c5760fcecfc7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=387&q=80">
+                        <q-img :src="account_info.data.personal_info.person_img">
                             <q-btn flat dense rounded icon="mdi-magnify" size="13px"></q-btn>
                         </q-img>
                         <div class="personal-info__item-content">
                             <div class="item-content">
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">First Name:</div>
-                                    <div class="personal-info__item-info">John</div>
+                                    <div class="personal-info__item-info">{{account_info.data.personal_info.given_name}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Last Name:</div>
-                                    <div class="personal-info__item-info">Doe</div>
+                                    <div class="personal-info__item-info">{{account_info.data.personal_info.last_name}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Middle Name:</div>
-                                    <div class="personal-info__item-info">fsdfsd</div>
+                                    <div class="personal-info__item-info">{{account_info.data.personal_info.middle_name}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Gender:</div>
-                                    <div class="personal-info__item-info">sdfsfs</div>
+                                    <div class="personal-info__item-info">{{account_info.data.personal_info.gender}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Birth Date:</div>
-                                    <div class="personal-info__item-info">sdfsdfsdfsdf</div>
+                                    <div class="personal-info__item-info">{{birthday}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Age:</div>
-                                    <div class="personal-info__item-info">sdfsdfsdf</div>
+                                    <div class="personal-info__item-info">{{new Date().getFullYear() - new Date(account_info.data.personal_info.birthday).getFullYear()}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Nationality:</div>
-                                    <div class="personal-info__item-info">sdfsdfsdf</div>
+                                    <div class="personal-info__item-info">{{account_info.data.personal_info.nationality}}</div>
                                 </div>
                             </div>
                             <div class="item-content">
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Home Address:</div>
-                                    <div class="personal-info__item-info">sdfsdfds</div>
+                                    <div class="personal-info__item-info">{{account_info.data.personal_info.home_address}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Contact Number:</div>
-                                    <div class="personal-info__item-info">sdfsdfsd</div>
+                                    <div class="personal-info__item-info">{{account_info.data.personal_info.contact_number}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Emergency Contact Number:</div>
-                                    <div class="personal-info__item-info">sdfsdfsd</div>
+                                    <div class="personal-info__item-info">{{account_info.data.personal_info.emergency_contact}}</div>
                                 </div>
                             </div>
                         </div>
@@ -75,28 +75,28 @@
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img src="https://images.unsplash.com/photo-1484515991647-c5760fcecfc7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=387&q=80"></q-img>
+                        <q-img :src="company_info.data.company_logo_url"></q-img>
                         <div class="personal-info__item-content">
                             <div class="item-content">
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Company Name:</div>
-                                    <div class="personal-info__item-info">dfgdfgdfg</div>
+                                    <div class="personal-info__item-info">{{company_info.data.company_name}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Parent:</div>
-                                    <div class="personal-info__item-info">dfgdfgdfg</div>
+                                    <div class="personal-info__item-info">{{company_info.data.parent_company}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Date Registered:</div>
-                                    <div class="personal-info__item-info">sdfsdfsdfdsf</div>
+                                    <div class="personal-info__item-info">{{date_registered}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Total Registered:</div>
-                                    <div class="personal-info__item-info">32</div>
+                                    <div class="personal-info__item-info">{{company_info.data.staff}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">Devices:</div>
-                                    <div class="personal-info__item-info">sdfsdfsdf</div>
+                                    <div class="personal-info__item-info"></div>
                                 </div>
                             </div>
                         </div>
@@ -278,13 +278,17 @@
 import { Notify } from 'quasar';
 import "./PersonalInformation.scss";
 import { postRemoveAccount , postGetCompany, postGetDevice, postGetPerson, postGetLogs} from '../../../../references/url';
+import { date } from 'quasar';
 
 export default {
      data: () => ({
         account_info: {},
         company_device: 0,
         company_info: {},
-        person_logs: {}
+        person_logs: {},
+        age : '',
+        birthday : '',
+        date_registered : ''
     }),
 
     methods:
@@ -302,7 +306,6 @@ export default {
         async removeAccount()
         {
             await this.$_post(postRemoveAccount, {id: this.$route.params.account_info._id , type: this.account_info.type});
-
             if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory_staff"})
             else this.$router.push({name: "member_accountdirectory_blacklist"})
 
@@ -327,10 +330,11 @@ export default {
             this.$router.push({
                 name: name,
                 params: {
-                    account_info: this.account_info,
+                    account_info: this.account_info.data.personal_info,
                     is_edit: 'edit'
                 }
             })
+        
         },
         async getCompany(company_id)
         {
@@ -350,9 +354,9 @@ export default {
     async mounted()
     {
 
-        this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.account_info._id})
-        this.account_info.type = this.$route.params.account_info.type
-        await this.getDeviceNumber(this.account_info.data.personal_info.company_name ? this.account_info.data.personal_info.company_name : '')
+        this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.account_info._id});
+        this.account_info.type = this.$route.params.account_info.type;
+        await this.getDeviceNumber(this.account_info.data.personal_info.company_name ? this.account_info.data.personal_info.company_name : '');
         if (this.account_info.data.personal_info.company_id)
         {
             this.company_info = await this.getCompany(this.account_info.data.personal_info.company_id)
@@ -363,7 +367,8 @@ export default {
         {
             this.person_logs = await this.$_post(postGetLogs,{ id: this.account_info.data.personal_info.frontdesk_person_id, limit: 3})
         }
-
+        this.birthday = date.formatDate(this.account_info.data.personal_info.birthday, 'MMM DD, YYYY');
+        this.date_registered = date.formatDate(this.account_info.data.personal_info.date_created, 'MMM DD, YYYY');
     }
 
 }

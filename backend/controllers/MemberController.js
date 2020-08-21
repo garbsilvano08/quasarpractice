@@ -399,8 +399,8 @@ module.exports =
         return res.send(await new MDB_COMPANIES().delete(req.body.id));
     },
     async getStaffs(req, res)
-    {
-        return res.send(await new MDB_STAFF().docs({is_active: true}));
+    {  
+        return res.send(await new MDB_PERSON().docs({is_active: true}));
     },
 
     async getBlacklists(req, res)
@@ -409,9 +409,11 @@ module.exports =
     },
     
     async removeAccount(req, res)
-    {
-        if (req.body.type == 'Staff') return res.send(await new MDB_STAFF().update(req.body.id, {is_active: false}));
+    {   
+        
+        if (req.body.type == 'Staff') return res.send(await new MDB_PERSON().update(req.body.id, {is_active: false}));
         else if (req.body.type == 'Blacklist') return res.send(await new MDB_BLACKLIST().update(req.body.id, {is_active: false}));
+        console.log(req.body)
     },
     
     async getCompany(req, res)
@@ -421,10 +423,11 @@ module.exports =
 
     async updateStaff(req, res)
     {
-        return res.send(await new MDB_STAFF().update(req.body.id, req.body.update_staff));
+        console.log(req.body)
+        return res.send(await new MDB_PERSON().update(req.body.id, req.body.update_staff));
     },    
     async updateVisitor(req, res)
-    {
+    {   
         return res.send(await new MDB_RAW_VISITOR().update(req.body.id, req.body.update_visitor));
     },  
     async updateBlacklist(req, res)
