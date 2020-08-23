@@ -6,12 +6,12 @@ module.exports =
         icon: 'mdi-chart-bar',
         route: 'member_dashboard',
     },
-    {
-        key: 'notification',
-        label: 'Notification',
-        icon: 'mdi-bell-ring',
-        route: 'member_notification',
-    },
+    // {
+    //     key: 'notification',
+    //     label: 'Notification',
+    //     icon: 'mdi-bell-ring',
+    //     route: 'member_notification',
+    // },
     {
         key: 'frontdesk_visitor',
         label: 'Frontdesk',
@@ -102,12 +102,12 @@ module.exports =
             { label: 'Fever Heatmap', route: 'member_heatmap' },
         ]
     },
-    {
-        key: '',
-        label: 'Security Access',
-        icon: 'mdi-security',
-        route: '',
-    },
+    // {
+    //     key: '',
+    //     label: 'Security Access',
+    //     icon: 'mdi-security',
+    //     route: '',
+    // },
     {
         key: 'member_logout',
         label: 'Logout',

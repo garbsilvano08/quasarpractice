@@ -275,6 +275,7 @@ module.exports =
                 let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey})
                 if (person.length) key.push(person[0].category)
                 else key.push('Stranger')
+    
                 if (device.length > 0)
                 {
                     await new CounterClass().counterActivities(device[0].company_id, key, date_string, req.body.deviceKey)

@@ -8,7 +8,7 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <com-picker class="btn-choose" @select=getCompanyData></com-picker>
+                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyData></com-picker>
                 <!-- <q-select v-model="select__date" :options="options_date" outlined dense></q-select> -->
             </div>
         </div>
@@ -136,7 +136,8 @@ export default {
         ],
         sort_item: 'Date Created',
         sort_options: ['Date Logged', 'Full Name', 'Temperature'],
-        sort: '1'
+        sort: '1',
+        company_details: {}
     }),
     watch:
     {
@@ -162,6 +163,10 @@ export default {
         }
     },
     methods:{
+        getCompanyData(value)
+        {
+            this.company_details = value
+        },
         sortOption()
         {
             let params = {}
@@ -214,6 +219,7 @@ export default {
         }
     },
     async mounted(){
+        this.company_details = this.$user_info.company ? this.$user_info.company : {}
         let start = new Date(this.start_date)
         let end = new Date(this.end_date)
         end = end.setDate(end.getDate() + 1)

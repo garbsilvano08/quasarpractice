@@ -54,7 +54,7 @@ module.exports =
                 {
                     let date = new Date()
                     let params = {}
-                    date = new Date(new Date(date.setUTCHours(0,0,0,0)))
+                    date = new Date(new Date(date.setHours(0,0,0,0)))
         
                     startDate = date
                     let transfer_date = startDate

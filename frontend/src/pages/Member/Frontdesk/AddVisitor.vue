@@ -5,7 +5,7 @@
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
-                <q-btn @click="test()" class="btn-save btn-primary" flat dense no-caps label="Test"></q-btn>
+                <!-- <q-btn @click="test()" class="btn-save btn-primary" flat dense no-caps label="Test"></q-btn> -->
             </div>
         </div>
         <div class="frontdesk__container content__grid-2x2">
@@ -564,7 +564,7 @@ export default {
                 let image_data = null
     
                 await document.getElementById("snap").addEventListener("click", async() => {
-                    context.drawImage(video, 0, 0, 640, 480);
+                    context.drawImage(video, 0, 0, 640,550);
     
                 this.image = canvas.toDataURL("image/png")
                 image_data = this.image
