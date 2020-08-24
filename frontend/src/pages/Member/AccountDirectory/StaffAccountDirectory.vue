@@ -8,7 +8,7 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyData></com-picker>
+                <com-picker class="btn-choose" @select=getCompanyData></com-picker>
             </div>
         </div>
         <div class="account-directory__header">
@@ -130,8 +130,7 @@ export default {
         ],
         sort_item: 'Date Created',
         sort_options: ['Date Created', 'Last Name', 'First Name', 'Middle Name'],
-        sort: '1',
-        company_details: {}
+        sort: '1'
     }),
     watch:
     {
@@ -159,10 +158,6 @@ export default {
 
     methods:
     {
-        getCompanyData(value)
-        {
-            this.company_details = value
-        },
         sortOption()
         {
             let params = {}
@@ -236,7 +231,6 @@ export default {
     },
     async mounted()
     {
-        this.company_details = this.$user_info.company ? this.$user_info.company : {}
         let start = new Date(this.start_date)
         let end = new Date(this.end_date)
         end = end.setDate(end.getDate() + 1)

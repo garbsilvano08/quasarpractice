@@ -83,7 +83,7 @@
 
 <script>
 import "./AccountDirectory.scss";
-
+import { saveAs } from 'file-saver';
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 import  ComPicker from "../../../components/companyPicker/ComPicker"
@@ -239,11 +239,78 @@ export default {
             let end = new Date(this.end_date)
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
-
-            let file_name = 'staff_' + date + '.xlsx'
+    
+            let file_name = 'staff_' + date + '.xls'
             // if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Staff', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
-            params = {user_name: this.$user_info.full_name, work_sheet: 'Staff',file_name: file_name,sort: sort_options, find_data: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}}
-            let is_saved = await this.$_post(postExpPerson,params);
+            // params = {user_name: this.$user_info.full_name, work_sheet: 'Staff',file_name: file_name,sort: sort_options, find_data: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}}
+            // let is_saved = await this.$_post(postExpPerson,params);
+            // console.log(this.staff_list.data);
+            let fields = [] , staff_data = [{}]
+            for (let index = 0; index < this.staff_list.data.length; index++) {
+                staff_data.push({
+                    "last_name": this.staff_list.data[index].last_name,
+                    "given_name": this.staff_list.data[index].given_name,
+                    "middle_name": this.staff_list.data[index].middle_name,
+                    "gender": this.staff_list.data[index].gender,
+                    "birthday" : this.staff_list.data[index].birthday,
+                    "nationality" : this.staff_list.data[index].nationality,
+                    "company_name" : this.staff_list.data[index].company_name,
+                    "position" : this.staff_list.data[index].position,
+                    "contact_number" : this.staff_list.data[index].contact_number,
+                    "home_address" : this.staff_list.data[index].home_address,
+                    "emergency_contact" : this.staff_list.data[index].emergency_contact
+
+                },)
+            }
+            
+            fields.push({
+            label: 'Last name',
+            value: 'last_name'
+            },{
+            label: 'Given name',
+            value: 'given_name'
+            },{
+            label: 'Middle name',
+            value: 'middle_name'
+            },{
+            label: 'Gender' ,
+            value: 'gender'
+            },{
+            label: 'Birthday' ,
+            value: 'birthday'
+            },{
+            label: 'Nationality' ,
+            value: 'nationality'
+            },{
+            label: 'Company name' ,
+            value: 'company_name'
+            },{
+            label: 'Position' ,
+            value: 'position'
+            },{
+            label: 'Contact number' ,
+            value: 'contact_number'
+            },{
+            label: 'Home address' ,
+            value: 'home_address'
+            },{
+            label: 'Emergency contact' ,
+            value: 'emergency_contact'
+            });
+
+            const { Parser } = require('json2csv');
+
+            const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
+            const csv = json2csvParser.parse(staff_data);
+    
+            var FileSaver = require('file-saver');
+            FileSaver.saveAs(
+            new Blob([csv], {
+                type:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }),
+            file_name
+            );
 
             if (is_saved)
             {
