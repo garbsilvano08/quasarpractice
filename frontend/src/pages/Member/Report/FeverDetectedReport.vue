@@ -274,15 +274,80 @@ export default {
             let sort_options = this.sortOption()
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let file_name = 'feverdetectedreport_' + date + '.xlsx'
-            let is_saved = await this.$_post(postExpFeverDeteted,{user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Report', file_name: file_name,sort: sort_options, find_data: {has_fever: true}});
-            if (is_saved)
-            {
-                this.$q.notify(
-                {
-                    color: 'green',
-                    message: 'File was successfully saved'
-                });
-            }
+            // let is_saved = await this.$_post(postExpFeverDeteted,{user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Report', file_name: file_name,sort: sort_options, find_data: {has_fever: true}});
+            // if (is_saved)
+            // {
+            //     this.$q.notify(
+            //     {
+            //         color: 'green',
+            //         message: 'File was successfully saved'
+            //     });
+            // }
+            // let fields = [] , staff_data = [{}]
+            // for (let index = 0; index < this.personWithFever.data.length; index++) {
+            //     staff_data.push({
+            //         "last_name": this.personWithFever.data[index].last_name,
+            //         "given_name": this.personWithFever.data[index].given_name,
+            //         "middle_name": this.personWithFever.data[index].middle_name,
+            //         "gender": this.personWithFever.data[index].gender,
+            //         "birthday" : this.personWithFever.data[index].birthday,
+            //         "nationality" : this.personWithFever.data[index].nationality,
+            //         "company_name" : this.personWithFever.data[index].company_name,
+            //         "category" : this.personWithFever.data[index].category,
+            //         "contact_number" : this.personWithFever.data[index].contact_number,
+            //         "home_address" : this.personWithFever.data[index].home_address,
+            //         "emergency_contact" : this.personWithFever.data[index].emergency_contact
+            //     },)
+            // }
+            
+            // fields.push({
+            // label: 'Last name',
+            // value: 'last_name'
+            // },{
+            // label: 'Given name',
+            // value: 'given_name'
+            // },{
+            // label: 'Middle name',
+            // value: 'middle_name'
+            // },{
+            // label: 'Gender' ,
+            // value: 'gender'
+            // },{
+            // label: 'Birthday' ,
+            // value: 'birthday'
+            // },{
+            // label: 'Nationality' ,
+            // value: 'nationality'
+            // },{
+            // label: 'Company name' ,
+            // value: 'company_name'
+            // },{
+            // label: 'Position' ,
+            // value: 'category'
+            // },{
+            // label: 'Contact number' ,
+            // value: 'contact_number'
+            // },{
+            // label: 'Home address' ,
+            // value: 'home_address'
+            // },{
+            // label: 'Emergency contact' ,
+            // value: 'emergency_contact'
+            // });
+
+            // const { Parser } = require('json2csv');
+
+            // const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
+            // const csv = json2csvParser.parse(staff_data);
+    
+            // var FileSaver = require('file-saver');
+            // FileSaver.saveAs(
+            // new Blob([csv], {
+            //     type:
+            //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            // }),
+            // file_name
+            // );
         },
 
         async getCompanyDatas(value)
