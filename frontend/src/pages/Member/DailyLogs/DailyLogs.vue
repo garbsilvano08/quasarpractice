@@ -5,9 +5,10 @@
             <div class="header__filter">
                 <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
                 <com-picker :user="this.$user_info" @select=getCompanyData class="btn-choose"></com-picker>
-                <q-btn class="btn-outline btn-export" flat dense no-caps>
+                <q-btn @click="exportData" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
+                
             </div>
         </div>
 
@@ -115,7 +116,7 @@
             </div>
 
             <div class="daily-logs__content-body content__grid-4x4">
-                <div v-for="(logs, index) in this.log_list" :key="index">
+                <div id='dailyLogs' v-for="(logs, index) in this.log_list" :key="index">
                     <DailyLogCards :all_logs="logs"></DailyLogCards>
                 </div>
             </div>
@@ -184,6 +185,12 @@ export default {
     },
     methods:
     {
+        exportData()
+        {
+            // var htmltable= document.getElementById('dailyLogs');
+            // var html = htmltable.outerHTML;
+            // window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+        },
         getCompanyData(value)
         {
             this.company_details = value
@@ -292,7 +299,6 @@ export default {
             if (this.checkbox_name) sort['full_name'] = Number(this.sort_type)
             if (this.checkbox_temperature) sort['temperature'] = Number(this.sort_type)
 
-            console.log(sort, 'params');
             let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort} );
 
             for (let index = 0; index < logs.data.length; index++) {                
@@ -325,7 +331,6 @@ export default {
             }
 
             this.log_list = logs.data
-            console.log(logs);
         },
 
         convertDateFormat(date_saved)
@@ -334,13 +339,11 @@ export default {
             let date = full_date.toISOString().split('T')[0]
             // let time = full_date.getHours() < 
             var hours = full_date.getHours() ; // gives the value in 24 hours format
-            console.log(full_date);
             var AmOrPm = hours >= 12 ? 'PM' : 'AM';
             hours = (hours % 12) || 12;
             var minutes = full_date.getMinutes() ;
             var finalTime = hours + ":" + minutes + " " + AmOrPm; 
 
-            console.log(hours + ", " + finalTime);
             return date + ", " + finalTime
         },
 
@@ -371,7 +374,7 @@ export default {
     {
         this.company_details = this.$user_info.company ? this.$user_info.company : {}
 
-        this.getDevice()
+        await this.getDevice()
         await this.getLogList()
     
     }

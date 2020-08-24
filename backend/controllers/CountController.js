@@ -44,7 +44,6 @@ module.exports =
         let startDate = ''
         let endDate = ''
         let traffic_data = []
-        console.log(req.body.filter.date_filter);
         for (let x = 0; x < options_people.length; x++) {
             let traffic = {}
 
@@ -171,7 +170,6 @@ module.exports =
                     }   
                 }
             }
-            console.log(traffic, options_people[x], 'traffic');
             traffic_data.push({name: options_people[x], data: traffic})
         }
         res.send(traffic_data)

@@ -35,6 +35,7 @@ const routes = [
             { name: 'member_dailylogs_feverdetected_mobile', path: '/dailylogs/fever-detected-mobile', component: () => import('pages/Member/DailyLogs/FeverDetectedDailyLogsMobile.vue') },
             // ACCOUNT DIRECTORY ROUTES
             { name: 'member_accountdirectory_staff', path: '/accountdirectory/staff', component: () => import('pages/Member/AccountDirectory/StaffAccountDirectory.vue') },
+            { name: 'member_accountdirectory', path: '/accountdirectory', component: () => import('pages/Member/AccountDirectory/AccountDirectory.vue') },
             { name: 'member_accountdirectory_visitor', path: '/accountdirectory/visitor', component: () => import('pages/Member/AccountDirectory/VisitorAccountDirectory.vue') },
             { name: 'member_accountdirectory_feverdetected', path: '/accountdirectory/feverdetected', component: () => import('pages/Member/AccountDirectory/FeverDetectedAccountDirectory.vue') },
             { name: 'member_accountdirectory_blacklist', path: '/accountdirectory/blacklist', component: () => import('pages/Member/AccountDirectory/BlacklistAccountDirectory.vue') },

@@ -76,6 +76,11 @@
                                 <div class="content__input-label">Middle Name *</div>
                                 <q-input v-model="personal_information.middle_name" outlined dense></q-input>
                             </div>
+                            <!-- Email -->
+                            <div class="content__input">
+                                <div class="content__input-label">Email Address</div>
+                                <q-input v-model="personal_information.email" outlined dense></q-input>
+                            </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
@@ -267,6 +272,7 @@ export default {
             id_number: null,
             first_name: null,
             middle_name: null,
+            email: null,
             last_name: null,
             gender: null,
             birth_date: null,
@@ -496,7 +502,13 @@ export default {
                     color: 'green',
                     message: 'Account was successfully created'
                 });
-
+                
+                this.$router.push({
+                        name: 'member_accountdirectory',
+                        params: {
+                            category: 'Visitors',
+                        }
+                        })
                 });
             }
             catch (e)

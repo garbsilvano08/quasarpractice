@@ -653,12 +653,14 @@ export default
                         contact_number: visitor.personal_information.contact_number,
                         emergency_contact: visitor.personal_information.emergency_contact_number,
                         date_created: new Date(),
-                        company_name: visitor.personal_information.company_name,
+                        company_name: this.$user_info.company.company_name,
+                        company_id: this.$user_info.company._id,
                         frontdesk_person_id: visitor.personal_information.frontdesk_person_id,
                         frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
                         location: visitor.personal_information.location,
                         location_coordinates: visitor.personal_information.location_coordinates,
                         is_active: true,
+                        email: visitor.personal_information.email,
     
                         saved_from: this.$user_info.company._id ? this.$user_info.company._id : '',
     

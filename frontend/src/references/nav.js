@@ -53,13 +53,13 @@ module.exports =
         key: 'account_directory',
         label: 'Account Directory',
         icon: 'mdi-account-group',
-        sub:
-        [
-            { label: 'Staff', route: 'member_accountdirectory_staff' },
-            { label: 'Visitors', route: 'member_accountdirectory_visitor' },
-            { label: 'Fever Detected', route: 'member_accountdirectory_feverdetected' },
-            { label: 'Blacklist', route: 'member_accountdirectory_blacklist' },
-        ]
+        route: 'member_accountdirectory',
+        // [
+        //     { label: 'Staff', route: 'member_accountdirectory_staff' },
+        //     { label: 'Visitors', route: 'member_accountdirectory_visitor' },
+        //     { label: 'Fever Detected', route: 'member_accountdirectory_feverdetected' },
+        //     { label: 'Blacklist', route: 'member_accountdirectory_blacklist' },
+        // ]
     },
     {
         key: 'company_management',
