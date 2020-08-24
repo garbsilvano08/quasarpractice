@@ -240,7 +240,7 @@ export default {
         let start = new Date(this.start_date)
         let end = new Date(this.end_date)
         end = end.setDate(end.getDate() + 1)
-        await this.getStaffList({find_person: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}})
+        await this.getStaffList({find_person: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}, is_active : true}})
     }
 
 }
