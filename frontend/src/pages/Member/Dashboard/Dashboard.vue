@@ -265,33 +265,39 @@
 
                <div class="dashboard__graph-total">
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number--grand">100</div>
+                     <div class="dashboard__graph-number--grand">{{purpose_visit.data.official_business + 
+                        purpose_visit.data.collection_pickup +
+                        purpose_visit.data.delivery +
+                        purpose_visit.data.corporate_meeting +
+                        purpose_visit.data.client_customer +
+                        purpose_visit.data.guest
+                        }}</div>
                      <div class="dashboard__graph-label">Total Visitor</div>
                   </div>
                </div>
                <div class="dashboard__graph-total content__grid-6x6">
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number">0</div>
+                     <div class="dashboard__graph-number">{{purpose_visit.data.official_business}}</div>
                      <div class="dashboard__graph-label">Official Business</div>
                   </div>
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-number">{{purpose_visit.data.collection_pickup}}</div>
                      <div class="dashboard__graph-label">Collection & Pickup</div>
                   </div>
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-number">{{purpose_visit.data.delivery}}</div>
                      <div class="dashboard__graph-label">Delivery</div>
                   </div>
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-number">{{purpose_visit.data.corporate_meeting}}</div>
                      <div class="dashboard__graph-label">Corporate Meeting</div>
                   </div>
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-number">{{purpose_visit.data.client_customer}}</div>
                      <div class="dashboard__graph-label">Client/Customer</div>
                   </div>
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-number">{{purpose_visit.data.guest}}</div>
                      <div class="dashboard__graph-label">Guest</div>
                   </div>
                </div>

@@ -252,7 +252,7 @@ export default {
         profile_img_dialog: false,
 
         options_id: [
-            'Drivers License', 'PIC'
+            'Others', 'Drivers License'
         ],
         options_gender: [
             'Male' , 'Female'
@@ -268,7 +268,7 @@ export default {
         {
             id_image: '',
             account_img: '',
-            id_type: 'Drivers License',
+            id_type: 'Others',
             id_number: null,
             first_name: null,
             middle_name: null,
@@ -587,7 +587,7 @@ export default {
                 image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
     
                   await this.uploadImage(image_data)
-                  if (this.image_type == 'id') await this.checkImage(this.face_pic_path)
+                  if (this.image_type == 'id' && this.personal_information.id_type == 'Drivers License') await this.checkImage(this.face_pic_path)
                 });
                 // this.open_camera = false
                 // if (type) this.$refs.idUploader.click();
