@@ -59,7 +59,6 @@ export default {
     {
         async getCompany(company_id)
         {
-            console.log(company_id, 'check');
             return await this.$_post(postGetCompany, {id: company_id})
         },
 

@@ -161,9 +161,9 @@ export default {
                 sortable: true,
             },
             {
-                name    : 'position',
-                label   : 'Position',
-                field   : row => row.position ? row.position : 'Unknown',
+                name    : 'date_created',
+                label   : 'Date Registered',
+                field   : row => row.date_created ? new Date(row.date_created) : 'Unknown',
                 align   : 'left',
                 required: true,
                 sortable: true,

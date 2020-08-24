@@ -503,7 +503,8 @@ module.exports =
     },
     async getUsers(req, res)
     {
-        return res.send(await new MDB_USER().docs());
+        console.log(req.body);
+        return res.send(await new MDB_USER().collection.find({company_id: req.body.id}));
     },
     async deleteUsers(req, res)
     {
