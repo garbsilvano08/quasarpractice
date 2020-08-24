@@ -465,7 +465,7 @@ export default
       ],
       select_people: 'All',
       options_people: [
-         'All' , 'Staff', 'Visitors', 'Stranger'
+         'All' , 'Staff', 'Visitor', 'Stranger'
       ],
       select_date: 'Daily',
       traffic_data: {data: []},
@@ -584,7 +584,7 @@ export default
       async getEmployeeVisitor()
       {
          let data
-         let registered_type = ['Staff', 'Visitors', , 'Stranger']
+         let registered_type = ['Staff', 'Visitor', , 'Stranger']
          this.data_bar_graph.data = []
 
          for (let index = 0; index < registered_type.length; index++) {
@@ -604,7 +604,7 @@ export default
          let data
          if (type == 'Registered')
          {
-            let option_filter = ['Staff', 'Visitors', 'Stranger']
+            let option_filter = ['Staff', 'Visitor', 'Stranger']
 
             if (new Date(this.startDateRegistered) <= new Date(this.endDateRegistered))
             {
@@ -656,7 +656,7 @@ export default
          let date_string = new Date().toISOString().split('T')[0].split("-")
          this.company_details = value
          this.staff_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Staff', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
-         this.visitor_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Visitors', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
+         this.visitor_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Visitor', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
          await this.getMonthlyAlert()
          await this.getDevices()
          await this.getPurposeVisit()
@@ -759,7 +759,7 @@ export default
          this.alert_list = await this.$_post(postPersonByCateg, params);
          let current_data = await this.$_post(postPersonByCateg, current_params);
          current_data.data.forEach(person=>{
-            if (person.category == 'Staff' || person.category == 'Visitors') this.registered_has_fever = this.registered_has_fever + 1
+            if (person.category == 'Staff' || person.category == 'Visitor') this.registered_has_fever = this.registered_has_fever + 1
          })
          this.current_alerts = current_data.data.length
       },
@@ -781,11 +781,11 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-           params =  {find_count: {date_string: new Date(this.employee_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: 'Visitors'}}
+           params =  {find_count: {date_string: new Date(this.employee_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: 'Visitor'}}
 
          }
          else {
-            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key:  'Visitors'}}
+            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key:  'Visitor'}}
          }
          this.staff_visitors = await this.$_post(postGetWeeklyCount, params);
          // console.log(data, 'data');
@@ -832,8 +832,8 @@ export default
          let total = 0
           let params = {}
          // if (this.company_details)
-         if (this.company_details) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? this.company_details._id : null, key: {$in: ['Staff', 'Visitors']}}}
-         if (params.find_count.company_id == null) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitors']}}}
+         if (this.company_details) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? this.company_details._id : null, key: {$in: ['Staff', 'Visitor']}}}
+         if (params.find_count.company_id == null) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitor']}}}
 
          // console.log(params);
          let today_logs = await this.$_post(postGetDailyLog, params);
@@ -843,7 +843,7 @@ export default
             for (let log of today_logs.data) {
                total = total + Number(log.count)
                console.log(log, 'kjkjkjkjk');
-               if (log.key == 'Visitors') this.today_visitors = this.today_visitors + 1
+               if (log.key == 'Visitor') this.today_visitors = this.today_visitors + 1
             }
             this.logged_today = (total/this.traffic_data.count) * 100
             this.logged_today = this.logged_today.toFixed(0);
@@ -893,7 +893,7 @@ export default
       this.current_date = this.current_date[0] + " " + this.current_date[1] + " " + this.current_date[2] + " " + this.current_date[3]
       this.current_month = this.current_month[2] + " " + this.current_month[3]
       this.staff_number = await this.personsData({find_person: {category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
-      this.visitor_number = await this.personsData({find_person: {category: 'Visitors', date_string: date_string[0] + "-" + date_string[1]}})
+      this.visitor_number = await this.personsData({find_person: {category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
       await this.getTotalRegistered()
    }
 }

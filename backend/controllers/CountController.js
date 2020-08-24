@@ -39,7 +39,7 @@ module.exports =
 
     async footTraffic(req, res)
     {
-        let options_people = ['All' , 'Staff', 'Visitors', 'Stranger'];
+        let options_people = ['All' , 'Staff', 'Visitor', 'Stranger'];
 
         let startDate = ''
         let endDate = ''

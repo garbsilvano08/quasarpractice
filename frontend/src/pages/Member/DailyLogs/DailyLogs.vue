@@ -149,7 +149,7 @@ export default {
         end_date: new Date().toISOString().split('T')[0],
         select__account_type: 'All',
         options_account_type: [
-            'All', 'Staff', 'Visitors', 'Stranger'
+            'All', 'Staff', 'Visitor', 'Stranger'
         ],
         select__device_name: 'All',
         options_device_name: ['All'],

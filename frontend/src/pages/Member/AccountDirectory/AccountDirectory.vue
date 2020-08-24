@@ -115,7 +115,7 @@ export default {
         staff_list: [],
         select__account_type: 'All',
         options_account_type: [
-            'All', 'Staff', 'Visitors'
+            'All', 'Staff', 'Visitor'
         ],
         table_column:
         [

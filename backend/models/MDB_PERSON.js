@@ -18,7 +18,7 @@ const schema    = new Schema(
     emergency_contact:  { type: String,  required: false, default: 'Unknown' },
     date_created:       { type: Date  ,  required: true },
     is_active:          { type: Boolean, required: false, default: true },
-    category:           { type: String,  required: true, default: 'Visitors' },
+    category:           { type: String,  required: true, default: 'Visitor' },
     
     // Staff
     position:           { type: String, required: false },
