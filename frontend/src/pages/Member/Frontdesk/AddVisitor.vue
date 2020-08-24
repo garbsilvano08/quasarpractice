@@ -506,7 +506,7 @@ export default {
                 this.$router.push({
                         name: 'member_accountdirectory',
                         params: {
-                            category: 'Visitors',
+                            category: 'Visitor',
                         }
                         })
                 });
@@ -539,12 +539,13 @@ export default {
                 formData.append('image', blobb, 'person' + Date.now().toString() + '.png');
                 if (this.image_type == 'id')
                 {
+                    this.face_pic_path = await this.$_post_file(formData);
                     this.personal_information.id_image = this.face_pic_path
                 }
                 else
                 {
-                    this.personal_information.account_img = this.face_pic_path
                     this.face_pic_path = await this.$_post_file(formData);
+                    this.personal_information.account_img = this.face_pic_path
                 }
 
                 this.$q.loading.hide();

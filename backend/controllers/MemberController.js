@@ -474,7 +474,7 @@ module.exports =
         let data = {}
         data.personal_info = await new MDB_PERSON().doc(req.body.id);
         
-        if (data.personal_info.category ==  'Visitors')
+        if (data.personal_info.category ==  'Visitor')
         {
             data.identification = await new MDB_IDENTIFICATION().collection.find({person_id: req.body.id}).limit(1).sort({date_saved:-1})
             data.purpose_visit = await new MDB_PURPOSE().collection.find({person_id: req.body.id}).limit(1).sort({date_saved:-1})
@@ -508,7 +508,8 @@ module.exports =
     },
     async getUsers(req, res)
     {
-        return res.send(await new MDB_USER().docs());
+        console.log(req.body);
+        return res.send(await new MDB_USER().collection.find({company_id: req.body.id}));
     },
     async deleteUsers(req, res)
     {

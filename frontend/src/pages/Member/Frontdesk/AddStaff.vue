@@ -455,8 +455,6 @@ export default {
             {
                 if (this.$route.params.is_edit)
                 {   
-                    console.log(data.given_name)
-                    console.log(data)
                     await this.$_post(postUpdateStaff, {id: this.$route.params.account_info._id, update_staff: data});
                     
                     // await this.$_post(postUpdateStaff, {id: this.$route.params.account_info._id, update_staff: data});
@@ -471,7 +469,6 @@ export default {
                             account_info: data,
                         }
                     })
-                    console.log("Pumasok dito")
                 }
                 else
                 {

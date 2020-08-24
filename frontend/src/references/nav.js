@@ -42,7 +42,7 @@ module.exports =
     //     sub:
     //     [
     //         { label: 'Staff', route: 'member_dailylogs_staff' },
-    //         { label: 'Visitors', route: 'member_dailylogs_visitor' },
+    //         { label: 'Visitor', route: 'member_dailylogs_visitor' },
     //         { label: 'Stranger', route: 'member_dailylogs_stranger' },
     //         { label: 'Body Temp. Logs', route: 'member_dailylogs_bodytemperature' },
     //         { label: 'Fever Detected', route: 'member_dailylogs_feverdetected' },
@@ -56,7 +56,7 @@ module.exports =
         route: 'member_accountdirectory',
         // [
         //     { label: 'Staff', route: 'member_accountdirectory_staff' },
-        //     { label: 'Visitors', route: 'member_accountdirectory_visitor' },
+        //     { label: 'Visitor', route: 'member_accountdirectory_visitor' },
         //     { label: 'Fever Detected', route: 'member_accountdirectory_feverdetected' },
         //     { label: 'Blacklist', route: 'member_accountdirectory_blacklist' },
         // ]

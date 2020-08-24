@@ -143,7 +143,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})
+            await this.getVisitorList({find_person: {category: 'Visitor', date_created: {$gt: start, $lt: end}}, sort: params})
         },
         async end_date(val)
         {
@@ -153,7 +153,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})
+            await this.getVisitorList({find_person: {category: 'Visitor', date_created: {$gt: start, $lt: end}}, sort: params})
         }
     },
     methods:
@@ -183,7 +183,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})
+            await this.getVisitorList({find_person: {category: 'Visitor', date_created: {$gt: start, $lt: end}}, sort: params})
         },
 
         async exportTableToExcel(tableID, filename = ''){
@@ -197,7 +197,7 @@ export default {
 
             let file_name = 'visitors_' + date + '.xlsx'
             // if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Staff', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
-            params = {user_name: this.$user_info.full_name, work_sheet: 'Visitors',file_name: file_name, sort: sort_options, find_data: {category: 'Visitors', date_created: { '$gt' : start , '$lt' : end}}}
+            params = {user_name: this.$user_info.full_name, work_sheet: 'Visitor',file_name: file_name, sort: sort_options, find_data: {category: 'Visitor', date_created: { '$gt' : start , '$lt' : end}}}
             let is_saved = await this.$_post(postExpPerson,params);
 
             if (is_saved)
@@ -240,7 +240,7 @@ export default {
 
         // console.log(start, end);
 
-        await this.getVisitorList({find_person: {category: 'Visitors', date_created: { '$gt' : start , '$lt' : end}}})
+        await this.getVisitorList({find_person: {category: 'Visitor', date_created: { '$gt' : start , '$lt' : end}}})
     }
 }
 </script>

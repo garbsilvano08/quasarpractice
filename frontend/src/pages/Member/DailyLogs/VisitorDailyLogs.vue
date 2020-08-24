@@ -83,8 +83,8 @@ export default {
             if (val)
             {
                 let params = this.sortOption()
-                if (this.company_details) this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params)
-                else this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params)
+                if (this.company_details) this.visitor_list = await this.getVisitorList({category: 'Visitor', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params)
+                else this.visitor_list = await this.getVisitorList({category: 'Visitor', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params)
             }
         }
     },
@@ -105,8 +105,8 @@ export default {
             this.sort_item = option
             let params = this.sortOption()
 
-            if (this.company_details) this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params)
-            else this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params)
+            if (this.company_details) this.visitor_list = await this.getVisitorList({category: 'Visitor', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id}, params)
+            else this.visitor_list = await this.getVisitorList({category: 'Visitor', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params)
         },
 
         async exportTableToExcel(tableID, filename = ''){
@@ -120,8 +120,8 @@ export default {
             // end = end.setDate(end.getDate() + 1)
 
             let file_name = 'visitorsdailylogs_' + date + '.xlsx'
-            if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Visitors Daily Logs', file_name: file_name, sort: sort_options, find_data: {company_name: this.company_details.company_name, category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
-            else params = {user_name: this.$user_info.full_name, work_sheet: 'Visitors Daily Logs',file_name: file_name, sort: sort_options, find_data: {category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
+            if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Visitors Daily Logs', file_name: file_name, sort: sort_options, find_data: {company_name: this.company_details.company_name, category: 'Visitor', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
+            else params = {user_name: this.$user_info.full_name, work_sheet: 'Visitors Daily Logs',file_name: file_name, sort: sort_options, find_data: {category: 'Visitor', date_logged: new Date(this.select__date).toISOString().split('T')[0]}}
             let is_saved = await this.$_post(postExpFeverDeteted,params);
 
             if (is_saved)
@@ -139,8 +139,8 @@ export default {
             let params = this.sortOption()
             this.company_details = value
             // this.getTotalScannedToday(new Date(), value._id)
-            if (this.company_details) this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id},params)
-            else this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params)
+            if (this.company_details) this.visitor_list = await this.getVisitorList({category: 'Visitor', date_logged: new Date(this.select__date).toISOString().split('T')[0], company_id: this.company_details._id},params)
+            else this.visitor_list = await this.getVisitorList({category: 'Visitor', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, params)
         },
 
         async getVisitorList(params, sort)
@@ -150,7 +150,7 @@ export default {
     },
     async mounted()
     {
-        this.visitor_list = await this.getVisitorList({category: 'Visitors', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, {date_saved: -1})
+        this.visitor_list = await this.getVisitorList({category: 'Visitor', date_logged: new Date(this.select__date).toISOString().split('T')[0]}, {date_saved: -1})
     }
 }
 </script>

@@ -234,7 +234,7 @@ export default {
 
             try
             {
-                if (!this.has_no_parent && this.company_details ){
+                if (!this.has_no_parent && !this.company_details ){
                     throw new Error("Company Name is required.");
                 }
                 else if (!this.input_location){

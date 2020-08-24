@@ -350,26 +350,26 @@ export default {
 
                 for (let validate in this.personal_information)
                 {
-                    let field = validate;
+                    // let field = validate;
 
-                    if (field === 'id_type') field = "ID Card Type";
-                    if (field === 'id_number') field = "ID Number";
-                    else field = capitalize(field.replace('_', ' '));
+                    // if (field === 'id_type') field = "ID Card Type";
+                    // if (field === 'id_number') field = "ID Number";
+                    // else field = capitalize(field.replace('_', ' '));
 
-                    if (
-                        !this.personal_information.id_number ||
-                        !this.personal_information.first_name ||
-                        !this.personal_information.last_name ||
-                        !this.personal_information.middle_name ||
-                        !this.personal_information.home_address ||
-                        !this.personal_information.contact_number ||
-                        !this.personal_information.birthday ||
-                        !this.personal_information.person_img ||
-                        !this.personal_information.id_image
-                    )
-                    {
-                        if (!this.personal_information[validate]) throw new Error(field + ' is required.');
-                    }
+                    // if (
+                    //     !this.personal_information.id_number ||
+                    //     !this.personal_information.first_name ||
+                    //     !this.personal_information.last_name ||
+                    //     !this.personal_information.middle_name ||
+                    //     !this.personal_information.home_address ||
+                    //     !this.personal_information.contact_number ||
+                    //     !this.personal_information.birthday ||
+                    //     !this.personal_information.person_img ||
+                    //     !this.personal_information.id_image
+                    // )
+                    // {
+                    //     if (!this.personal_information[validate]) throw new Error(field + ' is required.');
+                    // }
                 }
 
                 if (this.personal_information.location) this.personal_information.location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.personal_information.location.place_id }).then(res => res.data);
@@ -400,6 +400,12 @@ export default {
                             color: 'green',
                             message: 'Successfully added Report'
                         });
+                        this.$router.push({
+                        name: 'member_accountdirectory',
+                        params: {
+                            category: 'Visitor',
+                        }
+                        })
                     }
                     else
                     {

@@ -142,6 +142,7 @@ export default {
                     const formData = new FormData();
                     formData.append('image',document.getElementById("userImage").files[0] );
                     let res = await this.$_post_file(formData);
+                    this.user_information.company_id = this.user_information.company._id
                     this.user_information.user_picture = res;
                     await this.$_post('member/add/user',  this.user_information );
 
