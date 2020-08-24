@@ -1,7 +1,7 @@
 <template>
     <div class="account-directory">
         <div class="account-directory__header" style="margin-bottom: 15px !important;">
-            <div class="header__title">ALL STAFF</div>
+            <div class="header__title">ACCOUNT DIRECTORY</div>
             <div class="header__filter">
                 <q-input outlined dense v-model="search" placeholder="Search People...">
                     <template v-slot:append>
@@ -9,13 +9,18 @@
                     </template>
                 </q-input>
                 <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyData></com-picker>
+                <q-btn @click="exportTableToExcel('tblData', 'staff-list')" class="btn-primary btn-export" flat dense no-caps>
+                    Export &nbsp;<q-icon name="mdi-export"></q-icon>
+                </q-btn>
             </div>
         </div>
         <div class="account-directory__header">
             <div class="header__filter">
+                <q-select label="Account Type" v-model="select__account_type" :options="options_account_type" outlined dense></q-select>
                 <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
                 <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
-                <q-btn flat dense no-caps class="btn-outline btn-sort" label="Sort">
+                <q-btn label="Generate" @click="generateResult" class="btn-primary btn-export" flat dense no-caps/>
+                <!-- <q-btn flat dense no-caps class="btn-outline btn-sort" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <div class="q-gutter-sm">
@@ -28,10 +33,42 @@
                             </q-item>
                         </q-list>
                     </q-menu>
-                </q-btn>
-                <q-btn @click="exportTableToExcel('tblData', 'staff-list')" class="btn-primary btn-export" flat dense no-caps>
-                    Export &nbsp;<q-icon name="mdi-export"></q-icon>
-                </q-btn>
+                </q-btn> -->
+                
+            </div>
+        </div>
+        <div class="account-directory__header">
+            <div class="header__filter">
+                <q-btn-dropdown class="btn-dropdown__primary" label="Sort By" flat dense no-caps>
+                    <q-list>
+                        <q-item clickable v-close-popup>
+                            <q-item-section>
+                                <q-radio v-model="sort_type" val='1' dense label="Ascending" />
+                            </q-item-section>
+                        </q-item>
+                        <q-item clickable v-close-popup>
+                            <q-item-section>
+                                <q-radio v-model="sort_type" val='-1' dense label="Descending" />
+                            </q-item-section>
+                        </q-item>
+                        <q-separator />
+                        <q-item clickable v-close-popup>
+                            <q-item-section>
+                                <q-checkbox v-model="checkbox_date_saved" dense label="Date Saved" />
+                            </q-item-section>
+                        </q-item>
+                            <q-item clickable v-close-popup>
+                            <q-item-section>
+                                <q-checkbox v-model="checkbox_name" dense label="Name" />
+                            </q-item-section>
+                        </q-item>
+                        <q-item clickable v-close-popup>
+                            <q-item-section>
+                                <q-checkbox v-model="checkbox_temperature" dense label="Temperature" />
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </q-btn-dropdown>
             </div>
         </div>
 
@@ -76,6 +113,10 @@ export default {
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
         staff_list: [],
+        select__account_type: 'All',
+        options_account_type: [
+            'All', 'Staff', 'Visitor'
+        ],
         table_column:
         [
             {
@@ -120,9 +161,9 @@ export default {
                 sortable: true,
             },
             {
-                name    : 'position',
-                label   : 'Position',
-                field   : row => row.position ? row.position : 'Unknown',
+                name    : 'date_created',
+                label   : 'Date Registered',
+                field   : row => row.date_created ? new Date(row.date_created) : 'Unknown',
                 align   : 'left',
                 required: true,
                 sortable: true,
@@ -131,34 +172,37 @@ export default {
         sort_item: 'Date Created',
         sort_options: ['Date Created', 'Last Name', 'First Name', 'Middle Name'],
         sort: '1',
-        company_details: {}
+        company_details: {},
+        checkbox_date_saved: '',
+        checkbox_name: '',
+        checkbox_temperature: '',
+        sort_type: '1'
     }),
     watch:
     {
         async start_date(val)
         {
-            let params = this.sortOption()
-            let start = new Date(this.start_date)
-            let end = new Date(this.end_date)
-            end = end.setDate(end.getDate() + 1)
-            // start = start.setDate(start.getDate() - 1)
 
-            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})
+            // await this.getStaffList()
         },
         async end_date(val)
         {
-            let params = this.sortOption()
-            let start = new Date(this.start_date)
-            let end = new Date(this.end_date)
-            end = end.setDate(end.getDate() + 1)
-            // start = start.setDate(start.getDate() - 1)
+            // let params = this.sortOption()
+            // let start = new Date(this.start_date)
+            // let end = new Date(this.end_date)
+            // end = end.setDate(end.getDate() + 1)
+            // // start = start.setDate(start.getDate() - 1)
 
-            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})
+            // await this.getStaffList()
         }
     },
 
     methods:
     {
+        async generateResult()
+        {
+            await this.getStaffList()
+        },
         getCompanyData(value)
         {
             this.company_details = value
@@ -175,16 +219,16 @@ export default {
 
         async sortItem(option)
         {
-            this.sort_item = option
-            let params = this.sortOption()
-
+            // this.sort_item = option
             // let params = this.sortOption()
-            let start = new Date(this.start_date)
-            let end = new Date(this.end_date)
-            end = end.setDate(end.getDate() + 1)
-            // start = start.setDate(start.getDate() - 1)
 
-            await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})
+            // // let params = this.sortOption()
+            // let start = new Date(this.start_date)
+            // let end = new Date(this.end_date)
+            // end = end.setDate(end.getDate() + 1)
+            // // start = start.setDate(start.getDate() - 1)
+
+            // await this.getStaffList({find_person: {category: 'Staff', date_created: {$gt: start, $lt: end}}, sort: params})
         },
 
         async exportTableToExcel(tableID, filename = ''){
@@ -228,19 +272,40 @@ export default {
             return temp_log.data[0]
         },
 
-        async getStaffList(params = {}, sort)
+        async getStaffList()
         {
-            this.staff_list = await this.$_post(postGetPersons, params);
+            let sort_item = {}
+            this.start_date = new Date(this.start_date).setHours(0,0,0,0)
+            this.end_date = new Date(this.end_date).setHours(23,59,59)
+            let parameter = {}
+            if (this.company_details) 
+            {
+               if (this.select__account_type == "All") parameter = {company_id: this.company_details._id, date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
+               else  parameter = {company_id: this.company_details._id, category: this.select__account_type, date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
+            }
+            else
+            {
+                if (this.select__account_type == "All") parameter = {date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
+               else  parameter = {category: this.select__account_type, date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
+            }
+            if (this.checkbox_date_saved) sort_item['date_created'] = Number(this.sort_type)
+            if (this.checkbox_name) sort_item['given_name'] = Number(this.sort_type)
+            if (this.checkbox_temperature) sort_item['temperature'] = Number(this.sort_type)
+
+            this.start_date = new Date(this.start_date).toISOString().split('T')[0]
+            this.end_date = new Date(this.end_date).toISOString().split('T')[0]
+            this.staff_list = await this.$_post(postGetPersons, {find_person: parameter, sort: sort_item});
 
         }
     },
     async mounted()
     {
         this.company_details = this.$user_info.company ? this.$user_info.company : {}
+        this.select__account_type = this.$route.params.category ? this.$route.params.category : 'All'
         let start = new Date(this.start_date)
         let end = new Date(this.end_date)
         end = end.setDate(end.getDate() + 1)
-        await this.getStaffList({find_person: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}, is_active : true}})
+        await this.getStaffList({find_person: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}})
     }
 
 }

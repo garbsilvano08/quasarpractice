@@ -181,11 +181,9 @@ module.exports =
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
         if (person.length) key.push(person[0].category)
         else key.push('Stranger')
-
-        console.log(key);
         // console.log(key);
         // if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
-        await new CounterClass().counterActivities(person[0].company_id, key, date_string, req.body.data.device_id)
+        await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
             mask:                   req.body.data.mask,
@@ -277,7 +275,6 @@ module.exports =
                 let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey})
                 if (person.length) key.push(person[0].category)
                 else key.push('Stranger')
-                console.log(key);
     
                 if (device.length > 0)
                 {
@@ -299,7 +296,6 @@ module.exports =
                     // console.log(req.body.personId, req.body.type);
                 }
             // }
-            console.log('done');
             return res.send({"success":true, "result":1});
         }
 
@@ -328,7 +324,6 @@ module.exports =
                 }
             })
             await new MDB_COMPANIES().update( parentCompany._id, parentCompany);
-
         }
         return res.send(true);
     },
@@ -399,8 +394,8 @@ module.exports =
         return res.send(await new MDB_COMPANIES().delete(req.body.id));
     },
     async getStaffs(req, res)
-    {
-        return res.send(await new MDB_STAFF().docs({is_active: true}));
+    {  
+        return res.send(await new MDB_PERSON().docs({is_active: true}));
     },
 
     async getBlacklists(req, res)
@@ -409,9 +404,11 @@ module.exports =
     },
     
     async removeAccount(req, res)
-    {
-        if (req.body.type == 'Staff') return res.send(await new MDB_STAFF().update(req.body.id, {is_active: false}));
+    {   
+        
+        if (req.body.type == 'Staff') return res.send(await new MDB_PERSON().update(req.body.id, {is_active: false}));
         else if (req.body.type == 'Blacklist') return res.send(await new MDB_BLACKLIST().update(req.body.id, {is_active: false}));
+        console.log(req.body)
     },
     
     async getCompany(req, res)
@@ -421,10 +418,11 @@ module.exports =
 
     async updateStaff(req, res)
     {
-        return res.send(await new MDB_STAFF().update(req.body.id, req.body.update_staff));
+        console.log(req.body)
+        return res.send(await new MDB_PERSON().update(req.body.id, req.body.update_staff));
     },    
     async updateVisitor(req, res)
-    {
+    {   
         return res.send(await new MDB_RAW_VISITOR().update(req.body.id, req.body.update_visitor));
     },  
     async updateBlacklist(req, res)
@@ -471,7 +469,7 @@ module.exports =
         let data = {}
         data.personal_info = await new MDB_PERSON().doc(req.body.id);
         
-        if (data.personal_info.category ==  'Visitors')
+        if (data.personal_info.category ==  'Visitor')
         {
             data.identification = await new MDB_IDENTIFICATION().collection.find({person_id: req.body.id}).limit(1).sort({date_saved:-1})
             data.purpose_visit = await new MDB_PURPOSE().collection.find({person_id: req.body.id}).limit(1).sort({date_saved:-1})
@@ -505,7 +503,8 @@ module.exports =
     },
     async getUsers(req, res)
     {
-        return res.send(await new MDB_USER().docs());
+        console.log(req.body);
+        return res.send(await new MDB_USER().collection.find({company_id: req.body.id}));
     },
     async deleteUsers(req, res)
     {

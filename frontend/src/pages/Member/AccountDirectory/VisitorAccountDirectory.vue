@@ -8,7 +8,7 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <com-picker class="btn-choose" @select=getCompanyData></com-picker>
+                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyData></com-picker>
             </div>
         </div>
         <div class="account-directory__header">
@@ -130,7 +130,8 @@ export default {
         ],
         sort_item: 'Date Created',
         sort_options: ['Date Created', 'Last Name', 'First Name', 'Middle Name'],
-        sort: '1'
+        sort: '1',
+        company_details: {}
     }),
     watch:
     {
@@ -142,7 +143,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})
+            await this.getVisitorList({find_person: {category: 'Visitor', date_created: {$gt: start, $lt: end}}, sort: params})
         },
         async end_date(val)
         {
@@ -152,11 +153,15 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})
+            await this.getVisitorList({find_person: {category: 'Visitor', date_created: {$gt: start, $lt: end}}, sort: params})
         }
     },
     methods:
     {
+        getCompanyData(value)
+        {
+            this.company_details = value
+        },
         sortOption()
         {
             let params = {}
@@ -178,7 +183,7 @@ export default {
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
 
-            await this.getVisitorList({find_person: {category: 'Visitors', date_created: {$gt: start, $lt: end}}, sort: params})
+            await this.getVisitorList({find_person: {category: 'Visitor', date_created: {$gt: start, $lt: end}}, sort: params})
         },
 
         async exportTableToExcel(tableID, filename = ''){
@@ -192,7 +197,7 @@ export default {
 
             let file_name = 'visitors_' + date + '.xlsx'
             // if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Staff', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
-            params = {user_name: this.$user_info.full_name, work_sheet: 'Visitors',file_name: file_name, sort: sort_options, find_data: {category: 'Visitors', date_created: { '$gt' : start , '$lt' : end}}}
+            params = {user_name: this.$user_info.full_name, work_sheet: 'Visitor',file_name: file_name, sort: sort_options, find_data: {category: 'Visitor', date_created: { '$gt' : start , '$lt' : end}}}
             let is_saved = await this.$_post(postExpPerson,params);
 
             if (is_saved)
@@ -227,6 +232,7 @@ export default {
 
     async mounted()
     {
+        this.company_details = this.$user_info.company ? this.$user_info.company : {}
         let start = new Date(this.start_date)
         let end = new Date(this.end_date)
         end = end.setDate(end.getDate() + 1)
@@ -234,7 +240,7 @@ export default {
 
         // console.log(start, end);
 
-        await this.getVisitorList({find_person: {category: 'Visitors', date_created: { '$gt' : start , '$lt' : end}}})
+        await this.getVisitorList({find_person: {category: 'Visitor', date_created: { '$gt' : start , '$lt' : end}}})
     }
 }
 </script>

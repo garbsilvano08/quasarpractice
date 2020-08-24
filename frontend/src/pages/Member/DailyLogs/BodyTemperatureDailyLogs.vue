@@ -3,7 +3,7 @@
         <div class="daily-logs__header">
             <div class="header__title">BODY TEMPERATURE LOGS</div>
             <div class="header__filter">
-                <com-picker @select=getCompanyData></com-picker>
+                <com-picker :user="this.$user_info" @select=getCompanyData></com-picker>
                 <q-btn @click="exportTableToExcel" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>

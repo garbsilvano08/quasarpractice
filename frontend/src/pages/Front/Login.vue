@@ -55,6 +55,7 @@ export default
             this.$q.loading.show();
 
             let res = await this.$_post(postLoginUser, this.form_data);
+            console.log(res, 'res');
 
             if(res)
             {

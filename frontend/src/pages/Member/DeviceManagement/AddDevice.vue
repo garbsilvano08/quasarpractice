@@ -6,7 +6,7 @@
             <div class="device-add__content-info">
                 <div class="content__select">
                     <div class="content__select-label">Tag a Company</div>
-                    <com-picker @select=getCompanyData></com-picker>
+                    <com-picker :user="this.$user_info" @select=getCompanyData></com-picker>
                     <!-- <q-select v-model="select_company" :options="options_company" outlined dense></q-select> -->
                 </div>
             </div>
@@ -36,7 +36,8 @@
                     <q-select v-model="log_type" :options="log_type_options" outlined dense></q-select>
                 </div>
                 <div class="content__input">
-                    <div class="content__input-label">Device Type</div>
+                    <div class="content__input-label"
+                    >Device Type</div>
                     <q-radio class="content__input-label" v-model="device_type" val="vision_sky" label="Vision Sky" />
                     <q-radio class="content__input-label" v-model="device_type" val="smart_pass" label="Smart Pass" />
                 </div>
@@ -80,7 +81,7 @@ export default {
         SuccessDialog
     },
     data: () => ({
-            is_success_dialog: 'false',
+            is_success_dialog: false,
             input_date_installed: '',
             input_device_id: '',
             select_company: '',

@@ -41,7 +41,7 @@
                     <div class="content__select-label">Tag a Company</div>
                     <!-- <q-select v-model="user_information.select_tag_company" :options="options_tag_company" outlined dense></q-select> -->
 
-                    <com-picker @select=getCompanyData class="btn-choose"></com-picker>
+                    <com-picker :user="this.$user_info" @select=getCompanyData class="btn-choose"></com-picker>
                 </div>
             </div>
             <div class="user-add__btn">
@@ -142,6 +142,7 @@ export default {
                     const formData = new FormData();
                     formData.append('image',document.getElementById("userImage").files[0] );
                     let res = await this.$_post_file(formData);
+                    this.user_information.company_id = this.user_information.company._id
                     this.user_information.user_picture = res;
                     await this.$_post('member/add/user',  this.user_information );
 

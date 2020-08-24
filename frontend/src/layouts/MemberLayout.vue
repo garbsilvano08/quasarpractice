@@ -195,7 +195,8 @@ export default
         {
             if (this.$user_info.user_type == 'Super Admin')
             {
-                return true
+                if ( key == 'frontdesk_visitor' || key == 'personnel_management') return false
+                else return true
             }
             else if (this.$user_info.user_type == 'Officer')
             {
@@ -207,7 +208,7 @@ export default
             }
             else if (this.$user_info.user_type == 'Admin')
             {
-                if ( key == 'user_management' )
+                if ( key == 'company_management' )
                 {
                     return false
                 }
@@ -215,7 +216,7 @@ export default
             }
             else
             {
-                if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'personnel_management' || key == 'daily')
+                if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'account_directory' || key == 'daily')
                 {
                     return true
                 }
@@ -285,359 +286,17 @@ export default
             if (this.$user_info.user_type)
             {
                 // console.log('kjkjkj');
-                if (this.person_uploads >= this.total)
-                {
-                    this.person_uploads = this.person_uploads + 1
-                    let data = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data.append('pass', 'abc123');
-                    data.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload = await this.$axios.post("http://192.168.1.119:8090/person/create", data).then(res => res.data);
-                    console.log(upload);
-
-                    let image = new FormData();
-                    image.append('pass', 'abc123');
-                    image.append("personId", this.person_uploads );
-                    image.append("faceId", "" );
-                    image.append("imgBase64", image_data.data[0].image );
-                    let img = await this.$axios.post("http://192.168.1.119:8090/face/create", image).then(res => res.data);
-                    console.log(img);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data2 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data2.append('pass', 'abc123');
-                    data2.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload2 = await this.$axios.post("http://192.168.1.119:8090/person/create", data2).then(res => res.data);
-                    console.log(upload2);
-
-                     let image2 = new FormData();
-                    image2.append('pass', 'abc123');
-                    image2.append("personId", this.person_uploads );
-                    image2.append("faceId", "" );
-                    image2.append("imgBase64", image_data.data[0].image );
-                    let img2 = await this.$axios.post("http://192.168.1.119:8090/face/create", image2).then(res => res.data);
-                    console.log(img2);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data3 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data3.append('pass', 'abc123');
-                    data3.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload3 = await this.$axios.post("http://192.168.1.119:8090/person/create", data3).then(res => res.data);
-                    console.log(upload3);
-
-                     let image3 = new FormData();
-                    image3.append('pass', 'abc123');
-                    image3.append("personId", this.person_uploads );
-                    image3.append("faceId", "" );
-                    image3.append("imgBase64", image_data.data[0].image );
-                    let img3 = await this.$axios.post("http://192.168.1.119:8090/face/create", image3).then(res => res.data);
-                    console.log(img3);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data4 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data4.append('pass', 'abc123');
-                    data4.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload4 = await this.$axios.post("http://192.168.1.119:8090/person/create", data4).then(res => res.data);
-                    console.log(upload4);
-
-                     let image4 = new FormData();
-                    image4.append('pass', 'abc123');
-                    image4.append("personId", this.person_uploads );
-                    image4.append("faceId", "" );
-                    image4.append("imgBase64", image_data.data[0].image );
-                    let img4 = await this.$axios.post("http://192.168.1.119:8090/face/create", image4).then(res => res.data);
-                    console.log(img4);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data5 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data5.append('pass', 'abc123');
-                    data5.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload5 = await this.$axios.post("http://192.168.1.119:8090/person/create", data5).then(res => res.data);
-                    console.log(upload5);
-
-                     let image5 = new FormData();
-                    image5.append('pass', 'abc123');
-                    image5.append("personId", this.person_uploads );
-                    image5.append("faceId", "" );
-                    image5.append("imgBase64", image_data.data[0].image );
-                    let img5 = await this.$axios.post("http://192.168.1.119:8090/face/create", image5).then(res => res.data);
-                    console.log(img5);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data6 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data6.append('pass', 'abc123');
-                    data6.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload6 = await this.$axios.post("http://192.168.1.119:8090/person/create", data6).then(res => res.data);
-                    console.log(upload6);
-
-                     let image6 = new FormData();
-                    image6.append('pass', 'abc123');
-                    image6.append("personId", this.person_uploads );
-                    image6.append("faceId", "" );
-                    image6.append("imgBase64", image_data.data[0].image );
-                    let img6 = await this.$axios.post("http://192.168.1.119:8090/face/create", image6).then(res => res.data);
-                    console.log(img6);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data7 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data7.append('pass', 'abc123');
-                    data7.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload7 = await this.$axios.post("http://192.168.1.119:8090/person/create", data7).then(res => res.data);
-                    console.log(upload7);
-
-                     let image7 = new FormData();
-                    image7.append('pass', 'abc123');
-                    image7.append("personId", this.person_uploads );
-                    image7.append("faceId", "" );
-                    image7.append("imgBase64", image_data.data[0].image );
-                    let img7 = await this.$axios.post("http://192.168.1.119:8090/face/create", image7).then(res => res.data);
-                    console.log(img7);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data8 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data8.append('pass', 'abc123');
-                    data8.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload8 = await this.$axios.post("http://192.168.1.119:8090/person/create", data8).then(res => res.data);
-                    console.log(upload8);
-
-                     let image8 = new FormData();
-                    image8.append('pass', 'abc123');
-                    image8.append("personId", this.person_uploads );
-                    image8.append("faceId", "" );
-                    image8.append("imgBase64", image_data.data[0].image );
-                    let img8 = await this.$axios.post("http://192.168.1.119:8090/face/create", image8).then(res => res.data);
-                    console.log(img8);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data9 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data9.append('pass', 'abc123');
-                    data9.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload9 = await this.$axios.post("http://192.168.1.119:8090/person/create", data9).then(res => res.data);
-                    console.log(upload9);
-
-                     let image9 = new FormData();
-                    image9.append('pass', 'abc123');
-                    image9.append("personId", this.person_uploads );
-                    image9.append("faceId", "" );
-                    image9.append("imgBase64", image_data.data[0].image );
-                    let img9 = await this.$axios.post("http://192.168.1.119:8090/face/create", image9).then(res => res.data);
-                    console.log(img9);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data10 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data10.append('pass', 'abc123');
-                    data10.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload10 = await this.$axios.post("http://192.168.1.119:8090/person/create", data10).then(res => res.data);
-                    console.log(upload10);
-
-                     let image10 = new FormData();
-                    image10.append('pass', 'abc123');
-                    image10.append("personId", this.person_uploads );
-                    image10.append("faceId", "" );
-                    image10.append("imgBase64", image_data.data[0].image );
-                    let img10 = await this.$axios.post("http://192.168.1.119:8090/face/create", image10).then(res => res.data);
-                    console.log(img10);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data11 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data11.append('pass', 'abc123');
-                    data11.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload11 = await this.$axios.post("http://192.168.1.119:8090/person/create", data11).then(res => res.data);
-                    console.log(upload11);
-
-                     let image11 = new FormData();
-                    image11.append('pass', 'abc123');
-                    image11.append("personId", this.person_uploads );
-                    image11.append("faceId", "" );
-                    image11.append("imgBase64", image_data.data[0].image );
-                    let img11 = await this.$axios.post("http://192.168.1.119:8090/face/create", image11).then(res => res.data);
-                    console.log(img11);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data12 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data12.append('pass', 'abc123');
-                    data12.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload12 = await this.$axios.post("http://192.168.1.119:8090/person/create", data12).then(res => res.data);
-                    console.log(upload12);
-
-                     let image12 = new FormData();
-                    image12.append('pass', 'abc123');
-                    image12.append("personId", this.person_uploads );
-                    image12.append("faceId", "" );
-                    image12.append("imgBase64", image_data.data[0].image );
-                    let img12 = await this.$axios.post("http://192.168.1.119:8090/face/create", image12).then(res => res.data);
-                    console.log(img12);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data13 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data13.append('pass', 'abc123');
-                    data13.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload13 = await this.$axios.post("http://192.168.1.119:8090/person/create", data13).then(res => res.data);
-                    console.log(upload13);
-
-                     let image13 = new FormData();
-                    image13.append('pass', 'abc123');
-                    image13.append("personId", this.person_uploads );
-                    image13.append("faceId", "" );
-                    image13.append("imgBase64", image_data.data[0].image );
-                    let img13 = await this.$axios.post("http://192.168.1.119:8090/face/create", image13).then(res => res.data);
-                    console.log(img13);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data14 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data14.append('pass', 'abc123');
-                    data14.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload14 = await this.$axios.post("http://192.168.1.119:8090/person/create", data14).then(res => res.data);
-                    console.log(upload14);
-
-                     let image14 = new FormData();
-                    image14.append('pass', 'abc123');
-                    image14.append("personId", this.person_uploads );
-                    image14.append("faceId", "" );
-                    image14.append("imgBase64", image_data.data[0].image );
-                    let img14 = await this.$axios.post("http://192.168.1.119:8090/face/create", image14).then(res => res.data);
-                    console.log(img14);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data15 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data15.append('pass', 'abc123');
-                    data15.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload15 = await this.$axios.post("http://192.168.1.119:8090/person/create", data15).then(res => res.data);
-                    console.log(upload15);
-
-                     let image15 = new FormData();
-                    image15.append('pass', 'abc123');
-                    image15.append("personId", this.person_uploads );
-                    image15.append("faceId", "" );
-                    image15.append("imgBase64", image_data.data[0].image );
-                    let img15 = await this.$axios.post("http://192.168.1.119:8090/face/create", image15).then(res => res.data);
-                    console.log(img15);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data16 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data16.append('pass', 'abc123');
-                    data16.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload16 = await this.$axios.post("http://192.168.1.119:8090/person/create", data16).then(res => res.data);
-                    console.log(upload16);
-
-                     let image16 = new FormData();
-                    image16.append('pass', 'abc123');
-                    image16.append("personId", this.person_uploads );
-                    image16.append("faceId", "" );
-                    image16.append("imgBase64", image_data.data[0].image );
-                    let img16 = await this.$axios.post("http://192.168.1.119:8090/face/create", image16).then(res => res.data);
-                    console.log(img16);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data17 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data17.append('pass', 'abc123');
-                    data17.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload17 = await this.$axios.post("http://192.168.1.119:8090/person/create", data17).then(res => res.data);
-                    console.log(upload17)
-
-                     let image17 = new FormData();
-                    image17.append('pass', 'abc123');
-                    image17.append("personId", this.person_uploads );
-                    image17.append("faceId", "" );
-                    image17.append("imgBase64", image_data.data[0].image );
-                    let img17 = await this.$axios.post("http://192.168.1.119:8090/face/create", image17).then(res => res.data);
-                    console.log(img17);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data18 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data18.append('pass', 'abc123');
-                    data18.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload18 = await this.$axios.post("http://192.168.1.119:8090/person/create", data18).then(res => res.data);
-                    console.log(upload18);
-
-                     let image18 = new FormData();
-                    image18.append('pass', 'abc123');
-                    image18.append("personId", this.person_uploads );
-                    image18.append("faceId", "" );
-                    image18.append("imgBase64", image_data.data[0].image );
-                    let img18 = await this.$axios.post("http://192.168.1.119:8090/face/create", image18).then(res => res.data);
-                    console.log(img18);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data19 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data19.append('pass', 'abc123');
-                    data19.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload19 = await this.$axios.post("http://192.168.1.119:8090/person/create", data19).then(res => res.data);
-                    console.log(upload19);
-
-                     let image19 = new FormData();
-                    image19.append('pass', 'abc123');
-                    image19.append("personId", this.person_uploads );
-                    image19.append("faceId", "" );
-                    image19.append("imgBase64", image_data.data[0].image );
-                    let img19 = await this.$axios.post("http://192.168.1.119:8090/face/create", image19).then(res => res.data);
-                    console.log(img19);
-
-                    this.person_uploads = this.person_uploads + 1
-                    let data20 = new FormData();
-                    // let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                    data20.append('pass', 'abc123');
-                    data20.append("person", "{'id': '"+this.person_uploads+"', 'name': 'Jeric Laderas', 'idcardNum': '1', 'departmentId': '1'}" );
-    
-                    let upload20 = await this.$axios.post("http://192.168.1.119:8090/person/create", data20).then(res => res.data);
-                    console.log(upload20);
-
-                     let image20 = new FormData();
-                    image20.append('pass', 'abc123');
-                    image20.append("personId", this.person_uploads );
-                    image20.append("faceId", "" );
-                    image20.append("imgBase64", image_data.data[0].image );
-                    let img20 = await this.$axios.post("http://192.168.1.119:8090/face/create", image20).then(res => res.data);
-                    console.log(img20);
-
-                }
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
                 // Info
     
                 for (let visitor of this.visitors)
                 {
+                    console.log(visitor);
                     let data = {
                         visit_purpose:      visitor.visitor_purpose.purpose_visit,
                         contact_person:     visitor.visitor_purpose.contact_person,
                         destination:        visitor.visitor_purpose.destination,
-    
+     
                         id_img: visitor.personal_information.id_image,
                         id_num: visitor.personal_information.id_number,
                         id_type: visitor.personal_information.id_type,
@@ -653,17 +312,18 @@ export default
                         contact_number: visitor.personal_information.contact_number,
                         emergency_contact: visitor.personal_information.emergency_contact_number,
                         date_created: new Date(),
-                        company_name: visitor.personal_information.company_name,
+                        company_name: this.$user_info.company.company_name,
+                        company_id: this.$user_info.company._id,
                         frontdesk_person_id: visitor.personal_information.frontdesk_person_id,
-                        frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
                         frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
                         location: visitor.personal_information.location,
                         location_coordinates: visitor.personal_information.location_coordinates,
                         is_active: true,
+                        email: visitor.personal_information.email,
     
                         saved_from: this.$user_info.company._id ? this.$user_info.company._id : '',
     
-                        category: 'Visitors'
+                        category: 'Visitor'
                     }
     
     //***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
@@ -695,19 +355,23 @@ export default
                     this.device_list.forEach(async (device) => {
                         if (device.device_type == 'vision_sky')
                         {
-                            let date = new Date().getFullYear() + "-" + new Date().getMonth() + "-" + new Date().getDate() + " 23.59.59"
-                            console.log(date);
-                            let image = new FormData();
-                            image.append('pass', 'abc123');
-                            image.append("personId", visitor.personal_information.id_number );
-                            image.append("idcardNum", "" );
-                            image.append("name",  visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name );
-                            image.append("imgBase64", b64 );
-                            image.append("passTime", expEndTime );
-                            image.append("permissionTime", date);
-                            image.append("type", 1 );
-                            
-                            let img = await this.$axios.post("http://"+ device.device_ip +":8090/person/quickCreate", image).then(res => res.data);
+                            try
+                            {
+                                let date = new Date().getFullYear() + "-" + (new Date(visitor.personal_information.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + "-" + new Date(visitor.personal_information.frontdesk_person_date).getDate().toString().padStart(2, "0") + " 23:59:59"
+                                // console.log(date);
+                                let image = new FormData();
+                                image.append('pass', 'abc123');
+                                image.append("personId", visitor.personal_information.frontdesk_person_id );
+                                image.append("idcardNum", 1 );
+                                image.append("name",  visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name );
+                                image.append("imgBase64", b64 );
+                                image.append("passTime", '01:00:00, 23:59:59' );
+                                image.append("permissionTime", date);
+                                image.append("type", 1 );
+                                let img = await this.$axios.post("http://"+ device.device_ip +":8090/person/quickCreate", image).then(res => res.data);
+                                console.log(img);
+                            }
+                            catch(e){}
                         }
                         else
                         {
@@ -731,7 +395,7 @@ export default
                 // Logs
                 for (let log of this.passLogs)
                 {
-                    console.log(log);
+                    console.log(log, this.$user_info.company);
                     log.company_id = this.$user_info.company ? this.$user_info.company._id : '';
     
                     await this.$_post('member/add/pass_log', { data: log });

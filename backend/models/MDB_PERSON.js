@@ -9,6 +9,7 @@ const schema    = new Schema(
     last_name:          { type: String,  required: true },
     middle_name:        { type: String,  required: true },
     given_name:         { type: String,  required: true },
+    email:              { type: String,  required: false },
     gender:             { type: String,  required: false, default: 'Unknown'},
     birthday:           { type: Date,    required: true},
     nationality:        { type: String,  required: false, default: 'Unknown' },
@@ -17,7 +18,7 @@ const schema    = new Schema(
     emergency_contact:  { type: String,  required: false, default: 'Unknown' },
     date_created:       { type: Date  ,  required: true },
     is_active:          { type: Boolean, required: false, default: true },
-    category:           { type: String,  required: true, default: 'Visitors' },
+    category:           { type: String,  required: true, default: 'Visitor' },
     
     // Staff
     position:           { type: String, required: false },

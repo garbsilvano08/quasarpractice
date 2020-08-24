@@ -6,12 +6,12 @@ module.exports =
         icon: 'mdi-chart-bar',
         route: 'member_dashboard',
     },
-    {
-        key: 'notification',
-        label: 'Notification',
-        icon: 'mdi-bell-ring',
-        route: 'member_notification',
-    },
+    // {
+    //     key: 'notification',
+    //     label: 'Notification',
+    //     icon: 'mdi-bell-ring',
+    //     route: 'member_notification',
+    // },
     {
         key: 'frontdesk_visitor',
         label: 'Frontdesk',
@@ -42,7 +42,7 @@ module.exports =
     //     sub:
     //     [
     //         { label: 'Staff', route: 'member_dailylogs_staff' },
-    //         { label: 'Visitors', route: 'member_dailylogs_visitor' },
+    //         { label: 'Visitor', route: 'member_dailylogs_visitor' },
     //         { label: 'Stranger', route: 'member_dailylogs_stranger' },
     //         { label: 'Body Temp. Logs', route: 'member_dailylogs_bodytemperature' },
     //         { label: 'Fever Detected', route: 'member_dailylogs_feverdetected' },
@@ -53,13 +53,13 @@ module.exports =
         key: 'account_directory',
         label: 'Account Directory',
         icon: 'mdi-account-group',
-        sub:
-        [
-            { label: 'Staff', route: 'member_accountdirectory_staff' },
-            { label: 'Visitors', route: 'member_accountdirectory_visitor' },
-            { label: 'Fever Detected', route: 'member_accountdirectory_feverdetected' },
-            { label: 'Blacklist', route: 'member_accountdirectory_blacklist' },
-        ]
+        route: 'member_accountdirectory',
+        // [
+        //     { label: 'Staff', route: 'member_accountdirectory_staff' },
+        //     { label: 'Visitor', route: 'member_accountdirectory_visitor' },
+        //     { label: 'Fever Detected', route: 'member_accountdirectory_feverdetected' },
+        //     { label: 'Blacklist', route: 'member_accountdirectory_blacklist' },
+        // ]
     },
     {
         key: 'company_management',
@@ -99,15 +99,15 @@ module.exports =
         [
             { label: 'Fever Detected', route: 'member_feverdetected_report' },
             { label: 'Fever Monitoring', route: 'member_fevermonitoring_report' },
-            { label: 'Fever Heatmap', route: 'member_feverheatmap_report' },
+            { label: 'Fever Heatmap', route: 'member_heatmap' },
         ]
     },
-    {
-        key: '',
-        label: 'Security Access',
-        icon: 'mdi-security',
-        route: '',
-    },
+    // {
+    //     key: '',
+    //     label: 'Security Access',
+    //     icon: 'mdi-security',
+    //     route: '',
+    // },
     {
         key: 'member_logout',
         label: 'Logout',

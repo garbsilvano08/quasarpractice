@@ -20,7 +20,7 @@ module.exports = class PersonClass
         
         if (already_existed.length)
         {
-            if (already_existed[0].category == 'Visitors' || already_existed[0].category == 'Report' )
+            if (already_existed[0].category == 'Visitor' || already_existed[0].category == 'Report' )
             {
                 await new MDB_PERSON().collection.where({contact_number: person.person_info.contact_number}).where({birthday: person.person_info.birthday}).updateMany(person.person_info)
                 await this.updateOtherDetails(person, already_existed[0]._id, company_id)
@@ -30,7 +30,7 @@ module.exports = class PersonClass
         else
         {
             let data = await new MDB_PERSON().add(person.person_info);
-            if (person.person_info.category == 'Visitors' || person.person_info.category == 'Report') await this.updateOtherDetails(person, data._id, company_id)
+            if (person.person_info.category == 'Visitor' || person.person_info.category == 'Report') await this.updateOtherDetails(person, data._id, company_id)
         }
 
         if (person.person_info.category == 'Staff') await new MDB_COMPANIES().update(company_id, {$inc: {staff: 1}})
@@ -60,6 +60,6 @@ module.exports = class PersonClass
             date_string:        person.person_info.date
         }
         await new MDB_IDENTIFICATION().add(id_info);
-        if (person.person_info.category == 'Visitors') await new MDB_PURPOSE().add(purpose_visit);
+        if (person.person_info.category == 'Visitor') await new MDB_PURPOSE().add(purpose_visit);
     }
 }

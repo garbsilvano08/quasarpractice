@@ -28,6 +28,7 @@
 <script>
 import './Synchronization.scss';
 import { postGetDevice, postGetPersons } from '../../../references/url';
+import { log } from 'util';
 
 
 function toDataUrl(url, callback) {
@@ -166,20 +167,25 @@ export default {
                             prescription = "'" + expStart + "," + expEnd + "'";
                             if (device_type == 'vision_sky')
                             {
-                                let date = new Date().getFullYear() + "-" + (new Date(person.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + "-" + new Date(person.frontdesk_person_date).getDate().toString().padStart(2, "0") + " 23:59:59"
-                                console.log(date, 'jhghjgjhgjhg');
-                                let image = new FormData();
-                                image.append('pass', 'abc123');
-                                image.append("personId", person.frontdesk_person_id );
-                                image.append("idcardNum", 1 );
-                                image.append("name", person.given_name + " " + person.middle_name + " " + person.last_name );
-                                image.append("imgBase64", b64 );
-                                image.append("passTime", '01:00:00, 23:59:59' );
-                                image.append("permissionTime", date);
-                                image.append("type", 1 );
-                                
-                                let img = await this.$axios.post("http://"+ device_ip +":8090/person/quickCreate", image).then(res => res.data);
-                                console.log(img);
+                                try
+                                {
+                                    let date = new Date().getFullYear() + "-" + (new Date(person.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + "-" + new Date(person.frontdesk_person_date).getDate().toString().padStart(2, "0") + " 23:59:59"
+                                    // console.log(date, 'jhghjgjhgjhg');
+                                    let image = new FormData();
+                                    image.append('pass', 'abc123');
+                                    image.append("personId", person.frontdesk_person_id );
+                                    image.append("idcardNum", 1 );
+                                    image.append("name", person.given_name + " " + person.middle_name + " " + person.last_name );
+                                    image.append("imgBase64", b64 );
+                                    image.append("passTime", '01:00:00, 23:59:59' );
+                                    image.append("permissionTime", date);
+                                    image.append("type", 1 );
+                                    
+                                    let img = await this.$axios.post("http://"+ device_ip +":8090/person/quickCreate", image).then(res => res.data);
+                                    console.log(img);
+                                }
+                                catch(e){}
+                                // console.log(img);
                             }
                             else
                             {
@@ -205,6 +211,7 @@ export default {
                                 image.append("faceId", person.frontdesk_person_id );
                                 image.append("imgBase64", b64 );
                                 let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data);
+                                console.log(img);
                             }
                             else
                             {

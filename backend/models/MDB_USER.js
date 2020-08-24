@@ -12,6 +12,7 @@ const schema    = new Schema(
     user_picture:   { type: String, required:   true },
     company:        { type: Object, required:   true },
     date_created:   { type: Date  , required:   true },
+    company_id:     { type: String, required:   true },
 });
 
 class MDB_USERS extends MODEL

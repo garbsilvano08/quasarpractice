@@ -86,6 +86,10 @@
                                 <div class="content__input-label">Middle Name *</div>
                                 <q-input v-model="staff_class.middle_name" outlined dense></q-input>
                             </div>
+                            <div class="content__input">
+                                <div class="content__input-label">Email Address</div>
+                                <q-input v-model="staff_class.email" outlined dense></q-input>
+                            </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
@@ -202,7 +206,7 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 // Refferences
 import position_reference from '../../../references/position';
 
-import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson} from '../../../references/url';
+import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson, postGetPerson} from '../../../references/url';
 import LoginVue from '../../Front/Login.vue';
 import {base64StringToBlob} from 'blob-util';
 
@@ -229,10 +233,11 @@ export default {
             'Official Business' , 'Collection and Pickup', 'Delivery', 'Corporate Meeting', 'Client/Customer', 'Guest'
         ],
         options_company: [],
-        staff_class: {account_img: null,
+        staff_class: {account_img: '',
                 given_name: '',
                 middle_name: '',
                 last_name: '',
+                email: '',
                 gender: 'Male',
                 birthday: '',
                 nationality: '',
@@ -243,6 +248,7 @@ export default {
                 position : ''},
         is_done: false,
         company_list: [],
+        account_info : {}
     }),
     watch:
     {
@@ -314,8 +320,8 @@ export default {
                 const blobb = base64StringToBlob(image_url, contentType)
                 blobb.lastModifiedDate = new Date()
                 // const blobUrl = URL.createObjectURL(blob);
-
                 // this.personaluploader_information.account_img = await this.getImageURL();
+
                 this.staff_class.account_img = image_url
 
                 let oFReader = new FileReader();
@@ -323,11 +329,11 @@ export default {
 
                 // formData.append('image',document.getElementById("uploadImage").files[0]);
                 formData.append('image', blobb, 'person' + Date.now().toString() + '.png');
+
                 this.staff_class.account_img = await this.$_post_file(formData);
 
                 this.$q.loading.hide();
             }
-
             this.open_camera = false
             // this.staff_class.account_img = await this.getImageURL()
         },
@@ -390,35 +396,22 @@ export default {
 
                 return str.join(" ");
                 }
-            for (let validate in this.staff_class)
-            {
-                let field = validate;
+            
+            // for (let validate in this.staff_class)
+            // {   
+            //     let field = validate;
+            //     if(!this.staff_class.field){
+            //         console.log(field)
+            //         this.$q.notify(
+            //         {
+            //             color: 'red',
+            //             message: 'Please fill in all required fields'
+            //         });
+            //         return
+            //     }
+            // }
 
-                // if (field === 'id_type') field = "ID Card Type";
-                // if (field === 'id_number') field = "ID Number";
-                // else field = capitalize(field.replace('_', ' '));
-
-                if (
-                    !this.staff_class.given_name ||
-                    !this.staff_class.last_name ||
-                    !this.staff_class.middle_name ||
-                    !this.staff_class.home_address ||
-                    !this.staff_class.contact_number ||
-                    !this.staff_class.birthday ||
-                    !this.staff_class.account_img ||
-                    !this.staff_class.company_name ||
-                    !this.staff_class.position
-                )
-                {
-                    this.$q.notify(
-                    {
-                        color: 'red',
-                        message: field + ' is required'
-                    });
-                    return
-                }
-            }
-
+                
             let result           = '';
             let characters       = '0123456789';
             let charactersLength = characters.length;
@@ -446,13 +439,14 @@ export default {
                 company_name: this.staff_class.company_name,
                 company_id: this.getCompany( this.staff_class.company_name),
                 is_active: true,
+                email: this.staff_class.email,
 
                 position: this.staff_class.position,
                 category: 'Staff',
                 frontdesk_person_id: result,
                 frontdesk_person_date: new Date(),
 
-                saved_from: this.$user_info.company._id ? this.$user_info.company._id : ''
+                saved_from: this.staff_class.company_name._id
             }
 
 
@@ -460,16 +454,17 @@ export default {
             try
             {
                 if (this.$route.params.is_edit)
-                {
-                    await this.$_post(postSavePerson, {id: this.$route.params.account_info._id, update_staff: data});
+                {   
+                    await this.$_post(postUpdateStaff, {id: this.$route.params.account_info._id, update_staff: data});
+                    
                     // await this.$_post(postUpdateStaff, {id: this.$route.params.account_info._id, update_staff: data});
                     Notify.create({
                         color: 'green',
-                        message: 'Successfully updated Staff'
+                        message: 'Successfully updated Staff',
                     });
                     data.type = 'Staff'
                     this.$router.push({
-                        name: 'member_personal-information',
+                        name: 'member_accountdirectory_staff',
                         params: {
                             account_info: data,
                         }
@@ -484,6 +479,12 @@ export default {
                             color: 'green',
                             message: 'Successfully added Staff'
                         });
+                        this.$router.push({
+                        name: 'member_accountdirectory',
+                        params: {
+                            category: 'Staff',
+                        }
+                        })
                     }
                     else
                     {
@@ -492,6 +493,7 @@ export default {
                             message: 'This account is already existing'
                         });
                     }
+                    
                 }
                 this.staff_class = {}
             }
@@ -513,10 +515,11 @@ export default {
         },
     },
     async mounted()
-    {
+    {   
         if (this.$route.params.is_edit)
-        {
-            this.staff_class = new OpticalReadClass(this.$route.params.account_info)
+        {   
+            this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.account_info._id})
+            this.staff_class = this.account_info.data.personal_info
         }
 
         this.company_list = await this.$_post(postGetCompanies);
