@@ -130,16 +130,14 @@ export default {
                     let req = await this.$_post(postAddDevice, {device_info: device_info});
                     // let logs = await this.$_post('member/visionsky/logs');
                     // console.log(logs);
-                    console.log(req);
                     // console.log(this.log_type);
                     if (this.device_type == 'vision_sky')
                     {
                         // console.log(this.input_device_ip);
                         let data = new FormData();
                         data.append('pass', 'abc123');
-                        data.append('callbackUrl', 'http://192.168.254.120:4001/api/member/visionsky/logs');
+                        data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
                         let logs = await this.$axios.post("http://" + this.input_device_ip + ":8090/setIdentifyCallBack", data).then(res => res.data);
-                        console.log(logs);
                     }
 
                     this.$q.loading.hide();

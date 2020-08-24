@@ -103,15 +103,15 @@
                 </div>
                 <div class="content__view-item">
                     <div class="content__view-color color-violet"></div>
-                    <div class="content__view-label">Staff (1)</div>
+                    <div class="content__view-label">Staff </div>
                 </div>
                 <div class="content__view-item">
                     <div class="content__view-color color-orange"></div>
-                    <div class="content__view-label">Visitor (1)</div>
+                    <div class="content__view-label">Visitor </div>
                 </div>
                 <div class="content__view-item">
                     <div class="content__view-color color-red"></div>
-                    <div class="content__view-label">Stranger (1)</div>
+                    <div class="content__view-label">Stranger </div>
                 </div>
             </div>
 
@@ -134,7 +134,7 @@ import { postGetCompanies, postFindLogs, postPersonByCateg, postGetDevice } from
 import { log } from 'util';
 import { base64StringToBlob } from 'blob-util';
 import { sort } from '../../../references/nav';
-
+import { saveAs } from 'file-saver';
 export default {
     components: {
         DailyLogCards,
@@ -186,10 +186,68 @@ export default {
     methods:
     {
         exportData()
-        {
-            // var htmltable= document.getElementById('dailyLogs');
-            // var html = htmltable.outerHTML;
-            // window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+        { 
+            let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
+            let params = {}
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+            end = end.setDate(end.getDate() + 1)
+            let file_name = this.select__account_type+"_" + date + '.xls'
+
+            console.log(this.log_list)
+            let fields = [] , log_list_data = [{}]
+            for (let index = 0; index < this.log_list.length; index++) {
+                log_list_data.push({
+                    "full_name": this.log_list[index].full_name,
+                    "gender": this.log_list[index].gender,
+                    "temperature": this.log_list[index].temperature,
+                    "has_fever": this.log_list[index].has_fever,
+                    "company_name": this.log_list[index].company_name,
+                    "category": this.log_list[index].category,
+                    "home_address" : this.log_list[index].home_address,
+                    "date_logged" : this.log_list[index].date_logged,
+                },)
+            }
+            
+            fields.push({
+            label: 'Full name',
+            value: 'full_name'
+            },{
+            label: 'Gender',
+            value: 'gender'
+            },{
+            label: 'Temperature',
+            value: 'temperature'
+            },{
+            label: 'Has Fever',
+            value: 'has_fever'
+            },{
+            label: 'Company name',
+            value: 'company_name'
+            },{
+            label: 'Category',
+            value: 'category'
+            },{
+            label: 'Home address',
+            value: 'home_address'
+            },{
+            label: 'Date logged',
+            value: 'date_logged'
+            });
+
+            const { Parser } = require('json2csv');
+
+            const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
+            const csv = json2csvParser.parse(log_list_data);
+    
+            var FileSaver = require('file-saver');
+            FileSaver.saveAs(
+            new Blob([csv], {
+                type:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }),
+            file_name
+            );
         },
         getCompanyData(value)
         {
