@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { postPersonByCateg }                         from '../../../references/url';
 export default 
 {
     name: 'Heatmap',
@@ -18,13 +19,12 @@ export default
     }),
     async created()
     {
-        let { data: visitors } = await this.$_post('member/get/visitors');
-        this.points = visitors.filter(visitor => visitor && visitor.personal_information && visitor.personal_information.location_coordinates).map(visitor =>
+        let { data: visitors } = await this.$_post(postPersonByCateg, {find_by_category: {has_fever: true}});
+        this.points = visitors.filter(visitor => visitor && visitor.location_coordinates).map(visitor =>
         {
-            let coordinates = visitor.personal_information.location_coordinates;
+            let coordinates = visitor.location_coordinates;
             return { lat: coordinates.lat, lng: coordinates.lon };
         });
-        console.log(this.points);
     }
 }
 </script>

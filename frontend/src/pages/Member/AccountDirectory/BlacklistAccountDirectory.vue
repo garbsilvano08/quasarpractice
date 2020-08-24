@@ -8,7 +8,7 @@
                         <q-icon name="mdi-magnify" />
                     </template>
                 </q-input>
-                <com-picker class="btn-choose" @select=getCompanyData></com-picker>
+                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyData></com-picker>
                 <!-- <q-select v-model="select__date" :options="options_date" outlined dense></q-select> -->
             </div>
         </div>
@@ -96,6 +96,7 @@ export default {
             '6/24/2020', '6/23/2020' , '6/22/2020'
         ],
         blacklist_account: [],
+        company_details: {},
         table_column:
         [
             {
@@ -152,6 +153,10 @@ export default {
 
     methods:
     {
+        getCompanyData(value)
+        {
+            this.company_details = value
+        },
         checkAccount(evt, account_info)
         {
             account_info.type = 'Blacklist'
@@ -166,6 +171,7 @@ export default {
 
     async mounted()
     {
+        this.company_details = this.$user_info.company ? this.$user_info.company : {}
         this.blacklist_account = await this.$_post(postGetPersons, {find_person: {category: 'Blacklist'}});
         // console.log(this.$user_info);
 

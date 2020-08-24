@@ -181,11 +181,9 @@ module.exports =
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
         if (person.length) key.push(person[0].category)
         else key.push('Stranger')
-
-        console.log(key);
         // console.log(key);
         // if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
-        await new CounterClass().counterActivities(person[0].company_id, key, date_string, req.body.data.device_id)
+        await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
             mask:                   req.body.data.mask,
@@ -277,7 +275,6 @@ module.exports =
                 let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey})
                 if (person.length) key.push(person[0].category)
                 else key.push('Stranger')
-                console.log(key);
     
                 if (device.length > 0)
                 {
@@ -299,7 +296,6 @@ module.exports =
                     // console.log(req.body.personId, req.body.type);
                 }
             // }
-            console.log('done');
             return res.send({"success":true, "result":1});
         }
 
@@ -328,7 +324,6 @@ module.exports =
                 }
             })
             await new MDB_COMPANIES().update( parentCompany._id, parentCompany);
-
         }
         return res.send(true);
     },

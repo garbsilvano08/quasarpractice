@@ -6,7 +6,7 @@
             <!-- <q-btn class="btn-outline btn-export" flat dense no-caps>
                Export &nbsp;<q-icon name="mdi-export"></q-icon>
             </q-btn> -->
-            <com-picker @select=getCompanyData class="btn-choose"></com-picker>
+            <com-picker :user="this.$user_info" @select=getCompanyData></com-picker>
             <!-- <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select> -->
          </div>
       </div>
@@ -56,10 +56,10 @@
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-title">Total Visitors</div>
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">{{current_alerts}}</div>
+                     <div class="decs-total">{{today_visitors}}</div>
                      <div class="decs-info"></div>
                   </div>
-                  <div class="dashboard__overview-date">{{current_date}}</div>
+                  <!-- <div class="dashboard__overview-date">{{current_date}}</div> -->
                </div>
             </q-img>
          </div>
@@ -68,10 +68,10 @@
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-title">Fever Cases Today</div>
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">0</div>
+                     <div class="decs-total">{{current_alerts}}</div>
                      <div class="decs-info"></div>
                   </div>
-                  <div class="dashboard__overview-date">Out of 275 Registered Users</div>
+                  <!-- <div class="dashboard__overview-date">Out of 275 Registered Users</div> -->
                </div>
             </q-img>
          </div>
@@ -136,6 +136,23 @@
             <div class="dashboard__graph-content">
                <line-chart :data="data_line_graph.data" />
             </div>
+            <q-dialog v-model="date_filter_dialog">
+               <q-card>
+                  <q-card-section>
+                  <div class="text-h6">Custom Date</div>
+                  </q-card-section>
+
+                  <q-card-section class="q-pt-none">
+                     <q-input v-model="startDate" type='date' outlined dense></q-input>
+                     <q-input v-model="endDate" type='date' outlined dense></q-input>
+                  </q-card-section>
+
+                  <q-card-actions align="right">
+                     <q-btn @click="date_filter_dialog = false, select_date = last_option" flat label="Cancel" color="primary" v-close-popup />
+                     <q-btn @click="getCustomTraffic" flat label="Search" color="primary" v-close-popup />
+                  </q-card-actions>
+               </q-card>
+         </q-dialog>
 
             <!-- <div v-if="traffic_weekly.data" class="dashboard__graph-content">
                <line-chart style="position: relative; height:250px; width:100%"
@@ -163,14 +180,31 @@
                <div class="dashboard__graph-filter">
                   <!-- <q-input v-model="employee_date" type='date' outlined dense></q-input> -->
                   <!-- <q-select v-model="select_people" :options="options_people" outlined dense></q-select> -->
-                  <q-select v-model="select_date" :options="options_date" outlined dense></q-select>
+                  <q-select v-model="registered_filter" :options="options_date" outlined dense></q-select>
                </div>
             </div>
 
             <div class="dashboard__graph-content">
-               <column-chart :data="data_bar_graph"></column-chart>
+               <column-chart :data="data_bar_graph.data"></column-chart>
             </div>
          </div>
+          <q-dialog v-model="date_filter_registered">
+            <q-card>
+               <q-card-section>
+               <div class="text-h6">Custom Date</div>
+               </q-card-section>
+
+               <q-card-section class="q-pt-none">
+                  <q-input v-model="startDateRegistered" type='date' outlined dense></q-input>
+                  <q-input v-model="endDateRegistered" type='date' outlined dense></q-input>
+               </q-card-section>
+
+               <q-card-actions align="right">
+                  <q-btn @click="date_filter_registered = false, select_date = last_option_registered" flat label="Cancel" color="primary" v-close-popup />
+                  <q-btn @click="getCustomTraffic('Registered')" flat label="Search" color="primary" v-close-popup />
+               </q-card-actions>
+            </q-card>
+         </q-dialog>
 
          <!-- EMPLOYEE/VISITOR OVERVIEW -->
          <!-- <div class="dashboard__graph-item">
@@ -213,21 +247,40 @@
                   Visitors Purpose
                </div>
                <div class="dashboard__graph-filter">
-                  <q-input v-model="visitors_date" type='date' outlined dense></q-input>
+                  <q-select v-model="purpose_filter" :options="option_purpose" outlined dense></q-select>
+                  <!-- <q-input v-model="visitors_date" type='date' outlined dense></q-input> -->
                </div>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div class="dashboard__graph-content">
                <pie-chart :data="{
-                  'Official Business': 50,
-                  'Collection & Pickup': 20,
-                  'Delivery': 10,
-                  'Corporate Meeting': 10,
-                  'Client/Customer': 5,
-                  'Guest': 5
+                  'Official Business': purpose_visit.data.official_business,
+                  'Collection & Pickup': purpose_visit.data.collection_pickup,
+                  'Delivery': purpose_visit.data.delivery,
+                  'Corporate Meeting': purpose_visit.data.corporate_meeting,
+                  'Client/Customer': purpose_visit.data.client_customer,
+                  'Guest': purpose_visit.data.guest,
                }">
                </pie-chart>
             </div>
+
+            <q-dialog v-model="purpose_popup">
+               <q-card>
+                  <q-card-section>
+                  <div class="text-h6">Custom Date</div>
+                  </q-card-section>
+
+                  <q-card-section class="q-pt-none">
+                     <q-input v-model="purposeStart" type='date' outlined dense></q-input>
+                     <q-input v-model="purposeEnd" type='date' outlined dense></q-input>
+                  </q-card-section>
+
+                  <q-card-actions align="right">
+                     <q-btn @click="date_filter_registered = false, select_date = last_option_registered" flat label="Cancel" color="primary" v-close-popup />
+                     <q-btn @click="getPurposeVisit('Registered')" flat label="Search" color="primary" v-close-popup />
+                  </q-card-actions>
+               </q-card>
+            </q-dialog>
 
             <!-- <div class="dashboard__graph-content">
                <pie-chart style="position: relative; height:250px; width:100%"
@@ -246,7 +299,7 @@
          </div>
 
          <!-- VISITOR LOGS -->
-         <div class="dashboard__graph-item dashboard__graph-item--alert-logs">
+         <!-- <div class="dashboard__graph-item dashboard__graph-item--alert-logs">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Alert Logs
@@ -254,7 +307,6 @@
                <div class="dashboard__graph-filter">
                   <q-input v-model="alert_date" type='date' outlined dense></q-input>
                </div>
-               <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div v-if="this.alert_list.data" class="dashboard__graph-content dashboard__graph-content--alert-logs">
                <div class="visitor-logs__list"  v-for="(alert, i) in this.alert_list.data" :key="i">
@@ -268,7 +320,6 @@
                      <div class="visitor-logs__info-visit">
                         <div class="visitor-logs__visit-details">
                            {{new Date(alert.date_saved).toLocaleString()}}<br>
-                           <!-- <span>{{alert.company_name}}</span> -->
                         </div>
                         <div class="visitor-logs__visit-company">
                            {{alert.company_name}}
@@ -277,10 +328,9 @@
                   </div>
                </div>
                <div class="visitor-logs__btn">
-                  <!-- <q-btn v-if="this.alert_list.data.length == 3" flat dense no-caps class="btn-see btn-outline" label="See All"></q-btn> -->
                </div>
             </div>
-         </div>
+         </div> -->
       </div>
    </div>
 </template>
@@ -309,6 +359,8 @@ import { postGetCompanies,
 
 // Classes
 import DashboardClass from '../../../classes/DashboardClass';
+import { date } from 'quasar';
+import { log } from 'util';
 
 Vue.use(Chartkick.use(Chart))
 
@@ -318,14 +370,7 @@ export default
 
    data:() =>
    ({
-      data_bar_graph: [
-         {
-            name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8, 'Saturday': 4, 'Sunday': 8,}
-         },
-         {
-            name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5, 'Saturday': 3, 'Sunday': 7,}
-         }
-      ],
+      data_bar_graph: {data:[]},
       data_line_graph:
        {data: [
          {
@@ -435,21 +480,79 @@ export default
       device_number: 0,
       date_range: new Date().setDate(1),
       logged_today: 0,
+      date_filter_dialog: false,
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date().toISOString().split('T')[0],
+      last_option: '',
+      date_filter_registered: false,
+      startDateRegistered: new Date().toISOString().split('T')[0],
+      endDateRegistered: new Date().toISOString().split('T')[0],
+      last_option_registered: '',
+      registered_filter: 'Daily',
+      purpose_filter: 'Daily',
+      option_purpose: ['Daily', 'Custom Date'],
+      purpose_popup: false,
+      purposeStart: new Date().toISOString().split('T')[0],
+      purposeEnd: new Date().toISOString().split('T')[0],
+      last_option_purpose: '',
+      registered_has_fever: 0,
+      today_visitors: 0
    }),
 
    watch:
     {
-       async select_date(val)
+       async purpose_filter(val)
+       {
+            this.last_option_purpose = val
+            if (val == 'Custom Date')
+            {
+               this.purpose_popup = true
+            }
+            else
+            {
+               await this.getPurposeVisit()
+            }
+       },
+
+       async select_date(val, old)
         {
-           console.log(this.company_details);
-           if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
-           else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
+           this.last_option = old
+           if (val == 'Custom Date')
+           {
+              this.date_filter_dialog = true
+           }
+           else
+           {
+              if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+              else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
+           }
         },
+
+        async registered_filter(val, old)
+        {
+            this.last_option_registered = old
+           
+            if (val == 'Custom Date')
+            {
+               this.date_filter_registered = true
+            }
+            else
+            {
+               await this.getEmployeeVisitor()
+            }
+        },
+
         async select_people(val)
         {
-           console.log(this.company_details);
-           if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
-           else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
+           if (this.select_date == 'Custom Date')
+           {
+              await this.getCustomTraffic()
+           }
+           else
+           {
+              if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+              else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
+           }
          //   await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
         },
         async visitors_date(val)
@@ -477,12 +580,83 @@ export default
     },
 
    methods: {
+
+      async getEmployeeVisitor()
+      {
+         let data
+         let registered_type = ['Staff', 'Visitors', , 'Stranger']
+         this.data_bar_graph.data = []
+
+         for (let index = 0; index < registered_type.length; index++) {
+            if (this.company_details._id) data = await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.registered_filter , person: registered_type[index]}}, 'Registered')
+            else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: registered_type[index]}}, 'Registered')
+            data.data.forEach(reg => {
+               if (reg.name == registered_type[index]) 
+               {
+                  this.data_bar_graph.data.push(reg)
+               }
+            }); 
+         }         
+      },
+
+      async getCustomTraffic(type)
+      {
+         let data
+         if (type == 'Registered')
+         {
+            let option_filter = ['Staff', 'Visitors', 'Stranger']
+
+            if (new Date(this.startDateRegistered) <= new Date(this.endDateRegistered))
+            {
+               for (let index = 0; index < option_filter.length; index++) {
+                     if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id: this.company_details._id, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
+                     else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered') 
+                     
+                     data.data.forEach(reg => {
+                        if (reg.name == option_filter[index]) 
+                        {
+                           this.data_bar_graph.data.push(reg)
+                        }
+                     }); 
+                     this.date_filter_registered = false
+               }
+               }
+            else
+            {
+               this.registered_filter = this.last_option_registered
+               this.$q.notify(
+               {
+                  color: 'red',
+                  message: 'Invalid date'
+               });
+            }
+         }
+         else
+         {
+            if (new Date(this.startDate) <= new Date(this.endDate))
+            {
+               if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.startDate, end_date: this.endDate, company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+               else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people, end_date: this.endDate, start_date: this.startDate}}) 
+               this.date_filter_dialog = false
+            }
+            else
+            {
+               this.select_date = this.last_option
+               this.$q.notify(
+               {
+                  color: 'red',
+                  message: 'Invalid date'
+               });
+            }
+         }
+      },
+
       async getCompanyData(value)
       {
          let date_string = new Date().toISOString().split('T')[0].split("-")
          this.company_details = value
-         this.staff_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
-         this.visitor_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Visitors', date_string: date_string[0] + "-" + date_string[1]}})
+         this.staff_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Staff', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
+         this.visitor_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Visitors', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
          await this.getMonthlyAlert()
          await this.getDevices()
          await this.getPurposeVisit()
@@ -503,7 +677,7 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-            params = {find_device: {company_name: this.company_details.company_name}}
+            params = {find_device: {company_name: this.company_details.company_name, date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}}
          }
          // else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
 
@@ -515,7 +689,7 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-            params = {find_by_category: {date_saved: { '$gt' : new Date(this.date_range) , '$lt' : new Date() },
+            params = {find_by_category: {date_saved: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date() },
             has_fever: true,
             company_name: this.company_details.company_name}}
          }
@@ -523,18 +697,48 @@ export default
             params = {find_by_category: {date_saved: { '$gt' : new Date(this.date_range) , '$lt' : new Date() }, has_fever: true}}
          }
          let count =  await this.$_post(postPersonByCateg, params);
+
          this.monthly_alert = count.data.length
       },
 
       async getPurposeVisit()
       {
-         let params = {}
+         let params = {}            
          if (this.company_details || this.company_details.company_name != "All Company" ){
-           params = {find_all: {date_string: new Date(this.visitors_date).toISOString().split('T')[0], company_id: this.company_details._id}}
+
+            if( this.purpose_filter == 'Custom Date')
+            {
+               if (new Date(this.purposeStart) > new Date(this.purposeEnd))
+               {
+                  this.purpose_filter = this.last_option_purpose
+                  this.$q.notify(
+                  {
+                     color: 'red',
+                     message: 'Invalid date'
+                  });
+                  params = {find_all: {date_string: new Date(this.visitors_date).toISOString().split('T')[0], company_id: this.company_details._id}}
+               }
+               else params = {find_all: {date_saved: { $gte: new Date(this.purposeStart), $lt: new Date(this.purposeEnd)}, company_id: this.company_details._id}}
+            }
+            else params = {find_all: {date_string: new Date(this.visitors_date).toISOString().split('T')[0], company_id: this.company_details._id}}
 
          }
          else {
-            params = {find_all: {date_string: new Date().toISOString().split('T')[0]}}
+            if( this.purpose_filter == 'Custom Date')
+            {
+               if (new Date(this.purposeStart) > new Date(this.purposeEnd))
+               {
+                  this.purpose_filter = this.last_option_purpose
+                  this.$q.notify(
+                  {
+                     color: 'red',
+                     message: 'Invalid date'
+                  });
+                  params = {find_all: {date_string: new Date().toISOString().split('T')[0]}}
+               }
+               else params = {find_all: {date_saved: { '$gte': new Date(this.purposeStart), '$lt': new Date(this.purposeEnd)}}}
+            }
+            else params = {find_all: {date_string: new Date().toISOString().split('T')[0]}}
          }
          this.purpose_visit =  await this.$_post(postGetPurposeVisit, params);
       },
@@ -553,8 +757,10 @@ export default
          }
 
          this.alert_list = await this.$_post(postPersonByCateg, params);
-
          let current_data = await this.$_post(postPersonByCateg, current_params);
+         current_data.data.forEach(person=>{
+            if (person.category == 'Staff' || person.category == 'Visitors') this.registered_has_fever = this.registered_has_fever + 1
+         })
          this.current_alerts = current_data.data.length
       },
       async getTraffic()
@@ -575,11 +781,11 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-           params =  {find_count: {date_string: new Date(this.employee_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: {$in: ['Staff', 'Visitors']}}}
+           params =  {find_count: {date_string: new Date(this.employee_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: 'Visitors'}}
 
          }
          else {
-            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitors']}}}
+            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key:  'Visitors'}}
          }
          this.staff_visitors = await this.$_post(postGetWeeklyCount, params);
          // console.log(data, 'data');
@@ -615,9 +821,10 @@ export default
          }
       },
 
-      async getTrafficData(params = {})
+      async getTrafficData(params = {}, type)
       {
-         this.data_line_graph = await this.$_post('member/dashbord/counting', params);
+         if (type == 'Registered') return await this.$_post('member/dashbord/counting', params);
+         else this.data_line_graph = await this.$_post('member/dashbord/counting', params);
       },
 
       async getTotalRegistered()
@@ -632,9 +839,11 @@ export default
          let today_logs = await this.$_post(postGetDailyLog, params);
          if (today_logs.data.length)
          {
+            this.today_visitors = 0
             for (let log of today_logs.data) {
-               console.log(log, 'log');
                total = total + Number(log.count)
+               console.log(log, 'kjkjkjkjk');
+               if (log.key == 'Visitors') this.today_visitors = this.today_visitors + 1
             }
             this.logged_today = (total/this.traffic_data.count) * 100
             this.logged_today = this.logged_today.toFixed(0);
@@ -675,6 +884,8 @@ export default
       await this.getTraffic()
 
       await this.getStaffVisitors()
+
+      await this.getEmployeeVisitor()
 
 
       let date_string = new Date().toISOString().split('T')[0].split("-")

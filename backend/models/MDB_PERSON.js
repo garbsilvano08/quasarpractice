@@ -9,6 +9,7 @@ const schema    = new Schema(
     last_name:          { type: String,  required: true },
     middle_name:        { type: String,  required: true },
     given_name:         { type: String,  required: true },
+    email:              { type: String,  required: false },
     gender:             { type: String,  required: false, default: 'Unknown'},
     birthday:           { type: Date,    required: true},
     nationality:        { type: String,  required: false, default: 'Unknown' },

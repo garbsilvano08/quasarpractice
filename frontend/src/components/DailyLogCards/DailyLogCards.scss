@@ -8,45 +8,64 @@
         text-align: center;
     }
 
-    .q-img {
-        height: 60px;
-        width: 60px;
-        border-radius: 100%;
-        border: solid 1px rgba(#000000, .2);
 
-        @media screen and (max-width: 768px) {
-            margin: auto;
-        }
-    }
 
     .content__info {
-        color: #233b61;
         line-height: 1.4rem;
 
-        .content__name, .content__details {
-            font-size: 14px;
-            font-weight: 700;
-        }
+        .q-img {
+            height: 60px;
+            width: 60px;
+            border-radius: 6px;
+            border: solid 1px rgba(#000000, .2);
+            margin-bottom: 5px;
 
-        .content__datetime{
-            font-size: 12px;
-            font-weight: 500;
-
-            span {
-                opacity: .6;
+            @media screen and (max-width: 768px) {
+                margin: auto;
             }
         }
 
-        .content__details {
-            line-height: 1.6rem;
+        .content__name {
+            color: #233b61;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.2rem;
+            margin-bottom: 5px;
+
+            span {
+                font-size: 12px;
+                font-weight: 500;
+            }
+        }
+
+        .content__datetime, .content__room, .content__location{
+            color: #000000;
+            opacity: .6;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .content__temperature {
+            color: #233b61;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.2rem;
+            text-align: center;
 
             span {
                 color: #ffffff;
                 font-size: 12px;
                 font-weight: 500;
-                background-color: #464de4;
-                padding: 3px 15px;
+                padding: 0px 5px;
                 border-radius: 4px;
+            }
+
+            .normal-temperature {
+                background-color: #30b900;
+            }
+
+            .abnormal-temperature {
+                background-color: #ff0000;
             }
         }
     }

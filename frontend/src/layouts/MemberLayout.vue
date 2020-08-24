@@ -653,13 +653,14 @@ export default
                         contact_number: visitor.personal_information.contact_number,
                         emergency_contact: visitor.personal_information.emergency_contact_number,
                         date_created: new Date(),
-                        company_name: visitor.personal_information.company_name,
+                        company_name: this.$user_info.company.company_name,
+                        company_id: this.$user_info.company._id,
                         frontdesk_person_id: visitor.personal_information.frontdesk_person_id,
-                        frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
                         frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
                         location: visitor.personal_information.location,
                         location_coordinates: visitor.personal_information.location_coordinates,
                         is_active: true,
+                        email: visitor.personal_information.email,
     
                         saved_from: this.$user_info.company._id ? this.$user_info.company._id : '',
     
@@ -695,19 +696,19 @@ export default
                     this.device_list.forEach(async (device) => {
                         if (device.device_type == 'vision_sky')
                         {
-                            let date = new Date().getFullYear() + "-" + new Date().getMonth() + "-" + new Date().getDate() + " 23.59.59"
-                            console.log(date);
+                            let date = new Date().getFullYear() + "-" + (new Date(visitor.personal_information.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + "-" + new Date(visitor.personal_information.frontdesk_person_date).getDate().toString().padStart(2, "0") + " 23:59:59"
+                            // console.log(date);
                             let image = new FormData();
                             image.append('pass', 'abc123');
-                            image.append("personId", visitor.personal_information.id_number );
-                            image.append("idcardNum", "" );
+                            image.append("personId", visitor.personal_information.frontdesk_person_id );
+                            image.append("idcardNum", 1 );
                             image.append("name",  visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name );
                             image.append("imgBase64", b64 );
-                            image.append("passTime", expEndTime );
+                            image.append("passTime", '01:00:00, 23:59:59' );
                             image.append("permissionTime", date);
                             image.append("type", 1 );
-                            
                             let img = await this.$axios.post("http://"+ device.device_ip +":8090/person/quickCreate", image).then(res => res.data);
+                            console.log(img);
                         }
                         else
                         {
@@ -731,7 +732,7 @@ export default
                 // Logs
                 for (let log of this.passLogs)
                 {
-                    console.log(log);
+                    console.log(log, this.$user_info.company);
                     log.company_id = this.$user_info.company ? this.$user_info.company._id : '';
     
                     await this.$_post('member/add/pass_log', { data: log });

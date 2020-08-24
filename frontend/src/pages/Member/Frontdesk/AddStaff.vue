@@ -86,6 +86,10 @@
                                 <div class="content__input-label">Middle Name *</div>
                                 <q-input v-model="staff_class.middle_name" outlined dense></q-input>
                             </div>
+                            <div class="content__input">
+                                <div class="content__input-label">Email Address</div>
+                                <q-input v-model="staff_class.email" outlined dense></q-input>
+                            </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__select">
@@ -233,6 +237,7 @@ export default {
                 given_name: '',
                 middle_name: '',
                 last_name: '',
+                email: '',
                 gender: 'Male',
                 birthday: '',
                 nationality: '',
@@ -434,13 +439,14 @@ export default {
                 company_name: this.staff_class.company_name,
                 company_id: this.getCompany( this.staff_class.company_name),
                 is_active: true,
+                email: this.staff_class.email,
 
                 position: this.staff_class.position,
                 category: 'Staff',
                 frontdesk_person_id: result,
                 frontdesk_person_date: new Date(),
 
-                saved_from: this.$user_info.company._id ? this.$user_info.company._id : ''
+                saved_from: this.staff_class.company_name._id
             }
 
 
@@ -476,6 +482,12 @@ export default {
                             color: 'green',
                             message: 'Successfully added Staff'
                         });
+                        this.$router.push({
+                        name: 'member_accountdirectory',
+                        params: {
+                            category: 'Staff',
+                        }
+                        })
                     }
                     else
                     {

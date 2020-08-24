@@ -5,7 +5,7 @@
             <div class="frontdesk__header-btn">
                 <q-btn class="btn-outline btn-discard" flat dense no-caps label="Discard"></q-btn>
                 <q-btn @click="submit()" class="btn-save btn-primary" flat dense no-caps label="Save"></q-btn>
-                <q-btn @click="test()" class="btn-save btn-primary" flat dense no-caps label="Test"></q-btn>
+                <!-- <q-btn @click="test()" class="btn-save btn-primary" flat dense no-caps label="Test"></q-btn> -->
             </div>
         </div>
         <div class="frontdesk__container content__grid-2x2">
@@ -75,6 +75,11 @@
                             <div class="content__input">
                                 <div class="content__input-label">Middle Name *</div>
                                 <q-input v-model="personal_information.middle_name" outlined dense></q-input>
+                            </div>
+                            <!-- Email -->
+                            <div class="content__input">
+                                <div class="content__input-label">Email Address</div>
+                                <q-input v-model="personal_information.email" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
                             <div class="frontdesk__content-grid">
@@ -267,6 +272,7 @@ export default {
             id_number: null,
             first_name: null,
             middle_name: null,
+            email: null,
             last_name: null,
             gender: null,
             birth_date: null,
@@ -496,7 +502,13 @@ export default {
                     color: 'green',
                     message: 'Account was successfully created'
                 });
-
+                
+                this.$router.push({
+                        name: 'member_accountdirectory',
+                        params: {
+                            category: 'Visitors',
+                        }
+                        })
                 });
             }
             catch (e)
@@ -557,28 +569,29 @@ export default {
         async openFilemanager()
         {
             this.$q.loading.show();
-            var canvas = this.image_type == 'id' ? document.getElementById('id_canvas') : document.getElementById('canvas');
-            var context =   canvas.getContext('2d');
-            var video = document.getElementById('video');;
-            let image_data = null
-
-            await document.getElementById("snap").addEventListener("click", async() => {
-                context.drawImage(video, 0, 0, 640, 480);
-
-            this.image = canvas.toDataURL("image/png")
-            image_data = this.image
-            // window.location.href=image;
-            this.is_carturing = false
-            // data:image/png;base64,
-            image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
-
-              await this.uploadImage(image_data)
-              if (this.image_type == 'id') await this.checkImage(this.face_pic_path)
-            });
-            // this.open_camera = false
-            // if (type) this.$refs.idUploader.click();
-            // else this.$refs.uploader.click();
-            // await video.pause()
+                
+                var canvas = this.image_type == 'id' ? document.getElementById('id_canvas') : document.getElementById('canvas');
+                var context =   canvas.getContext('2d');
+                var video = document.getElementById('video');;
+                let image_data = null
+    
+                await document.getElementById("snap").addEventListener("click", async() => {
+                    context.drawImage(video, 0, 0, 640,550);
+    
+                this.image = canvas.toDataURL("image/png")
+                image_data = this.image
+                // window.location.href=image;
+                this.is_carturing = false
+                // data:image/png;base64,
+                image_data = image_data.replace(/^data:image\/[a-z]+;base64,/, "");
+    
+                  await this.uploadImage(image_data)
+                  if (this.image_type == 'id') await this.checkImage(this.face_pic_path)
+                });
+                // this.open_camera = false
+                // if (type) this.$refs.idUploader.click();
+                // else this.$refs.uploader.click();
+                // await video.pause()
             this.$q.loading.hide();
         },
         openCamera(type)

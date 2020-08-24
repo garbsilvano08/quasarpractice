@@ -3,7 +3,7 @@
         <div class="report__header" style="margin-bottom: 15px !important;">
             <div class="header__title">FEVER DETECTED REPORTS</div>
             <div class="header__filter">
-                <com-picker class="select-lg" @select=getCompanyDatas></com-picker>
+                <com-picker :user="this.$user_info" class="select-lg" @select=getCompanyDatas></com-picker>
                 <q-btn @click="exportTableToExcel('tblData', 'fever-detected')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
