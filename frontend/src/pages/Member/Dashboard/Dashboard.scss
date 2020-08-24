@@ -267,6 +267,38 @@
             .dashboard__graph-content {
                 width: 100%;
 
+                .dashboard__graph-total {
+                    .dashboard__graph-content {
+                        text-align: center;
+                        margin-top: 30px;
+                        line-height: 2rem;
+                        border-right: solid 1px rgba(#000000, .15);
+
+                        .dashboard__graph-number--grand {
+                            color: #222222;
+                            font-size: 40px;
+                            font-weight: 700;
+                        }
+
+                        .dashboard__graph-number {
+                            color: #222222;
+                            font-size: 28px;
+                            font-weight: 700;
+                        }
+
+                        .dashboard__graph-label {
+                            color: #222222;
+                            font-size: 14px;
+                            font-weight: 500;
+                            opacity: .6;
+                        }
+                    }
+
+                    .dashboard__graph-content:last-child {
+                        border-right: none !important;
+                    }
+                }
+
                 .visitor-logs__list {
                     .visitor-logs__info {
                         display: grid;

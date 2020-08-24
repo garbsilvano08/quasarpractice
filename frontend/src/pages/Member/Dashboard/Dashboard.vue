@@ -262,6 +262,39 @@
                   'Guest': purpose_visit.data.guest,
                }">
                </pie-chart>
+
+               <div class="dashboard__graph-total">
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number--grand">100</div>
+                     <div class="dashboard__graph-label">Total Visitor</div>
+                  </div>
+               </div>
+               <div class="dashboard__graph-total content__grid-6x6">
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">0</div>
+                     <div class="dashboard__graph-label">Official Business</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Collection & Pickup</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Delivery</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Corporate Meeting</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Client/Customer</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Guest</div>
+                  </div>
+               </div>
             </div>
 
             <q-dialog v-model="purpose_popup">
@@ -531,7 +564,7 @@ export default
         async registered_filter(val, old)
         {
             this.last_option_registered = old
-           
+
             if (val == 'Custom Date')
             {
                this.date_filter_registered = true
@@ -591,12 +624,12 @@ export default
             if (this.company_details._id) data = await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.registered_filter , person: registered_type[index]}}, 'Registered')
             else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: registered_type[index]}}, 'Registered')
             data.data.forEach(reg => {
-               if (reg.name == registered_type[index]) 
+               if (reg.name == registered_type[index])
                {
                   this.data_bar_graph.data.push(reg)
                }
-            }); 
-         }         
+            });
+         }
       },
 
       async getCustomTraffic(type)
@@ -610,14 +643,14 @@ export default
             {
                for (let index = 0; index < option_filter.length; index++) {
                      if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id: this.company_details._id, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
-                     else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered') 
-                     
+                     else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered')
+
                      data.data.forEach(reg => {
-                        if (reg.name == option_filter[index]) 
+                        if (reg.name == option_filter[index])
                         {
                            this.data_bar_graph.data.push(reg)
                         }
-                     }); 
+                     });
                      this.date_filter_registered = false
                }
                }
@@ -636,7 +669,7 @@ export default
             if (new Date(this.startDate) <= new Date(this.endDate))
             {
                if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.startDate, end_date: this.endDate, company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
-               else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people, end_date: this.endDate, start_date: this.startDate}}) 
+               else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people, end_date: this.endDate, start_date: this.startDate}})
                this.date_filter_dialog = false
             }
             else
@@ -703,7 +736,7 @@ export default
 
       async getPurposeVisit()
       {
-         let params = {}            
+         let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
 
             if( this.purpose_filter == 'Custom Date')
