@@ -56,6 +56,21 @@
     }
 }
 
+// BOX GRID STYLE 4x4 ( 4 GRID )
+.content__grid-6x6 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 15px;
+
+    @media screen and (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: 425px) {
+        grid-template-columns: 1fr;
+    }
+}
+
 //CARD STYLE ( THIS IS SMALL CARD )
 .content__card {
     width: 100%;

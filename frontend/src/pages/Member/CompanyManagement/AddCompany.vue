@@ -114,7 +114,7 @@
 
             <div class="company-add__btn">
                 <q-btn class="btn-save btn-primary" flat dense no-caps label="Save" @click="submit"></q-btn>
-                <q-btn class="btn-save btn-primary" flat dense no-caps label="Success" @click="is_success_dialog = true"></q-btn>
+                <!-- <q-btn class="btn-save btn-primary" flat dense no-caps label="Success" @click="is_success_dialog = true"></q-btn> -->
             </div>
         </div>
 

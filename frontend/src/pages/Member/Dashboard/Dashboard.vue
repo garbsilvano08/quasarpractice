@@ -227,7 +227,42 @@
                   'Guest': 5
                }">
                </pie-chart>
+
+               <div class="dashboard__graph-total">
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number--grand">100</div>
+                     <div class="dashboard__graph-label">Total Visitor</div>
+                  </div>
+               </div>
+               <div class="dashboard__graph-total content__grid-6x6">
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">0</div>
+                     <div class="dashboard__graph-label">Official Business</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Collection & Pickup</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Delivery</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Corporate Meeting</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Client/Customer</div>
+                  </div>
+                  <div class="dashboard__graph-content">
+                     <div class="dashboard__graph-number">150</div>
+                     <div class="dashboard__graph-label">Guest</div>
+                  </div>
+               </div>
             </div>
+
+
 
             <!-- <div class="dashboard__graph-content">
                <pie-chart style="position: relative; height:250px; width:100%"

@@ -43,7 +43,7 @@
             </div>
             <div class="device-add__btn">
                 <q-btn @click="submit" class="btn-install btn-primary" flat dense no-caps label="Install"></q-btn>
-                <q-btn class="btn-save btn-primary" flat dense no-caps label="Success" @click="is_success_dialog = true"></q-btn>
+                <!-- <q-btn class="btn-save btn-primary" flat dense no-caps label="Success" @click="is_success_dialog = true"></q-btn> -->
             </div>
         </div>
 
