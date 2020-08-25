@@ -6,7 +6,7 @@
             <!-- <q-btn class="btn-outline btn-export" flat dense no-caps>
                Export &nbsp;<q-icon name="mdi-export"></q-icon>
             </q-btn> -->
-            <com-picker :user="this.$user_info" @select=getCompanyData></com-picker>
+            <com-picker :user="this.$user_info" @select=getCompanyData class="btn-choose"></com-picker>
             <!-- <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select> -->
          </div>
       </div>
@@ -26,72 +26,77 @@
             </q-img>
          </div> -->
          <div class="dashboard__overview-item">
-            <q-img cover src="../../../assets/Member/dashboard_overview-bg-1.jpg">
+            <div class="dashboard__overview-bg bg-first">
                <div class="dashboard__overview-info">
-                  <div class="dashboard__overview-title">Total Scanned Today</div>
                   <div class="dashboard__overview-desc">
                      <div class="decs-total">{{traffic_data.count ? traffic_data.count : 0}}</div>
-                     <div class="desc-separator"></div>
-                     <div class="decs-info">{{logged_today}}% of Registered Users</div>
+                     <!-- <div class="desc-separator"></div>
+                     <div class="decs-info">{{logged_today}}% of Registered Users</div> -->
                   </div>
-                  <div class="dashboard__overview-date">{{current_date}}</div>
+                  <div class="dashboard__overview-title">Total Scanned Today</div>
+                  <!-- <div class="dashboard__overview-date">{{current_date}}</div> -->
                </div>
-            </q-img>
+               <q-img src="../../../assets/Member/overview-1.svg" width="40px"></q-img>
+            </div>
          </div>
          <div class="dashboard__overview-item">
-            <q-img cover src="../../../assets/Member/dashboard_overview-bg-2.jpg">
+            <div class="dashboard__overview-bg bg-second">
                <div class="dashboard__overview-info">
-                  <div class="dashboard__overview-title">Highest Temperature Today</div>
                   <div class="dashboard__overview-desc">
                      <div class="decs-total">{{highest_log.data.length ? highest_log.data[0].temperature + "°" : 'No Logs Yet'}} </div>
                      <!-- <div class="desc-separator"></div>
                      <div class="decs-info">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                   </div>
-                  <div class="dashboard__overview-date">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div>
+                  <div class="dashboard__overview-title">Highest Temperature Today</div>
+                  <!-- <div class="dashboard__overview-date">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                </div>
-            </q-img>
+               <q-img src="../../../assets/Member/overview-2.svg" width="45px"></q-img>
+            </div>
+
+            <!-- </q-img> -->
          </div>
          <div class="dashboard__overview-item">
-            <q-img cover src="../../../assets/Member/dashboard_overview-bg-3.jpg">
+            <div class="dashboard__overview-bg bg-third">
                <div class="dashboard__overview-info">
-                  <div class="dashboard__overview-title">Total Visitors</div>
                   <div class="dashboard__overview-desc">
                      <div class="decs-total">{{today_visitors}}</div>
                      <div class="decs-info"></div>
                   </div>
-                  <!-- <div class="dashboard__overview-date">{{current_date}}</div> -->
+                  <div class="dashboard__overview-title">Total Visitors</div>
                </div>
-            </q-img>
+               <q-img src="../../../assets/Member/overview-3.svg" width="70px"></q-img>
+            </div>
          </div>
          <div class="dashboard__overview-item">
-            <q-img cover src="../../../assets/Member/dashboard_overview-bg-4.jpg">
+            <div class="dashboard__overview-bg bg-fourth">
                <div class="dashboard__overview-info">
-                  <div class="dashboard__overview-title">Fever Cases Today</div>
                   <div class="dashboard__overview-desc">
                      <div class="decs-total">{{current_alerts}}</div>
                      <div class="decs-info"></div>
                   </div>
+                  <div class="dashboard__overview-title">Fever Cases Today</div>
                   <!-- <div class="dashboard__overview-date">Out of 275 Registered Users</div> -->
                </div>
-            </q-img>
+               <q-img src="../../../assets/Member/overview-4.svg" width="45px"></q-img>
+            </div>
          </div>
       </div>
       <div class="dashboard__overview">
          <div class="dashboard__overview-total">
-            <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
             <div class="dashboard__total-info">
-               <div class="dashboard__total-title">Total Employess</div>
                <div class="dashboard__total-number">{{staff_number}}</div>
+               <div class="dashboard__total-title">Total Employess</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
+            <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
          </div>
          <div class="dashboard__overview-total">
-            <q-img src="../../../assets/Member/total-visitors.svg" width="45px"></q-img>
             <div class="dashboard__total-info">
-               <div class="dashboard__total-title">Total Visitors</div>
                <div class="dashboard__total-number">{{visitor_number}}</div>
+               <div class="dashboard__total-title">Total Visitors</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
+            <q-img src="../../../assets/Member/total-visitors.svg" width="70px"></q-img>
          </div>
          <!-- <div class="dashboard__overview-total">
             <q-img src="../../../assets/Member/total-alerts.svg" width="45px"></q-img>
@@ -102,20 +107,20 @@
             </div>
          </div> -->
          <div class="dashboard__overview-total">
-            <q-img src="../../../assets/Member/total-devices.svg" width="30px"></q-img>
             <div class="dashboard__total-info">
-               <div class="dashboard__total-title">Total Devices Installed</div>
                <div class="dashboard__total-number">{{device_number}}</div>
+               <div class="dashboard__total-title">Total Devices Installed</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
+            <q-img src="../../../assets/Member/total-devices.svg" width="30px"></q-img>
          </div>
          <div class="dashboard__overview-total">
-            <q-img src="../../../assets/Member/total-cases.svg" width="25px"></q-img>
             <div class="dashboard__total-info">
-               <div class="dashboard__total-title">Total Fever Cases</div>
                <div class="dashboard__total-number">0</div>
+               <div class="dashboard__total-title">Total Fever Cases</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
+            <q-img src="../../../assets/Member/total-cases.svg" width="25px"></q-img>
          </div>
       </div>
       <div class="dashboard__graph">
