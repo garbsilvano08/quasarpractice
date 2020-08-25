@@ -194,7 +194,6 @@ export default {
             end = end.setDate(end.getDate() + 1)
             let file_name = this.select__account_type+"_" + date + '.xls'
 
-            console.log(this.log_list)
             let fields = [] , log_list_data = [{}]
             for (let index = 0; index < this.log_list.length; index++) {
                 log_list_data.push({
@@ -401,7 +400,7 @@ export default {
             hours = (hours % 12) || 12;
             var minutes = full_date.getMinutes() ;
             var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm; 
-            console.log(date + ", " + finalTime);
+            // console.log(date + ", " + finalTime);
             return date + ", " + finalTime
         },
 

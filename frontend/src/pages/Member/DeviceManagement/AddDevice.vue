@@ -144,7 +144,7 @@ export default {
                         // console.log(this.input_device_ip);
                         let data = new FormData();
                         data.append('pass', '123456');
-                        data.append('callbackUrl', 'http://192.168.254.120:4001/api/member/visionsky/logs');
+                        data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
                         let logs = await this.$axios.post("http://" + this.input_device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
                     }
 
@@ -180,8 +180,6 @@ export default {
             this.select_company = value;
             // console.log(value)
         },
-
-
     },
 
     async created()

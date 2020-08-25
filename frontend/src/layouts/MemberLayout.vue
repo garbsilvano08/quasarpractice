@@ -291,7 +291,7 @@ export default
     
                 for (let visitor of this.visitors)
                 {
-                    console.log(visitor);
+                    // console.log(visitor);
                     let data = {
                         visit_purpose:      visitor.visitor_purpose.purpose_visit,
                         contact_person:     visitor.visitor_purpose.contact_person,
@@ -369,7 +369,7 @@ export default
                                 image.append("permissionTime", date);
                                 image.append("type", 1 );
                                 let img = await this.$axios.post("http://"+ device.device_ip +":8090/person/quickCreate", image).then(res => res.data);
-                                console.log(img);
+                                // console.log(img);
                             }
                             catch(e){}
                         }
@@ -395,7 +395,7 @@ export default
                 // Logs
                 for (let log of this.passLogs)
                 {
-                    console.log(new Date(log.currentTime), this.$user_info.company_id);
+                    // console.log(new Date(log.currentTime), this.$user_info.company_id);
                     log.company_id = this.$user_info.company ? this.$user_info.company_id : '';
     
                     await this.$_post('member/add/pass_log', { data: log });
@@ -475,7 +475,7 @@ export default
 
         async saveLogsIndexDb(dat, device)
         {
-            console.log(dat);
+            // console.log(dat);
             let response="";
 
             for (let data of dat)

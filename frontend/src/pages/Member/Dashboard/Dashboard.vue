@@ -62,7 +62,7 @@
                      <div class="decs-total">{{today_visitors}}</div>
                      <div class="decs-info"></div>
                   </div>
-                  <div class="dashboard__overview-title">Total Visitors</div>
+                  <div class="dashboard__overview-title">Total Visitors Today</div>
                </div>
                <q-img src="../../../assets/Member/overview-3.svg" width="70px"></q-img>
             </div>
@@ -85,7 +85,7 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">{{staff_number}}</div>
-               <div class="dashboard__total-title">Total Employess</div>
+               <div class="dashboard__total-title">Total Employees</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
             <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
@@ -141,7 +141,7 @@
             <div class="dashboard__graph-content">
                <line-chart :data="data_line_graph.data" />
             </div>
-            <q-dialog v-model="date_filter_dialog">
+            <q-dialog v-model="date_filter_dialog" persistent>
                <q-card>
                   <q-card-section>
                   <div class="text-h6">Custom Date</div>
@@ -193,7 +193,7 @@
                <column-chart :data="data_bar_graph.data"></column-chart>
             </div>
          </div>
-          <q-dialog v-model="date_filter_registered">
+          <q-dialog v-model="date_filter_registered" persistent>
             <q-card>
                <q-card-section>
                <div class="text-h6">Custom Date</div>
@@ -308,7 +308,7 @@
                </div>
             </div>
 
-            <q-dialog v-model="purpose_popup">
+            <q-dialog v-model="purpose_popup" persistent>
                <q-card>
                   <q-card-section>
                   <div class="text-h6">Custom Date</div>
@@ -320,7 +320,7 @@
                   </q-card-section>
 
                   <q-card-actions align="right">
-                     <q-btn @click="date_filter_registered = false, select_date = last_option_registered" flat label="Cancel" color="primary" v-close-popup />
+                     <q-btn @click="purpose_popup = false, select_date = last_option_registered" flat label="Cancel" color="primary" v-close-popup />
                      <q-btn @click="getPurposeVisit('Registered')" flat label="Search" color="primary" v-close-popup />
                   </q-card-actions>
                </q-card>
