@@ -260,7 +260,7 @@ module.exports =
 
     async visionSkyLogs(req, res)
     {
-        // console.log(req.body);
+        console.log(req.body);
         if (req.body.personId)
         {
             let extra = parseJson(req.body.extra)

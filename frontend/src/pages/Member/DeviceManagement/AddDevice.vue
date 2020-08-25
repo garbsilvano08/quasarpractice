@@ -141,11 +141,11 @@ export default {
                     }
                     else
                     {
-                        // console.log(this.input_device_ip);
-                        // let data = new FormData();
-                        // data.append('pass', '123456');
-                        // data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
-                        // let logs = await this.$axios.post("http://" + this.input_device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
+                        console.log(this.input_device_ip);
+                        let data = new FormData();
+                        data.append('pass', '123456');
+                        data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
+                        let logs = await this.$axios.post("http://" + this.input_device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
                     }
 
                     this.$q.loading.hide();
