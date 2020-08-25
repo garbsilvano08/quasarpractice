@@ -39,6 +39,7 @@ module.exports =
 
     async footTraffic(req, res)
     {
+        
         let options_people = ['All' , 'Staff', 'Visitor', 'Stranger'];
 
         let startDate = ''
@@ -75,6 +76,7 @@ module.exports =
                 }
                 else if (req.body.filter.date_filter == 'Weekly')
                 {   
+                    
                     let day_list = ['Sun','Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat']
                     let date_string = new Date()
                     date_string.setDate((date_string.getDate() - date_string.getDay()))

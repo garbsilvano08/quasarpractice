@@ -395,8 +395,8 @@ export default
                 // Logs
                 for (let log of this.passLogs)
                 {
-                    console.log(log, this.$user_info.company);
-                    log.company_id = this.$user_info.company ? this.$user_info.company._id : '';
+                    console.log(new Date(log.currentTime), this.$user_info.company_id);
+                    log.company_id = this.$user_info.company ? this.$user_info.company_id : '';
     
                     await this.$_post('member/add/pass_log', { data: log });
                     await this.db.delete(log.id, "passLogs");

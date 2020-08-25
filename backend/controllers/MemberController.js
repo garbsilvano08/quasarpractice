@@ -167,7 +167,7 @@ module.exports =
     
     async addPassLog(req, res)
     {
-        console.log(req.body);
+        console.log(req.body.data.company_id, 'jhjhjhjhj');
         let key = ['Traffic']
         // let person_log = []
         let date_string = new Date(new Date(req.body.data.currentTime)).toISOString().split('T')[0]
@@ -185,7 +185,7 @@ module.exports =
         console.log(key);
         // console.log(key);
         // if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
-        await new CounterClass().counterActivities(person[0].company_id, key, date_string, req.body.data.device_id)
+        await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
             mask:                   req.body.data.mask,
@@ -260,7 +260,7 @@ module.exports =
 
     async visionSkyLogs(req, res)
     {
-        console.log(req.body.personId, new Date(req.body.time));
+        // console.log(req.body);
         if (req.body.personId)
         {
             let extra = parseJson(req.body.extra)

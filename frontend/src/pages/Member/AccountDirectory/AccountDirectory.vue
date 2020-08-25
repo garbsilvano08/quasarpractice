@@ -131,6 +131,14 @@ export default {
                 sortable: true,
             },
             {
+                name    : 'category',
+                label   : 'Account Type',
+                field   : row => row.category ? row.category : 'Unknown',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            {
                 name    : 'gender',
                 label   : 'Gender',
                 field   : 'gender',
@@ -156,17 +164,9 @@ export default {
                 sortable: true,
             },
             {
-                name    : 'company_name',
-                label   : 'Company Name',
-                field   : row => row.company_name ? row.company_name : 'Unknown',
-                align   : 'left',
-                required: true,
-                sortable: true,
-            },
-            {
                 name    : 'date_created',
                 label   : 'Date Registered',
-                field   : row => row.date_created ? new Date(row.date_created) : 'Unknown',
+                field   : row => row.date_created ? new Date(row.date_created).toISOString().split('T')[0] : 'Unknown',
                 align   : 'left',
                 required: true,
                 sortable: true,

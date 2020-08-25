@@ -38,10 +38,10 @@
                     <div class="content__filter-label">Device Name</div>
                     <q-select v-model="select__device_name" :options="options_device_name" outlined dense></q-select>
                 </div>
-                <div class="content__filter-item">
+                <!-- <div class="content__filter-item">
                     <div class="content__filter-label">Tagged to</div>
                     <q-select v-model="select__tagged_to" :options="options_tagged_to" outlined dense></q-select>
-                </div>
+                </div> -->
                 <div class="content__filter-item">
                     <div class="content__filter-label">Body Temperature</div>
                     <q-select v-model="select__body_temperature" :options="options_body_temperature" outlined dense></q-select>
@@ -97,7 +97,7 @@
                     </q-input>
                 </div>
             </div>
-            <div class="content__view">
+            <!-- <div class="content__view">
                 <div class="content__view-item">
                     <div class="content__view-label">All</div>
                 </div>
@@ -113,7 +113,7 @@
                     <div class="content__view-color color-red"></div>
                     <div class="content__view-label">Stranger </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="daily-logs__content-body content__grid-4x4">
                 <div id='dailyLogs' v-for="(logs, index) in this.log_list" :key="index">
@@ -400,8 +400,8 @@ export default {
             var AmOrPm = hours >= 12 ? 'PM' : 'AM';
             hours = (hours % 12) || 12;
             var minutes = full_date.getMinutes() ;
-            var finalTime = hours + ":" + minutes + " " + AmOrPm; 
-
+            var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm; 
+            console.log(date + ", " + finalTime);
             return date + ", " + finalTime
         },
 

@@ -808,7 +808,6 @@ export default
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: 'Traffic'}}
-
          }
          else {
             params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: 'Traffic'}}
@@ -881,7 +880,6 @@ export default
             this.today_visitors = 0
             for (let log of today_logs.data) {
                total = total + Number(log.count)
-               console.log(log, 'kjkjkjkjk');
                if (log.key == 'Visitor') this.today_visitors = this.today_visitors + 1
             }
             this.logged_today = (total/this.traffic_data.count) * 100
@@ -896,9 +894,12 @@ export default
 
    async mounted()
    {
+      this.company_details = this.$user_info.company ? this.$user_info.company : {}
       let params = {}
-      if (this.company_details._id) params = {filter: {company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
+      console.log(this.company_details);
+      if (this.company_details) params = {filter: {company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
       else params = {filter: {date_filter: this.select_date, person: this.select_people}}
+         console.log(params, 'params');
       await this.getTrafficData(params)
       if (this.$user_info.user_type == 'Officer')
       {
