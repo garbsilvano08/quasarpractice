@@ -33,7 +33,7 @@
                 
             </div>
             <div class="header__filter">
-                <q-input outlined dense v-model="search" placeholder="Search People...">
+                <q-input outlined dense v-model="search" @keyup.exact.native="searchKeyPress()" placeholder="Search People...">
                     <template v-slot:append>
                         <q-icon name="mdi-magnify" />
                     </template>
@@ -344,7 +344,7 @@ export default {
         async getStaffList()
         {
             let sort_item = {}
-            this.start_date = new Date(this.start_date).setHours(0,0,0,0)
+            this.start_date = new Date(this.start_date) //.setHours(0,0,0,0)
             this.end_date = new Date(this.end_date).setHours(23,59,59)
             let parameter = {}
             if (this.company_details) 
@@ -365,6 +365,14 @@ export default {
             this.end_date = new Date(this.end_date).toISOString().split('T')[0]
             this.staff_list = await this.$_post(postGetPersons, {find_person: parameter, sort: sort_item});
 
+        },
+        async searchKeyPress(){
+            if (this.search != "") {
+                 this.staff_list = await this.$_post(postGetPersons);  
+            }
+            else{
+                await this.getStaffList()
+            }
         }
     },
     async mounted()

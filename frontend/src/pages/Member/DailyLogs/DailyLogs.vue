@@ -90,7 +90,7 @@
                 </div>
 
                 <div class="content__filter-people content__filter-item">
-                    <q-input outlined dense v-model="input__people" class="search-people" placeholder="Search People...">
+                    <q-input outlined dense v-model="input__people" @keypress.exact.native="filteredList()" class="search-people" placeholder="Search People...">
                         <template v-slot:append>
                             <q-icon name="mdi-magnify" />
                         </template>
@@ -170,21 +170,60 @@ export default {
         selected_device: {}
 
     }),
-
+    computed:{
+        
+    },
     watch:
     {
-    //     async select__device_name(val)
-    //     {
-    //         this.selected_device = this.deviceId(val)
-    //         await this.getLogList()
-    //     },
+        async input__people(val)
+        {
+            if(val == ""){
+                await this.getLogList()
+            }
+        },
     //     start_time(val)
     //     {
     //         console.log(val);
     //     }
     },
     methods:
-    {
+    {   
+        async filteredList() {
+            if (this.input__people != "") {
+                let logs = await this.$_post(postPersonByCateg);
+                for (let index = 0; index < logs.data.length; index++) {                
+                    logs.data.forEach(async log => {
+                        if (!log.person_img.startsWith('http')) 
+                        {
+                            let imageName = 'vision-' + Date.now().toString() + ".png"
+                            let blob = "";
+                            var formDatatoBackend = new FormData();
+                            let contentType = 'image/png';
+                            blob = "";
+                            blob = base64StringToBlob(log.person_img, contentType);
+                            blob.lastModifiedDate = new Date();
+                            formDatatoBackend.append('image', blob, imageName);
+                            let res
+                            try
+                            {
+                                res = await this.$_post_file(formDatatoBackend);
+                                logs.data[index].person_img = res
+                                await this.$_post('member/save/image', {info: {id: log._id, image: res}});
+                            }
+                            catch(e){}
+                        }
+                        logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
+                        logs.data[index].device = this.deviceId("", logs.data[index].device_id)
+                        index++
+                        // console.log(element);
+                    });
+                }
+                this.log_list = logs.data
+                return this.log_list.filter((logs) => {
+                    return log_list.full_name.toLowerCase().includes(this.input__people.toLowerCase());
+                });
+            }
+        },
         exportData()
         { 
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
