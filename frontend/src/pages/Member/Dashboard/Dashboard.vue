@@ -120,7 +120,7 @@
                <div class="dashboard__total-title">Total Fever Cases</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
-            <q-img src="../../../assets/Member/total-cases.svg" width="25px"></q-img>
+            <q-img src="../../../assets/Member/total-cases.svg" width="23px"></q-img>
          </div>
       </div>
       <div class="dashboard__graph">
@@ -270,7 +270,7 @@
 
                <div class="dashboard__graph-total">
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number--grand">{{purpose_visit.data.official_business + 
+                     <div class="dashboard__graph-number--grand">{{purpose_visit.data.official_business +
                         purpose_visit.data.collection_pickup +
                         purpose_visit.data.delivery +
                         purpose_visit.data.corporate_meeting +

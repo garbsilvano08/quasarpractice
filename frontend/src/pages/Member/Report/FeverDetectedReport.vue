@@ -3,7 +3,7 @@
         <div class="report__header" style="margin-bottom: 15px !important;">
             <div class="header__title">FEVER DETECTED REPORTS</div>
             <div class="header__filter">
-                <com-picker :user="this.$user_info" class="select-lg" @select=getCompanyDatas></com-picker>
+                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyDatas></com-picker>
                 <q-btn @click="exportTableToExcel('tblData', 'fever-detected')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
@@ -299,7 +299,7 @@ export default {
             //         "emergency_contact" : this.personWithFever.data[index].emergency_contact
             //     },)
             // }
-            
+
             // fields.push({
             // label: 'Last name',
             // value: 'last_name'
@@ -339,7 +339,7 @@ export default {
 
             // const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
             // const csv = json2csvParser.parse(staff_data);
-    
+
             // var FileSaver = require('file-saver');
             // FileSaver.saveAs(
             // new Blob([csv], {

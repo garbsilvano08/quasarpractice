@@ -5,22 +5,22 @@
         padding: 30px;
     }
 
-    .account-directory__header {
+    .account-directory__header-1 {
         display: flex;
         align-items: center;
         width: 100%;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
 
         @media screen and (max-width: 425px) {
-            text-align: center;
             flex-direction: column;
-            display: block;
-            // margin-bottom: 30px;
+            align-items: stretch;
+            margin-bottom: 10px;
         }
 
         .header__title {
             @media screen and (max-width: 425px) {
                 margin-bottom: 20px;
+                text-align: center;
             }
         }
 
@@ -29,10 +29,11 @@
 
             @media screen and (max-width: 425px) {
                 margin-bottom: 20px;
+                text-align: center;
             }
         }
 
-        .header__filter {
+        .header__filter-1 {
             display: flex;
             align-items: center;
             margin-left: auto;
@@ -40,17 +41,61 @@
             @media screen and (max-width: 425px) {
                 flex-direction: column;
                 margin-left: 0px;
-                align-items: flex-start !important;
             }
 
-            .q-select {
-                width: 250px !important;
+            .btn-export {
                 margin-left: 10px;
-                background-color: #e1e3f0;
 
                 @media screen and (max-width: 425px) {
                     margin-left: 0px !important;
-                    margin-bottom: 10px;
+                    width: 100% !important;
+                    padding: 3px 0px !important;
+                    margin-bottom: 5px !important;
+                }
+            }
+
+            .btn-choose {
+                margin-right: 10px;
+
+                @media screen and (max-width: 425px) {
+                    margin-right: 0px !important;
+                    width: 100% !important;
+                    padding: 3px 0px !important;
+                }
+            }
+        }
+    }
+
+    .account-directory__header-2 {
+        display: grid;
+        align-items: center;
+        grid-template-columns: 1fr auto;
+        margin-bottom: 20px;
+        border-bottom: solid 1px rgba(#000000, .15);
+        padding-bottom: 20px;
+
+        @media screen and (max-width: 768px) {
+            grid-template-columns: 1fr;
+            grid-gap: 15px;
+        }
+
+        @media screen and (max-width: 425px) {
+            grid-gap: 0px;
+        }
+
+        .header__filter-1 {
+            .q-input {
+                background-color: #ffffff;
+                width: 250px;
+
+                @media screen and (max-width: 768px) {
+                    width: 100% !important;
+                }
+
+                @media screen and (max-width: 425px) {
+                    width: 100% !important;
+                    margin-left: 0px !important;
+                    margin-right: 0px !important;
                 }
 
                 .q-field__native {
@@ -60,20 +105,18 @@
                     padding-left: 10px;
                 }
             }
-
-            .btn-export {
-                margin-left: 10px;
-            }
-
-            .btn-choose {
-                margin-right: 10px;
-            }
         }
-        .header_filter{
+
+        .header__filter-2{
             display: flex;
             align-items: center;
-            margin-right: auto;
-            .q-input , .q-select {
+
+            @media screen and (max-width: 425px) {
+                flex-direction: column;
+                margin-left: 0px;
+            }
+
+            .q-input, .q-select {
                 background-color: #ffffff;
                 width: 250px;
                 margin-right: 10px;
@@ -82,6 +125,7 @@
                     width: 100% !important;
                     margin-left: 0px !important;
                     margin-bottom: 10px;
+                    margin-right: 0px !important;
                 }
 
                 .q-field__native {
@@ -104,11 +148,21 @@
                 }
             }
 
-            .btn-export, .btn-sort {
+            .btn-export {
                 margin-left: 10px;
 
                 @media screen and (max-width: 425px) {
                     margin-left: 0px !important;
+                    margin-bottom: 10px !important;
+                }
+            }
+
+            .btn-generate {
+                @media screen and (max-width: 768px) {
+                    margin-left: auto !important;
+                }
+
+                @media screen and (max-width: 425px) {
                     margin-bottom: 10px !important;
                 }
             }
