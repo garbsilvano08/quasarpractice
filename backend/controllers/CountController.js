@@ -52,14 +52,15 @@ module.exports =
             {
                 if (req.body.filter.date_filter == 'Daily') 
                 {
-                    let date = new Date()
+                    let date = new Date().toUTCString()
+                    console.log(date), 'date';
                     let params = {}
                     date = new Date(new Date(date.setHours(0,0,0,0)))
         
                     startDate = date
-                    let transfer_date = startDate
+                    let transfer_date = new Date(startDate)
                     for (let index = 0; index <= 23; index++) {
-                        endDate = new Date(transfer_date.setHours(startDate.getHours(), 59, 59, 100))
+                        endDate = new Date(transfer_date.setHours(startDate.getHours(), 59, 59))
                         if (req.body.filter.person === 'All'){
                             if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gte' : startDate , '$lt' : endDate}}
                             else params = {date_saved: {'$gte' : startDate , '$lt' : endDate}}
