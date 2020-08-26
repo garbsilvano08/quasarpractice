@@ -143,7 +143,7 @@ export default {
             start = start.setDate(start.getDate() - 1)
             end = end.setDate(end.getDate() + 1)
 
-            let file_name = 'fevermonitoringreport_' + date + '.xlsx'
+            let file_name = 'fevermonitoringreport_' + date + '.xls'
             if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Monitoring Report', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
             else params = {user_name: this.$user_info.full_name, work_sheet: 'Fever Monitoring Report',file_name: file_name, find_data: {has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
             let is_saved = await this.$_post(postExpFeverDeteted,params);
@@ -156,6 +156,62 @@ export default {
                     message: 'File was successfully saved'
                 });
             }
+
+            let fields = [] , person_with_fever_data = [{}]
+            for (let index = 0; index < this.fever_logs.length; index++) {
+                person_with_fever_data.push({
+                    "full_name": this.fever_logs[index].full_name,
+                    "category": this.fever_logs[index].category,
+                    "home_address": this.fever_logs[index].home_address,
+                    "company_name": this.fever_logs[index].company_name,
+                    "date_logged" : this.fever_logs[index].date_logged,
+                    "device_id" : this.fever_logs[index].device_id,
+                    "temperature" : this.fever_logs[index].temperature,
+                    "monitoring_day" : this.getFeverDate(this.fever_logs[index].date_saved),
+                },)
+            }
+            fields.push({
+            label: 'Full name',
+            value: 'full_name'
+            },{
+            label: 'Account type',
+            value: 'category'
+            },{
+            label: 'Home Address',
+            value: 'home_address'
+            },{
+            label: 'Company name' ,
+            value: 'company_name'
+            },{
+            label: 'Date scanned' ,
+            value: 'date_logged'
+            },{
+            label: 'Device scanned' ,
+            value: 'device_id'
+            },{
+            label: 'Temperature' ,
+            value: 'temperature'
+            },{
+            label: 'Monitoring day' ,
+            value: 'monitoring_day'
+            });
+
+            const { Parser } = require('json2csv');
+
+            const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
+            const csv = json2csvParser.parse(person_with_fever_data);
+    
+            var FileSaver = require('file-saver');
+            FileSaver.saveAs(
+            new Blob([csv], {
+                type:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }),
+            file_name
+            );
+
+
+
             // var downloadLink;
             // var dataType = 'application/vnd.ms-excel';
             // var tableSelect = document.getElementById(tableID);

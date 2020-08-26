@@ -287,7 +287,7 @@ export default {
             label: 'Company name' ,
             value: 'company_name'
             },{
-            label: 'Position' ,
+            label: 'Account type' ,
             value: 'category'
             },{
             label: 'Contact number' ,

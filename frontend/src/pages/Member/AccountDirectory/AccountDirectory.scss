@@ -124,4 +124,13 @@
             }
         }
     }
+    .account-directory__container{
+        tbody>tr>:nth-child(1){
+            font-weight: bold;
+            color:#3f51b5;
+        }
+        tbody>tr>:nth-child(1):hover {
+            text-decoration: underline;
+        }
+    }
 }

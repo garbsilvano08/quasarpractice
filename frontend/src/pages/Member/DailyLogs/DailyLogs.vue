@@ -116,7 +116,7 @@
             </div> -->
 
             <div class="daily-logs__content-body content__grid-4x4">
-                <div id='dailyLogs' v-for="(logs, index) in this.log_list" :key="index">
+                <div id='dailyLogs' v-for="(logs, index) in filteredList" :key="index">
                     <DailyLogCards :all_logs="logs"></DailyLogCards>
                 </div>
             </div>
@@ -171,7 +171,11 @@ export default {
 
     }),
     computed:{
-        
+        filteredList() {
+            return this.log_list.filter((logs) => {
+                return logs.full_name.toLowerCase().includes(this.input__people.toLowerCase());
+            });
+        }
     },
     watch:
     {
@@ -188,42 +192,6 @@ export default {
     },
     methods:
     {   
-        async filteredList() {
-            if (this.input__people != "") {
-                let logs = await this.$_post(postPersonByCateg);
-                for (let index = 0; index < logs.data.length; index++) {                
-                    logs.data.forEach(async log => {
-                        if (!log.person_img.startsWith('http')) 
-                        {
-                            let imageName = 'vision-' + Date.now().toString() + ".png"
-                            let blob = "";
-                            var formDatatoBackend = new FormData();
-                            let contentType = 'image/png';
-                            blob = "";
-                            blob = base64StringToBlob(log.person_img, contentType);
-                            blob.lastModifiedDate = new Date();
-                            formDatatoBackend.append('image', blob, imageName);
-                            let res
-                            try
-                            {
-                                res = await this.$_post_file(formDatatoBackend);
-                                logs.data[index].person_img = res
-                                await this.$_post('member/save/image', {info: {id: log._id, image: res}});
-                            }
-                            catch(e){}
-                        }
-                        logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
-                        logs.data[index].device = this.deviceId("", logs.data[index].device_id)
-                        index++
-                        // console.log(element);
-                    });
-                }
-                this.log_list = logs.data
-                return this.log_list.filter((logs) => {
-                    return log_list.full_name.toLowerCase().includes(this.input__people.toLowerCase());
-                });
-            }
-        },
         exportData()
         { 
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
@@ -243,7 +211,7 @@ export default {
                     "company_name": this.log_list[index].company_name,
                     "category": this.log_list[index].category,
                     "home_address" : this.log_list[index].home_address,
-                    "date_logged" : this.log_list[index].date_logged,
+                    "date_logged" : this.log_list[index].date,
                 },)
             }
             
