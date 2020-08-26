@@ -47,10 +47,10 @@
                      <!-- <div class="desc-separator"></div>
                      <div class="decs-info">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                   </div>
-                  <div class="dashboard__overview-title">Highest Temperature Today</div>
+                  <div class="dashboard__overview-title">Total Staff Today</div>
                   <!-- <div class="dashboard__overview-date">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                </div>
-               <q-img src="../../../assets/Member/overview-2.svg" width="45px"></q-img>
+               <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
             </div>
 
             <!-- </q-img> -->
@@ -74,7 +74,7 @@
                      <div class="decs-total">{{current_alerts}}</div>
                      <div class="decs-info"></div>
                   </div>
-                  <div class="dashboard__overview-title">Fever Cases Today</div>
+                  <div class="dashboard__overview-title">Total Fever Cases Today</div>
                   <!-- <div class="dashboard__overview-date">Out of 275 Registered Users</div> -->
                </div>
                <q-img src="../../../assets/Member/overview-4.svg" width="45px"></q-img>
@@ -85,7 +85,7 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">{{staff_number}}</div>
-               <div class="dashboard__total-title">Total Employees</div>
+               <div class="dashboard__total-title">Registered Staff</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
             <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
@@ -93,7 +93,7 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">{{visitor_number}}</div>
-               <div class="dashboard__total-title">Total Visitors</div>
+               <div class="dashboard__total-title">Registered Visitors</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
             <q-img src="../../../assets/Member/total-visitors.svg" width="70px"></q-img>
@@ -109,7 +109,7 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">{{device_number}}</div>
-               <div class="dashboard__total-title">Total Devices Installed</div>
+               <div class="dashboard__total-title">Devices Installed</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
             <q-img src="../../../assets/Member/total-devices.svg" width="30px"></q-img>
@@ -117,7 +117,7 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">0</div>
-               <div class="dashboard__total-title">Total Fever Cases</div>
+               <div class="dashboard__total-title">Fever Cases</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
             <q-img src="../../../assets/Member/total-cases.svg" width="23px"></q-img>
