@@ -39,7 +39,7 @@ module.exports =
 
     async footTraffic(req, res)
     {
-        
+        console.log(req, 'lsasaas');
         let options_people = ['All' , 'Staff', 'Visitor', 'Stranger'];
 
         let startDate = ''
