@@ -11,6 +11,7 @@ const { get } = require('mongoose');
 const { getPerson } = require('./MemberController');
 
 const day_list = ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
+const current_date = new Date()
 
 module.exports =
 {
@@ -39,7 +40,7 @@ module.exports =
 
     async footTraffic(req, res)
     {
-        console.log(req, 'lsasaas');
+        // console.log(req, 'lsasaas');
         let options_people = ['All' , 'Staff', 'Visitor', 'Stranger'];
 
         let startDate = ''
@@ -52,26 +53,30 @@ module.exports =
             {
                 if (req.body.filter.date_filter == 'Daily') 
                 {
-                    let date = new Date()
                     let params = {}
-                    date = new Date(new Date(date.setHours(0,0,0,0)))
-        
-                    startDate = date
-                    let transfer_date = startDate
+                    let date = new Date()
+                    date.setHours(0,0,0,0)
+                    let end = new Date()
+                    end.setHours(0,59,59,999)
+                    console.log(current_date, date, end);
                     for (let index = 0; index <= 23; index++) {
-                        endDate = new Date(transfer_date.setHours(startDate.getHours(), 59, 59, 100))
+                        // let transfer_date = startDate
+                        startDate = date
+                        endDate = end
                         if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gte' : startDate , '$lt' : endDate}}
-                            else params = {date_saved: {'$gte' : startDate , '$lt' : endDate}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            else params = {date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
                         else {
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gte' : startDate , '$lt' : endDate}}
-                            else params = {category: options_people[x], date_saved: {'$gte' : startDate , '$lt' : endDate}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            else params = {category: options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
+                        console.log(params);
                         let data = await new DashboardClass().getTraffic(params)
                         if (index < 12)traffic[index == 0 ? 12 + "AM" : index + "AM"] = data.length
                         else traffic[index == 12 ? 12 + "PM" : index - 12  + "PM"] = data.length
-                        startDate = new Date(startDate.setHours(startDate.getHours() + 1,0,0))
+                        startDate.setHours(startDate.getHours() + 1,0,0)
+                        endDate.setHours(endDate.getHours() + 1,59,59,999)
                     }
                 }
                 else if (req.body.filter.date_filter == 'Weekly')
