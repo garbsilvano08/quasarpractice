@@ -1,21 +1,21 @@
 <template>
     <div class="account-directory">
-        <div class="account-directory__header" style="margin-bottom: 15px !important;">
+        <div class="account-directory__header-1">
             <div class="header__title">ACCOUNT DIRECTORY</div>
-            <div class="header__filter">
-                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyData></com-picker>
-                <q-btn @click="exportTableToExcel('tblData', 'staff-list')" class="btn-primary btn-export" flat dense no-caps>
+            <div class="header__filter-1">
+                <q-btn @click="exportTableToExcel('tblData', 'staff-list')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
+                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyData></com-picker>
             </div>
         </div>
-        <div class="account-directory__header">
-            <div class="header_filter">
-                <q-select label="Account Type" v-model="select__account_type" :options="options_account_type" outlined dense></q-select>
+        <div class="account-directory__header-2">
+            <div class="header__filter-2">
+                <q-select label="Account Type" class="select-sm" v-model="select__account_type" :options="options_account_type" outlined dense></q-select>
                 <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense></q-input>
                 <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense></q-input>
-                <q-btn label="Generate" @click="generateResult" class="btn-primary btn-export" flat dense no-caps/>
-                
+                <q-btn label="Generate" @click="generateResult" class="btn-primary btn-generate" flat dense no-caps/>
+
                 <!-- <q-btn flat dense no-caps class="btn-outline btn-sort" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
@@ -30,9 +30,9 @@
                         </q-list>
                     </q-menu>
                 </q-btn> -->
-                
+
             </div>
-            <div class="header__filter">
+            <div class="header__filter-1">
                 <q-input outlined dense v-model="search" placeholder="Search People...">
                     <template v-slot:append>
                         <q-icon name="mdi-magnify" />
@@ -40,8 +40,8 @@
                 </q-input>
             </div>
         </div>
-        <div class="account-directory__header">
-            <div class="header_filter">
+        <div class="account-directory__header-1" style="margin-bottom: 30px !important">
+            <div class="header__filter-2">
                 <q-btn-dropdown class="btn-dropdown__primary" label="Sort By" flat dense no-caps>
                     <q-list>
                         <q-item clickable v-close-popup>
@@ -242,7 +242,7 @@ export default {
             let end = new Date(this.end_date)
             end = end.setDate(end.getDate() + 1)
             // start = start.setDate(start.getDate() - 1)
-    
+
             let file_name = this.select__account_type+"_" + date + '.xls'
             // if (this.company_details) params = {user_name: this.$user_info.full_name, work_sheet: 'Staff', file_name: file_name, find_data: {company_name: this.company_details.company_name, has_fever: true, date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)}}}
             // params = {user_name: this.$user_info.full_name, work_sheet: 'Staff',file_name: file_name,sort: sort_options, find_data: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}}
@@ -264,7 +264,7 @@ export default {
                     "emergency_contact" : this.staff_list.data[index].emergency_contact
                 },)
             }
-            
+
             fields.push({
             label: 'Last name',
             value: 'last_name'
@@ -304,7 +304,7 @@ export default {
 
             const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
             const csv = json2csvParser.parse(staff_data);
-    
+
             var FileSaver = require('file-saver');
             FileSaver.saveAs(
             new Blob([csv], {
@@ -347,7 +347,7 @@ export default {
             this.start_date = new Date(this.start_date).setHours(0,0,0,0)
             this.end_date = new Date(this.end_date).setHours(23,59,59)
             let parameter = {}
-            if (this.company_details) 
+            if (this.company_details)
             {
                if (this.select__account_type == "All") parameter = {company_id: this.company_details._id, date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
                else  parameter = {company_id: this.company_details._id, category: this.select__account_type, date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
