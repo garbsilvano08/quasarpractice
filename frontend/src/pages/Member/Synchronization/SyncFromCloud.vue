@@ -150,6 +150,7 @@ export default {
                 {
                     toDataUrl(person.person_img, async(myBase64) =>
                     {
+                        console.log(device_type);
                         if (device_type == 'smart_pass')
                         {
                             let data = new FormData();
