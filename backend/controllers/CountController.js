@@ -52,7 +52,7 @@ module.exports =
             {
                 if (req.body.filter.date_filter == 'Daily') 
                 {
-                    let date = new Date().toUTCString()
+                    let date = new Date()
                     console.log(date), 'date';
                     let params = {}
                     date = new Date(new Date(date.setHours(0,0,0,0)))
