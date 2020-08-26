@@ -167,7 +167,7 @@ module.exports =
     
     async addPassLog(req, res)
     {
-        console.log(req.body);
+        // console.log(req.body.data.company_id, 'jhjhjhjhj');
         let key = ['Traffic']
         // let person_log = []
         let date_string = new Date(new Date(req.body.data.currentTime)).toISOString().split('T')[0]
@@ -182,10 +182,10 @@ module.exports =
         if (person.length) key.push(person[0].category)
         else key.push('Stranger')
 
-        console.log(key);
+        // console.log(key);
         // console.log(key);
         // if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
-        await new CounterClass().counterActivities(person[0].company_id, key, date_string, req.body.data.device_id)
+        await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
             mask:                   req.body.data.mask,
@@ -260,7 +260,7 @@ module.exports =
 
     async visionSkyLogs(req, res)
     {
-        console.log(req.body.personId, new Date(req.body.time));
+        console.log(req.body);
         if (req.body.personId)
         {
             let extra = parseJson(req.body.extra)
@@ -277,7 +277,7 @@ module.exports =
                 let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey})
                 if (person.length) key.push(person[0].category)
                 else key.push('Stranger')
-                console.log(key);
+                // console.log(key);
     
                 if (device.length > 0)
                 {
@@ -299,7 +299,7 @@ module.exports =
                     // console.log(req.body.personId, req.body.type);
                 }
             // }
-            console.log('done');
+            // console.log('done');
             return res.send({"success":true, "result":1});
         }
 
@@ -413,7 +413,7 @@ module.exports =
         
         if (req.body.type == 'Staff') return res.send(await new MDB_PERSON().update(req.body.id, {is_active: false}));
         else if (req.body.type == 'Blacklist') return res.send(await new MDB_BLACKLIST().update(req.body.id, {is_active: false}));
-        console.log(req.body)
+        // console.log(req.body)
     },
     
     async getCompany(req, res)
@@ -423,7 +423,7 @@ module.exports =
 
     async updateStaff(req, res)
     {
-        console.log(req.body)
+        // console.log(req.body)
         return res.send(await new MDB_PERSON().update(req.body.id, req.body.update_staff));
     },    
     async updateVisitor(req, res)
@@ -508,7 +508,7 @@ module.exports =
     },
     async getUsers(req, res)
     {
-        console.log(req.body);
+        // console.log(req.body);
         return res.send(await new MDB_USER().collection.find({company_id: req.body.id}));
     },
     async deleteUsers(req, res)

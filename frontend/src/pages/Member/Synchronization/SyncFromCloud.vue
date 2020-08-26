@@ -162,8 +162,9 @@ export default {
                         let tabletFormData = new FormData();
                         let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
 
-                        if (person.category == "Visitors")
+                        if (person.category == "Visitor")
                         {
+                            console.log(person);
                             prescription = "'" + expStart + "," + expEnd + "'";
                             if (device_type == 'vision_sky')
                             {

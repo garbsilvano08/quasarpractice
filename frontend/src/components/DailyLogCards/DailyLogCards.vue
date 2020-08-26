@@ -34,7 +34,7 @@
                 <span v-if="all_logs.full_name != 'Stranger'">{{all_logs.category}}</span>
             </div>
             <div class="content__datetime">
-                <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{new Date(all_logs.date)}}
+                <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{all_logs.date}}
             </div>
             <div class="content__room">
                 <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{ all_logs.device.device_name + "-" + all_logs.device.log_type }}

@@ -39,6 +39,7 @@ module.exports =
 
     async footTraffic(req, res)
     {
+        
         let options_people = ['All' , 'Staff', 'Visitor', 'Stranger'];
 
         let startDate = ''
@@ -75,6 +76,7 @@ module.exports =
                 }
                 else if (req.body.filter.date_filter == 'Weekly')
                 {   
+                    
                     let day_list = ['Sun','Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat']
                     let date_string = new Date()
                     date_string.setDate((date_string.getDate() - date_string.getDay()))
@@ -128,7 +130,7 @@ module.exports =
                         date = new Date(date.setMonth(index))
                         let date_string = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, "0")
 
-                        console.log(date_string, date);
+                        // console.log(date_string, date);
                         if (req.body.filter.person === 'All'){
                             if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
                             else params = {company_id: 'global',key: 'Traffic', date_string: date_string}

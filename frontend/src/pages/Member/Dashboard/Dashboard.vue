@@ -62,7 +62,7 @@
                      <div class="decs-total">{{today_visitors}}</div>
                      <div class="decs-info"></div>
                   </div>
-                  <div class="dashboard__overview-title">Total Visitors</div>
+                  <div class="dashboard__overview-title">Total Visitors Today</div>
                </div>
                <q-img src="../../../assets/Member/overview-3.svg" width="70px"></q-img>
             </div>
@@ -85,7 +85,7 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">{{staff_number}}</div>
-               <div class="dashboard__total-title">Total Employess</div>
+               <div class="dashboard__total-title">Total Employees</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
             <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
@@ -141,7 +141,7 @@
             <div class="dashboard__graph-content">
                <line-chart :data="data_line_graph.data" />
             </div>
-            <q-dialog v-model="date_filter_dialog">
+            <q-dialog v-model="date_filter_dialog" persistent>
                <q-card>
                   <q-card-section>
                   <div class="text-h6">Custom Date</div>
@@ -193,7 +193,7 @@
                <column-chart :data="data_bar_graph.data"></column-chart>
             </div>
          </div>
-          <q-dialog v-model="date_filter_registered">
+          <q-dialog v-model="date_filter_registered" persistent>
             <q-card>
                <q-card-section>
                <div class="text-h6">Custom Date</div>
@@ -308,7 +308,7 @@
                </div>
             </div>
 
-            <q-dialog v-model="purpose_popup">
+            <q-dialog v-model="purpose_popup" persistent>
                <q-card>
                   <q-card-section>
                   <div class="text-h6">Custom Date</div>
@@ -320,7 +320,7 @@
                   </q-card-section>
 
                   <q-card-actions align="right">
-                     <q-btn @click="date_filter_registered = false, select_date = last_option_registered" flat label="Cancel" color="primary" v-close-popup />
+                     <q-btn @click="purpose_popup = false, select_date = last_option_registered" flat label="Cancel" color="primary" v-close-popup />
                      <q-btn @click="getPurposeVisit('Registered')" flat label="Search" color="primary" v-close-popup />
                   </q-card-actions>
                </q-card>
@@ -813,7 +813,6 @@ export default
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: 'Traffic'}}
-
          }
          else {
             params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: 'Traffic'}}
@@ -886,7 +885,6 @@ export default
             this.today_visitors = 0
             for (let log of today_logs.data) {
                total = total + Number(log.count)
-               console.log(log, 'kjkjkjkjk');
                if (log.key == 'Visitor') this.today_visitors = this.today_visitors + 1
             }
             this.logged_today = (total/this.traffic_data.count) * 100
@@ -901,9 +899,12 @@ export default
 
    async mounted()
    {
+      this.company_details = this.$user_info.company ? this.$user_info.company : {}
       let params = {}
-      if (this.company_details._id) params = {filter: {company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
+      console.log(this.company_details);
+      if (this.company_details) params = {filter: {company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
       else params = {filter: {date_filter: this.select_date, person: this.select_people}}
+         console.log(params, 'params');
       await this.getTrafficData(params)
       if (this.$user_info.user_type == 'Officer')
       {

@@ -274,7 +274,7 @@ export default {
             middle_name: null,
             email: null,
             last_name: null,
-            gender: null,
+            gender: 'Male',
             birth_date: null,
             nationality: null,
             home_address: null,
@@ -451,7 +451,6 @@ export default {
                         !this.personal_information.id_number ||
                         !this.personal_information.first_name ||
                         !this.personal_information.last_name ||
-                        !this.personal_information.middle_name ||
                         !this.personal_information.home_address ||
                         !this.personal_information.contact_number ||
                         !this.personal_information.birth_date ||
@@ -577,7 +576,7 @@ export default {
                 let image_data = null
     
                 await document.getElementById("snap").addEventListener("click", async() => {
-                    context.drawImage(video, 0, 0, 640,550);
+                    context.drawImage(video, 0, 0, 640, 480);
     
                 this.image = canvas.toDataURL("image/png")
                 image_data = this.image
