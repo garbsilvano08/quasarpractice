@@ -43,7 +43,7 @@
             <div class="dashboard__overview-bg bg-second">
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">{{highest_log.data.length ? highest_log.data[0].temperature + "°" : 'No Logs Yet'}} </div>
+                     <div class="decs-total">{{today_staff}} </div>
                      <!-- <div class="desc-separator"></div>
                      <div class="decs-info">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                   </div>
@@ -540,7 +540,8 @@ export default
       purposeEnd: new Date().toISOString().split('T')[0],
       last_option_purpose: '',
       registered_has_fever: 0,
-      today_visitors: 0
+      today_visitors: 0,
+      today_staff: 0
    }),
 
    watch:
@@ -886,6 +887,7 @@ export default
             for (let log of today_logs.data) {
                total = total + Number(log.count)
                if (log.key == 'Visitor') this.today_visitors = this.today_visitors + 1
+               if (log.key == 'Staff') this.today_staff = this.today_staff + 1
             }
             this.logged_today = (total/this.traffic_data.count) * 100
             this.logged_today = this.logged_today.toFixed(0);
