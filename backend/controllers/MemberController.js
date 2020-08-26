@@ -259,11 +259,11 @@ module.exports =
 
     async visionSkyLogs(req, res)
     {
+        console.log(req.body.deviceKey ? req.body.deviceKey : req.body.mac, 'saved');
         let person_info = {}
-        console.log(req.body.deviceKey ? req.body.deviceKey : req.body.mac);
         let key = ['Traffic']
         let date_string = new Date(new Date(req.body.time ? req.body.time : req.body.checkTime)).toISOString().split('T')[0]
-
+        
         date_string = date_string.split("-")
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.personId ? req.body.personId : req.body.userId})
         let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey ? req.body.deviceKey : req.body.mac})
@@ -289,8 +289,6 @@ module.exports =
                     record_id:              req.body.id,
                     company_id:             device[0].company_id
                 }
-                
-                // console.log(req.body.personId, req.body.type);
             }
         }
         
@@ -299,7 +297,7 @@ module.exports =
             if (device.length > 0)
             {
                 await new CounterClass().counterActivities(device[0].company_id, key, date_string, req.body.deviceKey)
-    
+                
                 person_info = {
                     mask:                   req.body.mask,
                     temperature:            req.body.temperature,

@@ -150,6 +150,7 @@ export default {
                 {
                     toDataUrl(person.person_img, async(myBase64) =>
                     {
+                        console.log(device_ip, 'id');
                         let sex = "";
                         if (person.gender == "Female")
                         {
