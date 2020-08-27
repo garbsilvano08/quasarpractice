@@ -55,10 +55,9 @@ module.exports =
                 {
                     let params = {}
                     let date = new Date()
-                    date.setHours(0,0,0,0)
+                    date.setHours(8,0,0,0)
                     let end = new Date()
-                    end.setHours(0,59,59,999)
-                    console.log(current_date, date, end);
+                    end.setHours(8,59,59,999)
                     for (let index = 0; index <= 23; index++) {
                         // let transfer_date = startDate
                         startDate = date
@@ -71,7 +70,6 @@ module.exports =
                             if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                             else params = {category: options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
-                        console.log(params);
                         let data = await new DashboardClass().getTraffic(params)
                         if (index < 12)traffic[index == 0 ? 12 + "AM" : index + "AM"] = data.length
                         else traffic[index == 12 ? 12 + "PM" : index - 12  + "PM"] = data.length
