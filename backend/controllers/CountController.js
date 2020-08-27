@@ -71,6 +71,7 @@ module.exports =
                             else params = {category: options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
                         let data = await new DashboardClass().getTraffic(params)
+                        console.log(data,'data');
                         if (index < 12)traffic[index == 0 ? 12 + "AM" : index + "AM"] = data.length
                         else traffic[index == 12 ? 12 + "PM" : index - 12  + "PM"] = data.length
                         startDate.setHours(startDate.getHours() + 1,0,0)
