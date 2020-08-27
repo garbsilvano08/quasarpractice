@@ -55,13 +55,15 @@ module.exports =
                 {
                     let params = {}
                     let date = new Date()
-                    date.setHours(8,0,0,0)
+                    date.setHours(date.getHours() + 8)
+                    date.setHours(0,0,0,0)
                     let end = new Date()
-                    end.setHours(8,59,59,999)
+                    end.setHours(end.getHours() + 8)
+                    end.setHours(0,59,59,999)
+                    startDate = date
+                    endDate = end
                     for (let index = 0; index <= 23; index++) {
                         // let transfer_date = startDate
-                        startDate = date
-                        endDate = end
                         if (req.body.filter.person === 'All'){
                             if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                             else params = {date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
