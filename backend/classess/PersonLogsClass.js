@@ -25,7 +25,7 @@ module.exports = class PersonLogsClass
         
         this.category               = data.hasOwnProperty('category') ? data.category : '';
         this.date_logged            = data.hasOwnProperty('date_logged') ? new Date(data.date_logged).toISOString().split('T')[0] : ''; 
-        this.date_saved             = new Date(new Date(data.date_logged).setHours(new Date(data.date_logged).getHours() + 8))
+        this.date_saved             = new Date(data.date_logged)
         this.has_fever              = false
         this.location               = {}
         this.location_coordinates   = {}
