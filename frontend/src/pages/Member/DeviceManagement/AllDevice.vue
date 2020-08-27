@@ -3,7 +3,7 @@
         <div class="device-management__header">
             <div class="header__title">
                 DEVICE MANAGEMENT <br>
-                <span>300 DEVICES INSTALLED</span></div>
+                <span>{{this.device_list.data.length}} DEVICES INSTALLED</span></div>
             <div class="header__filter">
                 <q-btn @click="addDevice" class="btn-primary btn-add" flat dense no-caps>
                     Add Device
@@ -80,9 +80,9 @@ export default {
             // else await this.getAllDevice(this.select__company)
             await this.getAllDevice()
         },
-        async getAllDevice(company)
+        async getAllDevice(params = {})
         {
-           this.device_list = await this.$_post(postGetDevice);
+           this.device_list = await this.$_post(postGetDevice, params);
         },
         convertToDate(timestamp){
             let date = new Date(timestamp);
@@ -92,7 +92,19 @@ export default {
 
     async mounted()
     {
-        await this.getAllDevice();
+        let params = {}
+        if (this.$user_info.company)
+        {
+            let company_id = []
+            company_id.push(this.$user_info.company._id)
+
+            for (let index = 0; index < this.$user_info.company.subcompanies.length; index++) {
+                if (this.$user_info.company.subcompanies[index]) company_id.push(this.$user_info.company.subcompanies[index])
+            }
+            console.log(this.$user_info.company);
+            params = {find_device: { company_id: {$in: company_id}}}
+        }
+        await this.getAllDevice(params);
     }
 }
 </script>

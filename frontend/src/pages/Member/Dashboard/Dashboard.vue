@@ -568,8 +568,8 @@ export default
            }
            else
            {
-              if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
-              else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
+              if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+              else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
            }
         },
 
@@ -887,7 +887,7 @@ export default
             for (let log of today_logs.data) {
                total = total + Number(log.count)
                if (log.key == 'Visitor') this.today_visitors = this.today_visitors + 1
-               // else if (log.key == 'Staff') this.today_staff = this.today_staff + 1
+               else if (log.key == 'Staff') this.today_staff = this.today_staff + 1
             }
             this.logged_today = (total/this.traffic_data.count) * 100
             this.logged_today = this.logged_today.toFixed(0);
@@ -901,11 +901,12 @@ export default
 
    async mounted()
    {
+      console.log(new Date());
       this.company_details = this.$user_info.company ? this.$user_info.company : {}
       let params = {}
       console.log(this.company_details);
-      if (this.company_details) params = {filter: {company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
-      else params = {filter: {date_filter: this.select_date, person: this.select_people}}
+      if (this.company_details) params = {filter: {current_date: new Date(), company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
+      else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
          console.log(params, 'params');
       await this.getTrafficData(params)
       if (this.$user_info.user_type == 'Officer')
