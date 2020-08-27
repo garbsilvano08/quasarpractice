@@ -124,6 +124,7 @@
          </div>
       </div>
       <div class="dashboard__graph">
+
          <!-- FOOT TRAFFIC GRAPH -->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
@@ -158,28 +159,27 @@
                   </q-card-actions>
                </q-card>
          </q-dialog>
-
-            <!-- <div v-if="traffic_weekly.data" class="dashboard__graph-content">
-               <line-chart style="position: relative; height:250px; width:100%"
-                  :data="{
-                     'MON': traffic_weekly.data.Mon,
-                     'TUES': traffic_weekly.data.Tue,
-                     'WED': traffic_weekly.data.Wed,
-                     'THURS': traffic_weekly.data.Thurs,
-                     'FRI': traffic_weekly.data.Fri,
-                     'SAT': traffic_weekly.data.Sat,
-                     'SUN': traffic_weekly.data.Sun,
-                  }"
-               >
-               </line-chart>
-            </div> -->
+         <!-- <div v-if="traffic_weekly.data" class="dashboard__graph-content">
+            <line-chart style="position: relative; height:250px; width:100%"
+               :data="{
+                  'MON': traffic_weekly.data.Mon,
+                  'TUES': traffic_weekly.data.Tue,
+                  'WED': traffic_weekly.data.Wed,
+                  'THURS': traffic_weekly.data.Thurs,
+                  'FRI': traffic_weekly.data.Fri,
+                  'SAT': traffic_weekly.data.Sat,
+                  'SUN': traffic_weekly.data.Sun,
+               }"
+            >
+            </line-chart>
+         </div> -->
          </div>
 
          <!-- EMPLOYEE/VISITOR OVERVIEW -->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
-                  Employee/Visitor Overview
+                  Compare Foot Traffic
                </div>
 
                <div class="dashboard__graph-filter">
@@ -190,7 +190,7 @@
             </div>
 
             <div class="dashboard__graph-content">
-               <column-chart :data="data_bar_graph.data"></column-chart>
+               <column-chart :data="data_bar_graph.data" :stacked="true"></column-chart>
             </div>
          </div>
           <q-dialog v-model="date_filter_registered" persistent>
@@ -210,6 +210,25 @@
                </q-card-actions>
             </q-card>
          </q-dialog>
+
+         <!-- JAM STACKED BAR CHART -->
+         <div class="dashboard__graph-item">
+            <div class="dashboard__graph-header">
+               <div class="dashboard__graph-title">
+                  Compare Foot Traffic
+               </div>
+
+               <div class="dashboard__graph-filter">
+                  <!-- <q-input v-model="employee_date" type='date' outlined dense></q-input> -->
+                  <!-- <q-select v-model="select_people" :options="options_people" outlined dense></q-select> -->
+                  <q-select v-model="registered_filter" :options="options_date" outlined dense></q-select>
+               </div>
+            </div>
+
+            <div class="dashboard__graph-content">
+               <column-chart :data="data_stacked_bar_graph.data" :stacked="true"></column-chart>
+            </div>
+         </div>
 
          <!-- EMPLOYEE/VISITOR OVERVIEW -->
          <!-- <div class="dashboard__graph-item">
@@ -342,6 +361,32 @@
             </div> -->
          </div>
 
+         <!-- WAG GALAWIN: JAM -->
+         <div class="dashboard__graph-item">
+            <div class="dashboard__graph-header">
+              <div class="dashboard__graph-title">
+                  Visitors Purpose
+               </div>
+               <div class="dashboard__graph-filter">
+                  <q-select v-model="purpose_filter" :options="option_purpose" outlined dense></q-select>
+                  <!-- <q-input v-model="visitors_date" type='date' outlined dense></q-input> -->
+               </div>
+            </div>
+
+            <div class="dashboard__graph-content">
+               <pie-chart :donut="true" legend="right"
+                  :data="{
+                     'Official Business': 40,
+                     'Collection & Pickup': 20,
+                     'Delivery': 20,
+                     'Corporate Meeting': 10,
+                     'Client/Customer': 5,
+                     'Guest': 5,
+                  }">
+               </pie-chart>
+            </div>
+         </div>
+
          <!-- VISITOR LOGS -->
          <!-- <div class="dashboard__graph-item dashboard__graph-item--alert-logs">
             <div class="dashboard__graph-header">
@@ -414,9 +459,20 @@ export default
 
    data:() =>
    ({
+      data_stacked_bar_graph: {data: [
+         {
+            name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
+         },
+         {
+            name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
+         },
+         {
+            name: 'Stranger', data: {'Monday': 4, 'Tuesday': 2, 'Wednesday': 1, 'Thrusday': 5, 'Friday': 4,}
+         }
+      ]},
       data_bar_graph: {data:[]},
       data_line_graph:
-       {data: [
+      {data: [
          {
             name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
          },
