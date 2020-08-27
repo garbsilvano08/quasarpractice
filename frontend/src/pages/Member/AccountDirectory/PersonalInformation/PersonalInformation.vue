@@ -103,23 +103,23 @@
                     </div>
                 </div>
             </div>
-            <div class="personal-info__holder">
+            <div class="personal-info__holder" v-if="account_info.data.personal_info.category == 'Visitor'">
                 <div class="personal-info__content-header content-header__grey">
                     <q-icon name="mdi-card-account-details" size="20px"></q-icon>
                     <div class="content__title">Registered Identification Card</div>
                 </div>
                 <div class="personal-info__content">
                     <div class="personal-info__grid">
-                        <q-img src="https://images.unsplash.com/photo-1484515991647-c5760fcecfc7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=387&q=80"></q-img>
+                        <q-img :src="this.identification_info.data[0].id_image"></q-img>
                         <div class="personal-info__item-content">
                             <div class="item-content">
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">ID Type:</div>
-                                    <div class="personal-info__item-info">erwerwer</div>
+                                    <div class="personal-info__item-info">{{this.identification_info.data[0].id_type}}</div>
                                 </div>
                                 <div class="personal-info__item">
                                     <div class="personal-info__item-label">ID Number:</div>
-                                    <div class="personal-info__item-info">fdfsdfsdfds</div>
+                                    <div class="personal-info__item-info">{{this.identification_info.data[0].id_number}}</div>
                                 </div>
                             </div>
                         </div>
@@ -277,7 +277,7 @@
 <script>
 import { Notify } from 'quasar';
 import "./PersonalInformation.scss";
-import { postRemoveAccount , postGetCompany, postGetDevice, postGetPerson, postGetLogs} from '../../../../references/url';
+import { postRemoveAccount , postGetCompany, postGetDevice, postGetPerson, postGetLogs, postGetIdentification} from '../../../../references/url';
 import { date } from 'quasar';
 
 export default {
@@ -286,6 +286,7 @@ export default {
         company_device: 0,
         company_info: {},
         person_logs: {},
+        identification_info : {},
         age : '',
         birthday : '',
         date_registered : ''
@@ -352,8 +353,8 @@ export default {
     },
 
     async mounted()
-    {
-
+    {   
+        
         this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.account_info._id});
         this.account_info.type = this.$route.params.account_info.type;
         await this.getDeviceNumber(this.account_info.data.personal_info.company_name ? this.account_info.data.personal_info.company_name : '');
@@ -369,6 +370,10 @@ export default {
         }
         this.birthday = date.formatDate(this.account_info.data.personal_info.birthday, 'MMM DD, YYYY');
         this.date_registered = date.formatDate(this.account_info.data.personal_info.date_created, 'MMM DD, YYYY');
+        if (this.account_info.data.personal_info.category == 'Visitor') {
+            this.identification_info = await this.$_post(postGetIdentification, {person_id: this.$route.params.account_info._id});
+            console.log(this.identification_info.data);
+        }
     }
 
 }

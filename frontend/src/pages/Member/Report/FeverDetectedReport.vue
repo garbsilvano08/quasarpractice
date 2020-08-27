@@ -63,6 +63,7 @@
 import './Report.scss';
 import { postGetPersonLogs , postGetPerson, postPersonByCateg, postExpFeverDeteted}                        from '../../../references/url';
 import  ComPicker from "../../../components/companyPicker/ComPicker"
+import { log } from 'util';
 
 function calculate_age(dob) {
     var diff_ms = Date.now() - dob.getTime();
@@ -88,7 +89,7 @@ export default {
         options_company: [
             'Green Sun Hotel', 'SM Mall' , 'WalterMart'
         ],
-        personWithFever : [{full_name:"asd"}],
+        personWithFever : [{}],
         company_details : "",
         table_column:
         [
@@ -101,18 +102,10 @@ export default {
                 sortable: true,
             },
             {
-                name    : 'gender',
-                label   : 'Gender',
-                field   : 'gender',
+                name    : 'category',
+                label   : 'Account type',
+                field   : 'category',
                 align   : 'left',
-                required: true,
-                sortable: true,
-            },
-            {
-                name    : 'age',
-                label   : 'Age',
-                field   : 'age',
-                align   : 'let',
                 required: true,
                 sortable: true,
             },
@@ -120,6 +113,14 @@ export default {
                 name    : 'home_address',
                 label   : 'Home Address',
                 field   : 'home_address',
+                align   : 'let',
+                required: true,
+                sortable: true,
+            },
+            {
+                name    : 'company_name',
+                label   : 'Tagged to',
+                field   : 'company_name',
                 align   : 'left',
                 required: true,
 
@@ -127,8 +128,16 @@ export default {
             },
             {
                 name    : 'date_logged',
-                label   : 'Last Scanned',
+                label   : 'Date Scanned',
                 field   : 'date_logged',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            {
+                name    : 'device_id',
+                label   : 'Device Scanned',
+                field   : 'device_id',
                 align   : 'left',
                 required: true,
                 sortable: true,
@@ -147,76 +156,49 @@ export default {
         [
             {
                 full_name: 'Jayjay Helterbrand',
-                gender: 'Male',
-                age: 25,
-                home_address: 'Balagtas Bulacan',
-                date_logged: new Date().toISOString().split('T')[0],
+                account_type: 'Male',
+                home_address: 25,
+                tagged_to: 'Balagtas Bulacan',
+                date_scanned: new Date().toISOString().split('T')[0],
+                device_scanned: '',
                 temperature: '26'
             },
             {
                 full_name: 'Juan',
-                gender: 'Male',
-                age: 23,
-                home_address: 'Pandi Bulacan',
-                date_logged: new Date().toISOString().split('T')[0],
+                account_type: 'Male',
+                home_address: 23,
+                tagged_to: 'Pandi Bulacan',
+                date_scanned: new Date().toISOString().split('T')[0],
+                device_scanned: '',
                 temperature: '27'
             },
             {
-                full_name: 'Kobe Bryant',
-                gender: 'Male',
-                age: 41,
-                home_address: 'Malolos Bulacan',
-                date_logged: new Date().toISOString().split('T')[0],
-                temperature: '26'
+                full_name: 'Juan',
+                account_type: 'Male',
+                home_address: 23,
+                tagged_to: 'Pandi Bulacan',
+                date_scanned: new Date().toISOString().split('T')[0],
+                device_scanned: '',
+                temperature: '27'
             },
             {
-                full_name: 'Lebron James',
-                gender: 'Male',
-                age: 39,
-                home_address: 'Bocaue Bulacan',
-                date_logged: new Date().toISOString().split('T')[0],
-                temperature: '26'
+                full_name: 'Juan',
+                account_type: 'Male',
+                home_address: 23,
+                tagged_to: 'Pandi Bulacan',
+                date_scanned: new Date().toISOString().split('T')[0],
+                device_scanned: '',
+                temperature: '27'
             },
             {
-                full_name: 'Paul George',
-                gender: 'Male',
-                age: 25,
-                home_address: 'Baliuag Bulacan',
-                date_logged: new Date().toISOString().split('T')[0],
-                temperature: '26'
-            },
-            {
-                full_name: 'Kawhi Leonard',
-                gender: 'Male',
-                age: 25,
-                home_address: 'Meycauayan Bulacan',
-                date_logged: new Date().toISOString().split('T')[0],
-                temperature: '26'
-            },
-            {
-                full_name: 'Michael Jordan',
-                gender: 'Male',
-                age: 25,
-                home_address: 'Marilao Bulacan',
-                date_logged: new Date().toISOString().split('T')[0],
-                temperature: '26'
-            },
-            {
-                full_name: 'Jason Mraz',
-                gender: 'Male',
-                age: 25,
-                home_address: 'Sta Maria Bulacan',
-                date_logged: new Date().toISOString().split('T')[0],
-                temperature: '26'
-            },
-            {
-                full_name: 'Chester Bennington',
-                gender: 'Male',
-                age: 25,
-                home_address: 'Guiguinto Bulacan',
-                date_logged: new Date().toISOString().split('T')[0],
-                temperature: '26'
-            },
+                full_name: 'Juan',
+                account_type: 'Male',
+                home_address: 23,
+                tagged_to: 'Pandi Bulacan',
+                date_scanned: new Date().toISOString().split('T')[0],
+                device_scanned: '',
+                temperature: '27'
+            }
 
         ],
         sort_item: 'Date Created',
@@ -275,81 +257,64 @@ export default {
         async exportTableToExcel(tableID, filename = ''){
             let sort_options = this.sortOption()
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
-            let file_name = 'feverdetectedreport_' + date + '.xlsx'
-            // let is_saved = await this.$_post(postExpFeverDeteted,{user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Report', file_name: file_name,sort: sort_options, find_data: {has_fever: true}});
-            // if (is_saved)
-            // {
-            //     this.$q.notify(
-            //     {
-            //         color: 'green',
-            //         message: 'File was successfully saved'
-            //     });
-            // }
-            // let fields = [] , staff_data = [{}]
-            // for (let index = 0; index < this.personWithFever.data.length; index++) {
-            //     staff_data.push({
-            //         "last_name": this.personWithFever.data[index].last_name,
-            //         "given_name": this.personWithFever.data[index].given_name,
-            //         "middle_name": this.personWithFever.data[index].middle_name,
-            //         "gender": this.personWithFever.data[index].gender,
-            //         "birthday" : this.personWithFever.data[index].birthday,
-            //         "nationality" : this.personWithFever.data[index].nationality,
-            //         "company_name" : this.personWithFever.data[index].company_name,
-            //         "category" : this.personWithFever.data[index].category,
-            //         "contact_number" : this.personWithFever.data[index].contact_number,
-            //         "home_address" : this.personWithFever.data[index].home_address,
-            //         "emergency_contact" : this.personWithFever.data[index].emergency_contact
-            //     },)
-            // }
+            let file_name = 'feverdetectedreport_' + date + '.xls'
+            let is_saved = await this.$_post(postExpFeverDeteted,{user_name: this.$user_info.full_name, work_sheet: 'Fever Detected Report', file_name: file_name,sort: sort_options, find_data: {has_fever: true}});
+            if (is_saved)
+            {
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'File was successfully saved'
+                });
+            }
+            let fields = [] , person_with_fever_data = [{}]
+            for (let index = 0; index < this.personWithFever.length; index++) {
+                person_with_fever_data.push({
+                    "full_name": this.personWithFever[index].full_name,
+                    "category": this.personWithFever[index].category,
+                    "home_address": this.personWithFever[index].home_address,
+                    "company_name": this.personWithFever[index].company_name,
+                    "date_logged" : this.personWithFever[index].date_logged,
+                    "device_id" : this.personWithFever[index].device_id,
+                    "temperature" : this.personWithFever[index].temperature,
+                },)
+            }
+            fields.push({
+            label: 'Full name',
+            value: 'full_name'
+            },{
+            label: 'Account type',
+            value: 'category'
+            },{
+            label: 'Home Address',
+            value: 'home_address'
+            },{
+            label: 'Company name' ,
+            value: 'company_name'
+            },{
+            label: 'Date scanned' ,
+            value: 'date_logged'
+            },{
+            label: 'Device scanned' ,
+            value: 'device_id'
+            },{
+            label: 'Temperature' ,
+            value: 'temperature'
+            });
 
-            // fields.push({
-            // label: 'Last name',
-            // value: 'last_name'
-            // },{
-            // label: 'Given name',
-            // value: 'given_name'
-            // },{
-            // label: 'Middle name',
-            // value: 'middle_name'
-            // },{
-            // label: 'Gender' ,
-            // value: 'gender'
-            // },{
-            // label: 'Birthday' ,
-            // value: 'birthday'
-            // },{
-            // label: 'Nationality' ,
-            // value: 'nationality'
-            // },{
-            // label: 'Company name' ,
-            // value: 'company_name'
-            // },{
-            // label: 'Position' ,
-            // value: 'category'
-            // },{
-            // label: 'Contact number' ,
-            // value: 'contact_number'
-            // },{
-            // label: 'Home address' ,
-            // value: 'home_address'
-            // },{
-            // label: 'Emergency contact' ,
-            // value: 'emergency_contact'
-            // });
+            const { Parser } = require('json2csv');
 
-            // const { Parser } = require('json2csv');
-
-            // const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
-            // const csv = json2csvParser.parse(staff_data);
-
-            // var FileSaver = require('file-saver');
-            // FileSaver.saveAs(
-            // new Blob([csv], {
-            //     type:
-            //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            // }),
-            // file_name
-            // );
+            const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
+            const csv = json2csvParser.parse(person_with_fever_data);
+    
+            var FileSaver = require('file-saver');
+            FileSaver.saveAs(
+            new Blob([csv], {
+                type:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }),
+            file_name
+            );
         },
 
         async getCompanyDatas(value)
@@ -368,14 +333,15 @@ export default {
             this.personWithFever = [];
             // let logs = await this.$_post(postGetPersonLogs, );
             logs = logs.data;
+            console.log(logs)
             logs.forEach(async person => {
             if(person.has_fever)
-            {
+            {   
                 if (person.category == "Stranger")
                 {
                     person.gender = "Unknown";
                     person.home_address = "Unknown";
-                    person.age = "Unknown";
+                    //person.age = "Unknown";
                     this.personWithFever.push(person);
                 }
                 else
