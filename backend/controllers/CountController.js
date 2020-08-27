@@ -65,15 +65,15 @@ module.exports =
                     for (let index = 0; index <= 23; index++) {
                         // let transfer_date = startDate
                         if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gt' : startDate , '$lte' : endDate}}
-                            else params = {date_saved: {'$gt' : startDate , '$lte' : endDate}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            else params = {date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
                         else {
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gt' : startDate , '$lte' : endDate}}
-                            else params = {category: options_people[x], date_saved: {'$gt' : startDate , '$lte' : endDate}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            else params = {category: options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
                         let data = await new DashboardClass().getTraffic(params)
-                        console.log(startDate.getHours(),'data');
+                        console.log(data,'data');
                         if (startDate.getHours() < 12)traffic[startDate.getHours() == 0 ? 12 + "AM" : index + "AM"] = data.length
                         else traffic[startDate.getHours() == 12 ? 12 + "PM" : index - 12  + "PM"] = data.length
                         startDate.setHours(startDate.getHours() + 1,0,0)

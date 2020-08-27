@@ -267,10 +267,12 @@ export default {
 
             let date_start = new Date(this.start_date)
             date_start.setHours(sort_time_start[0])
+            date_start.setHours(date_start.getHours() + 8)
             date_start.setMinutes(sort_time_start[1])
 
             let date_end = new Date(this.end_date)
             date_end.setHours(sort_time_end[0])
+            date_end.setHours(date_end.getHours() + 8)
             date_end.setMinutes(sort_time_end[1])
             if (this.select__account_type == 'All')
             {
@@ -400,7 +402,7 @@ export default {
         convertDateFormat(date_saved)
         {
             let full_date = new Date(date_saved)
-            full_date.setHours(full_date.getHours() - 8)
+            // full_date.setHours(full_date.getHours() - 8)
             let date = full_date.toISOString().split('T')[0]
             // let time = full_date.getHours() < 
             var hours = full_date.getHours() ; // gives the value in 24 hours format
