@@ -402,7 +402,7 @@ export default {
         convertDateFormat(date_saved)
         {
             let full_date = new Date(date_saved)
-            // full_date.setHours(full_date.getHours() - 8)
+            full_date.setHours(full_date.getHours() - 8)
             let date = full_date.toISOString().split('T')[0]
             // let time = full_date.getHours() < 
             var hours = full_date.getHours() ; // gives the value in 24 hours format
