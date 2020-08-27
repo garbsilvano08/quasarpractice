@@ -54,7 +54,7 @@ export default {
     }),
     async mounted()
     {
-        await this.getAllDevice(this.$user_info.company._id);
+        await this.getAllDevice(this.$user_info.company);
         this.persons_list = await this.$_post(postGetPersons);
         this.persons_list = this.persons_list.data;
         
@@ -63,7 +63,7 @@ export default {
     {
         async getAllDevice(company)
         {
-           this.device_list = await this.$_post(postGetDevice, {find_device: {company_id: company}});
+           this.device_list = await this.$_post(postGetDevice, {find_device: {company_name: company.company_name}});
            this.device_list = this.device_list.data;
         },
         async syncAll()
