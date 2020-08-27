@@ -72,6 +72,8 @@ app.post('/api/member/get/weekly_count',  member_only, count_controller.getOneWe
 //Logs
 app.post('/api/member/get/logs',  member_only, member_controller.getLogs);
 app.post('/api/member/find/logs',  member_only, member_controller.getFindLogs);
+app.post('/api/member/update/person_logs',  member_only, member_controller.updatePersonLogs);
+
 
 app.post('/api/member/get/logs_by_category',  member_only, count_controller.getPersonLogs);
 app.post('/api/member/get/latest_log',  member_only, count_controller.getLatestLog);
@@ -87,7 +89,9 @@ app.post('/api/member/visionsky/logs', member_controller.visionSkyLogs);
 app.post('/api/member/dashbord/counting',member_only, count_controller.footTraffic);
 app.post('/api/member/save/image',member_only, member_controller.saveImage);
 
-
+//Identification
+app.post('/api/member/add/fever_detected_identification',member_only, member_controller.addVisitorIdentification);
+app.post('/api/member/get/identification',member_only, member_controller.getIdentification);
 
 app.listen({port: 4001}, (err) =>
 {

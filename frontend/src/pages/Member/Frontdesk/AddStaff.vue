@@ -87,7 +87,7 @@
                                 <q-input v-model="staff_class.middle_name" outlined dense></q-input>
                             </div>
                             <div class="content__input">
-                                <div class="content__input-label">Email Address</div>
+                                <div class="content__input-label">Email Address *</div>
                                 <q-input v-model="staff_class.email" outlined dense></q-input>
                             </div>
                             <!-- Gender and Birthdate -->
@@ -209,6 +209,7 @@ import position_reference from '../../../references/position';
 import { postGetCompanies, postAddPerson, postUpdateStaff, postSavePerson, postGetPerson} from '../../../references/url';
 import LoginVue from '../../Front/Login.vue';
 import {base64StringToBlob} from 'blob-util';
+import { log } from 'util';
 
 export default {
     data:() =>
@@ -248,7 +249,8 @@ export default {
                 position : ''},
         is_done: false,
         company_list: [],
-        account_info : {}
+        account_info : {},
+        flag : 0
     }),
     watch:
     {
@@ -396,22 +398,7 @@ export default {
 
                 return str.join(" ");
                 }
-            
-            // for (let validate in this.staff_class)
-            // {   
-            //     let field = validate;
-            //     if(!this.staff_class.field){
-            //         console.log(field)
-            //         this.$q.notify(
-            //         {
-            //             color: 'red',
-            //             message: 'Please fill in all required fields'
-            //         });
-            //         return
-            //     }
-            // }
-
-                
+               
             let result           = '';
             let characters       = '0123456789';
             let charactersLength = characters.length;
@@ -440,16 +427,33 @@ export default {
                 company_id: this.getCompany( this.staff_class.company_name),
                 is_active: true,
                 email: this.staff_class.email,
-
                 position: this.staff_class.position,
                 category: 'Staff',
                 frontdesk_person_id: result,
                 frontdesk_person_date: new Date(),
-
                 saved_from: this.staff_class.company_name._id
             }
 
-
+            if (this.flag == 1) {
+                this.staff_class.account_img = this.account_info.data.personal_info.person_img 
+            }
+            if(this.flag == 0){
+                this.staff_class.account_img = data.person_img
+            }
+            for (let validate in this.staff_class)
+            {   
+                if(!this.staff_class.account_img || !this.staff_class.given_name || !this.staff_class.middle_name || !this.staff_class.last_name
+                    || !this.staff_class.email || !this.staff_class.gender || !this.staff_class.birthday || !this.staff_class.nationality
+                    || !this.staff_class.home_address || !this.staff_class.contact_number || !this.staff_class.emergency_contact 
+                    || !this.staff_class.position ){ 
+                    this.$q.notify(
+                    {   
+                        color: 'red',
+                        message: 'Please fill in all required fields'
+                    });
+                    return
+                }
+            }
             this.$q.loading.show();
             try
             {
@@ -520,6 +524,7 @@ export default {
         {   
             this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.account_info._id})
             this.staff_class = this.account_info.data.personal_info
+            this.flag = 1
         }
 
         this.company_list = await this.$_post(postGetCompanies);

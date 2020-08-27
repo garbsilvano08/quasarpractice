@@ -211,7 +211,9 @@ module.exports =
         await new MDB_PERSON_LOGS().add(req.body.person_info)
         return res.send(true);
     },
-
+    async getPersonLogs(req, res){
+        return res.send(await new MDB_PERSON_LOGS().doc());
+    },
     async getNearbyPlaces(req, res)
     {
         let locations = null;
@@ -529,5 +531,17 @@ module.exports =
     async getDbPersonLogs(req, res)
     {
         res.send(await new MDB_PERSON_LOGS().docs());
-    }
+    },
+    async updatePersonLogs(req, res)
+    {
+        res.send(await new MDB_PERSON_LOGS().update(req.body.id ,{category : req.body.category}));
+    },
+    async addVisitorIdentification(req, res)
+    {
+        res.send(await new MDB_IDENTIFICATION().add(req.body));
+    },
+    async getIdentification(req, res)
+    {
+        res.send(await new MDB_IDENTIFICATION().docs({person_id : req.body.person_id}));
+    },
 }
