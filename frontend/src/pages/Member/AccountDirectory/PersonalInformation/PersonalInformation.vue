@@ -296,7 +296,7 @@ export default {
     {
         back()
         {
-            if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory_staff"})
+            if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory"})
             else if (this.account_info.type == 'Blacklist') this.$router.push({name: "member_accountdirectory_blacklist"})
             else if (this.account_info.type == 'Visitor') this.$router.push({name: "member_accountdirectory_visitor"})
         },
@@ -307,7 +307,7 @@ export default {
         async removeAccount()
         {
             await this.$_post(postRemoveAccount, {id: this.$route.params.account_info._id , type: this.account_info.type});
-            if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory_staff"})
+            if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory"})
             else this.$router.push({name: "member_accountdirectory_blacklist"})
 
              Notify.create({
