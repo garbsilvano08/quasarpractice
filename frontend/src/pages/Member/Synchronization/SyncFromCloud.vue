@@ -54,7 +54,7 @@ export default {
     }),
     async mounted()
     {
-        await this.getAllDevice(this.$user_info.company);
+        await this.getAllDevice(this.$user_info.company._id);
         this.persons_list = await this.$_post(postGetPersons);
         this.persons_list = this.persons_list.data;
         
@@ -63,7 +63,7 @@ export default {
     {
         async getAllDevice(company)
         {
-           this.device_list = await this.$_post(postGetDevice, {find_device: {company_name: company.company_name}});
+           this.device_list = await this.$_post(postGetDevice, {find_device: {company_id: company}});
            this.device_list = this.device_list.data;
         },
         async syncAll()
@@ -150,7 +150,6 @@ export default {
                 {
                     toDataUrl(person.person_img, async(myBase64) =>
                     {
-                        console.log(device_type);
                         if (device_type == 'smart_pass')
                         {
                             let data = new FormData();

@@ -212,13 +212,15 @@
          </q-dialog>
 
          <!-- JAM STACKED BAR CHART -->
-         <!-- <div class="dashboard__graph-item">
+         <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Compare Foot Traffic
                </div>
 
                <div class="dashboard__graph-filter">
+                  <!-- <q-input v-model="employee_date" type='date' outlined dense></q-input> -->
+                  <!-- <q-select v-model="select_people" :options="options_people" outlined dense></q-select> -->
                   <q-select v-model="registered_filter" :options="options_date" outlined dense></q-select>
                </div>
             </div>
@@ -226,7 +228,7 @@
             <div class="dashboard__graph-content">
                <column-chart :data="data_stacked_bar_graph.data" :stacked="true"></column-chart>
             </div>
-         </div> -->
+         </div>
 
          <!-- VISITORS PURPOSE -->
          <div class="dashboard__graph-item">
