@@ -212,55 +212,19 @@
          </q-dialog>
 
          <!-- JAM STACKED BAR CHART -->
-         <div class="dashboard__graph-item">
+         <!-- <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Compare Foot Traffic
                </div>
 
                <div class="dashboard__graph-filter">
-                  <!-- <q-input v-model="employee_date" type='date' outlined dense></q-input> -->
-                  <!-- <q-select v-model="select_people" :options="options_people" outlined dense></q-select> -->
                   <q-select v-model="registered_filter" :options="options_date" outlined dense></q-select>
                </div>
             </div>
 
             <div class="dashboard__graph-content">
                <column-chart :data="data_stacked_bar_graph.data" :stacked="true"></column-chart>
-            </div>
-         </div>
-
-         <!-- EMPLOYEE/VISITOR OVERVIEW -->
-         <!-- <div class="dashboard__graph-item">
-            <div class="dashboard__graph-header">
-               <div class="dashboard__graph-title">
-                  Employee/Visitor Overview
-               </div>
-               <q-input v-model="employee_date" type='date' outlined dense></q-input>
-               <q-select v-model="select_date" :options="options" outlined dense></q-select>
-            </div>
-
-            <div class="dashboard__graph-content">
-               <column-chart :data="data_bar_graph"></column-chart>
-            </div>
-
-            <div class="dashboard__graph-content">
-               <bar-chart :data="data_bar_graph"></bar-chart>
-            </div>
-
-            <div v-if="staff_visitors.data" class="dashboard__graph-content">
-               <bar-chart style="position: relative; height:250px; width:100%"
-                  :data="{
-                     'MON': staff_visitors.data.Mon,
-                     'TUES': staff_visitors.data.Tue,
-                     'WED': staff_visitors.data.Wed,
-                     'THURS': staff_visitors.data.Thurs,
-                     'FRI': staff_visitors.data.Fri,
-                     'SAT': staff_visitors.data.Sat,
-                     'SUN': staff_visitors.data.Sun,
-                  }"
-               >
-               </bar-chart>
             </div>
          </div> -->
 
