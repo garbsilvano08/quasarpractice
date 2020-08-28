@@ -328,30 +328,117 @@
          </div>
 
          <!-- WAG GALAWIN: JAM -->
-         <div class="dashboard__graph-item">
-            <div class="dashboard__graph-header">
-              <div class="dashboard__graph-title">
-                  Visitors Purpose
-               </div>
-               <div class="dashboard__graph-filter">
-                  <q-select v-model="purpose_filter" :options="option_purpose" outlined dense></q-select>
-                  <!-- <q-input v-model="visitors_date" type='date' outlined dense></q-input> -->
+         <div class="row">
+            <div class="col-lg-6  col-md-12">
+               <div class="dashboard__graph-item">
+                  <div class="dashboard__graph-header">
+                  <div class="dashboard__graph-title">
+                        Visitors Purpose
+                     </div>
+                     <div class="dashboard__graph-filter">
+                        <q-select v-model="purpose_filter" :options="option_purpose" outlined dense></q-select>
+                        <!-- <q-input v-model="visitors_date" type='date' outlined dense></q-input> -->
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-7  col-md-6">
+                        <div class="dashboard__graph-content">
+                           <pie-chart :donut="true" :legend="null"
+                              :data="{
+                                 'Official Business': 40,
+                                 'Collection & Pickup': 20,
+                                 'Delivery': 20,
+                                 'Corporate Meeting': 10,
+                                 'Client/Customer': 5,
+                                 'Guest': 5,
+                              }">
+                           </pie-chart>
+                        </div>
+                     </div>
+                     <div class="col-lg-5  col-md-6">
+                        <div class="header">
+                           <div class="content">
+                              <span>
+                                 <svg width="40" height="11">
+                                 <rect width="40" height="11" style="fill:#3366CC" /> 
+                                 </svg>
+                                 Official Business
+                                 <div class="float-right">{{purpose_visit.data.official_business}}</div> 
+                              </span>
+                              <span>
+                                 <svg width="40" height="11">
+                                 <rect width="40" height="11" style="fill:#DC3912" /> 
+                                 </svg>
+                                 Collection & Pick-up
+                                 <div class="float-right">{{purpose_visit.data.collection_pickup}}</div> 
+                              </span>
+                              <span>
+                                 <svg width="40" height="11">
+                                 <rect width="40" height="11" style="fill:#FF9900" /> 
+                                 </svg>
+                                 Delivery
+                                 <div class="float-right">{{purpose_visit.data.delivery}}</div> 
+                              </span>
+                              <span>
+                                 <svg width="40" height="11">
+                                 <rect width="40" height="11" style="fill:#109618" /> 
+                                 </svg>
+                                 Corporate Meeting 
+                                 <div class="float-right">{{purpose_visit.data.corporate_meeting}}</div> 
+                              </span>
+                              <span>
+                                 <svg width="40" height="11">
+                                 <rect width="40" height="11" style="fill:#990099" /> 
+                                 </svg>
+                                 Client/Customer
+                                 <div class="float-right">{{purpose_visit.data.client_customer}}</div> 
+                              </span>
+                              <span>
+                                 <svg width="40" height="11">
+                                 <rect width="40" height="11" style="fill:#3B3EAC" /> 
+                                 </svg>
+                                 Guest
+                                 <div class="float-right">{{purpose_visit.data.guest}}</div> 
+                              </span>
+
+                              <div class="float-right">
+                                 <div class="total-number">{{this.purpose_visit_total}}</div>
+                                 <div class="total-visitors">Total Visitors</div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
                </div>
             </div>
+            <div class="col-lg-6  col-md-12">
+               <div class="dashboard__graph-item">
+                  <div class="dashboard__graph-header">
+                  <div class="dashboard__graph-title">
+                        Visitors Purpose
+                     </div>
+                     <div class="dashboard__graph-filter">
+                        <q-select v-model="purpose_filter" :options="option_purpose" outlined dense></q-select>
+                        <!-- <q-input v-model="visitors_date" type='date' outlined dense></q-input> -->
+                     </div>
+                  </div>
 
-            <div class="dashboard__graph-content">
-               <pie-chart :donut="true" legend="right"
-                  :data="{
-                     'Official Business': 40,
-                     'Collection & Pickup': 20,
-                     'Delivery': 20,
-                     'Corporate Meeting': 10,
-                     'Client/Customer': 5,
-                     'Guest': 5,
-                  }">
-               </pie-chart>
+                  <div class="dashboard__graph-content">
+                     <pie-chart :donut="true" legend="right"
+                        :data="{
+                           'Official Business': 40,
+                           'Collection & Pickup': 20,
+                           'Delivery': 20,
+                           'Corporate Meeting': 10,
+                           'Client/Customer': 5,
+                           'Guest': 5,
+                        }">
+                     </pie-chart>
+                  </div>
+               </div>
             </div>
          </div>
+         
 
          <!-- VISITOR LOGS -->
          <!-- <div class="dashboard__graph-item dashboard__graph-item--alert-logs">
@@ -425,6 +512,7 @@ export default
 
    data:() =>
    ({
+      purpose_visit_total : 0,
       data_stacked_bar_graph: {data: [
          {
             name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
