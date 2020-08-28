@@ -150,6 +150,15 @@ export default {
                 {
                     toDataUrl(person.person_img, async(myBase64) =>
                     {
+                        if (device_type == 'smart_pass')
+                        {
+                            let data = new FormData();
+                            data.append('pass', '123456');
+                            data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
+                            let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
+                            console.log(logs, 'logs');
+                        }
+
                         let sex = "";
                         if (person.gender == "Female")
                         {
@@ -164,7 +173,6 @@ export default {
 
                         if (person.category == "Visitor")
                         {
-                            console.log(person);
                             prescription = "'" + expStart + "," + expEnd + "'";
                             if (device_type == 'vision_sky')
                             {
@@ -198,6 +206,7 @@ export default {
                         }
                         else if (person.category == "Staff")
                         {
+                            console.log(device_type);
                             if (device_type == 'vision_sky')
                             {
                                 let data = new FormData();
@@ -212,7 +221,7 @@ export default {
                                 image.append("faceId", person.frontdesk_person_id );
                                 image.append("imgBase64", b64 );
                                 let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data);
-                                console.log(img);
+                                // console.log(img);
                             }
                             else
                             {
@@ -220,6 +229,7 @@ export default {
                                 tabletFormData.append("pass", "123456");
                                 tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0}");
                                 let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
+                                
                             }
                         }
 

@@ -30,8 +30,8 @@
         </div>
         <div class="content__info">
             <div class="content__name">
-                {{all_logs.full_name}} <br>
-                <span v-if="all_logs.full_name != 'Stranger'">{{all_logs.category}}</span>
+                {{ all_logs.full_name == 'Stranger' ? 'Unregistered' : all_logs.full_name}} <br>
+                <span>{{all_logs.category}}</span>
             </div>
             <div class="content__datetime">
                 <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{all_logs.date}}

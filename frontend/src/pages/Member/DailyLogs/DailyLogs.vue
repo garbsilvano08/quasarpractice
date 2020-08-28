@@ -61,12 +61,12 @@
                         <q-list>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="sort_type" val='1' dense label="Ascending" />
+                                    <q-radio v-model="sort_type" val='-1' dense label="Descending" />
                                 </q-item-section>
                             </q-item>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="sort_type" val='-1' dense label="Descending" />
+                                    <q-radio v-model="sort_type" val='1' dense label="Ascending" />
                                 </q-item-section>
                             </q-item>
                             <q-separator />
@@ -141,9 +141,9 @@ export default {
         ComPicker
     },
     data: () => ({
-        sort_type: '1',
+        sort_type: '-1',
         input__people: '',
-        start_time: '01:00',
+        start_time: '00:00',
         end_time:  '23:59',
         start_date: new Date().toISOString().split('T')[0],
         end_date: new Date().toISOString().split('T')[0],
@@ -161,9 +161,9 @@ export default {
         options_body_temperature: [
             'Normal', 'Fever'
         ],
-        checkbox_date_saved: '',
-        checkbox_name: '',
-        checkbox_temperature: '',
+        checkbox_date_saved: true,
+        checkbox_name: false,
+        checkbox_temperature: false,
         company_details: {},
         device_list: [],
         log_list: [],
@@ -267,10 +267,12 @@ export default {
 
             let date_start = new Date(this.start_date)
             date_start.setHours(sort_time_start[0])
+            date_start.setHours(date_start.getHours() + 8)
             date_start.setMinutes(sort_time_start[1])
 
             let date_end = new Date(this.end_date)
             date_end.setHours(sort_time_end[0])
+            date_end.setHours(date_end.getHours() + 8)
             date_end.setMinutes(sort_time_end[1])
             if (this.select__account_type == 'All')
             {
@@ -400,6 +402,7 @@ export default {
         convertDateFormat(date_saved)
         {
             let full_date = new Date(date_saved)
+            full_date.setHours(full_date.getHours() - 8)
             let date = full_date.toISOString().split('T')[0]
             // let time = full_date.getHours() < 
             var hours = full_date.getHours() ; // gives the value in 24 hours format

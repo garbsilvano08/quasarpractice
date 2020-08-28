@@ -3,7 +3,7 @@
         <div class="report__header" style="margin-bottom: 15px !important;">
             <div class="header__title">FEVER DETECTED REPORTS</div>
             <div class="header__filter">
-                <com-picker :user="this.$user_info" class="select-lg" @select=getCompanyDatas></com-picker>
+                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyDatas></com-picker>
                 <q-btn @click="exportTableToExcel('tblData', 'fever-detected')" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
@@ -11,7 +11,8 @@
         </div>
         <div class="report__header">
             <div class="header__filter">
-                <q-input v-model="select__date" type="date" outlined dense></q-input>
+                <q-input v-model="start__date" type="date" outlined dense></q-input>
+                <q-input v-model="end__date" type="date" outlined dense></q-input>
                 <q-btn flat dense no-caps class="btn-primary btn-sort" label="Sort">
                     <q-menu>
                         <q-list style="min-width: 100px">
@@ -76,7 +77,8 @@ export default {
         ComPicker,
     },
      data: () => ({
-        select__date: new Date().toISOString().split('T')[0],
+        start__date: new Date(),
+        end__date: new Date(),
         select__company: '',
         pagination: {
             rowsPerPage: 10,

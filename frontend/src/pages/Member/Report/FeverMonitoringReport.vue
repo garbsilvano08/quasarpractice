@@ -3,7 +3,7 @@
         <div class="report__header" style="margin-bottom: 15px !important;">
             <div class="header__title">FEVER MONITORING REPORTS</div>
             <div class="header__filter">
-                <com-picker :user="this.$user_info" class="select-lg" @select=getCompanyData></com-picker>
+                <com-picker :user="this.$user_info" class="btn-choose" @select=getCompanyData></com-picker>
                 <!-- <q-select class="select-sm" v-model="select__date" :options="options_date" outlined dense></q-select> -->
                 <!-- <q-select class="select-lg" v-model="select__company" :options="options_company" outlined dense></q-select> -->
                 <q-btn @click="exportTableToExcel('tblData', 'visitor-list')" class="btn-outline btn-export" flat dense no-caps>

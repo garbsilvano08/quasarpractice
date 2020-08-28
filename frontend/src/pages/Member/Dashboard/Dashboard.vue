@@ -43,14 +43,14 @@
             <div class="dashboard__overview-bg bg-second">
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">{{highest_log.data.length ? highest_log.data[0].temperature + "°" : 'No Logs Yet'}} </div>
+                     <div class="decs-total">{{today_staff}} </div>
                      <!-- <div class="desc-separator"></div>
                      <div class="decs-info">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                   </div>
-                  <div class="dashboard__overview-title">Highest Temperature Today</div>
+                  <div class="dashboard__overview-title">Total Staff Today</div>
                   <!-- <div class="dashboard__overview-date">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                </div>
-               <q-img src="../../../assets/Member/overview-2.svg" width="45px"></q-img>
+               <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
             </div>
 
             <!-- </q-img> -->
@@ -74,7 +74,7 @@
                      <div class="decs-total">{{current_alerts}}</div>
                      <div class="decs-info"></div>
                   </div>
-                  <div class="dashboard__overview-title">Fever Cases Today</div>
+                  <div class="dashboard__overview-title">Total Fever Cases Today</div>
                   <!-- <div class="dashboard__overview-date">Out of 275 Registered Users</div> -->
                </div>
                <q-img src="../../../assets/Member/overview-4.svg" width="45px"></q-img>
@@ -85,7 +85,7 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">{{staff_number}}</div>
-               <div class="dashboard__total-title">Total Employees</div>
+               <div class="dashboard__total-title">Registered Staff</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
             <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
@@ -93,7 +93,7 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">{{visitor_number}}</div>
-               <div class="dashboard__total-title">Total Visitors</div>
+               <div class="dashboard__total-title">Registered Visitors</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
             <q-img src="../../../assets/Member/total-visitors.svg" width="70px"></q-img>
@@ -109,7 +109,7 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">{{device_number}}</div>
-               <div class="dashboard__total-title">Total Devices Installed</div>
+               <div class="dashboard__total-title">Devices Installed</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
             <q-img src="../../../assets/Member/total-devices.svg" width="30px"></q-img>
@@ -117,13 +117,14 @@
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
                <div class="dashboard__total-number">0</div>
-               <div class="dashboard__total-title">Total Fever Cases</div>
+               <div class="dashboard__total-title">Fever Cases</div>
                <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
             </div>
-            <q-img src="../../../assets/Member/total-cases.svg" width="25px"></q-img>
+            <q-img src="../../../assets/Member/total-cases.svg" width="23px"></q-img>
          </div>
       </div>
       <div class="dashboard__graph">
+
          <!-- FOOT TRAFFIC GRAPH -->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
@@ -158,28 +159,27 @@
                   </q-card-actions>
                </q-card>
          </q-dialog>
-
-            <!-- <div v-if="traffic_weekly.data" class="dashboard__graph-content">
-               <line-chart style="position: relative; height:250px; width:100%"
-                  :data="{
-                     'MON': traffic_weekly.data.Mon,
-                     'TUES': traffic_weekly.data.Tue,
-                     'WED': traffic_weekly.data.Wed,
-                     'THURS': traffic_weekly.data.Thurs,
-                     'FRI': traffic_weekly.data.Fri,
-                     'SAT': traffic_weekly.data.Sat,
-                     'SUN': traffic_weekly.data.Sun,
-                  }"
-               >
-               </line-chart>
-            </div> -->
+         <!-- <div v-if="traffic_weekly.data" class="dashboard__graph-content">
+            <line-chart style="position: relative; height:250px; width:100%"
+               :data="{
+                  'MON': traffic_weekly.data.Mon,
+                  'TUES': traffic_weekly.data.Tue,
+                  'WED': traffic_weekly.data.Wed,
+                  'THURS': traffic_weekly.data.Thurs,
+                  'FRI': traffic_weekly.data.Fri,
+                  'SAT': traffic_weekly.data.Sat,
+                  'SUN': traffic_weekly.data.Sun,
+               }"
+            >
+            </line-chart>
+         </div> -->
          </div>
 
          <!-- EMPLOYEE/VISITOR OVERVIEW -->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
-                  Employee/Visitor Overview
+                  Compare Foot Traffic
                </div>
 
                <div class="dashboard__graph-filter">
@@ -190,7 +190,7 @@
             </div>
 
             <div class="dashboard__graph-content">
-               <column-chart :data="data_bar_graph.data"></column-chart>
+               <column-chart :data="data_bar_graph.data" :stacked="true"></column-chart>
             </div>
          </div>
           <q-dialog v-model="date_filter_registered" persistent>
@@ -211,39 +211,24 @@
             </q-card>
          </q-dialog>
 
-         <!-- EMPLOYEE/VISITOR OVERVIEW -->
-         <!-- <div class="dashboard__graph-item">
+         <!-- JAM STACKED BAR CHART -->
+         <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
-                  Employee/Visitor Overview
+                  Compare Foot Traffic
                </div>
-               <q-input v-model="employee_date" type='date' outlined dense></q-input>
-               <q-select v-model="select_date" :options="options" outlined dense></q-select>
+
+               <div class="dashboard__graph-filter">
+                  <!-- <q-input v-model="employee_date" type='date' outlined dense></q-input> -->
+                  <!-- <q-select v-model="select_people" :options="options_people" outlined dense></q-select> -->
+                  <q-select v-model="registered_filter" :options="options_date" outlined dense></q-select>
+               </div>
             </div>
 
             <div class="dashboard__graph-content">
-               <column-chart :data="data_bar_graph"></column-chart>
+               <column-chart :data="data_stacked_bar_graph.data" :stacked="true"></column-chart>
             </div>
-
-            <div class="dashboard__graph-content">
-               <bar-chart :data="data_bar_graph"></bar-chart>
-            </div>
-
-            <div v-if="staff_visitors.data" class="dashboard__graph-content">
-               <bar-chart style="position: relative; height:250px; width:100%"
-                  :data="{
-                     'MON': staff_visitors.data.Mon,
-                     'TUES': staff_visitors.data.Tue,
-                     'WED': staff_visitors.data.Wed,
-                     'THURS': staff_visitors.data.Thurs,
-                     'FRI': staff_visitors.data.Fri,
-                     'SAT': staff_visitors.data.Sat,
-                     'SUN': staff_visitors.data.Sun,
-                  }"
-               >
-               </bar-chart>
-            </div>
-         </div> -->
+         </div>
 
          <!-- VISITORS PURPOSE -->
          <div class="dashboard__graph-item">
@@ -270,7 +255,7 @@
 
                <div class="dashboard__graph-total">
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number--grand">{{purpose_visit.data.official_business + 
+                     <div class="dashboard__graph-number--grand">{{purpose_visit.data.official_business +
                         purpose_visit.data.collection_pickup +
                         purpose_visit.data.delivery +
                         purpose_visit.data.corporate_meeting +
@@ -340,6 +325,32 @@
                >
                </pie-chart>
             </div> -->
+         </div>
+
+         <!-- WAG GALAWIN: JAM -->
+         <div class="dashboard__graph-item">
+            <div class="dashboard__graph-header">
+              <div class="dashboard__graph-title">
+                  Visitors Purpose
+               </div>
+               <div class="dashboard__graph-filter">
+                  <q-select v-model="purpose_filter" :options="option_purpose" outlined dense></q-select>
+                  <!-- <q-input v-model="visitors_date" type='date' outlined dense></q-input> -->
+               </div>
+            </div>
+
+            <div class="dashboard__graph-content">
+               <pie-chart :donut="true" legend="right"
+                  :data="{
+                     'Official Business': 40,
+                     'Collection & Pickup': 20,
+                     'Delivery': 20,
+                     'Corporate Meeting': 10,
+                     'Client/Customer': 5,
+                     'Guest': 5,
+                  }">
+               </pie-chart>
+            </div>
          </div>
 
          <!-- VISITOR LOGS -->
@@ -414,9 +425,20 @@ export default
 
    data:() =>
    ({
+      data_stacked_bar_graph: {data: [
+         {
+            name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
+         },
+         {
+            name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
+         },
+         {
+            name: 'Stranger', data: {'Monday': 4, 'Tuesday': 2, 'Wednesday': 1, 'Thrusday': 5, 'Friday': 4,}
+         }
+      ]},
       data_bar_graph: {data:[]},
       data_line_graph:
-       {data: [
+      {data: [
          {
             name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
          },
@@ -540,7 +562,8 @@ export default
       purposeEnd: new Date().toISOString().split('T')[0],
       last_option_purpose: '',
       registered_has_fever: 0,
-      today_visitors: 0
+      today_visitors: 0,
+      today_staff: 0
    }),
 
    watch:
@@ -567,8 +590,8 @@ export default
            }
            else
            {
-              if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
-              else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
+              if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+              else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
            }
         },
 
@@ -721,7 +744,7 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-            params = {find_device: {company_name: this.company_details.company_name, date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}}
+            params = {find_device: {company_name: this.company_details.company_name}}
          }
          // else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
 
@@ -886,6 +909,7 @@ export default
             for (let log of today_logs.data) {
                total = total + Number(log.count)
                if (log.key == 'Visitor') this.today_visitors = this.today_visitors + 1
+               else if (log.key == 'Staff') this.today_staff = this.today_staff + 1
             }
             this.logged_today = (total/this.traffic_data.count) * 100
             this.logged_today = this.logged_today.toFixed(0);
@@ -899,11 +923,12 @@ export default
 
    async mounted()
    {
+      console.log(new Date());
       this.company_details = this.$user_info.company ? this.$user_info.company : {}
       let params = {}
       console.log(this.company_details);
-      if (this.company_details) params = {filter: {company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
-      else params = {filter: {date_filter: this.select_date, person: this.select_people}}
+      if (this.company_details) params = {filter: {current_date: new Date(), company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
+      else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
          console.log(params, 'params');
       await this.getTrafficData(params)
       if (this.$user_info.user_type == 'Officer')
