@@ -2,13 +2,13 @@
     <div class="personal-info">
         <div class="personal-info__header">
             <q-btn @click="back" class="btn-back btn-outline" flat dense no-caps label="Back"></q-btn>
-            <div class="personal-info__header-btn">
+            <div class="personal-info__header-btn" v-if="this.$route.params.from_account_directory">
                 <q-btn @click="removeAccount()" class="btn-outline btn-remove" flat dense no-caps label="Remove"></q-btn>
                 <q-btn @click="editAccount()" class="btn-primary btn-edit" flat dense no-caps label="Edit"></q-btn>
             </div>
         </div>
 
-        <div class="personal-info__container content__box">
+        <div class="personal-info__container content__box" v-if="this.$route.params.from_account_directory">
             <div class="personal-info__holder">
                 <div class="personal-info__content-header">
                     <q-icon name="mdi-apple-icloud" size="30px"></q-icon>
@@ -68,7 +68,7 @@
                     </div>
                 </div>
             </div>
-            <div class="personal-info__holder">
+            <div class="personal-info__holder" v-if="this.$route.params.from_account_directory">
                 <div class="personal-info__content-header content-header__grey">
                     <q-icon name="mdi-briefcase" size="20px"></q-icon>
                     <div class="content__title">Data Source</div>
@@ -103,7 +103,7 @@
                     </div>
                 </div>
             </div>
-            <div class="personal-info__holder" v-if="account_info.data.personal_info.category == 'Visitor'">
+            <div class="personal-info__holder" v-if="this.$route.params.from_account_directory && account_info.data.personal_info.category == 'Visitor'">
                 <div class="personal-info__content-header content-header__grey">
                     <q-icon name="mdi-card-account-details" size="20px"></q-icon>
                     <div class="content__title">Registered Identification Card</div>
@@ -245,7 +245,7 @@
                 </div>
             </div>
         </div> -->
-        <div class="personal-info__container content__box" style="margin-top: 30px">
+        <div class="personal-info__container content__box" style="margin-top: 30px" v-if="this.$route.params.from_daily_logs">
             <div class="personal-info__content-header">
                 <q-icon name="mdi-face-recognition" size="22px"></q-icon>
                 <div class="content__title">User Logs</div>
@@ -263,9 +263,9 @@
                     <tbody v-if="this.person_logs">
                         <tr v-for="(logs, index) in this.person_logs.data" :key="index">
                             <td>{{new Date(logs.currentTime * 1000).toString()}}</td>
-                            <td class="td-green">{{logs.tempratrue}}°C</td>
+                            <td class="td-green">{{logs.temperature}}°C</td>
                             <td>{{logs.device_id}}</td>
-                            <td>Green Sun Hotel</td>
+                            <td>{{logs.company_name}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -279,6 +279,7 @@ import { Notify } from 'quasar';
 import "./PersonalInformation.scss";
 import { postRemoveAccount , postGetCompany, postGetDevice, postGetPerson, postGetLogs, postGetIdentification} from '../../../../references/url';
 import { date } from 'quasar';
+import { log } from 'util';
 
 export default {
      data: () => ({
@@ -299,6 +300,7 @@ export default {
             if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory"})
             else if (this.account_info.type == 'Blacklist') this.$router.push({name: "member_accountdirectory_blacklist"})
             else if (this.account_info.type == 'Visitor') this.$router.push({name: "member_accountdirectory_visitor"})
+            //else this.$router.push({name: "member_dailylogs"})
         },
         getImgUrl(path){
 
@@ -354,26 +356,34 @@ export default {
 
     async mounted()
     {   
-        
-        this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.account_info._id});
-        this.account_info.type = this.$route.params.account_info.type;
-        await this.getDeviceNumber(this.account_info.data.personal_info.company_name ? this.account_info.data.personal_info.company_name : '');
-        if (this.account_info.data.personal_info.company_id)
-        {
-            this.company_info = await this.getCompany(this.account_info.data.personal_info.company_id)
-            this.company_info.data.parent_company =  await this.getParentCompany(this.company_info.data.parent_id)
-        }
+        if (this.$route.params.account_info) {
+            this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.account_info._id});
+            this.account_info.type = this.$route.params.account_info.type;
+            await this.getDeviceNumber(this.account_info.data.personal_info.company_name ? this.account_info.data.personal_info.company_name : '');
+            if (this.account_info.data.personal_info.company_id)
+            {
+                this.company_info = await this.getCompany(this.account_info.data.personal_info.company_id)
+                this.company_info.data.parent_company =  await this.getParentCompany(this.company_info.data.parent_id)
+            }
 
-        if (this.account_info.data.personal_info.frontdesk_person_id)
-        {
-            this.person_logs = await this.$_post(postGetLogs,{ id: this.account_info.data.personal_info.frontdesk_person_id, limit: 3})
+            // if (this.account_info.data.personal_info.frontdesk_person_id)
+            // {
+            //     this.person_logs = await this.$_post(postGetLogs,{ id: this.account_info.data.personal_info.frontdesk_person_id, limit: 3})
+            // }
+            this.birthday = date.formatDate(this.account_info.data.personal_info.birthday, 'MMM DD, YYYY');
+            this.date_registered = date.formatDate(this.account_info.data.personal_info.date_created, 'MMM DD, YYYY');
+            if (this.account_info.data.personal_info.category == 'Visitor') {
+                this.identification_info = await this.$_post(postGetIdentification, {person_id: this.$route.params.account_info._id});
+                console.log(this.identification_info.data);
+            }
         }
-        this.birthday = date.formatDate(this.account_info.data.personal_info.birthday, 'MMM DD, YYYY');
-        this.date_registered = date.formatDate(this.account_info.data.personal_info.date_created, 'MMM DD, YYYY');
-        if (this.account_info.data.personal_info.category == 'Visitor') {
-            this.identification_info = await this.$_post(postGetIdentification, {person_id: this.$route.params.account_info._id});
-            console.log(this.identification_info.data);
+        else{
+            // this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.daily_logs_info._id});
+            console.log(this.$route.params.daily_logs_info._id);
+            this.person_logs = await this.$_post(postGetLogs,{ id: this.$route.params.daily_logs_info._id, limit: 3})
+            
         }
+        
     }
 
 }

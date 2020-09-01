@@ -480,7 +480,7 @@ module.exports =
     
     async getLogs(req, res)
     {
-        res.send(await new MDB_LOGS().collection.find(req.body.find_logs).limit(req.body.limit).sort({currentTime:-1}))
+        res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_logs).limit(req.body.limit))
     },
 
     async getPerson(req, res)
@@ -537,8 +537,8 @@ module.exports =
     },
     async getDeviceByUser(req, res)
     {
-        console.log(req.user_info);
-        console.log(await new MDB_DEVICE.docs());
+        // console.log(req.user_info);
+        // console.log(await new MDB_DEVICE.docs());
     },
     async getDbPersonLogs(req, res)
     {

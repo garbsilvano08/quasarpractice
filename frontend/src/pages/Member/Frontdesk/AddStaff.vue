@@ -16,7 +16,8 @@
                     <div class="frontdesk__content-info">
                         <div class="content__title">Facial Recognition</div>
                         <div class="content__img-holder">
-                            <canvas class="content__img"  border icon="mdi-camera" id="canvas" width="640" height="480"></canvas>
+                            <q-img v-show="this.show" class="content__img" :src="this.staff_class.person_img"></q-img>
+                            <canvas v-show="this.show == false" class="content__img"  border icon="mdi-camera" id="canvas" width="640" height="480"></canvas>
                             <!-- <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video> -->
                             <!-- <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img> -->
                             <!-- <input style="display:none" capture="camera" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file"> -->
@@ -214,6 +215,7 @@ import { log } from 'util';
 export default {
     data:() =>
     ({
+        show : true,
         open_camera: false,
         position_input: '',
         id_url : 'https://fleek.geer.solutions/storage/photos/Z3zuI9NN61eJoh5yDHJEaNOGGDC2z9o2NWzEpbwc.jpeg',
@@ -350,7 +352,7 @@ export default {
             return await this.$_post_file(formData);
         },
         async openFilemanager(type)
-        {
+        {   this.show = false
             this.$q.loading.show();
             var canvas = document.getElementById('canvas');
             var context =   canvas.getContext('2d');

@@ -213,30 +213,7 @@
             @media screen and (max-width: 768px) {
                 overflow: scroll;
             }
-            .header{
-                .content{
-                    padding-top: 20%;
-                    span{
-                        margin-right: 30px;
-                        margin-left: 30px;
-                        margin-bottom: 3px;
-                        display: block;
-                        font-size: 13px;
-                    }
-                    div{
-                        .total-number{
-                            margin-right: 30px;
-                            text-align: right;
-                            font-size: 50px;
-                            margin-bottom:-10px;
-                        }
-                        .total-visitors{
-                            margin-right: 30px;
-                            color: #9E9E9E;
-                        }
-                    }
-                }
-            }
+            
             .dashboard__graph-header {
                 width: 100%;
                 display: flex;
