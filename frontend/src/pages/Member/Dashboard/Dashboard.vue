@@ -291,13 +291,7 @@
 
                <div class="dashboard__graph-total">
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number--grand">{{purpose_visit.data.official_business +
-                        purpose_visit.data.collection_pickup +
-                        purpose_visit.data.delivery +
-                        purpose_visit.data.corporate_meeting +
-                        purpose_visit.data.client_customer +
-                        purpose_visit.data.guest
-                        }}</div>
+                     <div class="dashboard__graph-number--grand">{{purpose_visit.total}}</div>
                      <div class="dashboard__graph-label">Total Visitor</div>
                   </div>
                </div>
@@ -391,16 +385,16 @@
                         '#00af50',
                      ]"
                      :data="{
-                        'Official Business': 40,
-                        'Collection & Pickup': 20,
-                        'Delivery': 20,
-                        'Corporate Meeting': 10,
-                        'Client/Customer': 5,
-                        'Guest': 5,
+                        'Official Business': purpose_visit.data.official_business,
+                        'Collection & Pickup': purpose_visit.data.collection_pickup,
+                        'Delivery': purpose_visit.data.delivery,
+                        'Corporate Meeting': purpose_visit.data.corporate_meeting,
+                        'Client/Customer': purpose_visit.data.client_customer,
+                        'Guest': purpose_visit.data.guest,
                      }">
                   </pie-chart>
                   <div class="dashboard__pie-total">
-                     <div class="pie-total__amount">100</div>
+                     <div class="pie-total__amount">{{purpose_visit.total}}</div>
                      <div class="pie-total__label">Total Visitors</div>
                   </div>
                </div>
@@ -434,42 +428,42 @@
 
                <div class="dashboard__pie-total content__grid-3x3">
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">40</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.official_business}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-1"></div>
                         <div class="item-label__name">Official Business</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">20</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.collection_pickup}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-2"></div>
                         <div class="item-label__name">Collection & Pickup</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">20</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.delivery}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-3"></div>
                         <div class="item-label__name">Delivery</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">10</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.corporate_meeting}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-4"></div>
                         <div class="item-label__name">Corporate Meeting</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">5</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.client_customer}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-5"></div>
                         <div class="item-label__name">Client/Customer</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">5</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.guest}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-6"></div>
                         <div class="item-label__name">Guest</div>
@@ -777,7 +771,6 @@ export default
    methods: {
       async getFootTraffic()
       {
-         console.log('dadad');
          if (this.select_date == 'Custom Date')
          {
             
@@ -951,6 +944,13 @@ export default
             else params = {find_all: {date_string: new Date().toISOString().split('T')[0]}}
          }
          this.purpose_visit =  await this.$_post(postGetPurposeVisit, params);
+         this.purpose_visit.total =
+            this.purpose_visit.data.official_business 
+            + this.purpose_visit.data.collection_pickup 
+            + this.purpose_visit.data.delivery
+            + this.purpose_visit.data.corporate_meeting
+            + this.purpose_visit.data.client_customer
+            + this.purpose_visit.data.guest
       },
 
       async getAlertLogs()
