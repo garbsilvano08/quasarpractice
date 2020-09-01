@@ -50,7 +50,7 @@
                   <div class="dashboard__overview-title">Total Staff Today</div>
                   <!-- <div class="dashboard__overview-date">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                </div>
-               <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
+               <q-img src="../../../assets/Member/overview-2.svg" width="45px"></q-img>
             </div>
 
             <!-- </q-img> -->
@@ -140,8 +140,19 @@
             </div>
 
             <div class="dashboard__graph-content">
-               <line-chart :data="data_line_graph.data" />
+               <line-chart
+                  :data="data_line_graph.data"
+                  :colors="[
+                     '#9825f2',
+                     '#fd8e22',
+                     '#f8fe22',
+                     '#2089fe',
+                     '#23dea7',
+                     '#00af50',
+                  ]"
+               />
             </div>
+            <!-- FILTER DIALOG -->
             <q-dialog v-model="date_filter_dialog" persistent>
                <q-card>
                   <q-card-section>
@@ -190,7 +201,20 @@
             </div>
 
             <div class="dashboard__graph-content">
-               <column-chart :data="data_bar_graph.data" :stacked="true"></column-chart>
+               <column-chart
+                  :data="data_bar_graph.data"
+                  :stacked="true"
+                  :colors="[
+                     '#9825f2',
+                     '#fd8e22',
+                     '#f22435',
+                     '#f8fe22',
+                     '#2089fe',
+                     '#23dea7',
+                     '#00af50',
+                  ]"
+               >
+               </column-chart>
             </div>
          </div>
           <q-dialog v-model="date_filter_registered" persistent>
@@ -226,7 +250,20 @@
             </div>
 
             <div class="dashboard__graph-content">
-               <column-chart :data="data_stacked_bar_graph.data" :stacked="true"></column-chart>
+               <column-chart
+                  :data="data_stacked_bar_graph.data"
+                  :stacked="true"
+                  :colors="[
+                     '#9825f2',
+                     '#fd8e22',
+                     '#f22435',
+                     '#f8fe22',
+                     '#2089fe',
+                     '#23dea7',
+                     '#00af50',
+                  ]"
+               >
+               </column-chart>
             </div>
          </div>
 
@@ -361,7 +398,7 @@
             </div> -->
          </div>
 
-         <!-- WAG GALAWIN: JAM -->
+         <!-- VISITORS PURPOSE NEW PIE CHART-->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
               <div class="dashboard__graph-title">
@@ -373,8 +410,20 @@
                </div>
             </div>
 
-            <div class="dashboard__graph-content">
-               <pie-chart :donut="true" legend="right"
+            <div class="dashboard__graph-content dashboard__graph-pie">
+               <pie-chart
+                  :donut="true"
+                  :legend="false"
+                  width="250px"
+                  height="250px"
+                  :colors="[
+                     '#9825f2',
+                     '#fd8e22',
+                     '#f8fe22',
+                     '#2089fe',
+                     '#23dea7',
+                     '#00af50',
+                  ]"
                   :data="{
                      'Official Business': 40,
                      'Collection & Pickup': 20,
@@ -384,6 +433,59 @@
                      'Guest': 5,
                   }">
                </pie-chart>
+               <div class="dashboard__pie-legend">
+                  <div class="pie-legend__item">
+                     <div class="pie-legend__color first-color"></div>
+                     <div class="pie-legend__percent">40%</div>
+                  </div>
+                  <div class="pie-legend__item">
+                     <div class="pie-legend__color second-color"></div>
+                     <div class="pie-legend__percent">20%</div>
+                  </div>
+                  <div class="pie-legend__item">
+                     <div class="pie-legend__color third-color"></div>
+                     <div class="pie-legend__percent">20%</div>
+                  </div>
+                  <div class="pie-legend__item">
+                     <div class="pie-legend__color fourth-color"></div>
+                     <div class="pie-legend__percent">10%</div>
+                  </div>
+                   <div class="pie-legend__item">
+                     <div class="pie-legend__color fifth-color"></div>
+                     <div class="pie-legend__percent">5%</div>
+                  </div>
+                  <div class="pie-legend__item">
+                     <div class="pie-legend__color sixth-color"></div>
+                     <div class="pie-legend__percent">5%</div>
+                  </div>
+               </div>
+
+               <div class="dashboard__pie-total content__grid-3x3">
+                  <div class="pie-total__item">
+                     <div class="pie-total__item-amount">40</div>
+                     <div class="pie-total__item-label">Official Business</div>
+                  </div>
+                  <div class="pie-total__item">
+                     <div class="pie-total__item-amount">20</div>
+                     <div class="pie-total__item-label">Collection & Pickup</div>
+                  </div>
+                  <div class="pie-total__item">
+                     <div class="pie-total__item-amount">20</div>
+                     <div class="pie-total__item-label">Delivery</div>
+                  </div>
+                  <div class="pie-total__item">
+                     <div class="pie-total__item-amount">10</div>
+                     <div class="pie-total__item-label">Corporate Meeting</div>
+                  </div>
+                  <div class="pie-total__item">
+                     <div class="pie-total__item-amount">5</div>
+                     <div class="pie-total__item-label">Client/Customer</div>
+                  </div>
+                  <div class="pie-total__item">
+                     <div class="pie-total__item-amount">5</div>
+                     <div class="pie-total__item-label">Guest</div>
+                  </div>
+               </div>
             </div>
          </div>
 

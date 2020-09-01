@@ -420,6 +420,80 @@
                     }
                 }
             }
+
+            .dashboard__graph-pie {
+                display: grid;
+                grid-template-columns: auto auto 1fr;
+                grid-gap: 75px;
+                align-items: center;
+
+                .dashboard__pie-legend {
+                    .pie-legend__item {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 15px;
+
+                        .pie-legend__color {
+                            width: 15px;
+                            height: 15px;
+                            border-radius: 100%;
+                            margin-right: 15px;
+                        }
+
+                        .first-color {
+                            background-color: #9825F2;
+                        }
+
+                        .second-color {
+                            background-color: #FF8000;
+                        }
+
+                        .third-color {
+                            background-color: #F8FE22;
+                        }
+
+                        .fourth-color {
+                            background-color: #0077FF;
+                        }
+
+                        .fifth-color {
+                            background-color: #23DEA7;
+                        }
+
+                        .sixth-color {
+                            background-color: #00af50;
+                        }
+
+                        .pie-legend__percent {
+                            color: #233b61;
+                            font-size: 14px;
+                            font-weight: 500;
+                        }
+                    }
+
+                    .pie-legend__item:last-child {
+                        margin-bottom: 0px !important;
+                    }
+                }
+
+                .dashboard__pie-total {
+                    .pie-total__item {
+                        color: #233b61;
+                        text-align: center  ;
+
+                        .pie-total__item-amount {
+                            font-size: 30px;
+                            font-weight: 500;
+                            margin-bottom: 5px;
+                        }
+
+                        .pie-total__item-label {
+                            font-size: 14px;
+                            font-weight: 500;
+                        }
+                    }
+                }
+            }
         }
 
         .dashboard__graph-item--alert-logs {
