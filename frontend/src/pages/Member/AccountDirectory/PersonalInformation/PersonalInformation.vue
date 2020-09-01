@@ -6,8 +6,19 @@
                 <q-btn @click="removeAccount()" class="btn-outline btn-remove" flat dense no-caps label="Remove"></q-btn>
                 <q-btn @click="editAccount()" class="btn-primary btn-edit" flat dense no-caps label="Edit"></q-btn>
             </div>
+            <div class="personal-info__header-btn" v-if="this.$route.params.from_daily_logs">
+                <q-btn @click="exportTableToExcel()" class="btn-outline btn-export" flat dense no-caps>
+                    Export &nbsp;<q-icon name="mdi-export"></q-icon>
+                </q-btn>
+            </div>
         </div>
-
+        <div class="account-directory__header-2" v-if="this.$route.params.from_daily_logs">
+            <div class="header__filter-2">
+                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense ></q-input>
+                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense ></q-input>
+                <!-- <q-btn label="Generate" @click="generateResult" class="btn-primary btn-generate" flat dense no-caps/> -->
+            </div>
+        </div>
         <div class="personal-info__container content__box" v-if="this.$route.params.from_account_directory">
             <div class="personal-info__holder">
                 <div class="personal-info__content-header">
@@ -256,13 +267,13 @@
                         <tr>
                             <th>Date & Time</th>
                             <th>Body Temperature</th>
-                            <th>Device ID</th>
+                            <th>Device Name</th>
                             <th>Company/Location Scanned</th>
                         </tr>
                     </thead>
                     <tbody v-if="this.person_logs">
                         <tr v-for="(logs, index) in this.person_logs.data" :key="index">
-                            <td>{{new Date(logs.currentTime * 1000).toString()}}</td>
+                            <td>{{logs.date_saved }}</td>
                             <td class="td-green">{{logs.temperature}}°C</td>
                             <td>{{logs.device_id}}</td>
                             <td>{{logs.company_name}}</td>
@@ -283,6 +294,8 @@ import { log } from 'util';
 
 export default {
      data: () => ({
+        start_date: new Date().toISOString().split('T')[0],
+        end_date:new Date().toISOString().split('T')[0], 
         account_info: {},
         company_device: 0,
         company_info: {},
@@ -294,7 +307,19 @@ export default {
     }),
 
     methods:
-    {
+    {   
+        // sortDate(){
+        //     let sort_item = {}
+        //     this.start_date = new Date(this.start_date) //.setHours(0,0,0,0)
+        //     this.end_date = new Date(this.end_date).setHours(23,59,59)
+        //     let parameter = {}
+            
+        //     parameter = {date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
+
+        //     this.start_date = new Date(this.start_date).toISOString().split('T')[0]
+        //     this.end_date = new Date(this.end_date).toISOString().split('T')[0]
+        //     this.person_logs = await this.$_post(postGetLogs, {daily_logs_id : this.$route.params.daily_logs_info.frontdesk_person_id, sort: sort_item});
+        // },
         back()
         {
             if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory"})
@@ -379,9 +404,8 @@ export default {
         }
         else{
             // this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.daily_logs_info._id});
-            console.log(this.$route.params.daily_logs_info._id);
-            this.person_logs = await this.$_post(postGetLogs,{ id: this.$route.params.daily_logs_info._id, limit: 3})
-            
+            console.log(this.$route.params.daily_logs_info);
+            this.person_logs = await this.$_post(postGetLogs,{ id: this.$route.params.daily_logs_info.frontdesk_person_id, limit: 10})
         }
         
     }

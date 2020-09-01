@@ -264,7 +264,9 @@ module.exports =
         console.log(req.body.deviceKey ? req.body.deviceKey : req.body.mac, 'saved');
         let person_info = {}
         let key = ['Traffic']
-        let date_string = new Date(new Date(req.body.time ? req.body.time : req.body.checkTime)).toISOString().split('T')[0]
+        let date_string = new Date(new Date(req.body.time ? req.body.time : req.body.checkTime))
+        date_string.setHours(date_string.getHours() + 8)
+        date_string = date_string.toISOString().split('T')[0]
         
         date_string = date_string.split("-")
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.personId ? req.body.personId : req.body.userId})
@@ -480,7 +482,17 @@ module.exports =
     
     async getLogs(req, res)
     {
-        res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_logs).limit(req.body.limit))
+        let log_list
+        if(req.body.id){
+            log_list = await new MDB_PERSON_LOGS().collection.find({frontdesk_person_id: req.body.id}).limit(req.body.limit)
+        }
+        else res.send(await new MDB_PERSON_LOGS().docs());
+        res.send(log_list)
+
+        let sort_date
+        if (req.body.daily_logs_id) {
+            sort_date = await new MDB_PERSON_LOGS().collection.find({frontdesk_person_id: req.body.daily_logs_id}).limit(req.body.limit).sort(req.body.sort)
+        }
     },
 
     async getPerson(req, res)
