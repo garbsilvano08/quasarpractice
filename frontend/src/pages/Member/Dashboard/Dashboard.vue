@@ -143,6 +143,7 @@
                <line-chart
                   :data="data_line_graph.data"
                   :colors="[
+                     '#4151b3',
                      '#9825f2',
                      '#fd8e22',
                      '#f8fe22',
@@ -205,7 +206,7 @@
                   :data="data_bar_graph.data"
                   :stacked="true"
                   :colors="[
-                     '#9825f2',
+                     '#4151b3',
                      '#fd8e22',
                      '#f22435',
                      '#f8fe22',
@@ -254,7 +255,7 @@
                   :data="data_stacked_bar_graph.data"
                   :stacked="true"
                   :colors="[
-                     '#9825f2',
+                     '#4151b3',
                      '#fd8e22',
                      '#f22435',
                      '#f8fe22',
@@ -436,27 +437,45 @@
                <div class="dashboard__pie-total content__grid-3x3">
                   <div class="pie-total__item">
                      <div class="pie-total__item-amount">40</div>
-                     <div class="pie-total__item-label">Official Business</div>
+                     <div class="pie-total__item-label">
+                        <div class="item-label__color color-1"></div>
+                        <div class="item-label__name">Official Business</div>
+                     </div>
                   </div>
                   <div class="pie-total__item">
                      <div class="pie-total__item-amount">20</div>
-                     <div class="pie-total__item-label">Collection & Pickup</div>
+                     <div class="pie-total__item-label">
+                        <div class="item-label__color color-2"></div>
+                        <div class="item-label__name">Collection & Pickup</div>
+                     </div>
                   </div>
                   <div class="pie-total__item">
                      <div class="pie-total__item-amount">20</div>
-                     <div class="pie-total__item-label">Delivery</div>
+                     <div class="pie-total__item-label">
+                        <div class="item-label__color color-3"></div>
+                        <div class="item-label__name">Delivery</div>
+                     </div>
                   </div>
                   <div class="pie-total__item">
                      <div class="pie-total__item-amount">10</div>
-                     <div class="pie-total__item-label">Corporate Meeting</div>
+                     <div class="pie-total__item-label">
+                        <div class="item-label__color color-4"></div>
+                        <div class="item-label__name">Corporate Meeting</div>
+                     </div>
                   </div>
                   <div class="pie-total__item">
                      <div class="pie-total__item-amount">5</div>
-                     <div class="pie-total__item-label">Client/Customer</div>
+                     <div class="pie-total__item-label">
+                        <div class="item-label__color color-5"></div>
+                        <div class="item-label__name">Client/Customer</div>
+                     </div>
                   </div>
                   <div class="pie-total__item">
                      <div class="pie-total__item-amount">5</div>
-                     <div class="pie-total__item-label">Guest</div>
+                     <div class="pie-total__item-label">
+                        <div class="item-label__color color-6"></div>
+                        <div class="item-label__name">Guest</div>
+                     </div>
                   </div>
                </div>
             </div>

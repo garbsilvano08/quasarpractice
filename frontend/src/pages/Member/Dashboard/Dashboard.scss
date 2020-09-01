@@ -511,8 +511,44 @@
                         }
 
                         .pie-total__item-label {
-                            font-size: 14px;
-                            font-weight: 500;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            .item-label__name {
+                                font-size: 14px;
+                                font-weight: 500;
+                            }
+
+                            .item-label__color {
+                                width: 25px;
+                                height: 8px;
+                                margin-right: 10px;
+                            }
+
+                            .color-1 {
+                                background-color: #9825f2;
+                            }
+
+                            .color-2 {
+                                background-color: #fd8e22;
+                            }
+
+                            .color-3 {
+                                background-color: #f8fe22;
+                            }
+
+                            .color-4 {
+                                background-color: #2089fe;
+                            }
+
+                            .color-5 {
+                                background-color: #23dea7;
+                            }
+
+                            .color-6 {
+                                background-color: #00af50;
+                            }
                         }
                     }
                 }
