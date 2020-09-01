@@ -133,7 +133,7 @@
                </div>
                <div class="dashboard__graph-filter">
                   <q-select v-model="select_people" :options="options_people" outlined dense></q-select>
-                  <q-select v-model="select_date" :options="options_date" outlined dense></q-select>
+                  <q-select @select="getFootTraffic()" v-model="select_date" :options="options_date" outlined dense></q-select>
                   <!-- <q-input v-model="traffic_date" type='date' outlined dense></q-input> -->
                </div>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
@@ -212,15 +212,13 @@
          </q-dialog>
 
          <!-- JAM STACKED BAR CHART -->
-         <div class="dashboard__graph-item">
+         <!-- <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Compare Foot Traffic
                </div>
 
                <div class="dashboard__graph-filter">
-                  <!-- <q-input v-model="employee_date" type='date' outlined dense></q-input> -->
-                  <!-- <q-select v-model="select_people" :options="options_people" outlined dense></q-select> -->
                   <q-select v-model="registered_filter" :options="options_date" outlined dense></q-select>
                </div>
             </div>
@@ -228,7 +226,7 @@
             <div class="dashboard__graph-content">
                <column-chart :data="data_stacked_bar_graph.data" :stacked="true"></column-chart>
             </div>
-         </div>
+         </div> -->
 
          <!-- VISITORS PURPOSE -->
          <div class="dashboard__graph-item">
@@ -584,8 +582,10 @@ export default
        async select_date(val, old)
         {
            this.last_option = old
+         //   console.log(val, old);
            if (val == 'Custom Date')
            {
+
               this.date_filter_dialog = true
            }
            else
@@ -647,7 +647,21 @@ export default
     },
 
    methods: {
-
+      async getFootTraffic()
+      {
+         console.log('dadad');
+         if (this.select_date == 'Custom Date')
+         {
+            
+            this.date_filter_dialog = true
+         }
+         else
+         {
+            if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+            else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
+         }
+         // this.last_option = this.select_date
+      },
       async getEmployeeVisitor()
       {
          let data
@@ -678,22 +692,21 @@ export default
                for (let index = 0; index < option_filter.length; index++) {
                      if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id: this.company_details._id, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
                      else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered')
-
+                     this.data_bar_graph.data = []
                      data.data.forEach(reg => {
                         if (reg.name == option_filter[index])
                         {
                            this.data_bar_graph.data.push(reg)
                         }
                      });
-                     this.date_filter_registered = false
                }
-               }
+            }
             else
             {
                this.registered_filter = this.last_option_registered
                this.$q.notify(
-               {
-                  color: 'red',
+                  {
+                     color: 'red',
                   message: 'Invalid date'
                });
             }
@@ -704,18 +717,20 @@ export default
             {
                if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.startDate, end_date: this.endDate, company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
                else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people, end_date: this.endDate, start_date: this.startDate}})
-               this.date_filter_dialog = false
+               // this.date_filter_dialog = false
             }
             else
             {
                this.select_date = this.last_option
                this.$q.notify(
-               {
-                  color: 'red',
-                  message: 'Invalid date'
+                  {
+                     color: 'red',
+                     message: 'Invalid date'
                });
             }
          }
+         this.date_filter_dialog = false
+         this.date_filter_registered = false
       },
 
       async getCompanyData(value)
@@ -923,13 +938,15 @@ export default
 
    async mounted()
    {
-      console.log(new Date());
+      let sample_date = new Date()
+      sample_date.setHours(sample_date.getHours() + 8 )
+      sample_date.toISOString().split('T')[0].split("-")
+
+      console.log(sample_date);
       this.company_details = this.$user_info.company ? this.$user_info.company : {}
       let params = {}
-      console.log(this.company_details);
       if (this.company_details) params = {filter: {current_date: new Date(), company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
       else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
-         console.log(params, 'params');
       await this.getTrafficData(params)
       if (this.$user_info.user_type == 'Officer')
       {

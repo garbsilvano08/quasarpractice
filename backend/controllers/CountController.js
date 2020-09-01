@@ -25,9 +25,17 @@ module.exports =
         res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by).limit(req.body.limit).sort(req.body.sort_by))
     },
 
+    async countLogs(req, res)
+    {
+        let count = {}
+        count.count = await new MDB_PERSON_LOGS().collection.countDocuments(req.body.find_by_category)
+        res.send(count)
+    },
+
     async getPersonLogs(req, res)
     {
-        res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).sort(req.body.sort).limit(req.body.limit));
+        let logs = await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).sort(req.body.sort).limit(req.body.limit)
+        res.send(logs);
     },
 
     async counterLogs(req, res)
