@@ -427,6 +427,29 @@
                 grid-gap: 75px;
                 align-items: center;
 
+
+                .dashboard__pie-chart {
+                    position: relative;
+
+                    .dashboard__pie-total {
+                        color: #233b61;
+                        text-align: center;
+                        position: absolute;
+                        top: 100px;
+                        left: 88px;
+
+                        .pie-total__amount {
+                            font-size: 20px;
+                            font-weight: 700;
+                        }
+
+                        .pie-total__label {
+                            font-size: 12px;
+                            font-weight: 500;
+                        }
+                    }
+                }
+
                 .dashboard__pie-legend {
                     .pie-legend__item {
                         display: flex;
@@ -479,7 +502,7 @@
                 .dashboard__pie-total {
                     .pie-total__item {
                         color: #233b61;
-                        text-align: center  ;
+                        text-align: center;
 
                         .pie-total__item-amount {
                             font-size: 30px;

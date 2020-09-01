@@ -377,28 +377,35 @@
             </div>
 
             <div class="dashboard__graph-content dashboard__graph-pie">
-               <pie-chart
-                  :donut="true"
-                  :legend="false"
-                  width="250px"
-                  height="250px"
-                  :colors="[
-                     '#9825f2',
-                     '#fd8e22',
-                     '#f8fe22',
-                     '#2089fe',
-                     '#23dea7',
-                     '#00af50',
-                  ]"
-                  :data="{
-                     'Official Business': 40,
-                     'Collection & Pickup': 20,
-                     'Delivery': 20,
-                     'Corporate Meeting': 10,
-                     'Client/Customer': 5,
-                     'Guest': 5,
-                  }">
-               </pie-chart>
+               <div class="dashboard__pie-chart">
+                  <pie-chart
+                     :donut="true"
+                     :legend="false"
+                     width="250px"
+                     height="250px"
+                     :colors="[
+                        '#9825f2',
+                        '#fd8e22',
+                        '#f8fe22',
+                        '#2089fe',
+                        '#23dea7',
+                        '#00af50',
+                     ]"
+                     :data="{
+                        'Official Business': 40,
+                        'Collection & Pickup': 20,
+                        'Delivery': 20,
+                        'Corporate Meeting': 10,
+                        'Client/Customer': 5,
+                        'Guest': 5,
+                     }">
+                  </pie-chart>
+                  <div class="dashboard__pie-total">
+                     <div class="pie-total__amount">100</div>
+                     <div class="pie-total__label">Total Visitors</div>
+                  </div>
+               </div>
+
                <div class="dashboard__pie-legend">
                   <div class="pie-legend__item">
                      <div class="pie-legend__color first-color"></div>
