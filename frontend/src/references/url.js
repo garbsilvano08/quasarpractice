@@ -26,6 +26,7 @@ exports.postAddDevice       = 'member/add/device';
 exports.postGetDevice       = 'member/get/device';
 exports.postDeleteDevice    = 'member/delete/device';
 exports.postGetPersonLogs   = 'member/get/db_person_logs';
+exports.postUpdatePersonLogs= 'member/update/person_logs'
 
 
 // Person
@@ -49,5 +50,7 @@ exports.postVisionSky       = 'member/visionsky/logs';
 
 exports.postDashboard       = 'member/dashboard/counting';
 
-
+//identification
+exports.postAddFeverDetectedIdentification = 'member/add/fever_detected_identification';
+exports.postGetIdentification = 'member/get/identification';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';

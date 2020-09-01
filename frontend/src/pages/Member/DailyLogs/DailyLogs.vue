@@ -61,12 +61,12 @@
                         <q-list>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="sort_type" val='1' dense label="Ascending" />
+                                    <q-radio v-model="sort_type" val='-1' dense label="Descending" />
                                 </q-item-section>
                             </q-item>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="sort_type" val='-1' dense label="Descending" />
+                                    <q-radio v-model="sort_type" val='1' dense label="Ascending" />
                                 </q-item-section>
                             </q-item>
                             <q-separator />
@@ -116,7 +116,7 @@
             </div> -->
 
             <div class="daily-logs__content-body content__grid-4x4">
-                <div id='dailyLogs' v-for="(logs, index) in this.log_list" :key="index">
+                <div id='dailyLogs' v-for="(logs, index) in filteredList" :key="index">
                     <DailyLogCards :all_logs="logs"></DailyLogCards>
                 </div>
             </div>
@@ -141,9 +141,9 @@ export default {
         ComPicker
     },
     data: () => ({
-        sort_type: '1',
+        sort_type: '-1',
         input__people: '',
-        start_time: '01:00',
+        start_time: '00:00',
         end_time:  '23:59',
         start_date: new Date().toISOString().split('T')[0],
         end_date: new Date().toISOString().split('T')[0],
@@ -161,9 +161,9 @@ export default {
         options_body_temperature: [
             'Normal', 'Fever'
         ],
-        checkbox_date_saved: '',
-        checkbox_name: '',
-        checkbox_temperature: '',
+        checkbox_date_saved: true,
+        checkbox_name: false,
+        checkbox_temperature: false,
         company_details: {},
         device_list: [],
         log_list: [],
@@ -171,7 +171,11 @@ export default {
 
     }),
     computed:{
-        
+        filteredList() {
+            return this.log_list.filter((logs) => {
+                return logs.full_name.toLowerCase().includes(this.input__people.toLowerCase());
+            });
+        }
     },
     watch:
     {
@@ -188,42 +192,6 @@ export default {
     },
     methods:
     {   
-        async filteredList() {
-            if (this.input__people != "") {
-                let logs = await this.$_post(postPersonByCateg);
-                for (let index = 0; index < logs.data.length; index++) {                
-                    logs.data.forEach(async log => {
-                        if (!log.person_img.startsWith('http')) 
-                        {
-                            let imageName = 'vision-' + Date.now().toString() + ".png"
-                            let blob = "";
-                            var formDatatoBackend = new FormData();
-                            let contentType = 'image/png';
-                            blob = "";
-                            blob = base64StringToBlob(log.person_img, contentType);
-                            blob.lastModifiedDate = new Date();
-                            formDatatoBackend.append('image', blob, imageName);
-                            let res
-                            try
-                            {
-                                res = await this.$_post_file(formDatatoBackend);
-                                logs.data[index].person_img = res
-                                await this.$_post('member/save/image', {info: {id: log._id, image: res}});
-                            }
-                            catch(e){}
-                        }
-                        logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
-                        logs.data[index].device = this.deviceId("", logs.data[index].device_id)
-                        index++
-                        // console.log(element);
-                    });
-                }
-                this.log_list = logs.data
-                return this.log_list.filter((logs) => {
-                    return log_list.full_name.toLowerCase().includes(this.input__people.toLowerCase());
-                });
-            }
-        },
         exportData()
         { 
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
@@ -243,7 +211,7 @@ export default {
                     "company_name": this.log_list[index].company_name,
                     "category": this.log_list[index].category,
                     "home_address" : this.log_list[index].home_address,
-                    "date_logged" : this.log_list[index].date_logged,
+                    "date_logged" : this.log_list[index].date,
                 },)
             }
             
@@ -299,10 +267,12 @@ export default {
 
             let date_start = new Date(this.start_date)
             date_start.setHours(sort_time_start[0])
+            date_start.setHours(date_start.getHours() + 8)
             date_start.setMinutes(sort_time_start[1])
 
             let date_end = new Date(this.end_date)
             date_end.setHours(sort_time_end[0])
+            date_end.setHours(date_end.getHours() + 8)
             date_end.setMinutes(sort_time_end[1])
             if (this.select__account_type == 'All')
             {
@@ -432,6 +402,7 @@ export default {
         convertDateFormat(date_saved)
         {
             let full_date = new Date(date_saved)
+            full_date.setHours(full_date.getHours() - 8)
             let date = full_date.toISOString().split('T')[0]
             // let time = full_date.getHours() < 
             var hours = full_date.getHours() ; // gives the value in 24 hours format

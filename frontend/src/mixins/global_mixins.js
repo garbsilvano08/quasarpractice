@@ -123,7 +123,7 @@ export default
 
             // http://128.199.130.24:81/
             // http://157.245.55.109:4000/
-            let resp = await axios.post('https://vcop-image.geer.solutions/', data,{
+            await axios.post('https://vcop-image.geer.solutions/', data,{
                 headers: {
                 'content-type': 'multipart/form-data',
                 }

@@ -180,9 +180,10 @@
 <script>
 import "./Frontdesk.scss";
 import OpticalReadClass from '../../../classes/OpticalReadClass';
-import { postGetLogs, postPersonByCateg, postSavePerson } from '../../../references/url';
+import { postGetLogs, postPersonByCateg, postSavePerson,  postUpdatePersonLogs , postAddFeverDetectedIdentification} from '../../../references/url';
 import  ComPicker from "../../../components/companyPicker/ComPicker"
 import {base64StringToBlob} from 'blob-util';
+import { log } from 'util';
 
 function toDataUrl(url, callback) {
     var xhr = new XMLHttpRequest();
@@ -207,7 +208,7 @@ export default {
             id_image: '',
             person_img: '',
             id_type: 'Drivers License',
-            id_number: null,
+            id_num: null,
             given_name: null,
             middle_name: null,
             last_name: null,
@@ -222,14 +223,14 @@ export default {
             company_id: null,
             location: null,
             location_coordinates: null,
-            id_type: 'Drivers License',
+            id_type: 'Other',
         },
         profile_img_dialog: false,
         select__id_type: '',
         select__gender: '',
         select__visit_purpose: '',
         options_id: [
-            'Drivers License', 'UMID' , 'PhilHealth'
+            'Other','Drivers License'
         ],
         options_gender: [
             'Male' , 'Female'
@@ -242,7 +243,8 @@ export default {
         visitor_class: new OpticalReadClass(),
         image: null,
         company_details: {},
-        options_location: []
+        options_location: [],
+        selected_image_id: '',
     }),
 
      watch:
@@ -348,30 +350,6 @@ export default {
                     return str.join(" ");
                 }
 
-                for (let validate in this.personal_information)
-                {
-                    // let field = validate;
-
-                    // if (field === 'id_type') field = "ID Card Type";
-                    // if (field === 'id_number') field = "ID Number";
-                    // else field = capitalize(field.replace('_', ' '));
-
-                    // if (
-                    //     !this.personal_information.id_number ||
-                    //     !this.personal_information.first_name ||
-                    //     !this.personal_information.last_name ||
-                    //     !this.personal_information.middle_name ||
-                    //     !this.personal_information.home_address ||
-                    //     !this.personal_information.contact_number ||
-                    //     !this.personal_information.birthday ||
-                    //     !this.personal_information.person_img ||
-                    //     !this.personal_information.id_image
-                    // )
-                    // {
-                    //     if (!this.personal_information[validate]) throw new Error(field + ' is required.');
-                    // }
-                }
-
                 if (this.personal_information.location) this.personal_information.location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.personal_information.location.place_id }).then(res => res.data);
 
                 toDataUrl(this.face_pic_path, async (myBase64)=> {
@@ -381,18 +359,49 @@ export default {
                 for ( let i = 0; i < 9; i++ ) {
                     result += characters.charAt(Math.floor(Math.random() * charactersLength));
                 }
+                this.personal_information._id  = this.selected_image_id
                 this.personal_information.frontdesk_person_id = result
                 this.personal_information.frontdesk_person_date = new Date()
                 this.personal_information.date_created = new Date(),
-                this.personal_information.company_name = this.company_details.company_name,
-                this.personal_information.company_id = this.company_details.company_id,
+                this.personal_information.company_name = this.$user_info.company.company_name,
+                this.personal_information.company_id = this.$user_info.company_id,
                 this.personal_information.is_active = true,
-                this.personal_information.category = 'Report',
+                this.personal_information.category = 'Visitor',
+                this.personal_information.position = 'Visitor',
                 this.personal_information.frontdesk_person_id = result,
                 this.personal_information.frontdesk_person_date = new Date(),
                 this.personal_information.saved_from = this.$user_info.company ? this.$user_info.company._id : ''
 
+                let person_identification = {
+                    person_id:  this.selected_image_id,
+                    id_image:   this.personal_information.id_image,
+                    id_number:  this.personal_information.id_num,
+                    id_type:    this.personal_information.id_type,
+                    date_saved: new Date()
+                }
+                console.log(this.personal_information.person_img)
+                for (let validate in this.personal_information)
+                {
+                    if(!this.personal_information.person_img || !this.personal_information.id_type || !this.personal_information.id_image || !this.personal_information.id_num
+                        || !this.personal_information.given_name || !this.personal_information.last_name || !this.personal_information.middle_name || !this.personal_information.gender
+                        || !this.personal_information.birthday || !this.personal_information.nationality || !this.personal_information.home_address || !this.personal_information.location 
+                        || !this.personal_information.contact_number || !this.personal_information.emergency_contact){ 
+                        this.$q.notify(
+                        {   
+                            color: 'red',
+                            message: 'Please fill in all required fields'
+                        });
+                        return
+                    }
+                }
+
+
+
+
+
                 let save = await this.$_post(postSavePerson, {person_info: this.personal_information});
+                await this.$_post(postAddFeverDetectedIdentification, person_identification)
+                await this.$_post(postUpdatePersonLogs, { id: this.selected_image_id  , category : "Visitor"});
                     if (save.data == true)
                     {
                          this.$q.notify(
@@ -517,15 +526,17 @@ export default {
         selectedLog(log)
         {
             this.profile_img_dialog = false
+            this.selected_image_id = log._id
             this.personal_information.person_img = log.person_img
             this.personal_information.temperature = log.temperature
+            console.log(this.selected_image_id);
         },
 
         async getPassLogs()
         {
             this.profile_img_dialog = true
 
-            let last_logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company ? this.$user_info.company._id : '', date_logged: new Date().toISOString().split('T')[0], has_fever: true}, limit: 20})
+            let last_logs = await this.$_post(postPersonByCateg, {find_by_category: {category: "Stranger", company_id: this.$user_info.company ? this.$user_info.company._id : '', date_logged: new Date().toISOString().split('T')[0], has_fever: true}, limit: 20})
             this.pass_logs = last_logs.data
         }
     },
