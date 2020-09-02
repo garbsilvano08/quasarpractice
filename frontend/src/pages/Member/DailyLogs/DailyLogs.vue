@@ -47,13 +47,10 @@
                     <q-select v-model="select__body_temperature" :options="options_body_temperature" outlined dense></q-select>
                 </div>
                 <div class="content__filter-item">
-                    <q-btn @click="getLogList()" class="btn-primary btn-generate" flat dense no-caps>
+                    <q-btn @click="getLogList(start_date, end_date, start_time, end_time)" class="btn-primary btn-generate" flat dense no-caps>
                         Generate
                     </q-btn>
                 </div>
-
-
-
             </div>
             <div class="content__filter-2">
                 <div class="content__filter-item">
@@ -120,6 +117,16 @@
                     <DailyLogCards :all_logs="logs"></DailyLogCards>
                 </div>
             </div>
+            <div class="q-pa-lg flex flex-center">
+                <q-pagination
+                    v-model="current_page"
+                    :max="page_number"
+                    :max-pages="2"
+                    :boundary-numbers="false"
+                    :direction-links="true"
+                    >
+                </q-pagination>
+            </div>
         </div>
     </div>
 </template>
@@ -135,12 +142,15 @@ import { log } from 'util';
 import { base64StringToBlob } from 'blob-util';
 import { sort } from '../../../references/nav';
 import { saveAs } from 'file-saver';
+import LoginVue from '../../Front/Login.vue';
 export default {
     components: {
         DailyLogCards,
         ComPicker
     },
     data: () => ({
+        current_page: 1,
+        page_number: 0,
         sort_type: '-1',
         input__people: '',
         start_time: '00:00',
@@ -179,10 +189,38 @@ export default {
     },
     watch:
     {
+        async current_page(new_val, old_val)
+        {
+            if (new_val - 1 == old_val)
+            {
+                let date = new Date(this.filteredList[this.filteredList.length - 1 ].date_saved)
+                date.setHours(date.getHours() - 8)
+                let end = new Date(date).toISOString().split('T')[0];
+                await this.getLogList(this.start_date, end, this.start_time, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds())
+            }
+            else if (new_val + 1 == old_val)
+            {
+                let date = new Date(this.filteredList[0].date_saved)
+                date.setHours(date.getHours() - 8)
+                let start = new Date(date).toISOString().split('T')[0];
+                await this.getLogList(start, this.end_date, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds(), this.end_time, 'reverse')
+            }
+            else if (new_val == 1)
+            {
+                let start = new Date(date).toISOString().split('T')[0];
+                await this.getLogList(this.start_date, this.end_date, this.end_date, this.end_time)
+            }
+        },
+        select__device_name(val)
+        {
+            for (let index = 0; index < this.device_list.length; index++) {
+                if ( this.device_list[index].device_name == val ) this.selected_device = this.device_list[index]
+            }
+        },
         async input__people(val)
         {
             if(val == ""){
-                await this.getLogList()
+                await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
             }
         },
     //     start_time(val)
@@ -259,21 +297,35 @@ export default {
         {
             this.company_details = value
         },
-        async getLogList()
+        async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "")
         {
             let params = {}
-            let sort_time_start = this.start_time.split(":")
-            let sort_time_end = this.end_time.split(":")
+            let sort_time_start = sort_start.split(":")
+            let sort_time_end = sort_end.split(":")
 
-            let date_start = new Date(this.start_date)
+            let date_start = new Date(sort_date_start)
             date_start.setHours(sort_time_start[0])
-            date_start.setHours(date_start.getHours() + 8)
+            date_start.setMinutes(sort_time_start[1])
+            date_start.setSeconds(sort_time_start[2] ? sort_time_start[2] : '00')
+            date_start.setMilliseconds(sort_time_start[3] ? sort_time_start[3] : '00')
+
+            // date_start.setHours(date_start.getHours
             date_start.setMinutes(sort_time_start[1])
 
-            let date_end = new Date(this.end_date)
+            let date_end = new Date(sort_date_end)
             date_end.setHours(sort_time_end[0])
-            date_end.setHours(date_end.getHours() + 8)
             date_end.setMinutes(sort_time_end[1])
+            date_end.setSeconds(sort_time_end[2] ? sort_time_end[2] : '00')
+            // date_end.setMilliseconds(sort_time_end[3] ? sort_time_end[3] : '00')
+
+            // date_end.setHours(date_end.getHours() + 8)
+            date_end.setMinutes(sort_time_end[1])
+
+            if (sort_reverse)
+            {
+                date_start.setMilliseconds(date_start.getMilliseconds() + 1)
+                date_end.setMilliseconds(date_end.getMilliseconds() + 1)
+            }
             if (this.select__account_type == 'All')
             {
                 if (this.company_details)
@@ -361,50 +413,31 @@ export default {
                 }
             }
             let sort = {}
-            if (this.checkbox_date_saved) sort['date_saved'] = Number(this.sort_type)
-            if (this.checkbox_name) sort['full_name'] = Number(this.sort_type)
-            if (this.checkbox_temperature) sort['temperature'] = Number(this.sort_type)
+            if (this.checkbox_date_saved) sort['date_saved'] = sort_reverse ? 1 : Number(this.sort_type)
+            if (this.checkbox_name) sort['full_name'] = sort_reverse ? 1 : Number(this.sort_type)
+            if (this.checkbox_temperature) sort['temperature'] = sort_reverse ? 1 : Number(this.sort_type)
 
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort} );
-
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 40} );
+            if (sort_reverse) logs.data.reverse()
             for (let index = 0; index < logs.data.length; index++) {
                 logs.data.forEach(async log => {
-                    if (!log.person_img.startsWith('http'))
-                    {
-                        let imageName = 'vision-' + Date.now().toString() + ".png"
-                        let blob = "";
-                        var formDatatoBackend = new FormData();
-                        let contentType = 'image/png';
-                        blob = "";
-                        blob = base64StringToBlob(log.person_img, contentType);
-                        blob.lastModifiedDate = new Date();
-                        formDatatoBackend.append('image', blob, imageName);
-                        let res
-                        try
-                        {
-                            res = await this.$_post_file(formDatatoBackend);
-                            logs.data[index].person_img = res
-                            await this.$_post('member/save/image', {info: {id: log._id, image: res}});
-                        }
-                        catch(e){}
-                    }
                     logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
                     logs.data[index].device = this.deviceId("", logs.data[index].device_id)
                     index++
-                    // console.log(element);
                 });
-
             }
-
             this.log_list = logs.data
+            if (this.page_number == 0)
+            {
+                let count = await this.$_post('member/get/count_logs', {find_by_category: params, sort: sort} );
+                this.page_number = Math.ceil(count.data.count / 40)
+            }
         },
 
         convertDateFormat(date_saved)
         {
             let full_date = new Date(date_saved)
-            full_date.setHours(full_date.getHours() - 8)
             let date = full_date.toISOString().split('T')[0]
-            // let time = full_date.getHours() <
             var hours = full_date.getHours() ; // gives the value in 24 hours format
             var AmOrPm = hours >= 12 ? 'PM' : 'AM';
             hours = (hours % 12) || 12;
@@ -442,7 +475,7 @@ export default {
         this.company_details = this.$user_info.company ? this.$user_info.company : {}
 
         await this.getDevice()
-        await this.getLogList()
+        await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
 
     }
 }

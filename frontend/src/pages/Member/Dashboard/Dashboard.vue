@@ -304,7 +304,7 @@
                </div>
                <div class="dashboard__graph-filter">
                   <q-select v-model="select_people" :options="options_people" outlined dense></q-select>
-                  <q-select v-model="select_date" :options="options_date" outlined dense></q-select>
+                  <q-select @select="getFootTraffic()" v-model="select_date" :options="options_date" outlined dense></q-select>
                   <!-- <q-input v-model="traffic_date" type='date' outlined dense></q-input> -->
                </div>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
@@ -388,7 +388,7 @@
                </column-chart>
             </div>
          </div>
-          <q-dialog v-model="date_filter_registered" persistent>
+         <q-dialog v-model="date_filter_registered" persistent>
             <q-card>
                <q-card-section>
                <div class="text-h6">Custom Date</div>
@@ -406,15 +406,13 @@
             </q-card>
          </q-dialog>
          <!-- JAM STACKED BAR CHART -->
-         <div class="dashboard__graph-item">
+         <!-- <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Compare Foot Traffic
                </div>
 
                <div class="dashboard__graph-filter">
-                  <!-- <q-input v-model="employee_date" type='date' outlined dense></q-input> -->
-                  <!-- <q-select v-model="select_people" :options="options_people" outlined dense></q-select> -->
                   <q-select v-model="registered_filter" :options="options_date" outlined dense></q-select>
                </div>
             </div>
@@ -435,7 +433,8 @@
                >
                </column-chart>
             </div>
-         </div>
+         </div> -->
+
          <!-- VISITORS PURPOSE -->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
@@ -461,13 +460,7 @@
 
                <div class="dashboard__graph-total">
                   <div class="dashboard__graph-content">
-                     <div class="dashboard__graph-number--grand">{{purpose_visit.data.official_business +
-                        purpose_visit.data.collection_pickup +
-                        purpose_visit.data.delivery +
-                        purpose_visit.data.corporate_meeting +
-                        purpose_visit.data.client_customer +
-                        purpose_visit.data.guest
-                        }}</div>
+                     <div class="dashboard__graph-number--grand">{{purpose_visit.total}}</div>
                      <div class="dashboard__graph-label">Total Visitor</div>
                   </div>
                </div>
@@ -560,16 +553,16 @@
                         '#00af50',
                      ]"
                      :data="{
-                        'Official Business': 40,
-                        'Collection & Pickup': 20,
-                        'Delivery': 20,
-                        'Corporate Meeting': 10,
-                        'Client/Customer': 5,
-                        'Guest': 5,
+                        'Official Business': purpose_visit.data.official_business,
+                        'Collection & Pickup': purpose_visit.data.collection_pickup,
+                        'Delivery': purpose_visit.data.delivery,
+                        'Corporate Meeting': purpose_visit.data.corporate_meeting,
+                        'Client/Customer': purpose_visit.data.client_customer,
+                        'Guest': purpose_visit.data.guest,
                      }">
                   </pie-chart>
                   <div class="dashboard__pie-total">
-                     <div class="pie-total__amount">100</div>
+                     <div class="pie-total__amount">{{purpose_visit.total}}</div>
                      <div class="pie-total__label">Total Visitors</div>
                   </div>
                </div>
@@ -603,42 +596,42 @@
 
                <div class="dashboard__pie-total content__grid-3x3">
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">40</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.official_business}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-1"></div>
                         <div class="item-label__name">Official Business</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">20</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.collection_pickup}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-2"></div>
                         <div class="item-label__name">Collection & Pickup</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">20</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.delivery}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-3"></div>
                         <div class="item-label__name">Delivery</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">10</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.corporate_meeting}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-4"></div>
                         <div class="item-label__name">Corporate Meeting</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">5</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.client_customer}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-5"></div>
                         <div class="item-label__name">Client/Customer</div>
                      </div>
                   </div>
                   <div class="pie-total__item">
-                     <div class="pie-total__item-amount">5</div>
+                     <div class="pie-total__item-amount">{{purpose_visit.data.guest}}</div>
                      <div class="pie-total__item-label">
                         <div class="item-label__color color-6"></div>
                         <div class="item-label__name">Guest</div>
@@ -883,8 +876,10 @@ export default
        async select_date(val, old)
         {
            this.last_option = old
+         //   console.log(val, old);
            if (val == 'Custom Date')
            {
+
               this.date_filter_dialog = true
            }
            else
@@ -946,7 +941,20 @@ export default
     },
 
    methods: {
+      async getFootTraffic()
+      {
+         if (this.select_date == 'Custom Date')
+         {
 
+            this.date_filter_dialog = true
+         }
+         else
+         {
+            if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+            else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
+         }
+         // this.last_option = this.select_date
+      },
       async getEmployeeVisitor()
       {
          let data
@@ -977,22 +985,21 @@ export default
                for (let index = 0; index < option_filter.length; index++) {
                      if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id: this.company_details._id, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
                      else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered')
-
+                     this.data_bar_graph.data = []
                      data.data.forEach(reg => {
                         if (reg.name == option_filter[index])
                         {
                            this.data_bar_graph.data.push(reg)
                         }
                      });
-                     this.date_filter_registered = false
                }
-               }
+            }
             else
             {
                this.registered_filter = this.last_option_registered
                this.$q.notify(
-               {
-                  color: 'red',
+                  {
+                     color: 'red',
                   message: 'Invalid date'
                });
             }
@@ -1003,18 +1010,20 @@ export default
             {
                if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.startDate, end_date: this.endDate, company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
                else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people, end_date: this.endDate, start_date: this.startDate}})
-               this.date_filter_dialog = false
+               // this.date_filter_dialog = false
             }
             else
             {
                this.select_date = this.last_option
                this.$q.notify(
-               {
-                  color: 'red',
-                  message: 'Invalid date'
+                  {
+                     color: 'red',
+                     message: 'Invalid date'
                });
             }
          }
+         this.date_filter_dialog = false
+         this.date_filter_registered = false
       },
 
       async getCompanyData(value)
@@ -1107,6 +1116,13 @@ export default
             else params = {find_all: {date_string: new Date().toISOString().split('T')[0]}}
          }
          this.purpose_visit =  await this.$_post(postGetPurposeVisit, params);
+         this.purpose_visit.total =
+            this.purpose_visit.data.official_business
+            + this.purpose_visit.data.collection_pickup
+            + this.purpose_visit.data.delivery
+            + this.purpose_visit.data.corporate_meeting
+            + this.purpose_visit.data.client_customer
+            + this.purpose_visit.data.guest
       },
 
       async getAlertLogs()
@@ -1221,13 +1237,15 @@ export default
    },
    async mounted()
    {
-      console.log(new Date());
+      let sample_date = new Date()
+      sample_date.setHours(sample_date.getHours() + 8 )
+      sample_date.toISOString().split('T')[0].split("-")
+
+      console.log(sample_date);
       this.company_details = this.$user_info.company ? this.$user_info.company : {}
       let params = {}
-      console.log(this.company_details);
       if (this.company_details) params = {filter: {current_date: new Date(), company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
       else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
-         console.log(params, 'params');
       await this.getTrafficData(params)
       if (this.$user_info.user_type == 'Officer')
       {

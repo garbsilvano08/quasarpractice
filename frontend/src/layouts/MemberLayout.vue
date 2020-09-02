@@ -69,7 +69,7 @@
 import EssentialLink    from 'components/EssentialLink.vue'
 import Layout           from './MemberLayout.scss'
 import navigation       from '../references/nav'
-import { postAddPerson , postSavePerson , postGetDevice, postGetLogsSettings, postVisionSky }                        from '../references/url';
+import { postAddPerson , postSavePerson , postGetDevice, postGetLogsSettings, postVisionSky, postPersonByCateg }                        from '../references/url';
 import Model from "../models/Model";
 import { base64StringToBlob } from 'blob-util';
 import { log } from 'util';
@@ -272,7 +272,34 @@ export default
         },
         async checkQueueSync()
         {
-            // console.log(this.visitors);
+            // console.log('save');
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: { person_img: { $regex: '/9j/'}}});
+            for (let index = 0; index < logs.data.length; index++) {                
+                logs.data.forEach(async log => {
+                    if (!log.person_img.startsWith('http')) 
+                    {
+                        let imageName = 'vision-' + Date.now().toString() + ".png"
+                        let blob = "";
+                        var formDatatoBackend = new FormData();
+                        let contentType = 'image/png';
+                        blob = "";
+                        blob = base64StringToBlob(log.person_img, contentType);
+                        blob.lastModifiedDate = new Date();
+                        formDatatoBackend.append('image', blob, imageName);
+                        let res
+                        try
+                        {
+                            res = await this.$_post_file(formDatatoBackend);
+                            logs.data[index].person_img = res
+                            await this.$_post('member/save/image', {info: {id: log._id, image: res}});
+                        }
+                        catch(e){}
+                    }
+                    index++
+                    // console.log(element);
+                });
+            }
+
             // if (this.$user_info.user_type != 'Super Admin')
                 let image_data = await this.$_post(postGetDevice, {find_device: {_id: '5f3a246175f6c4915ed24083'}});
 
@@ -291,7 +318,7 @@ export default
     
                 for (let visitor of this.visitors)
                 {
-                    console.log(visitor);
+                    // console.log(visitor);
                     let data = {
                         visit_purpose:      visitor.visitor_purpose.purpose_visit,
                         contact_person:     visitor.visitor_purpose.contact_person,
@@ -369,7 +396,7 @@ export default
                                 image.append("permissionTime", date);
                                 image.append("type", 1 );
                                 let img = await this.$axios.post("http://"+ device.device_ip +":8090/person/quickCreate", image).then(res => res.data);
-                                console.log(img);
+                                // console.log(img);
                             }
                             catch(e){}
                         }
@@ -411,7 +438,7 @@ export default
                     }
                     this.checkDevice()
                 }
-
+                
                 // await this.$_post('member/count/logs');
                 setTimeout(() => this.checkQueueSync(), 1000);
             }
@@ -445,22 +472,22 @@ export default
                     }
                     else
                     {
-                        var formData = new FormData();
-                        formData.append("startTime", startTime)// number 123456 is immediately converted to a string "123456"
-                        formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
-                        formData.append("pass", "123456");
-                        request.open("POST", "http://"+device.device_ip+":8080/newFindRecords");
-                        request.onreadystatechange = () => {
-                            if (request.readyState === 4) {
-                                if (request.status === 200) {
-                                    let resp = request.responseText;
-                                    this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
-                                } else {
-                                    console.log("Error", request.statusText);
-                                }
-                            }
-                        }
-                        request.send(formData);
+                        // var formData = new FormData();
+                        // formData.append("startTime", startTime)// number 123456 is immediately converted to a string "123456"
+                        // formData.append("endTime", timeToday); // number 123456 is immediately converted to a string "123456"
+                        // formData.append("pass", "123456");
+                        // request.open("POST", "http://"+device.device_ip+":8080/newFindRecords");
+                        // request.onreadystatechange = () => {
+                        //     if (request.readyState === 4) {
+                        //         if (request.status === 200) {
+                        //             let resp = request.responseText;
+                        //             this.saveLogsIndexDb(JSON.parse(JSON.parse(resp).data), device);
+                        //         } else {
+                        //             console.log("Error", request.statusText);
+                        //         }
+                        //     }
+                        // }
+                        // request.send(formData);
                     }
                     await this.db.add(
                     {
@@ -475,7 +502,7 @@ export default
 
         async saveLogsIndexDb(dat, device)
         {
-            console.log(dat);
+            // console.log(dat);
             let response="";
 
             for (let data of dat)
