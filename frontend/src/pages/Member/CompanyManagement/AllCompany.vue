@@ -30,7 +30,7 @@
                         Owned {{company.subcompanies.length}} Establishment(s)
                     </div>
                     <div class="company-management__info-people">
-                        300 People Registered Here
+                        <!-- 300 People Registered Here -->
                     </div>
                 </div>
             </div> 

@@ -3,7 +3,7 @@
         <div class="device-management__header">
             <div class="header__title">
                 DEVICE MANAGEMENT <br>
-                <span>{{this.device_list.data.length}} DEVICES INSTALLED</span></div>
+                <span>{{this.device_list.data.length ? this.device_list.data.length : 0}} DEVICES INSTALLED</span></div>
             <div class="header__filter">
                 <q-btn @click="addDevice" class="btn-primary btn-add" flat dense no-caps>
                     Add Device
@@ -48,7 +48,7 @@ export default {
         options_company: [
             'All Companies'
         ],
-        device_list: [],
+        device_list: {data:[]},
         company_list: []
     }),
 
@@ -101,7 +101,6 @@ export default {
             for (let index = 0; index < this.$user_info.company.subcompanies.length; index++) {
                 if (this.$user_info.company.subcompanies[index]) company_id.push(this.$user_info.company.subcompanies[index])
             }
-            console.log(this.$user_info.company);
             params = {find_device: { company_id: {$in: company_id}}}
         }
         await this.getAllDevice(params);

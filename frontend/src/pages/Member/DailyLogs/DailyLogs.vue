@@ -417,7 +417,7 @@ export default {
             if (this.checkbox_name) sort['full_name'] = sort_reverse ? 1 : Number(this.sort_type)
             if (this.checkbox_temperature) sort['temperature'] = sort_reverse ? 1 : Number(this.sort_type)
 
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 40} );
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20} );
             if (sort_reverse) logs.data.reverse()
             for (let index = 0; index < logs.data.length; index++) {                
                 logs.data.forEach(async log => {
@@ -430,7 +430,7 @@ export default {
             if (this.page_number == 0)
             {
                 let count = await this.$_post('member/get/count_logs', {find_by_category: params, sort: sort} );
-                this.page_number = Math.ceil(count.data.count / 40)
+                this.page_number = Math.ceil(count.data.count / 20)
             }
         },
 
@@ -472,6 +472,18 @@ export default {
     },
     async mounted()
     {
+        if (this.$route.params && this.$route.params.category)
+        {
+            if (this.$route.params.category == 'Fever')
+            {
+                this.select__body_temperature = 'Fever'
+            }
+            else
+            {
+                this.select__account_type = this.$route.params.category
+            }
+        }
+
         this.company_details = this.$user_info.company ? this.$user_info.company : {}
 
         await this.getDevice()
