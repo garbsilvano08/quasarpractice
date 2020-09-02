@@ -48,7 +48,6 @@ module.exports =
 
     async footTraffic(req, res)
     {
-        console.log(req.body, 'lsasaas');
         let options_people = ['All' , 'Staff', 'Visitor', 'Stranger'];
 
         let startDate = ''
@@ -81,7 +80,6 @@ module.exports =
                             else params = {category: options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
                         let data = await new DashboardClass().getTraffic(params)
-                        console.log(data,'data');
                         if (startDate.getHours() < 12)traffic[startDate.getHours() == 0 ? 12 + "AM" : index + "AM"] = data.length
                         else traffic[startDate.getHours() == 12 ? 12 + "PM" : index - 12  + "PM"] = data.length
                         startDate.setHours(startDate.getHours() + 1,0,0)

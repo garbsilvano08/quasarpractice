@@ -309,7 +309,7 @@ export default {
             date_start.setSeconds(sort_time_start[2] ? sort_time_start[2] : '00')
             date_start.setMilliseconds(sort_time_start[3] ? sort_time_start[3] : '00')
 
-            date_start.setHours(date_start.getHours() + 8)
+            // date_start.setHours(date_start.getHours
             date_start.setMinutes(sort_time_start[1])
 
             let date_end = new Date(sort_date_end)
@@ -318,7 +318,7 @@ export default {
             date_end.setSeconds(sort_time_end[2] ? sort_time_end[2] : '00')
             // date_end.setMilliseconds(sort_time_end[3] ? sort_time_end[3] : '00')
 
-            date_end.setHours(date_end.getHours() + 8)
+            // date_end.setHours(date_end.getHours() + 8)
             date_end.setMinutes(sort_time_end[1])
 
             if (sort_reverse) 
@@ -437,9 +437,7 @@ export default {
         convertDateFormat(date_saved)
         {
             let full_date = new Date(date_saved)
-            full_date.setHours(full_date.getHours() - 8)
             let date = full_date.toISOString().split('T')[0]
-            // let time = full_date.getHours() < 
             var hours = full_date.getHours() ; // gives the value in 24 hours format
             var AmOrPm = hours >= 12 ? 'PM' : 'AM';
             hours = (hours % 12) || 12;

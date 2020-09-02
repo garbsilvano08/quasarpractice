@@ -261,11 +261,10 @@ module.exports =
 
     async visionSkyLogs(req, res)
     {
-        console.log(req.body.deviceKey ? req.body.deviceKey : req.body.mac, 'saved');
         let person_info = {}
         let key = ['Traffic']
         let date_string = new Date(new Date(req.body.time ? req.body.time : req.body.checkTime))
-        date_string.setHours(date_string.getHours() + 8)
+        // date_string.setHours(date_string.getHours())
         date_string = date_string.toISOString().split('T')[0]
         
         date_string = date_string.split("-")
@@ -293,6 +292,7 @@ module.exports =
                     record_id:              req.body.id,
                     company_id:             device[0].company_id
                 }
+                
             }
         }
         
@@ -539,7 +539,6 @@ module.exports =
     },
     async getDeviceByUser(req, res)
     {
-        console.log(req.user_info);
         console.log(await new MDB_DEVICE.docs());
     },
     async getDbPersonLogs(req, res)
