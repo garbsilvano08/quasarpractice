@@ -94,23 +94,23 @@
                     </q-input>
                 </div>
             </div>
-            <!-- <div class="content__view">
-                <div class="content__view-item">
-                    <div class="content__view-label">All</div>
+            <div class="content__view">
+                <div class="content__view-item" v-if="this.select__account_type == 'All'">
+                    <div class="content__view-label">All ({{filteredList.length}})</div>
                 </div>
-                <div class="content__view-item">
+                <div class="content__view-item" v-if="this.select__account_type == 'Staff'">
                     <div class="content__view-color color-violet"></div>
-                    <div class="content__view-label">Staff </div>
+                    <div class="content__view-label">Staff ({{filteredList.length}})</div>
                 </div>
-                <div class="content__view-item">
+                <div class="content__view-item" v-if="this.select__account_type == 'Visitor'">
                     <div class="content__view-color color-orange"></div>
-                    <div class="content__view-label">Visitor </div>
+                    <div class="content__view-label">Visitor ({{filteredList.length}})</div>
                 </div>
-                <div class="content__view-item">
+                <div class="content__view-item" v-if="this.select__account_type == 'Stranger'">
                     <div class="content__view-color color-red"></div>
-                    <div class="content__view-label">Stranger </div>
+                    <div class="content__view-label">Stranger ({{filteredList.length}})</div>
                 </div>
-            </div> -->
+            </div>
 
             <div class="daily-logs__content-body content__grid-4x4">
                 <div id='dailyLogs' v-for="(logs, index) in filteredList" :key="index">
