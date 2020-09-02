@@ -278,7 +278,7 @@ export default {
             label: 'Date logged',
             value: 'date_logged'
             });
-
+    
             const { Parser } = require('json2csv');
 
             const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});

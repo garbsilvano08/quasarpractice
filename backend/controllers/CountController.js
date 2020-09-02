@@ -62,10 +62,10 @@ module.exports =
                 {
                     let params = {}
                     let date = new Date()
-                    date.setHours(date.getHours() + 8)
+                    // date.setHours(date.getHours() + 8)
                     date.setHours(0,0,0,0)
                     let end = new Date()
-                    end.setHours(end.getHours() + 8)
+                    // end.setHours(end.getHours() + 8)
                     end.setHours(0,59,59,999)
                     startDate = date
                     endDate = end
@@ -142,9 +142,9 @@ module.exports =
                         date = new Date(date.setMonth(index))
                         let date_string = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, "0")
 
-                        // console.log(date_string, date);
+                        console.log(req.body.filter);
                         if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
                             else params = {company_id: 'global',key: 'Traffic', date_string: date_string}
                         }
                         else {

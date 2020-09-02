@@ -24,7 +24,9 @@ const routes = [
             { name: 'member_frontdesk_blacklist', path: '/frontdesk/blacklist', component: () => import('pages/Member/Frontdesk/BlackList.vue') },
             { name: 'member_frontdesk_addreport', path: '/frontdesk/add-report', component: () => import('pages/Member/Frontdesk/AddReport') },
             // DAILY LOGS ROUTES
-            { name: 'member_dailylogs', path: '/dailylogs', component: () => import('pages/Member/DailyLogs/DailyLogs.vue') },
+            { name: 'member_log_report', path: 'report/log-report', component: () => import('pages/Member/DailyLogs/DailyLogs.vue') },
+            { name: 'member_foot_traffic_report', path: 'report/foot-traffic-report', component: () => import('pages/Member/Report/FootTrafficReport.vue') },
+
             { name: 'member_dailylogs_staff', path: '/dailylogs/staff', component: () => import('pages/Member/DailyLogs/StaffDailyLogs.vue') },
             { name: 'member_dailylogs_visitor', path: '/dailylogs/visitor', component: () => import('pages/Member/DailyLogs/VisitorDailyLogs.vue') },
             { name: 'member_dailylogs_stranger', path: '/dailylogs/stanger', component: () => import('pages/Member/DailyLogs/StrangerDailyLogs.vue') },
