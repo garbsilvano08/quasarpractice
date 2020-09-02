@@ -39,6 +39,10 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 15px;
+
+    @media screen and (max-width: 425px) {
+        grid-template-columns: 1fr;
+    }
 }
 
 // BOX GRID STYLE 4x4 ( 4 GRID )

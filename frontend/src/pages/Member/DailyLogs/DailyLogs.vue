@@ -8,7 +8,7 @@
                 <q-btn @click="exportData" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                
+
             </div>
         </div>
 
@@ -191,9 +191,9 @@ export default {
     //     }
     },
     methods:
-    {   
+    {
         exportData()
-        { 
+        {
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let params = {}
             let start = new Date(this.start_date)
@@ -214,7 +214,7 @@ export default {
                     "date_logged" : this.log_list[index].date,
                 },)
             }
-            
+
             fields.push({
             label: 'Full name',
             value: 'full_name'
@@ -245,7 +245,7 @@ export default {
 
             const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
             const csv = json2csvParser.parse(log_list_data);
-    
+
             var FileSaver = require('file-saver');
             FileSaver.saveAs(
             new Blob([csv], {
@@ -367,9 +367,9 @@ export default {
 
             let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort} );
 
-            for (let index = 0; index < logs.data.length; index++) {                
+            for (let index = 0; index < logs.data.length; index++) {
                 logs.data.forEach(async log => {
-                    if (!log.person_img.startsWith('http')) 
+                    if (!log.person_img.startsWith('http'))
                     {
                         let imageName = 'vision-' + Date.now().toString() + ".png"
                         let blob = "";
@@ -404,12 +404,12 @@ export default {
             let full_date = new Date(date_saved)
             full_date.setHours(full_date.getHours() - 8)
             let date = full_date.toISOString().split('T')[0]
-            // let time = full_date.getHours() < 
+            // let time = full_date.getHours() <
             var hours = full_date.getHours() ; // gives the value in 24 hours format
             var AmOrPm = hours >= 12 ? 'PM' : 'AM';
             hours = (hours % 12) || 12;
             var minutes = full_date.getMinutes() ;
-            var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm; 
+            var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm;
             // console.log(date + ", " + finalTime);
             return date + ", " + finalTime
         },
@@ -429,7 +429,7 @@ export default {
                 params = {find_device: {company_name: this.company_details.company_name}}
             }
             else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
-            
+
             let {data: devices} =  await this.$_post(postGetDevice, params);
             devices.forEach(device => {
                 this.options_device_name.push(device.device_name)
@@ -443,8 +443,7 @@ export default {
 
         await this.getDevice()
         await this.getLogList()
-    
+
     }
 }
 </script>
- 
