@@ -14,8 +14,8 @@
         </div>
         <div class="account-directory__header-2" v-if="this.$route.params.from_daily_logs">
             <div class="header__filter-2">
-                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense ></q-input>
-                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense ></q-input>
+                <q-input label="Start Date" class="select-sm" v-model="start_date" type="date" outlined dense @change="selectedSortDate"></q-input>
+                <q-input label="End Date" class="select-sm" v-model="end_date" type="date" outlined dense @change="selectedSortDate"></q-input>
                 <!-- <q-btn label="Generate" @click="generateResult" class="btn-primary btn-generate" flat dense no-caps/> -->
             </div>
         </div>
@@ -273,7 +273,7 @@
                     </thead>
                     <tbody v-if="this.person_logs">
                         <tr v-for="(logs, index) in this.person_logs.data" :key="index">
-                            <td>{{logs.date_saved }}</td>
+                            <td>{{logs.date_saved}}</td>
                             <td class="td-green">{{logs.temperature}}°C</td>
                             <td>{{logs.device_id}}</td>
                             <td>{{logs.company_name}}</td>
@@ -300,26 +300,83 @@ export default {
         company_device: 0,
         company_info: {},
         person_logs: {},
+        person_date_logs: {},
         identification_info : {},
         age : '',
         birthday : '',
-        date_registered : ''
+        date_registered : '',
+        sort_type: '-1'
     }),
 
     methods:
     {   
-        // sortDate(){
-        //     let sort_item = {}
-        //     this.start_date = new Date(this.start_date) //.setHours(0,0,0,0)
-        //     this.end_date = new Date(this.end_date).setHours(23,59,59)
-        //     let parameter = {}
-            
-        //     parameter = {date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
+        async exportTableToExcel(){
+            let file_name = this.$route.params.daily_logs_info.full_name+ '_logs.xls'
+            let fields = [] , person__logs = [{}]          
+            for (let index = 0; index < this.person_logs.data.length; index++) {
+                person__logs.push({
+                    "date_saved": date.formatDate(this.person_logs.data[index].date_saved, 'MMM D YYYY hh:mm:ss A'),
+                    "temperature": this.person_logs.data[index].temperature,
+                    "device_id": this.person_logs.data[index].device_id,
+                    "company_name": this.person_logs.data[index].company_name,
+                },
+                )
+            }
+            fields.push({
+            label: 'Date & Time Scanned',
+            value: 'date_saved'
+            },{
+            label: 'Body Temperature',
+            value: 'temperature'
+            },{
+            label: 'Device name',
+            value: 'device_id'
+            },{
+            label: 'Company name' ,
+            value: 'company_name'
+            });
+            const { Parser } = require('json2csv');
 
-        //     this.start_date = new Date(this.start_date).toISOString().split('T')[0]
-        //     this.end_date = new Date(this.end_date).toISOString().split('T')[0]
-        //     this.person_logs = await this.$_post(postGetLogs, {daily_logs_id : this.$route.params.daily_logs_info.frontdesk_person_id, sort: sort_item});
-        // },
+            const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
+            const csv = json2csvParser.parse(person__logs);
+
+            var FileSaver = require('file-saver');
+            FileSaver.saveAs(
+            new Blob([csv], {
+                type:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }),
+            file_name
+            );
+
+            if (is_saved)
+            {
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'File was successfully saved'
+                });
+            }
+        },
+        async selectedSortDate(){
+            await this.getLogs()
+        },
+        async getLogs(){
+            let sort_item = {}
+            this.start_date = new Date(this.start_date).setHours(0,0,0,0)
+            this.end_date = new Date(this.end_date).setHours(23,59,59)
+            let parameter = {}
+            
+            parameter = {id : this.$route.params.daily_logs_info.frontdesk_person_id, date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
+            sort_item['date_saved'] = Number(this.sort_type)
+            this.start_date = new Date(this.start_date).toISOString().split('T')[0]
+            this.end_date = new Date(this.end_date).toISOString().split('T')[0]
+            this.person_logs = await this.$_post(postGetLogs, {find_logs: parameter, sort: sort_item ,limit:10});
+            
+            for (let index = 0; index < this.person_logs.data.length; index++) {
+                this.person_logs.data[index].date_saved = date.formatDate(this.person_logs.data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
+            }
+        },
         back()
         {
             if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory"})
@@ -404,8 +461,13 @@ export default {
         }
         else{
             // this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.daily_logs_info._id});
-            console.log(this.$route.params.daily_logs_info);
-            this.person_logs = await this.$_post(postGetLogs,{ id: this.$route.params.daily_logs_info.frontdesk_person_id, limit: 10})
+            //this.person_logs = await this.$_post(postGetLogs,{ id: this.$route.params.daily_logs_info.frontdesk_person_id, limit: 10})
+            let start = new Date(this.start_date)
+            let end = new Date(this.end_date)
+            end = end.setDate(end.getDate() + 1)
+            await this.getLogs({find_logs : {id: this.$route.params.daily_logs_info.frontdesk_person_id, date_created: { '$gt' : start , '$lt' : end},limit:10}})
+            // await this.getStaffList({find_person: {category: 'Staff', date_created: { '$gt' : start , '$lt' : end}}})
+            
         }
         
     }

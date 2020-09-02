@@ -481,18 +481,15 @@ module.exports =
     },
     
     async getLogs(req, res)
-    {
+    {  
         let log_list
-        if(req.body.id){
-            log_list = await new MDB_PERSON_LOGS().collection.find({frontdesk_person_id: req.body.id}).limit(req.body.limit)
+        if(req.body.find_logs){
+            log_list = await new MDB_PERSON_LOGS().collection.find({frontdesk_person_id : req.body.find_logs.id, date_logged: req.body.find_logs.date_created}).sort(req.body.sort).limit(req.body.limit)
         }
         else res.send(await new MDB_PERSON_LOGS().docs());
         res.send(log_list)
 
-        let sort_date
-        if (req.body.daily_logs_id) {
-            sort_date = await new MDB_PERSON_LOGS().collection.find({frontdesk_person_id: req.body.daily_logs_id}).limit(req.body.limit).sort(req.body.sort)
-        }
+      
     },
 
     async getPerson(req, res)
