@@ -1287,7 +1287,7 @@ export default
          slidesPerView: 4,
          spaceBetween: 20,
          autoplay: {
-            delay: 3000,
+            delay: 5000,
             disableOnInteraction: false,
          },
          breakpoints: {
