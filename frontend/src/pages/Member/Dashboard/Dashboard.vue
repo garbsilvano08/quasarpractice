@@ -129,7 +129,7 @@
          <div class="swiper-container">
             <div class="swiper-wrapper">
                <div class="swiper-slide">
-                  <div class="content__card">
+                  <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSpxi45JqKLxNoMHj7PODtUHUCsKhk4At5GFg&usqp=CAU"></q-img>
                         <div class="content__temperature">
@@ -156,7 +156,7 @@
                   </div>
                </div>
                <div class="swiper-slide">
-                  <div class="content__card">
+                  <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img src="https://images.squarespace-cdn.com/content/v1/5070f2f8c4aa65eb3b6394d0/1436318761703-SUWVQ0QPHE569A8FNBHH/ke17ZwdGBToddI8pDm48kMIebV6MdNPQMcRDrC5oPxMUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKc73FUbOtyHSZLq0696RfXhzOQ1C7e-4RYctpOI87j69--0uIsXqDbvJ5MkV0zcn4f/LYB+People+Profile+%2808%29.jpg?format=1500w"></q-img>
                         <div class="content__temperature">
@@ -183,7 +183,7 @@
                   </div>
                </div>
                <div class="swiper-slide">
-                  <div class="content__card">
+                  <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img src="https://media1-production-mightynetworks.imgix.net/asset/2422215/basadur-profile-big.jpg?ixlib=rails-0.3.0&fm=jpg&q=75&auto=format"></q-img>
                         <div class="content__temperature">
@@ -210,7 +210,7 @@
                   </div>
                </div>
                <div class="swiper-slide">
-                  <div class="content__card">
+                  <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img src="https://photof8.com/wp-content/uploads/2017/01/WSS505.jpg"></q-img>
                         <div class="content__temperature">
@@ -237,7 +237,7 @@
                   </div>
                </div>
                <div class="swiper-slide">
-                  <div class="content__card">
+                  <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img src="https://images.squarespace-cdn.com/content/v1/5416b734e4b0f910e31345fb/1449684896502-06F3ID8PBOB20TECV9BI/ke17ZwdGBToddI8pDm48kGXoD000J7kx3NE7W-LXpdwUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcSHIBb6yNmvYkAyvF3loIw6LWPhmq3jJqr-f9nvyP7bW--NA7--1aw0mnW_uWXk87/image-asset.jpeg"></q-img>
                         <div class="content__temperature">
@@ -264,7 +264,7 @@
                   </div>
                </div>
                <div class="swiper-slide">
-                  <div class="content__card">
+                  <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img src="https://imgix.bustle.com/uploads/image/2018/5/9/aa15d5d8-4b32-4888-b5c1-aa51349df70d-2t4a9501.JPG"></q-img>
                         <div class="content__temperature">
@@ -290,14 +290,23 @@
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide">
+               <!-- <div class="swiper-slide">
                   <div class="dashboard__overview-btn">
                      <q-btn flat dense no-caps class="btn-primary btn-seemore">
                         See More <q-icon name="mdi-arrow-right" size="20px"></q-icon>
                      </q-btn>
                   </div>
+               </div> -->
+               <div class="swiper-slide">
+                  <div class="content__card-seemore content__card">
+                     <q-img src="../../../assets/dashboard-logs-more.svg"></q-img>
+                     <div class="seemore-label">See more ..</div>
+                  </div>
                </div>
             </div>
+
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
          </div>
 
       </div>
@@ -1296,6 +1305,10 @@ export default
          autoplay: {
             delay: 5000,
             disableOnInteraction: false,
+         },
+         navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
          },
          breakpoints: {
         1366: {
