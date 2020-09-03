@@ -148,6 +148,10 @@
                                 <div class="content__select-label">Purpose of Visit *</div>
                                 <q-select v-model="visitor_purpose.purpose_visit" :options="options_visit_purpose" outlined dense></q-select>
                             </div>
+                            <div class="content__select" v-if="visitor_purpose.purpose_visit == 'Delivery'">
+                                <div class="content__select-label">Delivery Name</div>
+                                <q-select v-model="visitor_purpose.delivery_name" :options="options_delivery_name" outlined dense></q-select>
+                            </div>
                             <!-- Visitor Details -->
                             <div class="frontdesk__content-grid">
                                 <div class="content__input">
@@ -287,8 +291,12 @@ export default {
         {
             purpose_visit: null,
             contact_person: null,
-            destination: null
+            destination: null,
+            delivery_name: null
         },
+        options_delivery_name: [
+            'Lazada' , 'Shoppee', 'LBC', 'Fedex', 'Food Panda', 'Grabfood', 'Lalamove', 'Lalafud', 'Mr Speedy', 'Mc Donalds', 'Jollibee', 'Chowking', 'Others'
+        ],
         device_list: [],
 
         db: new Model()
@@ -490,7 +498,6 @@ export default {
                     visitor_purpose: this.visitor_purpose
                 },
                 'visitors');
-
                 setTimeout(() => {
                     this.visitor_purpose = {}
                     this.personal_information = {}
