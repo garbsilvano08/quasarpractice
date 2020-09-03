@@ -56,6 +56,7 @@ module.exports = class PersonClass
             visit_purpose:      person.person_info.visit_purpose,
             contact_person:     person.person_info.contact_person,
             destination:        person.person_info.destination,
+            delivery_name:      person.person_info.delivery_name,
             date_saved:         new Date(),
             date_string:        person.person_info.date
         }

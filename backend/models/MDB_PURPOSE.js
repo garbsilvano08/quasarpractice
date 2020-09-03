@@ -11,6 +11,7 @@ const schema    = new Schema(
     contact_person: { type: String,  required: true },
     destination:    { type: String,  required: true },
     date_string:    { type: String,  required: true },
+    delivery_name:  { type: String,  required: false }
 });
 
 class MDB_PURPOSE extends MODEL
