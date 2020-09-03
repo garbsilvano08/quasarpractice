@@ -8,7 +8,7 @@
                 <q-btn @click="exportData" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
-                
+
             </div>
         </div>
 
@@ -193,15 +193,16 @@ export default {
         {
             if (new_val - 1 == old_val)
             {
+                console.log(this.filteredList[this.filteredList.length - 1]);
                 let date = new Date(this.filteredList[this.filteredList.length - 1 ].date_saved)
-                date.setHours(date.getHours() - 8)
+                // date.setHours(date.getHours() - 8)
                 let end = new Date(date).toISOString().split('T')[0];
                 await this.getLogList(this.start_date, end, this.start_time, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds())
             }
             else if (new_val + 1 == old_val)
             {
                 let date = new Date(this.filteredList[0].date_saved)
-                date.setHours(date.getHours() - 8)
+                // date.setHours(date.getHours() - 8)
                 let start = new Date(date).toISOString().split('T')[0];
                 await this.getLogList(start, this.end_date, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds(), this.end_time, 'reverse')
             }
@@ -229,9 +230,9 @@ export default {
     //     }
     },
     methods:
-    {   
+    {
         exportData()
-        { 
+        {
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let params = {}
             let start = new Date(this.start_date)
@@ -252,7 +253,7 @@ export default {
                     "date_logged" : this.log_list[index].date,
                 },)
             }
-            
+
             fields.push({
             label: 'Full name',
             value: 'full_name'
@@ -283,7 +284,7 @@ export default {
 
             const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
             const csv = json2csvParser.parse(log_list_data);
-    
+
             var FileSaver = require('file-saver');
             FileSaver.saveAs(
             new Blob([csv], {
@@ -299,6 +300,7 @@ export default {
         },
         async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "")
         {
+            this.$q.loading.show();
             let params = {}
             let sort_time_start = sort_start.split(":")
             let sort_time_end = sort_end.split(":")
@@ -321,7 +323,7 @@ export default {
             // date_end.setHours(date_end.getHours() + 8)
             date_end.setMinutes(sort_time_end[1])
 
-            if (sort_reverse) 
+            if (sort_reverse)
             {
                 date_start.setMilliseconds(date_start.getMilliseconds() + 1)
                 date_end.setMilliseconds(date_end.getMilliseconds() + 1)
@@ -417,9 +419,9 @@ export default {
             if (this.checkbox_name) sort['full_name'] = sort_reverse ? 1 : Number(this.sort_type)
             if (this.checkbox_temperature) sort['temperature'] = sort_reverse ? 1 : Number(this.sort_type)
 
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 40} );
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20} );
             if (sort_reverse) logs.data.reverse()
-            for (let index = 0; index < logs.data.length; index++) {                
+            for (let index = 0; index < logs.data.length; index++) {
                 logs.data.forEach(async log => {
                     logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
                     logs.data[index].device = this.deviceId("", logs.data[index].device_id)
@@ -427,11 +429,14 @@ export default {
                 });
             }
             this.log_list = logs.data
+            console.log(logs.data);
             if (this.page_number == 0)
             {
                 let count = await this.$_post('member/get/count_logs', {find_by_category: params, sort: sort} );
-                this.page_number = Math.ceil(count.data.count / 40)
+                this.page_number = Math.ceil(count.data.count / 20)
             }
+
+            this.$q.loading.hide();
         },
 
         convertDateFormat(date_saved)
@@ -442,7 +447,7 @@ export default {
             var AmOrPm = hours >= 12 ? 'PM' : 'AM';
             hours = (hours % 12) || 12;
             var minutes = full_date.getMinutes() ;
-            var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm; 
+            var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm;
             // console.log(date + ", " + finalTime);
             return date + ", " + finalTime
         },
@@ -462,7 +467,7 @@ export default {
                 params = {find_device: {company_name: this.company_details.company_name}}
             }
             else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
-            
+
             let {data: devices} =  await this.$_post(postGetDevice, params);
             devices.forEach(device => {
                 this.options_device_name.push(device.device_name)
@@ -476,8 +481,7 @@ export default {
 
         await this.getDevice()
         await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
-    
+
     }
 }
 </script>
- 
