@@ -13,7 +13,9 @@ const schema    = new Schema(
     subcompanies: { type: Array , required: true},
     staff: {type: Number , required: true , default: 0},
     location_coordinates: {type: Object , required: true , default: 0},
-    date_created: {type: Date , required: true}
+    date_created: {type: Date , required: true},
+    device_owner: { type: String  , required:   true },
+    tenants: { type: Array , required: true},
 });
 
 class MDB_COMPANIES extends MODEL

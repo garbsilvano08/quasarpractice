@@ -193,7 +193,6 @@ export default {
         {
             if (new_val - 1 == old_val)
             {
-                console.log(this.filteredList[this.filteredList.length - 1]);
                 let date = new Date(this.filteredList[this.filteredList.length - 1 ].date_saved)
                 // date.setHours(date.getHours() - 8)
                 let end = new Date(date).toISOString().split('T')[0];
@@ -429,7 +428,6 @@ export default {
                 });
             }
             this.log_list = logs.data
-            console.log(logs.data);
             if (this.page_number == 0)
             {
                 let count = await this.$_post('member/get/count_logs', {find_by_category: params, sort: sort} );

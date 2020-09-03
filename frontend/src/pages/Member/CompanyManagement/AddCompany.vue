@@ -54,7 +54,7 @@
                 <div class="content__input">
                     <div class="company-add__content-info">
                         <div class="content__select-label">
-                            <q-checkbox v-model="has_no_parent" label="Device Owner"/>
+                            <q-checkbox v-model="is_device_owner" label="Device Owner"/>
                             <!-- Device Owner -->
                         </div>
                         <com-picker v-show="is_open" :user="this.$user_info" @select=getDeviceOwner></com-picker>
@@ -142,7 +142,7 @@ export default {
         company_pic: "",
         company_list: [{company_name: 'No Parent'}],
         company_details: {},
-        has_no_parent: true,
+        is_device_owner: true,
         is_open: false,
         device_owner: {}
     }),
@@ -155,7 +155,7 @@ export default {
     
     watch:
     {
-        has_no_parent(val)
+        is_device_owner(val)
         {
             this.is_open = !this.is_open
         }
@@ -239,10 +239,11 @@ export default {
                         company_location: this.input_location, 
                         company_type:this.company_type, 
                         company_logo_url: res, 
+                        device_owner: this.is_device_owner ? 'Device Owner' : this.device_owner._id,
                         parent_id: this.company_details.company_name == 'Super Admin' ? 'No Parent' : this.company_details._id, 
                         location_coordinates: location_coordinates,
                         date_created: new Date()
-                        });
+                    });
                     this.input_company_name = "";
                     this.input_location = "";
                     this.company_type = this.company_type = "public";

@@ -4,7 +4,7 @@
         <div class="login__content">
             <div class="login__title">
                 <div class="login__title-primary">
-                    <q-img @dblclick="createAdmin()" src="../../../assets/vcop-logo.svg"></q-img>
+                    <q-img @click="createAdmin()" src="../../../assets/vcop-logo.svg"></q-img>
                 </div>
                 <div class="login__title-sub">Client Login</div>
             </div>

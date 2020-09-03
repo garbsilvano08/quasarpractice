@@ -330,7 +330,7 @@ module.exports =
         
         if (req.body.parent_id == "No Parent")
         {
-
+            
 
         }
         else
@@ -340,6 +340,7 @@ module.exports =
                 {
                     parentCompany=com;
                     parentCompany.subcompanies.push(createdCompany._id);
+                    if (req.body.device_owner != "Device Owner") parentCompany.tenants.push(createdCompany._id)
                 }
             })
             await new MDB_COMPANIES().update( parentCompany._id, parentCompany);
@@ -407,7 +408,13 @@ module.exports =
     },
     async getCompanies(req, res)
     {
-        return res.send(await new MDB_COMPANIES().docs());
+        // console.log(req.body);
+        if (req.body.find_company) 
+        {
+            // console.log('lkjlkjlkj');
+            return await new MDB_COMPANIES().collection.find(req.body.find_company)
+        }
+        else return res.send(await new MDB_COMPANIES().docs());
     },
     async deleteCompany(req, res)
     {
@@ -466,12 +473,12 @@ module.exports =
 
     async getPersons(req, res)
     {
-        let person_list
+        // let person_list
         if(req.body.find_person){
-            person_list = await new MDB_PERSON().collection.find(req.body.find_person).sort(req.body.sort)
+            res.send(await new MDB_PERSON().collection.find(req.body.find_person).sort(req.body.sort))
         }
         else res.send(await new MDB_PERSON().docs());
-        res.send(person_list);
+        // res.send(person_list);
     }, 
 
     async getFindLogs(req, res)
