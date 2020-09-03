@@ -193,15 +193,16 @@ export default {
         {
             if (new_val - 1 == old_val)
             {
+                console.log(this.filteredList[this.filteredList.length - 1]);
                 let date = new Date(this.filteredList[this.filteredList.length - 1 ].date_saved)
-                date.setHours(date.getHours() - 8)
+                // date.setHours(date.getHours() - 8)
                 let end = new Date(date).toISOString().split('T')[0];
                 await this.getLogList(this.start_date, end, this.start_time, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds())
             }
             else if (new_val + 1 == old_val)
             {
                 let date = new Date(this.filteredList[0].date_saved)
-                date.setHours(date.getHours() - 8)
+                // date.setHours(date.getHours() - 8)
                 let start = new Date(date).toISOString().split('T')[0];
                 await this.getLogList(start, this.end_date, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds(), this.end_time, 'reverse')
             }
@@ -299,6 +300,7 @@ export default {
         },
         async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "")
         {
+            this.$q.loading.show();
             let params = {}
             let sort_time_start = sort_start.split(":")
             let sort_time_end = sort_end.split(":")
@@ -417,7 +419,7 @@ export default {
             if (this.checkbox_name) sort['full_name'] = sort_reverse ? 1 : Number(this.sort_type)
             if (this.checkbox_temperature) sort['temperature'] = sort_reverse ? 1 : Number(this.sort_type)
 
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 40} );
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20} );
             if (sort_reverse) logs.data.reverse()
             for (let index = 0; index < logs.data.length; index++) {
                 logs.data.forEach(async log => {
@@ -427,11 +429,14 @@ export default {
                 });
             }
             this.log_list = logs.data
+            console.log(logs.data);
             if (this.page_number == 0)
             {
                 let count = await this.$_post('member/get/count_logs', {find_by_category: params, sort: sort} );
-                this.page_number = Math.ceil(count.data.count / 40)
+                this.page_number = Math.ceil(count.data.count / 20)
             }
+
+            this.$q.loading.hide();
         },
 
         convertDateFormat(date_saved)
