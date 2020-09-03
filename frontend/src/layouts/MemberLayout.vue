@@ -272,8 +272,9 @@ export default
         },
         async checkQueueSync()
         {
-            // console.log('save');
+            console.log('save');
             let logs = await this.$_post(postPersonByCateg, {find_by_category: { person_img: { $regex: '/9j/'}}});
+                console.log(logs);
             for (let index = 0; index < logs.data.length; index++) {                
                 logs.data.forEach(async log => {
                     if (!log.person_img.startsWith('http')) 
