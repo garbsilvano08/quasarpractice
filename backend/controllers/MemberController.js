@@ -280,7 +280,6 @@ module.exports =
             if (device.length > 0)
             {
                 await new CounterClass().counterActivities(device[0].company_id, key, date_string, req.body.deviceKey)
-    
                 person_info = {
                     mask:                   1,
                     temperature:            extra.bodyTemp,
@@ -290,9 +289,8 @@ module.exports =
                     frontdesk_person_id:    req.body.personId,
                     date_logged:            req.body.time,
                     record_id:              req.body.id,
-                    company_id:             device[0].company_id
+                    company_id:             person.length ? person[0].company_id : device[0].company_id
                 }
-                
             }
         }
         

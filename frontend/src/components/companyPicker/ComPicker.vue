@@ -1,7 +1,7 @@
 <template>
     <div>
         <q-btn dense no-caps flat class="btn-outline btn-choose" align="between">
-            <span>{{value.company_name ? value.company_name : "Choose"}}</span>
+            <span>{{value.company_name ? value.company_name : "Super Admin"}}</span>
             <q-icon size="small" class="icon" name="fa fa-caret-down"></q-icon>
             <q-menu fit>
                 <q-list style="min-width: 200px">
@@ -66,6 +66,7 @@ export default {
         {
             if (this.user.user_type == "Super Admin")
             {
+                this.parent_companies.push({company_name: "Super Admin"});
                 this.company_list.data.forEach((com) => {
                     if(com.parent_id == "No Parent")
                     {
