@@ -290,6 +290,13 @@
                      </div>
                   </div>
                </div>
+               <div class="swiper-slide">
+                  <div class="dashboard__overview-btn">
+                     <q-btn flat dense no-caps class="btn-primary btn-seemore">
+                        See More <q-icon name="mdi-arrow-right" size="20px"></q-icon>
+                     </q-btn>
+                  </div>
+               </div>
             </div>
          </div>
 

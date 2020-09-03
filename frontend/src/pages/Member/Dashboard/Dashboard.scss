@@ -276,6 +276,17 @@
                 }
             }
         }
+
+        .dashboard__overview-btn {
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           height: 179px;
+
+           .btn-seemore {
+               width: 200px;
+           }
+        }
     }
 
     .dashboard__overview:last-child {
