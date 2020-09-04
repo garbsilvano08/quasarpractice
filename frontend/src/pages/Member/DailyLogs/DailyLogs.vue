@@ -85,6 +85,22 @@
                         </q-list>
                     </q-btn-dropdown>
                 </div>
+                <div class="content__filter-item">
+                    <q-btn-dropdown class="btn-dropdown__primary" label="View As" flat dense no-caps>
+                        <q-list>
+                            <q-item clickable v-close-popup>
+                                <q-item-section>
+                                    <q-radio v-model="view_as" val='grid' dense label="Grid" />
+                                </q-item-section>
+                            </q-item>
+                            <q-item clickable v-close-popup>
+                                <q-item-section>
+                                    <q-radio v-model="view_as" val='list' dense label="List" />
+                                </q-item-section>
+                            </q-item>
+                        </q-list>
+                    </q-btn-dropdown>
+                </div>
 
                 <div class="content__filter-people content__filter-item">
                     <q-input outlined dense v-model="input__people" @keypress.exact.native="filteredList()" class="search-people" placeholder="Search People...">
@@ -112,11 +128,12 @@
                 </div>
             </div>
 
-            <div class="daily-logs__content-body content__grid-4x4">
+            <div v-if="view_as=='grid'" class="daily-logs__content-body content__grid-4x4">
                 <div id='dailyLogs' v-for="(logs, index) in filteredList" :key="index">
                     <DailyLogCards :all_logs="logs"></DailyLogCards>
                 </div>
             </div>
+            <q-table v-else dense flat :data="this.filteredList" :hide-pagination="true" :rows-per-page-options="[20]" :columns="table_column"></q-table>
             <div class="q-pa-lg flex flex-center">
                 <q-pagination
                     v-model="current_page"
@@ -149,6 +166,59 @@ export default {
         ComPicker
     },
     data: () => ({
+        view_as: 'grid',
+        table_column:
+        [
+            {
+                name    : 'full_name',
+                label   : 'Name',
+                field   : row => row.full_name,
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            {
+                name    : 'temperature',
+                label   : 'Temperature',
+                field   : row => row.temperature ? row.temperature : 'Unknown',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            {
+                name    : 'device',
+                label   : 'Device Name',
+                field   : row => row.device.device_name + "-" + row.device.log_type,
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            {
+                name    : 'company',
+                label   : 'Company',
+                field   : row => row.company_name,
+                align   : 'left',
+                required: true,
+                sortable: true,
+            },
+            {
+                name    : 'home_address',
+                label   : 'Home Address',
+                field   : row => row.home_address ? row.home_address : 'Unknown',
+                align   : 'left',
+                required: true,
+
+                sortable: true,
+            },
+            {
+                name    : 'date_created',
+                label   : 'Date Registered',
+                field   : row => row.date ? row.date : 'Unknown',
+                align   : 'left',
+                required: true,
+                sortable: true,
+            }
+        ],
         log_items: 0,
         item_sort: 'date',
         sort_type: '-1',
