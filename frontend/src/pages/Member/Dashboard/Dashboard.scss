@@ -202,7 +202,36 @@
             width: 100%;
             height: auto;
             overflow: hidden;
-            padding-bottom: 4px
+            padding-bottom: 4px;
+            position: relative;
+
+            .swiper-next {
+                position: absolute;
+                top: 42%;
+                right: 8px;
+                z-index: 99;
+                cursor: pointer;
+                outline: none;
+
+                img {
+                    object-fit: contain;
+                    width: 25px;
+                }
+            }
+
+            .swiper-prev {
+                position: absolute;
+                top: 42%;
+                left: 8px;
+                z-index: 99;
+                cursor: pointer;
+                outline: none;
+
+                img {
+                    object-fit: contain;
+                    width: 25px;
+                }
+            }
         }
 
         .content__card-info {

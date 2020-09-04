@@ -305,8 +305,12 @@
                </div>
             </div>
 
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+            <div class="swiper-next">
+               <img src="../../../assets/swiper-next-arrow.svg" alt="">
+            </div>
+            <div class="swiper-prev">
+               <img src="../../../assets/swiper-prev-arrow.svg" alt="">
+            </div>
          </div>
 
       </div>
@@ -1307,8 +1311,8 @@ export default
             disableOnInteraction: false,
          },
          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
+            nextEl: '.swiper-next',
+            prevEl: '.swiper-prev',
          },
          breakpoints: {
         1366: {
