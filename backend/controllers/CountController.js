@@ -34,8 +34,9 @@ module.exports =
 
     async getPersonLogs(req, res)
     {
-        let logs = await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).sort(req.body.sort).limit(req.body.limit)
-        res.send(logs);
+        // let logs = 
+        if (req.body.skip) res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).skip(req.body.skip).sort(req.body.sort).limit(req.body.limit));
+        else res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).sort(req.body.sort).limit(req.body.limit));
     },
 
     async counterLogs(req, res)

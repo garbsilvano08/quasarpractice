@@ -69,17 +69,17 @@
                             <q-separator />
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-checkbox v-model="checkbox_date_saved" dense label="Date Saved" />
+                                    <q-radio v-model="item_sort" val='date' dense label="Date Saved" />
                                 </q-item-section>
                             </q-item>
                              <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-checkbox v-model="checkbox_name" dense label="Name" />
+                                    <q-radio v-model="item_sort" val='name' dense label="Name" />
                                 </q-item-section>
                             </q-item>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-checkbox v-model="checkbox_temperature" dense label="Temperature" />
+                                    <q-radio v-model="item_sort" val='temp' dense label="Temperature" />
                                 </q-item-section>
                             </q-item>
                         </q-list>
@@ -149,9 +149,10 @@ export default {
         ComPicker
     },
     data: () => ({
+        item_sort: 'date',
+        sort_type: '-1',
         current_page: 1,
         page_number: 0,
-        sort_type: '-1',
         input__people: '',
         start_time: '00:00',
         end_time:  '23:59',
@@ -189,11 +190,19 @@ export default {
     },
     watch:
     {
+        async item_sort(val)
+        {
+            await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
+        },
+        async sort_type(val)
+        {
+            await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
+        },
         async current_page(new_val, old_val)
         {
             if (new_val - 1 == old_val)
             {
-                console.log(this.filteredList[this.filteredList.length - 1]);
+                // await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
                 let date = new Date(this.filteredList[this.filteredList.length - 1 ].date_saved)
                 // date.setHours(date.getHours() - 8)
                 let end = new Date(date).toISOString().split('T')[0];
@@ -201,6 +210,7 @@ export default {
             }
             else if (new_val + 1 == old_val)
             {
+                // await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time, 'reverse')
                 let date = new Date(this.filteredList[0].date_saved)
                 // date.setHours(date.getHours() - 8)
                 let start = new Date(date).toISOString().split('T')[0];
@@ -208,6 +218,7 @@ export default {
             }
             else if (new_val == 1)
             {
+                // await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
                 let start = new Date(date).toISOString().split('T')[0];
                 await this.getLogList(this.start_date, this.end_date, this.end_date, this.end_time)
             }
@@ -415,9 +426,9 @@ export default {
                 }
             }
             let sort = {}
-            if (this.checkbox_date_saved) sort['date_saved'] = sort_reverse ? 1 : Number(this.sort_type)
-            if (this.checkbox_name) sort['full_name'] = sort_reverse ? 1 : Number(this.sort_type)
-            if (this.checkbox_temperature) sort['temperature'] = sort_reverse ? 1 : Number(this.sort_type)
+            if (this.item_sort == 'date') sort['date_saved'] = sort_reverse ? 1 : Number(this.sort_type)
+            if (this.item_sort == 'name') sort['full_name'] = sort_reverse ? 1 : Number(this.sort_type)
+            if (this.item_sort == 'temp') sort['temperature'] = sort_reverse ? 1 : Number(this.sort_type)
 
             let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20} );
             if (sort_reverse) logs.data.reverse()
@@ -429,10 +440,10 @@ export default {
                 });
             }
             this.log_list = logs.data
-            console.log(logs.data);
             if (this.page_number == 0)
             {
                 let count = await this.$_post('member/get/count_logs', {find_by_category: params, sort: sort} );
+                console.log(count);
                 this.page_number = Math.ceil(count.data.count / 20)
             }
 
