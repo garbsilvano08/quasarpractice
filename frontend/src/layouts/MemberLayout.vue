@@ -62,6 +62,35 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
+        <q-dialog v-model="dialog" :position="position" persistent>
+            <q-card class="bg-red text-white" style="width: 300px">
+                <q-card-section>
+                    <div class="text-h6">VCOP ALLERT</div>
+                </q-card-section>
+                <q-card-section align="center" class="q-pt-none">
+                    <div>
+                        Fever Detected
+                    </div>
+                    <div>
+                        {{log_alert.temperature}} °C
+                    </div>
+                </q-card-section>
+
+                <q-card-section align="center" class="bg-white text-black">
+                    <div>
+                        <q-img :src="log_alert.person_img"></q-img>
+                    </div>
+                    <div style="font-weight: 700 !important; font-size: 16px;"> 
+                        {{log_alert.full_name == 'Stranger' ? "" : log_alert.full_name}}
+                    </div>
+                    <div> {{log_alert.category}} </div>
+                    <div style="font-size: 10px;"> Please bring the person to your station to get further information. </div>
+                </q-card-section>
+                <q-card-actions align="right" class="bg-white text-teal">
+                    <q-btn @click="logCheck()" flat label="OK" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </q-layout>
 </template>
 <script>
@@ -97,6 +126,8 @@ export default
     },
 	data: () =>
 	({
+        dialog: false,
+        position: "bottom",
         getLogsSwitch: "",
 		package_data: { version: '0.0.0' },
 		leftDrawerOpen: false,
@@ -113,6 +144,7 @@ export default
         person_uploads: 50000,
         total: 60000,
         image: null,
+        log_alert: {}
         
     }),
     computed:
@@ -159,6 +191,10 @@ export default
     },
     methods:
     {
+        logCheck()
+        {
+            this.dialog = false
+        },
         async getDevices()
         {
             if (this.$user_info && this.$user_info.company)
@@ -293,6 +329,11 @@ export default
                                 res = await this.$_post_file(formDatatoBackend);
                                 logs.data[index].person_img = res
                                 await this.$_post('member/save/image', {info: {id: log._id, image: res}});
+                                if (logs.data[index].has_fever ==  true)
+                                {
+                                    this.log_alert =  logs.data[index]
+                                    this.dialog = true
+                                }
                             }
                             catch(e){}
                         }
