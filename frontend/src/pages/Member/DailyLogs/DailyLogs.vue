@@ -481,7 +481,6 @@ export default {
 
         await this.getDevice()
         await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
-
     }
 }
 </script>

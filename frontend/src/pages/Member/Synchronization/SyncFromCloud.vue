@@ -125,8 +125,7 @@ export default {
                     
                 setTimeout(() => this.createAll(this.persons_list, device.device_ip, device.device_type), 2000);
            })
-        },
-        async createAll(personToTablet , device_ip, device_type)
+        },        async createAll(personToTablet , device_ip, device_type)
         {
             this.device_list.forEach(async (device) => {
                 if (device.device_type != 'vision_sky')
@@ -154,7 +153,7 @@ export default {
                         {
                             let data = new FormData();
                             data.append('pass', '123456');
-                            data.append('callbackUrl', 'http://vcop-image.geer.solutions/api/member/visionsky/logs');
+                            data.append('callbackUrl', 'http://192.168.254.89/api/member/visionsky/logs');
                             let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
                             console.log(logs, 'logs');
                         }

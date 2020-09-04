@@ -1,5 +1,5 @@
 <template>
-    <div class="content__card">
+    <div class="content__card"  v-on:click="personInformation">
         <!-- <q-img :src="staff_logs.person_img"></q-img>
         <div class="content__info">
             <div v-if="type == 'Staff'" class="content__name">{{staff_logs.full_name}}</div>
@@ -55,6 +55,22 @@ export default {
         all_logs: Object,
         type: String
     },
+    data:() =>({
+
+    }),
+    methods:{
+        personInformation(evt, daily_logs_info){
+            this.$router.push({
+                name: "member_personal-information",
+                params: {
+                    daily_logs_info: this.all_logs,
+                    from_daily_logs : 'daily_logs'
+                }
+            })
+        }
+    },
+    async mounted(){
+    }
 
 }
 </script>

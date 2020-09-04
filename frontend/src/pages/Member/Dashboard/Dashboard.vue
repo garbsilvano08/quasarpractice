@@ -128,7 +128,7 @@
       <div class="dashboard__overview-logs">
          <div class="swiper-container">
             <div class="swiper-wrapper">
-               <div class="swiper-slide" v-on:click="viewData(0)">
+               <div class="swiper-slide" v-on:click="personInformation(0)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img :src="this.logs_card.data[0].person_img"></q-img>
@@ -155,7 +155,7 @@
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide" v-on:click="viewData(1)">
+               <div class="swiper-slide" v-on:click="personInformation(1)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img :src="this.logs_card.data[1].person_img"></q-img>
@@ -182,7 +182,7 @@
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide" v-on:click="viewData(2)">
+               <div class="swiper-slide" v-on:click="personInformation(2)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img :src="this.logs_card.data[2].person_img"></q-img>
@@ -209,7 +209,7 @@
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide" v-on:click="viewData(3)">
+               <div class="swiper-slide" v-on:click="personInformation(3)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img :src="this.logs_card.data[3].person_img"></q-img>
@@ -236,7 +236,7 @@
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide" v-on:click="viewData(4)">
+               <div class="swiper-slide" v-on:click="personInformation(4)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img :src="this.logs_card.data[4].person_img"></q-img>
@@ -263,7 +263,7 @@
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide" v-on:click="viewData(5)">
+               <div class="swiper-slide" v-on:click="personInformation(5)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img :src="this.logs_card.data[5].person_img"></q-img>
@@ -544,7 +544,7 @@
          <!-- VISITORS PURPOSE NEW PIE CHART-->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
-              <div class="dashboard__graph-title">
+            <div class="dashboard__graph-title">
                   Visitors Purpose
                </div>
                <div class="dashboard__graph-filter">
@@ -656,6 +656,12 @@
                </div>
             </div>
          </div>
+           
+            
+               
+    
+         
+
          <!-- VISITOR LOGS -->
          <!-- <div class="dashboard__graph-item dashboard__graph-item--alert-logs">
             <div class="dashboard__graph-header">
@@ -732,8 +738,9 @@ export default
    components: { ComPicker },
    //pointerdata
    data:() =>
-   ({ 
-      logs_card: {},
+   ({
+      logs_card : {},
+      purpose_visit_total : 0,
       data_stacked_bar_graph: {data: [
          {
             name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
@@ -962,7 +969,7 @@ export default
       {
          if (this.select_date == 'Custom Date')
          {
-
+            
             this.date_filter_dialog = true
          }
          else
@@ -1134,8 +1141,8 @@ export default
          }
          this.purpose_visit =  await this.$_post(postGetPurposeVisit, params);
          this.purpose_visit.total =
-            this.purpose_visit.data.official_business
-            + this.purpose_visit.data.collection_pickup
+            this.purpose_visit.data.official_business 
+            + this.purpose_visit.data.collection_pickup 
             + this.purpose_visit.data.delivery
             + this.purpose_visit.data.corporate_meeting
             + this.purpose_visit.data.client_customer
@@ -1256,30 +1263,33 @@ export default
                 name: "member_dailylogs"
             })
       },
-      async viewData(index){
-         console.log(this.logs_card.data[index]._id)
+      personInformation(daily_logs_info){
+         this.$router.push({
+               name: "member_personal-information",
+               params: {
+                  daily_logs_info: this.logs_card.data[daily_logs_info],
+                  from_daily_logs : 'daily_logs'
+               },
+         })
+      },
+      async getLatestLogs(){
+         let sort = {} , flag = 0
+         sort['date_saved'] = -1
+         this.logs_card = await this.$_post(postPersonByCateg, {sort: sort, limit:6} );
+         for (let index = 0; index < this.logs_card.data.length; index++) {
+               this.logs_card.data[index].date_saved = date.formatDate(this.logs_card.data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
+         }
+         setTimeout(this.getLatestLogs, 30000);
+         console.log("test");
       }
    },
    async mounted()
    {  //pointermount
-      // var time = new Date().getTime();
-      // $(document.body).bind("mousemove keypress", function(e) {
-      //       time = new Date().getTime();
-      // });
+      await this.getLatestLogs()
+      
+      
+      
 
-      // function refresh() {
-      //       if(new Date().getTime() - time >= 60000) 
-      //          window.location.reload(true);
-      //       else 
-      //          setTimeout(refresh, 10000);
-      // }
-
-      // setTimeout(refresh, 10000);
-
-
-      let sort = {}
-      sort['date_saved'] = -1
-      this.logs_card = await this.$_post(postPersonByCateg, {sort: sort, limit:6} );
 
       let sample_date = new Date()
       sample_date.setHours(sample_date.getHours() + 8 )

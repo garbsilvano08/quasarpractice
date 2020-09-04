@@ -36,7 +36,7 @@
                 <q-img :src="person.person_img"></q-img>
                 <div class="report__info">
                     <div class="report__info-details">
-                        <span>{{person.full_name}}</span> is on the <span>{{getFeverDate(person.date_saved)}}</span> after abnormal temperature was detected.
+                        <span>{{person.full_name}}</span> is on the <span>{{getFeverDate(person.date_saved)}}</span> after abnormal temperature was detected. <!-- at <span>{{person.date_logged}}</span> in <span>{{person.company_name}}</span> -->
                     </div>
                     <!-- <div class="report__info-datetime">{{timeAgo(person.date_saved)}}</div> -->
                 </div>
@@ -209,37 +209,6 @@ export default {
             }),
             file_name
             );
-
-
-
-            // var downloadLink;
-            // var dataType = 'application/vnd.ms-excel';
-            // var tableSelect = document.getElementById(tableID);
-            // var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-
-            // // Specify file name
-            // filename = filename?filename+'.xls':'excel_data.xls';
-
-            // // Create download link element
-            // downloadLink = document.createElement("a");
-
-            // document.body.appendChild(downloadLink);
-
-            // if(navigator.msSaveOrOpenBlob){
-            //     var blob = new Blob(['\ufeff', tableHTML], {
-            //         type: dataType
-            //     });
-            //     navigator.msSaveOrOpenBlob( blob, filename);
-            // }else{
-            //     // Create a link to the file
-            //     downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-
-            //     // Setting the file name
-            //     downloadLink.download = filename;
-
-            //     //triggering the function
-            //     downloadLink.click();
-            // }
         },
         getFeverDate(date)
         {
@@ -273,11 +242,13 @@ export default {
             if (this.company_details || this.company_details.company_name == 'All Company') {
                 params = {sort: sort_options, find_by_category: {date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)},
                 has_fever: true,
-                company_id: this.company_details._id},
+                company_id: this.company_details._id,
+                company_name : this.company_details.company_name},
                 limit: 10}
             }
             else params = {sort: sort_options, find_by_category: {date_saved: { '$gt' : new Date(start) , '$lt' : new Date(end)},
-                has_fever: true},
+                has_fever: true, 
+                company_name : this.company_details.company_name},
                 limit: 10}
 
             let data = await this.$_post(postPersonByCateg, params);
@@ -286,7 +257,8 @@ export default {
     },
 
     async mounted()
-    {
+    {   
+        console.log(this.company_details);
         await this.getFeverList()
     }
 }

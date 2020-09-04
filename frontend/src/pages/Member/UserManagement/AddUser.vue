@@ -36,7 +36,7 @@
                     <q-select v-model="user_information.user_type" :options="options_user_type" outlined dense></q-select>
                 </div>
             </div>
-            <div class="user-add__content-info">
+            <div class="user-add__content-info user-add__content-grid">
                 <div class="content__select">
                     <div class="content__select-label">Tag a Company</div>
                     <!-- <q-select v-model="user_information.select_tag_company" :options="options_tag_company" outlined dense></q-select> -->
