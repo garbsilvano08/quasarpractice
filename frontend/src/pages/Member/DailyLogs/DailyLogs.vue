@@ -47,7 +47,7 @@
                     <q-select v-model="select__body_temperature" :options="options_body_temperature" outlined dense></q-select>
                 </div>
                 <div class="content__filter-item">
-                    <q-btn @click="getLogList(start_date, end_date, start_time, end_time)" class="btn-primary btn-generate" flat dense no-caps>
+                    <q-btn @click="getLogList(start_date, end_date, start_time, end_time, '', 'generate')" class="btn-primary btn-generate" flat dense no-caps>
                         Generate
                     </q-btn>
                 </div>
@@ -94,23 +94,23 @@
                     </q-input>
                 </div>
             </div>
-            <!-- <div class="content__view">
+            <div class="content__view">
                 <div class="content__view-item">
-                    <div class="content__view-label">All</div>
+                    <div v-if="select__account_type == 'All'" class="content__view-label">All ({{log_items}})</div>
                 </div>
-                <div class="content__view-item">
+                <div v-if="select__account_type == 'Staff'" class="content__view-item">
                     <div class="content__view-color color-violet"></div>
-                    <div class="content__view-label">Staff </div>
+                    <div class="content__view-label">Staff ({{log_items}})</div>
                 </div>
-                <div class="content__view-item">
+                <div v-if="select__account_type == 'Visitor'" class="content__view-item">
                     <div class="content__view-color color-orange"></div>
-                    <div class="content__view-label">Visitor </div>
+                    <div class="content__view-label">Visitor ({{log_items}}) </div>
                 </div>
-                <div class="content__view-item">
+                <div v-if="select__account_type == 'Stranger'" class="content__view-item">
                     <div class="content__view-color color-red"></div>
-                    <div class="content__view-label">Stranger </div>
+                    <div class="content__view-label">Stranger ({{log_items}}) </div>
                 </div>
-            </div> -->
+            </div>
 
             <div class="daily-logs__content-body content__grid-4x4">
                 <div id='dailyLogs' v-for="(logs, index) in filteredList" :key="index">
@@ -149,10 +149,11 @@ export default {
         ComPicker
     },
     data: () => ({
+        log_items: 0,
         item_sort: 'date',
         sort_type: '-1',
         current_page: 1,
-        page_number: 0,
+        page_number: 1,
         input__people: '',
         start_time: '00:00',
         end_time:  '23:59',
@@ -202,25 +203,25 @@ export default {
         {
             if (new_val - 1 == old_val)
             {
-                // await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
-                let date = new Date(this.filteredList[this.filteredList.length - 1 ].date_saved)
-                // date.setHours(date.getHours() - 8)
-                let end = new Date(date).toISOString().split('T')[0];
-                await this.getLogList(this.start_date, end, this.start_time, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds())
+                await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
+                // let date = new Date(this.filteredList[this.filteredList.length - 1 ].date_saved)
+                // // date.setHours(date.getHours() - 8)
+                // let end = new Date(date).toISOString().split('T')[0];
+                // await this.getLogList(this.start_date, end, this.start_time, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds())
             }
             else if (new_val + 1 == old_val)
             {
-                // await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time, 'reverse')
-                let date = new Date(this.filteredList[0].date_saved)
-                // date.setHours(date.getHours() - 8)
-                let start = new Date(date).toISOString().split('T')[0];
-                await this.getLogList(start, this.end_date, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds(), this.end_time, 'reverse')
+                await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time, 'reverse')
+                // let date = new Date(this.filteredList[0].date_saved)
+                // // date.setHours(date.getHours() - 8)
+                // let start = new Date(date).toISOString().split('T')[0];
+                // await this.getLogList(start, this.end_date, date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds(), this.end_time, 'reverse')
             }
             else if (new_val == 1)
             {
-                // await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
-                let start = new Date(date).toISOString().split('T')[0];
-                await this.getLogList(this.start_date, this.end_date, this.end_date, this.end_time)
+                await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
+                // let start = new Date(date).toISOString().split('T')[0];
+                // await this.getLogList(this.start_date, this.end_date, this.end_date, this.end_time)
             }
         },
         select__device_name(val)
@@ -309,9 +310,14 @@ export default {
         {
             this.company_details = value
         },
-        async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "")
+        async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "", generate = "")
         {
             this.$q.loading.show();
+            if (generate) {
+                this.current_page = 1;
+                this.page_number = 1
+            }
+            let skip = 0
             let params = {}
             let sort_time_start = sort_start.split(":")
             let sort_time_end = sort_end.split(":")
@@ -333,12 +339,12 @@ export default {
 
             // date_end.setHours(date_end.getHours() + 8)
             date_end.setMinutes(sort_time_end[1])
-
-            if (sort_reverse)
-            {
-                date_start.setMilliseconds(date_start.getMilliseconds() + 1)
-                date_end.setMilliseconds(date_end.getMilliseconds() + 1)
-            }
+            
+            // if (sort_reverse)
+            // {
+            //     date_start.setMilliseconds(date_start.getMilliseconds() + 1)
+            //     date_end.setMilliseconds(date_end.getMilliseconds() + 1)
+            // }
             if (this.select__account_type == 'All')
             {
                 if (this.company_details)
@@ -426,12 +432,13 @@ export default {
                 }
             }
             let sort = {}
-            if (this.item_sort == 'date') sort['date_saved'] = sort_reverse ? 1 : Number(this.sort_type)
-            if (this.item_sort == 'name') sort['full_name'] = sort_reverse ? 1 : Number(this.sort_type)
-            if (this.item_sort == 'temp') sort['temperature'] = sort_reverse ? 1 : Number(this.sort_type)
+            if (this.item_sort == 'date') sort['date_saved'] =  Number(this.sort_type)
+            if (this.item_sort == 'name') sort['full_name'] =  Number(this.sort_type)
+            if (this.item_sort == 'temp') sort['temperature'] = Number(this.sort_type)
+            if (this.current_page > 1) skip = 20 * (this.current_page - 1)
 
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20} );
-            if (sort_reverse) logs.data.reverse()
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20,  skip: skip} );
+            // if (sort_reverse) logs.data.reverse()
             for (let index = 0; index < logs.data.length; index++) {
                 logs.data.forEach(async log => {
                     logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
@@ -440,10 +447,11 @@ export default {
                 });
             }
             this.log_list = logs.data
-            if (this.page_number == 0)
+            if (this.current_page == 1)
             {
                 let count = await this.$_post('member/get/count_logs', {find_by_category: params, sort: sort} );
-                console.log(count);
+                // console.log(count);
+                this.log_items = count.data.count
                 this.page_number = Math.ceil(count.data.count / 20)
             }
 

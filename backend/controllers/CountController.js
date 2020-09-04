@@ -34,8 +34,15 @@ module.exports =
 
     async getPersonLogs(req, res)
     {
-        // let logs = 
-        if (req.body.skip) res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).skip(req.body.skip).sort(req.body.sort).limit(req.body.limit));
+        // console.log(req.body); 
+        if (req.body.skip) 
+        {
+            console.log(req.body.skip);
+            let data = await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).skip(req.body.skip).sort(req.body.sort).limit(req.body.limit)
+            // console.log(data);
+            
+            res.send(data);
+        }
         else res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).sort(req.body.sort).limit(req.body.limit));
     },
 
