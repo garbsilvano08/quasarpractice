@@ -128,164 +128,164 @@
       <div class="dashboard__overview-logs">
          <div class="swiper-container">
             <div class="swiper-wrapper">
-               <div class="swiper-slide">
+               <div class="swiper-slide" v-on:click="viewData(0)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
-                        <q-img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSpxi45JqKLxNoMHj7PODtUHUCsKhk4At5GFg&usqp=CAU"></q-img>
+                        <q-img :src="this.logs_card.data[0].person_img"></q-img>
                         <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
+                           {{this.logs_card.data[0].temperature}}<br>
+                           <span class="abnormal-temperature" v-if="this.logs_card.data[0].has_fever">Has Fever</span>
+                           <span class="normal-temperature" v-if="!this.logs_card.data[0].has_fever">Normal</span>
                         </div>
                      </div>
                      <div class="content__info">
                         <div class="content__name">
-                           Gracie-Leigh Mccarty <br>
-                           <span>Stranger</span>
+                           {{this.logs_card.data[0].full_name}} <br>
+                           <span>{{this.logs_card.data[0].category}}</span>
                         </div>
                         <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
+                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[0].date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[0].device_id}}
                         </div>
                         <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
+                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[0].company_name}}
                         </div>
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide">
+               <div class="swiper-slide" v-on:click="viewData(1)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
-                        <q-img src="https://images.squarespace-cdn.com/content/v1/5070f2f8c4aa65eb3b6394d0/1436318761703-SUWVQ0QPHE569A8FNBHH/ke17ZwdGBToddI8pDm48kMIebV6MdNPQMcRDrC5oPxMUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKc73FUbOtyHSZLq0696RfXhzOQ1C7e-4RYctpOI87j69--0uIsXqDbvJ5MkV0zcn4f/LYB+People+Profile+%2808%29.jpg?format=1500w"></q-img>
+                        <q-img :src="this.logs_card.data[1].person_img"></q-img>
                         <div class="content__temperature">
-                           36 °C <br>
-                           <span class="abnormal-temperature">Has Fever</span>
-                           <!-- <span class="normal-temperature">Normal</span> -->
+                           {{this.logs_card.data[1].temperature}}<br>
+                           <span class="abnormal-temperature" v-if="this.logs_card.data[1].has_fever">Has Fever</span>
+                           <span class="normal-temperature" v-if="!this.logs_card.data[1].has_fever">Normal</span>
                         </div>
                      </div>
                      <div class="content__info">
                         <div class="content__name">
-                           Steve Lord <br>
-                           <span>Stranger</span>
+                           {{this.logs_card.data[1].full_name}} <br>
+                           <span>{{this.logs_card.data[1].category}}</span>
                         </div>
                         <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
+                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[1].date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[1].device_id}}
                         </div>
                         <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
+                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[1].company_name}}
                         </div>
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide">
+               <div class="swiper-slide" v-on:click="viewData(2)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
-                        <q-img src="https://media1-production-mightynetworks.imgix.net/asset/2422215/basadur-profile-big.jpg?ixlib=rails-0.3.0&fm=jpg&q=75&auto=format"></q-img>
+                        <q-img :src="this.logs_card.data[2].person_img"></q-img>
                         <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
+                           {{this.logs_card.data[2].temperature}} <br>
+                           <span class="abnormal-temperature" v-if="this.logs_card.data[2].has_fever">Has Fever</span>
+                           <span class="normal-temperature" v-if="!this.logs_card.data[2].has_fever">Normal</span>
                         </div>
                      </div>
                      <div class="content__info">
                         <div class="content__name">
-                          Ahmed Webster <br>
-                           <span>Stranger</span>
+                          {{this.logs_card.data[2].full_name}} <br>
+                           <span>{{this.logs_card.data[2].category}}</span>
                         </div>
                         <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
+                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[2].date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[2].device_id}}
                         </div>
                         <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
+                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[2].company_name}}
                         </div>
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide">
+               <div class="swiper-slide" v-on:click="viewData(3)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
-                        <q-img src="https://photof8.com/wp-content/uploads/2017/01/WSS505.jpg"></q-img>
+                        <q-img :src="this.logs_card.data[3].person_img"></q-img>
                         <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
+                           {{this.logs_card.data[3].temperature}} <br>
+                           <span class="abnormal-temperature" v-if="this.logs_card.data[3].has_fever">Has Fever</span>
+                           <span class="normal-temperature" v-if="!this.logs_card.data[3].has_fever">Normal</span>
                         </div>
                      </div>
                      <div class="content__info">
                         <div class="content__name">
-                           Syed Gallagher <br>
+                           {{this.logs_card.data[3].full_name}} <br>
                            <span>Stranger</span>
                         </div>
                         <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
+                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[3].date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[3].device_id}}
                         </div>
                         <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
+                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[3].company_name}}
                         </div>
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide">
+               <div class="swiper-slide" v-on:click="viewData(4)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
-                        <q-img src="https://images.squarespace-cdn.com/content/v1/5416b734e4b0f910e31345fb/1449684896502-06F3ID8PBOB20TECV9BI/ke17ZwdGBToddI8pDm48kGXoD000J7kx3NE7W-LXpdwUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcSHIBb6yNmvYkAyvF3loIw6LWPhmq3jJqr-f9nvyP7bW--NA7--1aw0mnW_uWXk87/image-asset.jpeg"></q-img>
+                        <q-img :src="this.logs_card.data[4].person_img"></q-img>
                         <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
+                           {{this.logs_card.data[4].temperature}} <br>
+                           <span class="abnormal-temperature" v-if="this.logs_card.data[4].has_fever">Has Fever</span>
+                           <span class="normal-temperature" v-if="!this.logs_card.data[4].has_fever">Normal</span>
                         </div>
                      </div>
                      <div class="content__info">
                         <div class="content__name">
-                           Yvie Washington <br>
-                           <span>Stranger</span>
+                           {{this.logs_card.data[4].full_name}} <br>
+                           <span>{{this.logs_card.data[4].category}}</span>
                         </div>
                         <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
+                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[4].date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[4].device_id}}
                         </div>
                         <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
+                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[4].company_name}}
                         </div>
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide">
+               <div class="swiper-slide" v-on:click="viewData(5)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
-                        <q-img src="https://imgix.bustle.com/uploads/image/2018/5/9/aa15d5d8-4b32-4888-b5c1-aa51349df70d-2t4a9501.JPG"></q-img>
+                        <q-img :src="this.logs_card.data[5].person_img"></q-img>
                         <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
+                           {{this.logs_card.data[5].temperature}} <br>
+                           <span class="abnormal-temperature" v-if="this.logs_card.data[5].has_fever">Has Fever</span>
+                           <span class="normal-temperature" v-if="!this.logs_card.data[5].has_fever">Normal</span>
                         </div>
                      </div>
                      <div class="content__info">
                         <div class="content__name">
-                           Ellise Potter <br>
-                           <span>Stranger</span>
+                           {{this.logs_card.data[5].full_name}} <br>
+                           <span>{{this.logs_card.data[5].category}}</span>
                         </div>
                         <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
+                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[5].date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[5].device_id}}
                         </div>
                         <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
+                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[5].company_name}}
                         </div>
                      </div>
                   </div>
@@ -298,7 +298,7 @@
                   </div>
                </div> -->
                <div class="swiper-slide">
-                  <div class="content__card-seemore content__card">
+                  <div class="content__card-seemore content__card" @click="seeMore">
                      <q-img src="../../../assets/dashboard-logs-more.svg"></q-img>
                      <div class="seemore-label">See more ..</div>
                   </div>
@@ -730,9 +730,10 @@ Vue.use(Chartkick.use(Chart))
 export default
 {
    components: { ComPicker },
-
+   //pointerdata
    data:() =>
-   ({
+   ({ 
+      logs_card: {},
       data_stacked_bar_graph: {data: [
          {
             name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
@@ -875,7 +876,7 @@ export default
    }),
 
    watch:
-    {
+    { 
        async purpose_filter(val)
        {
             this.last_option_purpose = val
@@ -1249,10 +1250,37 @@ export default
          {
              this.logged_today = 0
          }
+      },
+      seeMore(){
+         this.$router.push({
+                name: "member_dailylogs"
+            })
+      },
+      async viewData(index){
+         console.log(this.logs_card.data[index]._id)
       }
    },
    async mounted()
-   {
+   {  //pointermount
+      // var time = new Date().getTime();
+      // $(document.body).bind("mousemove keypress", function(e) {
+      //       time = new Date().getTime();
+      // });
+
+      // function refresh() {
+      //       if(new Date().getTime() - time >= 60000) 
+      //          window.location.reload(true);
+      //       else 
+      //          setTimeout(refresh, 10000);
+      // }
+
+      // setTimeout(refresh, 10000);
+
+
+      let sort = {}
+      sort['date_saved'] = -1
+      this.logs_card = await this.$_post(postPersonByCateg, {sort: sort, limit:6} );
+
       let sample_date = new Date()
       sample_date.setHours(sample_date.getHours() + 8 )
       sample_date.toISOString().split('T')[0].split("-")
@@ -1298,6 +1326,7 @@ export default
       this.visitor_number = await this.personsData({find_person: {category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
       await this.getTotalRegistered()
    },
+   
    updated() {
       var swiper = new Swiper('.swiper-container', {
          slidesPerView: 4,

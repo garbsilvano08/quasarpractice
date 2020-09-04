@@ -202,7 +202,10 @@
             width: 100%;
             height: auto;
             overflow: hidden;
-            padding-bottom: 4px
+            padding-bottom: 4px;
+            .swiper-slide:hover{
+                cursor: pointer;
+            }
         }
 
         .content__card-info {
