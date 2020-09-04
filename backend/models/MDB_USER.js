@@ -28,7 +28,7 @@ class MDB_USERS extends MODEL
     }
     async findByEmailPassword(email, password)
     {
-        console.log(email, password);
+        // console.log(email, password);
         const userRes = await this.collection.findOne({ email: email, password: password });
         return userRes ? userRes.toJSON() : null;
     }

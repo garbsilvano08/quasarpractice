@@ -164,7 +164,7 @@ export default {
     methods:{
         getCompanyData(value)
         {
-            console.log(value);
+            // console.log(value);
             this.company_details = value
         },
 
@@ -229,7 +229,7 @@ export default {
                     throw new Error("Logo is required.");
                 }
                 else{
-                    console.log(this.company_details);
+                    // console.log(this.company_details);
                     let location_coordinates = null
                     if (this.input_location) location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.input_location.place_id }).then(res => res.data);
                     const formData = new FormData();
