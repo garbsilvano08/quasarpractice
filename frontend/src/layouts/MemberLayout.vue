@@ -208,19 +208,41 @@ export default
             }
             else if (this.$user_info.user_type == 'Admin')
             {
-                if ( key == 'company_management' )
+                if (this.$user_info.company.device_owner != 'Device Owner')
                 {
-                    return false
+                    if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
+                    {
+                        return true
+                    }
+                    else return false
                 }
-                else return true
+                else
+                {
+                    if ( key == 'company_management' )
+                    {
+                        return false
+                    }
+                    else return true
+                }
             }
             else
             {
-                if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'account_directory' || key == 'daily')
+                 if (this.$user_info.company.device_owner != 'Device Owner')
                 {
-                    return true
+                    if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
+                    {
+                        return true
+                    }
+                    else return false
                 }
-                else return false
+                else
+                {
+                    if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'account_directory' || key == 'daily')
+                    {
+                        return true
+                    }
+                    else return false
+                }
             }
         },
 

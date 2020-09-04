@@ -21,7 +21,7 @@
                             <div v-for="(sub, a) in getSubCompanyDetails(membership).subcompanies" :key="a">
                                 <q-item clickable v-close-popup @click="getValue(getSubCompanyDetails(sub))" >
                                     <q-item-section>
-                                        <q-item-label class="q-ml-xl" >{{ getSubCompanyDetails(sub).company_name}}</q-item-label>
+                                        <q-item-label class="q-ml-xl" >{{ getSubCompanyDetails(sub).company_name ?  getSubCompanyDetails(sub).company_name : null}}</q-item-label>
                                     </q-item-section>
                                 </q-item>
                             </div>

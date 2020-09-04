@@ -270,7 +270,7 @@ module.exports =
         date_string = date_string.split("-")
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.personId ? req.body.personId : req.body.userId})
         let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey ? req.body.deviceKey : req.body.mac})
-        console.log(device);
+        console.log(person);
         if (person.length) key.push(person[0].category)
         else key.push('Stranger')
 
@@ -310,7 +310,7 @@ module.exports =
                     frontdesk_person_id:    req.body.userId,
                     date_logged:            req.body.checkTime,
                     record_id:              1,
-                    company_id:             device[0].company_id
+                    company_id:             person.length ? person[0].company_id : device[0].company_id
                 }
                 
                 // console.log(req.body.personId, req.body.type);
