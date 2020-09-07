@@ -132,8 +132,8 @@
                   Foot Traffic
                </div>
                <div class="dashboard__graph-filter">
-                  <q-select v-model="select_people" :options="options_people" outlined dense></q-select>
-                  <q-select @select="getFootTraffic()" v-model="select_date" :options="options_date" outlined dense></q-select>
+                  <q-select v-model="select_people" :options="options_people" dense></q-select>
+                  <q-select @change="getFootTraffic()" v-model="select_date" :options="options_date" outlined dense></q-select>
                   <!-- <q-input v-model="traffic_date" type='date' outlined dense></q-input> -->
                </div>
                <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
@@ -335,8 +335,8 @@
                   </q-card-section>
 
                   <q-card-actions align="right">
-                     <q-btn @click="purpose_popup = false, select_date = last_option_registered" flat label="Cancel" color="primary" v-close-popup />
-                     <q-btn @click="getPurposeVisit('Registered')" flat label="Search" color="primary" v-close-popup />
+                     <q-btn @click="purpose_popup = false, select_date = last_option_purpose" flat label="Cancel" color="primary" v-close-popup />
+                     <q-btn @click="getPurposeVisit()" flat label="Search" color="primary" v-close-popup />
                   </q-card-actions>
                </q-card>
             </q-dialog>
@@ -713,7 +713,6 @@ export default
          //   console.log(val, old);
            if (val == 'Custom Date')
            {
-
               this.date_filter_dialog = true
            }
            else
@@ -726,7 +725,7 @@ export default
         async registered_filter(val, old)
         {
             this.last_option_registered = old
-
+            
             if (val == 'Custom Date')
             {
                this.date_filter_registered = true
@@ -738,9 +737,9 @@ export default
         },
 
         async select_people(val)
-        {
-           if (this.select_date == 'Custom Date')
-           {
+        {   let dateTraffic = date.formatDate(this.startDate, 'MMM DD') + " - " + date.formatDate(this.endDate , 'MMM DD YYYY')
+           if (this.select_date == dateTraffic)
+           {   
               await this.getCustomTraffic()
            }
            else
@@ -751,7 +750,7 @@ export default
          //   await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
         },
         async visitors_date(val)
-        {
+        {   
             if (val)
             {
                await this.getPurposeVisit()
@@ -776,10 +775,9 @@ export default
 
    methods: {
       async getFootTraffic()
-      {
+      {  
          if (this.select_date == 'Custom Date')
          {
-            
             this.date_filter_dialog = true
          }
          else
@@ -791,6 +789,7 @@ export default
       },
       async getEmployeeVisitor()
       {
+         
          let data
          let registered_type = ['Staff', 'Visitor', , 'Stranger']
          this.data_bar_graph.data = []
@@ -802,20 +801,20 @@ export default
                if (reg.name == registered_type[index])
                {
                   this.data_bar_graph.data.push(reg)
-               }
+               }  
             });
          }
       },
 
       async getCustomTraffic(type)
-      {
+      {  
          let data
          if (type == 'Registered')
-         {
+         {  
             let option_filter = ['Staff', 'Visitor', 'Stranger']
-
             if (new Date(this.startDateRegistered) <= new Date(this.endDateRegistered))
-            {
+            {  
+               this.registered_filter = date.formatDate(this.startDateRegistered, 'MMM DD') + " - " + date.formatDate(this.endDateRegistered , 'MMM DD YYYY')
                for (let index = 0; index < option_filter.length; index++) {
                      if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id: this.company_details._id, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
                      else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered')
@@ -826,10 +825,10 @@ export default
                            this.data_bar_graph.data.push(reg)
                         }
                      });
-               }
+               }  
             }
             else
-            {
+            {  
                this.registered_filter = this.last_option_registered
                this.$q.notify(
                   {
@@ -839,7 +838,8 @@ export default
             }
          }
          else
-         {
+         {  
+            this.select_date = date.formatDate(this.startDate, 'MMM DD') + " - " + date.formatDate(this.endDate , 'MMM DD YYYY') // Foot Traffic
             if (new Date(this.startDate) <= new Date(this.endDate))
             {
                if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.startDate, end_date: this.endDate, company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
@@ -911,15 +911,16 @@ export default
       },
 
       async getPurposeVisit()
-      {
+      {  
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-
-            if( this.purpose_filter == 'Custom Date')
-            {
+            
+            if( this.purpose_filter != 'Daily')
+            {     
+               this.purpose_filter = date.formatDate(this.purposeStart, 'MMM DD') + " - " + date.formatDate(this.purposeEnd , 'MMM DD YYYY') // Purpose Traffic
                if (new Date(this.purposeStart) > new Date(this.purposeEnd))
                {
-                  this.purpose_filter = this.last_option_purpose
+                  this.purpose_filter = date.formatDate(this.purposeStart, 'MMM DD') + " - " + date.formatDate(this.purposeEnd , 'MMM DD YYYY') // Purpose Traffic
                   this.$q.notify(
                   {
                      color: 'red',
@@ -933,11 +934,12 @@ export default
 
          }
          else {
-            if( this.purpose_filter == 'Custom Date')
-            {
+            if( this.purpose_filter != 'Daily')
+            {  
+               this.purpose_filter = date.formatDate(this.purposeStart, 'MMM DD') + " - " + date.formatDate(this.purposeEnd , 'MMM DD YYYY') // Purpose Traffic
                if (new Date(this.purposeStart) > new Date(this.purposeEnd))
                {
-                  this.purpose_filter = this.last_option_purpose
+                  this.purpose_filter = date.formatDate(this.purposeStart, 'MMM DD') + " - " + date.formatDate(this.purposeEnd , 'MMM DD YYYY') // Purpose Traffic
                   this.$q.notify(
                   {
                      color: 'red',
@@ -948,6 +950,7 @@ export default
                else params = {find_all: {date_saved: { '$gte': new Date(this.purposeStart), '$lt': new Date(this.purposeEnd)}}}
             }
             else params = {find_all: {date_string: new Date().toISOString().split('T')[0]}}
+            
          }
          this.purpose_visit =  await this.$_post(postGetPurposeVisit, params);
          this.purpose_visit.total =
@@ -957,6 +960,7 @@ export default
             + this.purpose_visit.data.corporate_meeting
             + this.purpose_visit.data.client_customer
             + this.purpose_visit.data.guest
+
       },
 
       async getAlertLogs()
@@ -1067,7 +1071,7 @@ export default
          {
              this.logged_today = 0
          }
-      }
+      },
    },
 
    async mounted()
