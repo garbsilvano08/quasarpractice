@@ -137,6 +137,15 @@ export default {
                     await this.$axios.post("http://"+device.device_ip+":8080/tempAndMaskSetting", settingsFormData).then(res => res.data);
                 }
             })
+
+            if (device_type == 'smart_pass')
+            {
+                let data = new FormData();
+                data.append('pass', '123456');
+                data.append('callbackUrl', 'http://vcop.geer.solutions/api/member/visionsky/logs');
+                let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
+                console.log(logs, 'logs');
+            }
             // console.log(personToTablet)
             for (let person of personToTablet)
             {
@@ -150,15 +159,6 @@ export default {
                 {
                     toDataUrl(person.person_img, async(myBase64) =>
                     {
-                        if (device_type == 'smart_pass')
-                        {
-                            let data = new FormData();
-                            data.append('pass', '123456');
-                            data.append('callbackUrl', 'http://vcop-image.geer.solutions/api/member/visionsky/logs');
-                            let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
-                            console.log(logs, 'logs');
-                        }
-
                         let sex = "";
                         if (person.gender == "Female")
                         {

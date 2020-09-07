@@ -94,7 +94,7 @@
                             <q-item-section>
                                 <q-item-label class="content__radio-title">Private</q-item-label>
                                 <q-item-label class="content__radio-details" caption>
-                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore, sint consequatur eveniet laudantium in laboriosam quas, nostrum magni quaerat, id eligendi totam nesciunt natus doloribus nemo nam. Porro, vel quis!
+                                    Receptionist’s access is limited only to adding of visitors in the company or building. The Front Desk is connected to the SMART PASS/VISION SKY in the tablet. The receptionist will collect information from the person using OCR (Optical Character Recognition, this enables to collect information from the ID presented by the person through scanning.  
                                 </q-item-label>
                             </q-item-section>
                         </q-item>
@@ -107,7 +107,7 @@
                             <q-item-section>
                                 <q-item-label class="content__radio-title">Public</q-item-label>
                                 <q-item-label class="content__radio-details" caption>
-                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore, sint consequatur eveniet laudantium in laboriosam quas, nostrum magni quaerat, id eligendi totam nesciunt natus doloribus nemo nam. Porro, vel quis!
+                                    Receptionist’s access is limited only to adding of fever detected person in the mall.  If the healthbox detected a person with unusual body temperature in the mall, the person will be asked to go to the front desk. The Front Desk will browse the person’s information from the logs which is consist of the Picture of the Person, Temperature, If the person id wearing a mask or not and timestamp.
                                 </q-item-label>
                             </q-item-section>
                         </q-item>
