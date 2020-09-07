@@ -113,7 +113,7 @@ export default {
                         personImage.append("pass", "abc123");
                         personImage.append("faceId", person.frontdesk_person_id);
                         let img = await this.$axios.post("http://"+device.device_ip+":8090/face/delete", personImage).then(res => res.data);
-                        console.log(rsp, img);
+                        // console.log(rsp, img);
                     })
                 }
                 else
@@ -154,9 +154,9 @@ export default {
                         {
                             let data = new FormData();
                             data.append('pass', '123456');
-                            data.append('callbackUrl', 'http://vcop-image.geer.solutions/api/member/visionsky/logs');
+                            data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
                             let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
-                            console.log(logs, 'logs');
+                            // console.log(logs, 'logs');
                         }
 
                         let sex = "";
@@ -191,7 +191,7 @@ export default {
                                     image.append("type", 1 );
                                     
                                     let img = await this.$axios.post("http://"+ device_ip +":8090/person/quickCreate", image).then(res => res.data);
-                                    console.log(img);
+                                    // console.log(img);
                                 }
                                 catch(e){}
                                 // console.log(img);
@@ -206,7 +206,7 @@ export default {
                         }
                         else if (person.category == "Staff")
                         {
-                            console.log(device_type);
+                            // console.log(device_type);
                             if (device_type == 'vision_sky')
                             {
                                 let data = new FormData();
@@ -258,7 +258,7 @@ export default {
                 
                 for (let device of this.device_list) 
                 {
-                    console.log(device.device_type)
+                    // console.log(device.device_type)
                     let ctr=0;
                     let totalTabletRecord = [];
                     let totalTabletRecordCount = 0;

@@ -81,7 +81,6 @@
             </div>
          </div>
       </div>
-
       <div class="dashboard__overview">
          <div class="dashboard__overview-total">
             <div class="dashboard__total-info">
@@ -124,198 +123,8 @@
             <q-img src="../../../assets/Member/total-cases.svg" width="23px"></q-img>
          </div>
       </div>
-
-      <div class="dashboard__overview-logs">
-         <div class="swiper-container">
-            <div class="swiper-wrapper">
-               <div class="swiper-slide">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSpxi45JqKLxNoMHj7PODtUHUCsKhk4At5GFg&usqp=CAU"></q-img>
-                        <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                           Gracie-Leigh Mccarty <br>
-                           <span>Stranger</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="swiper-slide">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img src="https://images.squarespace-cdn.com/content/v1/5070f2f8c4aa65eb3b6394d0/1436318761703-SUWVQ0QPHE569A8FNBHH/ke17ZwdGBToddI8pDm48kMIebV6MdNPQMcRDrC5oPxMUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKc73FUbOtyHSZLq0696RfXhzOQ1C7e-4RYctpOI87j69--0uIsXqDbvJ5MkV0zcn4f/LYB+People+Profile+%2808%29.jpg?format=1500w"></q-img>
-                        <div class="content__temperature">
-                           36 °C <br>
-                           <span class="abnormal-temperature">Has Fever</span>
-                           <!-- <span class="normal-temperature">Normal</span> -->
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                           Steve Lord <br>
-                           <span>Stranger</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="swiper-slide">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img src="https://media1-production-mightynetworks.imgix.net/asset/2422215/basadur-profile-big.jpg?ixlib=rails-0.3.0&fm=jpg&q=75&auto=format"></q-img>
-                        <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                          Ahmed Webster <br>
-                           <span>Stranger</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="swiper-slide">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img src="https://photof8.com/wp-content/uploads/2017/01/WSS505.jpg"></q-img>
-                        <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                           Syed Gallagher <br>
-                           <span>Stranger</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="swiper-slide">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img src="https://images.squarespace-cdn.com/content/v1/5416b734e4b0f910e31345fb/1449684896502-06F3ID8PBOB20TECV9BI/ke17ZwdGBToddI8pDm48kGXoD000J7kx3NE7W-LXpdwUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcSHIBb6yNmvYkAyvF3loIw6LWPhmq3jJqr-f9nvyP7bW--NA7--1aw0mnW_uWXk87/image-asset.jpeg"></q-img>
-                        <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                           Yvie Washington <br>
-                           <span>Stranger</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="swiper-slide">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img src="https://imgix.bustle.com/uploads/image/2018/5/9/aa15d5d8-4b32-4888-b5c1-aa51349df70d-2t4a9501.JPG"></q-img>
-                        <div class="content__temperature">
-                           36 °C <br>
-                           <!-- <span class="abnormal-temperature">Has Fever</span> -->
-                           <span class="normal-temperature">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                           Ellise Potter <br>
-                           <span>Stranger</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> 2020-09-01, 2:30 AM
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> SMART Pass-Out
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> Mysolid Technology and Device Corp
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- <div class="swiper-slide">
-                  <div class="dashboard__overview-btn">
-                     <q-btn flat dense no-caps class="btn-primary btn-seemore">
-                        See More <q-icon name="mdi-arrow-right" size="20px"></q-icon>
-                     </q-btn>
-                  </div>
-               </div> -->
-               <div class="swiper-slide">
-                  <div class="content__card-seemore content__card">
-                     <q-img src="../../../assets/dashboard-logs-more.svg"></q-img>
-                     <div class="seemore-label">See more ..</div>
-                  </div>
-               </div>
-            </div>
-
-            <div class="swiper-next">
-               <img src="../../../assets/swiper-next-arrow.svg" alt="">
-            </div>
-            <div class="swiper-prev">
-               <img src="../../../assets/swiper-prev-arrow.svg" alt="">
-            </div>
-         </div>
-
-      </div>
-
       <div class="dashboard__graph">
+
          <!-- FOOT TRAFFIC GRAPH -->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
@@ -377,6 +186,7 @@
             </line-chart>
          </div> -->
          </div>
+
          <!-- EMPLOYEE/VISITOR OVERVIEW -->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
@@ -408,7 +218,7 @@
                </column-chart>
             </div>
          </div>
-         <q-dialog v-model="date_filter_registered" persistent>
+          <q-dialog v-model="date_filter_registered" persistent>
             <q-card>
                <q-card-section>
                <div class="text-h6">Custom Date</div>
@@ -425,6 +235,7 @@
                </q-card-actions>
             </q-card>
          </q-dialog>
+
          <!-- JAM STACKED BAR CHART -->
          <!-- <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
@@ -545,6 +356,7 @@
                </pie-chart>
             </div> -->
          </div>
+
          <!-- VISITORS PURPOSE NEW PIE CHART-->
          <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
@@ -590,27 +402,27 @@
                <div class="dashboard__pie-legend">
                   <div class="pie-legend__item">
                      <div class="pie-legend__color first-color"></div>
-                     <div class="pie-legend__percent">40%</div>
+                     <div class="pie-legend__percent">{{purpose_visit.percentage.official_business}}%</div>
                   </div>
                   <div class="pie-legend__item">
                      <div class="pie-legend__color second-color"></div>
-                     <div class="pie-legend__percent">20%</div>
+                     <div class="pie-legend__percent">{{purpose_visit.percentage.collection_pickup}}%</div>
                   </div>
                   <div class="pie-legend__item">
                      <div class="pie-legend__color third-color"></div>
-                     <div class="pie-legend__percent">20%</div>
+                     <div class="pie-legend__percent">{{purpose_visit.percentage.delivery}}%</div>
                   </div>
                   <div class="pie-legend__item">
                      <div class="pie-legend__color fourth-color"></div>
-                     <div class="pie-legend__percent">10%</div>
+                     <div class="pie-legend__percent">{{purpose_visit.percentage.corporate_meeting}}%</div>
                   </div>
                    <div class="pie-legend__item">
                      <div class="pie-legend__color fifth-color"></div>
-                     <div class="pie-legend__percent">5%</div>
+                     <div class="pie-legend__percent">{{purpose_visit.percentage.client_customer}}%</div>
                   </div>
                   <div class="pie-legend__item">
                      <div class="pie-legend__color sixth-color"></div>
-                     <div class="pie-legend__percent">5%</div>
+                     <div class="pie-legend__percent">{{purpose_visit.percentage.guest}}%</div>
                   </div>
                </div>
 
@@ -660,6 +472,7 @@
                </div>
             </div>
          </div>
+
          <!-- VISITOR LOGS -->
          <!-- <div class="dashboard__graph-item dashboard__graph-item--alert-logs">
             <div class="dashboard__graph-header">
@@ -703,8 +516,7 @@ import "./Dashboard.scss";
 import Vue from 'vue';
 import Chartkick from 'vue-chartkick';
 import "chart.js"
-import {
-   postGetCompanies,
+import { postGetCompanies,
    postAddPerson,
    postUpdateStaff,
    postSavePerson,
@@ -724,10 +536,7 @@ import {
 import DashboardClass from '../../../classes/DashboardClass';
 import { date } from 'quasar';
 import { log } from 'util';
-
-import Swiper from 'swiper';
-import 'swiper/swiper-bundle.css';
-import swiper from 'swiper/bundle';
+import LoginVue from '../../Front/Login.vue';
 
 Vue.use(Chartkick.use(Chart))
 
@@ -965,7 +774,7 @@ export default
       {
          if (this.select_date == 'Custom Date')
          {
-
+            
             this.date_filter_dialog = true
          }
          else
@@ -1137,12 +946,22 @@ export default
          }
          this.purpose_visit =  await this.$_post(postGetPurposeVisit, params);
          this.purpose_visit.total =
-            this.purpose_visit.data.official_business
-            + this.purpose_visit.data.collection_pickup
+            this.purpose_visit.data.official_business 
+            + this.purpose_visit.data.collection_pickup 
             + this.purpose_visit.data.delivery
             + this.purpose_visit.data.corporate_meeting
             + this.purpose_visit.data.client_customer
             + this.purpose_visit.data.guest
+         this.purpose_visit.percentage =
+         {
+            official_business: this.purpose_visit.total ? (this.purpose_visit.data.official_business/this.purpose_visit.total)*100 : 0,
+            collection_pickup: this.purpose_visit.total ? (this.purpose_visit.data.collection_pickup/this.purpose_visit.total)*100 : 0,
+            delivery: this.purpose_visit.total ? (this.purpose_visit.data.delivery/this.purpose_visit.total)*100 : 0,
+            corporate_meeting: this.purpose_visit.total ? (this.purpose_visit.data.corporate_meeting/this.purpose_visit.total)*100 : 0,
+            client_customer: this.purpose_visit.total ? (this.purpose_visit.data.client_customer/this.purpose_visit.total)*100 : 0,
+            guest: this.purpose_visit.total ? (this.purpose_visit.data.guest/this.purpose_visit.total)*100: 0,
+         }
+         console.log(this.purpose_visit);
       },
 
       async getAlertLogs()
@@ -1255,6 +1074,7 @@ export default
          }
       }
    },
+
    async mounted()
    {
       let sample_date = new Date()
@@ -1301,37 +1121,6 @@ export default
       this.staff_number = await this.personsData({find_person: {category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
       this.visitor_number = await this.personsData({find_person: {category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
       await this.getTotalRegistered()
-   },
-   updated() {
-      var swiper = new Swiper('.swiper-container', {
-         slidesPerView: 4,
-         spaceBetween: 20,
-         autoplay: {
-            delay: 5000,
-            disableOnInteraction: false,
-         },
-         navigation: {
-            nextEl: '.swiper-next',
-            prevEl: '.swiper-prev',
-         },
-         breakpoints: {
-        1366: {
-            slidesPerView: 4,
-        },
-        768: {
-				slidesPerView: 3,
-        },
-        425: {
-            slidesPerView: 1,
-        },
-        375: {
-            slidesPerView: 1,
-        },
-        320: {
-            slidesPerView: 1,
-        },
-      }
-      });
-   },
+   }
 }
 </script>
