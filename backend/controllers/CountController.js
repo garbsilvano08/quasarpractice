@@ -63,10 +63,10 @@ module.exports =
                 {
                     let params = {}
                     let date = new Date()
-                    date.setHours(date.getHours() + 8)
+                    // date.setHours(date.getHours())
                     date.setHours(0,0,0,0)
                     let end = new Date()
-                    end.setHours(end.getHours() + 8)
+                    // end.setHours(end.getHours())
                     end.setHours(0,59,59,999)
                     startDate = date
                     endDate = end
