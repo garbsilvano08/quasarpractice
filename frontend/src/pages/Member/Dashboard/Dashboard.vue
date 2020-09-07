@@ -305,8 +305,12 @@
                </div>
             </div>
 
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+            <div class="swiper-next">
+               <img src="../../../assets/swiper-next-arrow.svg" alt="">
+            </div>
+            <div class="swiper-prev">
+               <img src="../../../assets/swiper-prev-arrow.svg" alt="">
+            </div>
          </div>
 
       </div>
@@ -1300,8 +1304,8 @@ export default
       let params = {}
       if (this.company_details) params = {filter: {current_date: new Date(), company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
       else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
-      await this.getTrafficData(params)
-      if (this.$user_info.user_type == 'Officer')
+     
+     if (this.$user_info.user_type == 'Officer')
       {
          this.$router.push({ name: 'member_frontdesk_addreport' });
       }
@@ -1327,6 +1331,7 @@ export default
 
       await this.getEmployeeVisitor()
 
+      await this.getTrafficData(params)
 
       let date_string = new Date().toISOString().split('T')[0].split("-")
       this.getTotalScannedToday(new Date(), 'global')
@@ -1346,8 +1351,8 @@ export default
             disableOnInteraction: false,
          },
          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
+            nextEl: '.swiper-next',
+            prevEl: '.swiper-prev',
          },
          breakpoints: {
         1366: {

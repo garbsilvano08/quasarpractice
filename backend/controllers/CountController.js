@@ -34,8 +34,9 @@ module.exports =
 
     async getPersonLogs(req, res)
     {
-        let logs = await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).sort(req.body.sort).limit(req.body.limit)
-        res.send(logs);
+        console.log(req.body);
+        if (req.body.limit) res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).sort(req.body.sort).limit(req.body.limit))
+        else res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category))
     },
 
     async counterLogs(req, res)
@@ -62,10 +63,10 @@ module.exports =
                 {
                     let params = {}
                     let date = new Date()
-                    date.setHours(date.getHours() + 8)
+                    // date.setHours(date.getHours())
                     date.setHours(0,0,0,0)
                     let end = new Date()
-                    end.setHours(end.getHours() + 8)
+                    // end.setHours(end.getHours())
                     end.setHours(0,59,59,999)
                     startDate = date
                     endDate = end
@@ -97,7 +98,7 @@ module.exports =
                         
                         date_string = new Date(date_string).toISOString().split('T')[0]
                         if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
                             else params = {company_id: 'global',key: 'Traffic', date_string: date_string}
                         }
                         else {
@@ -118,7 +119,7 @@ module.exports =
                     let date = new Date().setDate(1)
                     for (let index = 0; new Date(date).getMonth() <= new Date().getMonth(); index++) {
                         if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
                             else params = {company_id: 'global',key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
                         }
                         else {
@@ -144,7 +145,7 @@ module.exports =
 
                         // console.log(date_string, date);
                         if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
                             else params = {company_id: 'global',key: 'Traffic', date_string: date_string}
                         }
                         else {
@@ -169,7 +170,7 @@ module.exports =
                     for (let index = 0; new Date(date) <= new Date(req.body.filter.end_date); index++) {
 
                         if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_name) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
                             else params = {company_id: 'global',key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
                         }
                         else {
