@@ -211,8 +211,8 @@ export default {
                 sortable: true,
             },
             {
-                name    : 'date_created',
-                label   : 'Date Registered',
+                name    : 'date_logged',
+                label   : 'Date Logged',
                 field   : row => row.date ? row.date : 'Unknown',
                 align   : 'left',
                 required: true,
