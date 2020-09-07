@@ -162,9 +162,9 @@ module.exports =
                         date_string.setDate(date_string.getDate() + 1)                        
                     }
                 }
-                else if (req.body.filter.date_filter == 'Custom Date' )
-                {
-                    // console.log(new Date(date) <= new Date(req.body.filter.end_date));
+                else  // if (req.body.filter.date_filter == 'Custom Date' )
+                {   
+                    
                     let date = new Date(req.body.filter.start_date)
                     let month_list = ['Jan','Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 
@@ -187,6 +187,7 @@ module.exports =
                 }
             }
             traffic_data.push({name: options_people[x], data: traffic})
+            console.log(traffic_data);
         }
         res.send(traffic_data)
     },
