@@ -203,19 +203,22 @@ export default
     },
     async created()
     {
-        await this.getDevices()
-
-        this.is_app = this.$user_info.user_type == 'Officer' ? false : true
-        // Edward
-        await this.db.initialize();
-        await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
-        await this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
-        await this.checkQueueSync();
-
-        // Irish
-        this.getGetTabletLogsSettings();
-        if (!this.$user_info.user_type == 'Super Admin') await this.getAllDevice(this.$user_info.company._id);
-        // await this.getLog();
+        if (this.$user_info)
+        {
+            await this.getDevices()
+    
+            this.is_app = this.$user_info.user_type == 'Officer' ? false : true
+            // Edward
+            await this.db.initialize();
+            await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+            await this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
+            await this.checkQueueSync();
+    
+            // Irish
+            this.getGetTabletLogsSettings();
+            if (!this.$user_info.user_type == 'Super Admin') await this.getAllDevice(this.$user_info.company._id);
+            // await this.getLog();
+        }
         setInterval(this.getLog, 60000);
     },
     methods:
@@ -273,19 +276,41 @@ export default
             }
             else if (this.$user_info.user_type == 'Admin')
             {
-                if ( key == 'company_management' )
+                if (this.$user_info.company.device_owner != 'Device Owner')
                 {
-                    return false
+                    if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
+                    {
+                        return true
+                    }
+                    else return false
                 }
-                else return true
+                else
+                {
+                    if ( key == 'company_management' )
+                    {
+                        return false
+                    }
+                    else return true
+                }
             }
             else
             {
-                if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'account_directory' || key == 'daily')
+                 if (this.$user_info.company.device_owner != 'Device Owner')
                 {
-                    return true
+                    if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
+                    {
+                        return true
+                    }
+                    else return false
                 }
-                else return false
+                else
+                {
+                    if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'account_directory' || key == 'daily')
+                    {
+                        return true
+                    }
+                    else return false
+                }
             }
         },
 
@@ -337,7 +362,7 @@ export default
         },
         async checkQueueSync()
         {
-            if (this.$user_info.company)
+            if (this.$user_info && this.$user_info.company)
             {
                 let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company._id, person_img: { $regex: '/9j/'}}});
                     // console.log(logs);
@@ -376,7 +401,7 @@ export default
                 // image.append("imgBase64", image_data.data[0].image );
                 // let img = await this.$axios.post("http://192.168.1.119:8090/face/create", image).then(res => res.data);
                 // console.log(img);
-            if (this.$user_info.user_type)
+            if ( this.$user_info && this.$user_info.user_type)
             {
                 // console.log('kjkjkj');
                 this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));

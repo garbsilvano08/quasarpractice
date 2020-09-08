@@ -92,7 +92,7 @@ module.exports =
         ]
     },
     {
-        key: '',
+        key: 'reports',
         label: 'Reports',
         icon: 'mdi-clipboard-text',
         sub:

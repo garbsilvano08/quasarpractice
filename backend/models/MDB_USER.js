@@ -10,9 +10,9 @@ const schema    = new Schema(
     password:       { type: String, required:   true },
     user_type:      { type: String, required:   true },
     user_picture:   { type: String, required:   true },
-    company:        { type: Object, required:   true },
+    company:        { type: Object, required:   false },
     date_created:   { type: Date  , required:   true },
-    company_id:     { type: String, required:   true },
+    company_id:     { type: String, required:   false },
 });
 
 class MDB_USERS extends MODEL
@@ -28,7 +28,7 @@ class MDB_USERS extends MODEL
     }
     async findByEmailPassword(email, password)
     {
-        console.log(email, password);
+        // console.log(email, password);
         const userRes = await this.collection.findOne({ email: email, password: password });
         return userRes ? userRes.toJSON() : null;
     }

@@ -40,45 +40,27 @@
                                 </q-item>
                             </template>
                         </q-select>
-                    <!-- <q-input v-model="input_location" outlined dense></q-input> -->
                 </div>
-                <!-- <div class="company-add__content-info company-add__content-grid">
-                    <div class="content__input">
-                        <div class="content__input-label">Company Name</div>
-                        <q-input v-model="input_company_name" outlined dense></q-input>
-                    </div>
-                    <div class="content__input">
-                        <div class="content__input-label">Location</div>
-                        <q-select
-                            outlined
-                            dense
-                            v-model="input_location"
-                            use-input
-                            input-debounce="1000"
-                            :options="options_location"
-                            @filter="getNearbyPlaces"
-                            option-value="place_id"
-                            option-label="description"
-                        >
-                            <template v-slot:no-option>
-                                <q-item>
-                                    <q-item-section class="text-grey">
-                                    No results
-                                    </q-item-section>
-                                </q-item>
-                            </template>
-                        </q-select>
-                    </div>
-                </div> -->
             </div>
             <div class="company-add__content-info company-add__content-grid">
-                <div class="company-add__content-info">
-                    <div class="content__select-label">Parent</div>
-                    <q-checkbox v-model="has_no_parent" label="No Parent"/>
-                    <!-- <com-picker v-show="is_open" :user="this.$user_info" @select=getCompanyData></com-picker> -->
+                <div class="content__input">
+                    <div class="company-add__content-info">
+                        <div class="content__select-label">Parent</div>
+                        <com-picker :user="this.$user_info" @select=getCompanyData></com-picker>
+                    </div>
+                    <div class="company-add__content-info">
+                    </div>
                 </div>
-                <div class="company-add__content-info">
-                    <com-picker v-show="is_open" :user="this.$user_info" @select=getCompanyData></com-picker>
+                <div class="content__input">
+                    <div class="company-add__content-info">
+                        <div class="content__select-label">
+                            <q-checkbox v-model="is_device_owner" label="Device Owner"/>
+                            <!-- Device Owner -->
+                        </div>
+                        <com-picker v-show="is_open" :user="this.$user_info" @select=getDeviceOwner></com-picker>
+                    </div>
+                    <div class="company-add__content-info">
+                    </div>
                 </div>
             </div>
 
@@ -160,19 +142,20 @@ export default {
         company_pic: "",
         company_list: [{company_name: 'No Parent'}],
         company_details: {},
-        has_no_parent: false,
-        is_open: true
+        is_device_owner: true,
+        is_open: false,
+        device_owner: {}
     }),
     async mounted()
     {
-
-        this.company_type = "public";
+        this.company_details = this.$user_info.company ? this.$user_info.company : {company_name: 'Super Admin'} 
+        this.company_type = "private";
         await this.getCompanies();
     },
     
     watch:
     {
-        has_no_parent(val)
+        is_device_owner(val)
         {
             this.is_open = !this.is_open
         }
@@ -181,7 +164,13 @@ export default {
     methods:{
         getCompanyData(value)
         {
+            // console.log(value);
             this.company_details = value
+        },
+
+        getDeviceOwner(value)
+        {
+            this.device_owner = value
         },
         getValue()
         {
@@ -231,20 +220,16 @@ export default {
         async submit()
         {
             this.$q.loading.show();
-
             try
             {
-                if (!this.has_no_parent && !this.company_details ){
-                    throw new Error("Company Name is required.");
-                }
-                else if (!this.input_location){
+                if (!this.input_location){
                     throw new Error("Location is required.");
                 }
                 else if (document.getElementById("uploadImage").files.length <= 0 ){
                     throw new Error("Logo is required.");
                 }
                 else{
-                    console.log(this.company_details);
+                    // console.log(this.company_details);
                     let location_coordinates = null
                     if (this.input_location) location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.input_location.place_id }).then(res => res.data);
                     const formData = new FormData();
@@ -254,10 +239,11 @@ export default {
                         company_location: this.input_location, 
                         company_type:this.company_type, 
                         company_logo_url: res, 
-                        parent_id: this.has_no_parent ? 'No Parent' : this.company_details._id, 
+                        device_owner: this.is_device_owner ? 'Device Owner' : this.device_owner._id,
+                        parent_id: this.company_details.company_name == 'Super Admin' ? 'No Parent' : this.company_details._id, 
                         location_coordinates: location_coordinates,
                         date_created: new Date()
-                        });
+                    });
                     this.input_company_name = "";
                     this.input_location = "";
                     this.company_type = this.company_type = "public";

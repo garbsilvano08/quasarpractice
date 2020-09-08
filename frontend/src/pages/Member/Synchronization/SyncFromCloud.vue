@@ -27,7 +27,7 @@
 
 <script>
 import './Synchronization.scss';
-import { postGetDevice, postGetPersons } from '../../../references/url';
+import { postGetDevice, postGetPersons, postGetCompanies } from '../../../references/url';
 import { log } from 'util';
 
 
@@ -55,12 +55,28 @@ export default {
     async mounted()
     {
         await this.getAllDevice(this.$user_info.company._id);
-        this.persons_list = await this.$_post(postGetPersons);
-        this.persons_list = this.persons_list.data;
+        await this.getPersonList()
         
     },
     methods:
     {
+        async getPersonList()
+        {
+            this.persons_list = []
+            let companies = await this.$_post('member/get/company', {id: this.$user_info.company._id});
+            if (companies.data.tenants.length)
+            {
+                companies = companies.data.tenants
+            }
+            companies.push(this.$user_info.company._id)
+            for (let index = 0; index < companies.length; index++) {
+                let company_registered = await this.$_post(postGetPersons, {find_person: {company_id: companies[index]}});
+                for (let x = 0; x < company_registered.data.length; x++) {
+                    this.persons_list.push(company_registered.data[x])
+                }
+            }
+        },
+
         async getAllDevice(company)
         {
            this.device_list = await this.$_post(postGetDevice, {find_device: {company_id: company}});
@@ -141,7 +157,7 @@ export default {
             {
                 let data = new FormData();
                 data.append('pass', '123456');
-                data.append('callbackUrl', 'http://192.168.254.120:4001/api/member/visionsky/logs');
+                data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
                 let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
                 // console.log(logs, 'logs');
             }
@@ -169,7 +185,6 @@ export default {
                         }
                         let tabletFormData = new FormData();
                         let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-
                         if (person.category == "Visitor")
                         {
                             prescription = "'" + expStart + "," + expEnd + "'";
@@ -224,11 +239,12 @@ export default {
                             }
                             else
                             {
+                                // console.log(person);
                                 type = 3;
                                 tabletFormData.append("pass", "123456");
                                 tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0}");
                                 let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
-                                
+                                // console.log(createRes);
                             }
                         }
 
@@ -243,8 +259,9 @@ export default {
             }
 
             this.$q.loading.hide();
-            this.persons_list = await this.$_post(postGetPersons);
-            this.persons_list = this.persons_list.data;
+            await this.getPersonList()
+            // this.persons_list = await this.$_post(postGetPersons);
+            // this.persons_list = this.persons_list.data;
         },
         async singlecreate(){
             if (this.device_list.length>0)
