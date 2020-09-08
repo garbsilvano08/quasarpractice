@@ -48,7 +48,7 @@ export default {
         options_company: [
             'All Companies'
         ],
-        device_list: [],
+        device_list: {data: []},
         company_list: []
     }),
 
@@ -80,8 +80,20 @@ export default {
             // else await this.getAllDevice(this.select__company)
             await this.getAllDevice()
         },
-        async getAllDevice(params = {})
+        async getAllDevice()
         {
+            let params = {}
+            if (this.$user_info.company)
+            {
+                let company_id = []
+                company_id.push(this.$user_info.company._id)
+
+                for (let index = 0; index < this.$user_info.company.subcompanies.length; index++) {
+                    if (this.$user_info.company.subcompanies[index]) company_id.push(this.$user_info.company.subcompanies[index])
+                }
+                console.log(this.$user_info.company);
+                params = {find_device: { company_id: {$in: company_id}}}
+            }
            this.device_list = await this.$_post(postGetDevice, params);
         },
         convertToDate(timestamp){
@@ -92,19 +104,7 @@ export default {
 
     async mounted()
     {
-        let params = {}
-        if (this.$user_info.company)
-        {
-            let company_id = []
-            company_id.push(this.$user_info.company._id)
-
-            for (let index = 0; index < this.$user_info.company.subcompanies.length; index++) {
-                if (this.$user_info.company.subcompanies[index]) company_id.push(this.$user_info.company.subcompanies[index])
-            }
-            console.log(this.$user_info.company);
-            params = {find_device: { company_id: {$in: company_id}}}
-        }
-        await this.getAllDevice(params);
+        await this.getAllDevice();
     }
 }
 </script>
