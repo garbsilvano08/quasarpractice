@@ -167,6 +167,7 @@ export default {
     },
     data: () => ({
         selected_option_account_type: 1,
+        flag: 1,
         current_page: 1,
         page_number: 0,
         view_as: 'grid',

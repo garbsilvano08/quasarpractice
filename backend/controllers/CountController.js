@@ -150,7 +150,6 @@ module.exports =
                         date = new Date(date.setMonth(index))
                         let date_string = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, "0")
 
-                        console.log(req.body.filter);
                         if (req.body.filter.person === 'All'){
                             if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: date_string}
                             else params = {company_id: 'global',key: 'Traffic', date_string: date_string}
@@ -168,9 +167,9 @@ module.exports =
                         date_string.setDate(date_string.getDate() + 1)                        
                     }
                 }
-                else if (req.body.filter.date_filter == 'Custom Date' )
-                {
-                    // console.log(new Date(date) <= new Date(req.body.filter.end_date));
+                else  // if (req.body.filter.date_filter == 'Custom Date' )
+                {   
+                    
                     let date = new Date(req.body.filter.start_date)
                     let month_list = ['Jan','Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 
