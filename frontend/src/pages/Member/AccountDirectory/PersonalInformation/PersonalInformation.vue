@@ -315,7 +315,7 @@ export default {
             let fields = [] , person__logs = [{}]          
             for (let index = 0; index < this.person_logs.data.length; index++) {
                 person__logs.push({
-                    "date_saved": date.formatDate(this.person_logs.data[index].date_saved, 'MMM D YYYY hh:mm:ss A'),
+                    "date_saved": this.person_logs.data[index].date_saved,
                     "temperature": this.person_logs.data[index].temperature,
                     "device_id": this.person_logs.data[index].device_id,
                     "company_name": this.person_logs.data[index].company_name,
