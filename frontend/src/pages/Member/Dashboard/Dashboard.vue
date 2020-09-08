@@ -872,6 +872,7 @@ export default
       {  
          console.log(this.company_details);
          let data
+         this.data_bar_graph.data = []
          if (type == 'Registered')
          {  
             let option_filter = ['Staff', 'Visitor', 'Stranger']
@@ -879,15 +880,14 @@ export default
             {  
                this.registered_filter = date.formatDate(this.startDateRegistered, 'MMM DD') + " - " + date.formatDate(this.endDateRegistered , 'MMM DD YYYY')
                for (let index = 0; index < option_filter.length; index++) {
-                     if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id: this.company_details._id, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
-                     else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered')
-                     this.data_bar_graph.data = []
-                     data.data.forEach(reg => {
-                        if (reg.name == option_filter[index])
-                        {
-                           this.data_bar_graph.data.push(reg)
-                        }
-                     });
+                  if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id: this.company_details._id, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
+                  else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered')
+                  data.data.forEach(reg => {
+                     if (reg.name == option_filter[index])
+                     {
+                        this.data_bar_graph.data.push(reg)
+                     }
+                  });
                }  
             }
             else
