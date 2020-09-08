@@ -128,175 +128,33 @@
       <div class="dashboard__overview-logs">
          <div class="swiper-container">
             <div class="swiper-wrapper">
-               <div class="swiper-slide" v-on:click="personInformation(0)">
+               <div class="swiper-slide" v-for="(data, i) in this.logs_card.data" :key="i" v-on:click="personInformation(0)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
-                        <q-img :src="this.logs_card.data[0].person_img"></q-img>
+                        <q-img :src="data.person_img"></q-img>
                         <div class="content__temperature">
-                           {{this.logs_card.data[0].temperature}}<br>
-                           <span class="abnormal-temperature" v-if="this.logs_card.data[0].has_fever">Has Fever</span>
-                           <span class="normal-temperature" v-if="!this.logs_card.data[0].has_fever">Normal</span>
+                           {{data.temperature}}<br>
+                           <span class="abnormal-temperature" v-if="data.has_fever">Has Fever</span>
+                           <span class="normal-temperature" v-if="!data.has_fever">Normal</span>
                         </div>
                      </div>
                      <div class="content__info">
                         <div class="content__name">
-                           {{this.logs_card.data[0].full_name}} <br>
-                           <span>{{this.logs_card.data[0].category}}</span>
+                           {{data.full_name}} <br>
+                           <span>{{data.category}}</span>
                         </div>
                         <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[0].date_saved}}
+                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{data.date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[0].device_id}}
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{data.device_id}}
                         </div>
                         <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[0].company_name}}
+                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{data.company_name}}
                         </div>
                      </div>
                   </div>
                </div>
-               <div class="swiper-slide" v-on:click="personInformation(1)">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img :src="this.logs_card.data[1].person_img"></q-img>
-                        <div class="content__temperature">
-                           {{this.logs_card.data[1].temperature}}<br>
-                           <span class="abnormal-temperature" v-if="this.logs_card.data[1].has_fever">Has Fever</span>
-                           <span class="normal-temperature" v-if="!this.logs_card.data[1].has_fever">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                           {{this.logs_card.data[1].full_name}} <br>
-                           <span>{{this.logs_card.data[1].category}}</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[1].date_saved}}
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[1].device_id}}
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[1].company_name}}
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="swiper-slide" v-on:click="personInformation(2)">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img :src="this.logs_card.data[2].person_img"></q-img>
-                        <div class="content__temperature">
-                           {{this.logs_card.data[2].temperature}} <br>
-                           <span class="abnormal-temperature" v-if="this.logs_card.data[2].has_fever">Has Fever</span>
-                           <span class="normal-temperature" v-if="!this.logs_card.data[2].has_fever">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                          {{this.logs_card.data[2].full_name}} <br>
-                           <span>{{this.logs_card.data[2].category}}</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[2].date_saved}}
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[2].device_id}}
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[2].company_name}}
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="swiper-slide" v-on:click="personInformation(3)">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img :src="this.logs_card.data[3].person_img"></q-img>
-                        <div class="content__temperature">
-                           {{this.logs_card.data[3].temperature}} <br>
-                           <span class="abnormal-temperature" v-if="this.logs_card.data[3].has_fever">Has Fever</span>
-                           <span class="normal-temperature" v-if="!this.logs_card.data[3].has_fever">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                           {{this.logs_card.data[3].full_name}} <br>
-                           <span>Stranger</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[3].date_saved}}
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[3].device_id}}
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[3].company_name}}
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="swiper-slide" v-on:click="personInformation(4)">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img :src="this.logs_card.data[4].person_img"></q-img>
-                        <div class="content__temperature">
-                           {{this.logs_card.data[4].temperature}} <br>
-                           <span class="abnormal-temperature" v-if="this.logs_card.data[4].has_fever">Has Fever</span>
-                           <span class="normal-temperature" v-if="!this.logs_card.data[4].has_fever">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                           {{this.logs_card.data[4].full_name}} <br>
-                           <span>{{this.logs_card.data[4].category}}</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[4].date_saved}}
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[4].device_id}}
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[4].company_name}}
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="swiper-slide" v-on:click="personInformation(5)">
-                  <div class="content__card-info content__card">
-                     <div class="content__info">
-                        <q-img :src="this.logs_card.data[5].person_img"></q-img>
-                        <div class="content__temperature">
-                           {{this.logs_card.data[5].temperature}} <br>
-                           <span class="abnormal-temperature" v-if="this.logs_card.data[5].has_fever">Has Fever</span>
-                           <span class="normal-temperature" v-if="!this.logs_card.data[5].has_fever">Normal</span>
-                        </div>
-                     </div>
-                     <div class="content__info">
-                        <div class="content__name">
-                           {{this.logs_card.data[5].full_name}} <br>
-                           <span>{{this.logs_card.data[5].category}}</span>
-                        </div>
-                        <div class="content__datetime">
-                           <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{this.logs_card.data[5].date_saved}}
-                        </div>
-                        <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{this.logs_card.data[5].device_id}}
-                        </div>
-                        <div class="content__location">
-                           <q-icon name="mdi-briefcase" size="16px"></q-icon> {{this.logs_card.data[5].company_name}}
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- <div class="swiper-slide">
-                  <div class="dashboard__overview-btn">
-                     <q-btn flat dense no-caps class="btn-primary btn-seemore">
-                        See More <q-icon name="mdi-arrow-right" size="20px"></q-icon>
-                     </q-btn>
-                  </div>
-               </div> -->
                <div class="swiper-slide">
                   <div class="content__card-seemore content__card" @click="seeMore">
                      <q-img src="../../../assets/dashboard-logs-more.svg"></q-img>
@@ -854,7 +712,7 @@ export default
          'All' , 'Staff', 'Visitor', 'Stranger'
       ],
       select_date: 'Daily',
-      traffic_data: {data: []},
+      traffic_data: {count: 0},
       highest_log: {data: []},
       current_date: new Date().toUTCString().split(" "),
       current_month: new Date().toUTCString().split(" "),
@@ -1207,27 +1065,29 @@ export default
          if (this.company_details)
          {
             params = {find_by: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 1, sort_by:{temperature: -1}}
-            filter = {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: this.company_details._id}}
+            filter = {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}}
          }
          else
          {
             params = {find_by: {date_logged: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}}
-            filter = {find_count: {date_string: new Date().toISOString().split('T')[0], company_id: 'global'}}
+            filter = {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id: 'global'}}
          }
 
          let date_string = new Date().toISOString().split('T')[0].split("-")
-         this.highest_log = await this.$_post(postLatestLog, params);
+         // this.highest_log = await this.$_post(postLatestLog, params);
 
-         let data = await this.$_post(postGetDailyLog, filter);
-         for (let logs of data.data)
-         {
-            if (logs.key == 'Traffic')
-            {
-               this.traffic_data = logs
-               this.traffic_data.date_string = new Date(logs.date_string).toUTCString().split(" ")
-               this.traffic_data.date_string = this.traffic_data.date_string[0] + " " + this.traffic_data.date_string[1] + " " + this.traffic_data.date_string[2] + " " + this.traffic_data.date_string[3]
-            }
-         }
+         let data = await this.$_post('member/get/count_logs', filter);
+         this.traffic_data = data.data
+         
+         // for (let logs of data.data)
+         // {
+         //    if (logs.key == 'Traffic')
+         //    {
+         //       this.traffic_data = logs
+         //       this.traffic_data.date_string = new Date(logs.date_string).toUTCString().split(" ")
+         //       this.traffic_data.date_string = this.traffic_data.date_string[0] + " " + this.traffic_data.date_string[1] + " " + this.traffic_data.date_string[2] + " " + this.traffic_data.date_string[3]
+         //    }
+         // }
       },
 
       async getTrafficData(params = {}, type)
@@ -1277,31 +1137,77 @@ export default
          })
       },
       async getLatestLogs(){
+         await this.getTotalScannedToday()
          let sort = {} , flag = 0
          sort['date_saved'] = -1
-         this.logs_card = await this.$_post(postPersonByCateg, {sort: sort, limit:6} );
+         this.logs_card = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.company_details._id}, sort: sort, limit:8} );
          for (let index = 0; index < this.logs_card.data.length; index++) {
                this.logs_card.data[index].date_saved = date.formatDate(this.logs_card.data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
          }
-         setTimeout(this.getLatestLogs, 30000);
-         console.log("test");
+         await this.getDevices()
+         await this.getMonthlyAlert()
+         await this.getPurposeVisit()
+         await this.getAlertLogs()
+         await this.getTraffic()
+         // await this.getStaffVisitors()
+         // await this.getEmployeeVisitor()
+
+         setTimeout(this.getLatestLogs, 10000);
+      },
+      async uploadImage()
+      {
+         if (this.company_details)
+            {
+               let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, sort: {date_saved: -1}});
+               console.log(logs, 'kljkljlkjlk');
+                for (let index = 0; index < logs.data.length; index++) {                
+                    logs.data.forEach(async log => {
+                        if (!log.person_img.startsWith('http')) 
+                        {
+                            let imageName = 'vision-' + Date.now().toString() + ".png"
+                            let blob = "";
+                            var formDatatoBackend = new FormData();
+                            let contentType = 'image/png';
+                            blob = "";
+                            blob = base64StringToBlob(log.person_img, contentType);
+                            blob.lastModifiedDate = new Date();
+                            formDatatoBackend.append('image', blob, imageName);
+                            let res
+                            try
+                            {
+                                res = await this.$_post_file(formDatatoBackend);
+                                logs.data[index].person_img = res
+                                await this.$_post('member/save/image', {info: {id: log._id, image: res}});
+                            }
+                            catch(e){}
+                        }
+                        index++
+                        // console.log(element);
+                    });
+                }
+            }
       }
    },
    async mounted()
    {  //pointermount
-      await this.getLatestLogs()
-      
-      
-      
-
-
       let sample_date = new Date()
-      sample_date.setHours(sample_date.getHours() + 8 )
+      sample_date.setHours(sample_date.getHours())
       sample_date.toISOString().split('T')[0].split("-")
 
       console.log(sample_date);
       this.company_details = this.$user_info.company ? this.$user_info.company : {}
       let params = {}
+
+      await this.uploadImage()
+      await this.getLatestLogs()
+      let date_string = new Date().toISOString().split('T')[0].split("-")
+      this.getTotalScannedToday(new Date(), 'global')
+      this.current_date = this.current_date[0] + " " + this.current_date[1] + " " + this.current_date[2] + " " + this.current_date[3]
+      this.current_month = this.current_month[2] + " " + this.current_month[3]
+      this.staff_number = await this.personsData({find_person: {category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
+      this.visitor_number = await this.personsData({find_person: {category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
+      await this.getTotalRegistered()
+
       if (this.company_details) params = {filter: {current_date: new Date(), company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
       else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
      
@@ -1333,23 +1239,12 @@ export default
 
       await this.getTrafficData(params)
 
-      let date_string = new Date().toISOString().split('T')[0].split("-")
-      this.getTotalScannedToday(new Date(), 'global')
-      this.current_date = this.current_date[0] + " " + this.current_date[1] + " " + this.current_date[2] + " " + this.current_date[3]
-      this.current_month = this.current_month[2] + " " + this.current_month[3]
-      this.staff_number = await this.personsData({find_person: {category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
-      this.visitor_number = await this.personsData({find_person: {category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
-      await this.getTotalRegistered()
    },
    
    updated() {
       var swiper = new Swiper('.swiper-container', {
          slidesPerView: 4,
          spaceBetween: 20,
-         autoplay: {
-            delay: 5000,
-            disableOnInteraction: false,
-         },
          navigation: {
             nextEl: '.swiper-next',
             prevEl: '.swiper-prev',
