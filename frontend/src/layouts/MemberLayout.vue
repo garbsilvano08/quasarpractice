@@ -389,7 +389,8 @@ export default
                         visit_purpose:      visitor.visitor_purpose.purpose_visit,
                         contact_person:     visitor.visitor_purpose.contact_person,
                         destination:        visitor.visitor_purpose.destination,
-     
+                        delivery_name:      visitor.visitor_purpose.delivery_name,
+                        
                         id_img: visitor.personal_information.id_image,
                         id_num: visitor.personal_information.id_number,
                         id_type: visitor.personal_information.id_type,
@@ -418,7 +419,6 @@ export default
     
                         category: 'Visitor'
                     }
-    
     //***************************SENDING DATA TO TABLET HTML POST REQUEST************************************************************
                     toDataUrl(visitor.personal_information.account_img, async (myBase64)=> {
                     let result           = '';

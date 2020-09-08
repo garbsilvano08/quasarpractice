@@ -94,23 +94,23 @@
                     </q-input>
                 </div>
             </div>
-            <!-- <div class="content__view">
-                <div class="content__view-item">
-                    <div class="content__view-label">All</div>
+            <div class="content__view">
+                <div class="content__view-item" v-if="this.selected_option_account_type == 1">
+                    <div class="content__view-label">All ({{filteredList.length}})</div>
                 </div>
-                <div class="content__view-item">
+                <div class="content__view-item" v-if="this.selected_option_account_type == 2">
                     <div class="content__view-color color-violet"></div>
-                    <div class="content__view-label">Staff </div>
+                    <div class="content__view-label">Staff ({{filteredList.length}})</div>
                 </div>
-                <div class="content__view-item">
+                <div class="content__view-item" v-if=" this.selected_option_account_type == 3">
                     <div class="content__view-color color-orange"></div>
-                    <div class="content__view-label">Visitor </div>
+                    <div class="content__view-label">Visitor ({{filteredList.length}})</div>
                 </div>
-                <div class="content__view-item">
+                <div class="content__view-item" v-if="this.selected_option_account_type == 4">
                     <div class="content__view-color color-red"></div>
-                    <div class="content__view-label">Stranger </div>
+                    <div class="content__view-label">Stranger ({{filteredList.length}})</div>
                 </div>
-            </div> -->
+            </div>
 
             <div class="daily-logs__content-body content__grid-4x4">
                 <div id='dailyLogs' v-for="(logs, index) in filteredList" :key="index">
@@ -149,6 +149,7 @@ export default {
         ComPicker
     },
     data: () => ({
+        selected_option_account_type: 1,
         current_page: 1,
         page_number: 0,
         sort_type: '-1',
@@ -331,6 +332,10 @@ export default {
         async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "")
         {
             this.$q.loading.show();
+            if (this.select__account_type == 'All') this.selected_option_account_type = 1
+            else if (this.select__account_type == 'Staff') this.selected_option_account_type = 2
+            else if (this.select__account_type == 'Visitor') this.selected_option_account_type = 3
+            else if (this.select__account_type == 'Stranger') this.selected_option_account_type = 4
             let params = {}
             let sort_time_start = sort_start.split(":")
             let sort_time_end = sort_end.split(":")
