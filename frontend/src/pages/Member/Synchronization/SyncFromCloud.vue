@@ -125,8 +125,7 @@ export default {
                     
                 setTimeout(() => this.createAll(this.persons_list, device.device_ip, device.device_type), 2000);
            })
-        },
-        async createAll(personToTablet , device_ip, device_type)
+        },        async createAll(personToTablet , device_ip, device_type)
         {
             this.device_list.forEach(async (device) => {
                 if (device.device_type != 'vision_sky')

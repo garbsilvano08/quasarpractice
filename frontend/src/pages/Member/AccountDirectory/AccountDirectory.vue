@@ -330,7 +330,8 @@ export default {
             this.$router.push({
                 name: "member_personal-information",
                 params: {
-                    account_info: account_info
+                    account_info: account_info,
+                    from_account_directory : 'account_directory'
                 }
             })
         },

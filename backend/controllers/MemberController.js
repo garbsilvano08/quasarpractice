@@ -264,7 +264,7 @@ module.exports =
         let person_info = {}
         let key = ['Traffic']
         let date_string = new Date(new Date(req.body.time ? req.body.time : req.body.checkTime))
-        // date_string.setHours(date_string.getHours())
+        date_string.setHours(date_string.getHours() + 8)
         date_string = date_string.toISOString().split('T')[0]
         
         date_string = date_string.split("-")
@@ -482,8 +482,15 @@ module.exports =
     },
     
     async getLogs(req, res)
-    {
-        res.send(await new MDB_LOGS().collection.find(req.body.find_logs).limit(req.body.limit).sort({currentTime:-1}))
+    {  
+        let log_list
+        if(req.body.find_logs){
+            log_list = await new MDB_PERSON_LOGS().collection.find({frontdesk_person_id : req.body.find_logs.id, date_logged: req.body.find_logs.date_created}).sort(req.body.sort).limit(req.body.limit)
+        }
+        else res.send(await new MDB_PERSON_LOGS().docs());
+        res.send(log_list)
+
+      
     },
 
     async getPerson(req, res)
