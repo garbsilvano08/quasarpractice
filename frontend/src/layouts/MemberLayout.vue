@@ -340,7 +340,7 @@ export default
             if (this.$user_info.company)
             {
                 let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company._id, person_img: { $regex: '/9j/'}}});
-                    console.log(logs);
+                    // console.log(logs);
                 for (let index = 0; index < logs.data.length; index++) {   
                     let imageName = 'vision-' + Date.now().toString() + ".png"
                     let blob = "";
