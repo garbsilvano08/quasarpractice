@@ -309,7 +309,7 @@ export default {
             label: 'Date logged',
             value: 'date_logged'
             });
-
+    
             const { Parser } = require('json2csv');
 
             const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
@@ -507,6 +507,18 @@ export default {
     },
     async mounted()
     {
+        if (this.$route.params && this.$route.params.category)
+        {
+            if (this.$route.params.category == 'Fever')
+            {
+                this.select__body_temperature = 'Fever'
+            }
+            else
+            {
+                this.select__account_type = this.$route.params.category
+            }
+        }
+
         this.company_details = this.$user_info.company ? this.$user_info.company : {}
 
         await this.getDevice()

@@ -3,7 +3,7 @@
         <div class="device-management__header">
             <div class="header__title">
                 DEVICE MANAGEMENT <br>
-                <span>{{this.device_list.data.length}} DEVICES INSTALLED</span></div>
+                <span>{{this.device_list.data.length ? this.device_list.data.length : 0}} DEVICES INSTALLED</span></div>
             <div class="header__filter">
                 <q-btn @click="addDevice" class="btn-primary btn-add" flat dense no-caps>
                     Add Device
@@ -48,7 +48,7 @@ export default {
         options_company: [
             'All Companies'
         ],
-        device_list: {data: []},
+        device_list: {data:[]},
         company_list: []
     }),
 

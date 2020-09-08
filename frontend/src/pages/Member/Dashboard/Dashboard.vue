@@ -1111,6 +1111,8 @@ export default
       {
          if (type == 'Registered') return await this.$_post('member/dashbord/counting', params);
          else this.data_line_graph = await this.$_post('member/dashbord/counting', params);
+
+         console.log(this.data_line_graph);
       },
 
       async getTotalRegistered()

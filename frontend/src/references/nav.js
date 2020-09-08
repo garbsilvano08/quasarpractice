@@ -29,12 +29,12 @@ module.exports =
             { label: '+ Add Blacklist', route: 'member_frontdesk_blacklist' },
         ]
     },
-    {
-        key: 'daily',
-        label: 'Daily Logs',
-        icon: 'mdi-face-recognition',
-        route: 'member_dailylogs',
-    },
+    // {
+    //     key: 'daily',
+    //     label: 'Daily Logs',
+    //     icon: 'mdi-face-recognition',
+    //     route: 'member_dailylogs',
+    // },
     // {
     //     key: 'daily',
     //     label: 'Daily Logs',
@@ -97,9 +97,20 @@ module.exports =
         icon: 'mdi-clipboard-text',
         sub:
         [
-            { label: 'Fever Detected', route: 'member_feverdetected_report' },
-            { label: 'Fever Monitoring', route: 'member_fevermonitoring_report' },
-            { label: 'Fever Heatmap', route: 'member_heatmap' },
+            // key: 'daily',
+            // label: 'Daily Logs',
+            // icon: 'mdi-face-recognition',
+            // route: 'member_dailylogs',
+            // { label: 'Fever Detected', route: 'member_feverdetected_report' },
+            // { label: 'Fever Monitoring', route: 'member_fevermonitoring_report' },
+            // { label: 'Fever Heatmap', route: 'member_heatmap' },
+            { label: 'Logs Report', route: 'member_log_report' },
+            { label: 'Staff Logs Report', route: 'member_log_report', params: { category: 'Staff' }},
+            { label: 'Visitor Logs Report', route: 'member_log_report', params: { category: 'Visitor' }},
+            { label: 'Stranger Logs Report', route: 'member_log_report', params: { category: 'Stranger' }},
+            { label: 'Alert Logs Report', route: 'member_log_report', params: { category: 'Fever' }},
+            { label: 'Foot Traffic Report', route: 'member_foot_traffic_report'},
+            // { label: 'Logs Report', route: 'member_dailylogs' },
         ]
     },
     // {
