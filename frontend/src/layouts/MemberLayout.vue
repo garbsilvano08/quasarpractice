@@ -68,7 +68,7 @@
             <div class="fever-detected__alert">
                 <div class="fever-detected__alert-header">
                 <div class="alert-header__title">VCOP ALERT</div>
-                <q-btn flat dense rounded icon="mdi-close" size="10px" color="white" class="alert-header__close" @click="if_fever_detected_alert_dialog = false"></q-btn>
+                <q-btn flat dense rounded icon="mdi-close" size="10px" color="white" class="alert-header__close" @click="logCheck()"></q-btn>
                 </div>
                 <div class="fever-detected__alert-body">
                 <div class="fever-detected__alert-temp">
@@ -340,35 +340,29 @@ export default
             if (this.$user_info.company)
             {
                 let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company._id, person_img: { $regex: '/9j/'}}});
-                for (let index = 0; index < logs.data.length; index++) {                
-                    logs.data.forEach(async log => {
-                        if (!log.person_img.startsWith('http')) 
+                    console.log(logs);
+                for (let index = 0; index < logs.data.length; index++) {   
+                    let imageName = 'vision-' + Date.now().toString() + ".png"
+                    let blob = "";
+                    var formDatatoBackend = new FormData();
+                    let contentType = 'image/png';
+                    blob = "";
+                    blob = base64StringToBlob(logs.data[index].person_img, contentType);
+                    blob.lastModifiedDate = new Date();
+                    formDatatoBackend.append('image', blob, imageName);
+                    let res
+                    try
+                    {
+                        res = await this.$_post_file(formDatatoBackend);
+                        logs.data[index].person_img = res
+                        await this.$_post('member/save/image', {info: {id: logs.data[index]._id, image: res}}).then(res => res.data);
+                        if (res && logs.data[index].has_fever ==  true)
                         {
-                            let imageName = 'vision-' + Date.now().toString() + ".png"
-                            let blob = "";
-                            var formDatatoBackend = new FormData();
-                            let contentType = 'image/png';
-                            blob = "";
-                            blob = base64StringToBlob(log.person_img, contentType);
-                            blob.lastModifiedDate = new Date();
-                            formDatatoBackend.append('image', blob, imageName);
-                            let res
-                            try
-                            {
-                                res = await this.$_post_file(formDatatoBackend);
-                                logs.data[index].person_img = res
-                                await this.$_post('member/save/image', {info: {id: log._id, image: res}});
-                                if (logs.data[index].has_fever ==  false)
-                                {
-                                    this.log_alert =  logs.data[index]
-                                    this.dialog = true
-                                }
-                            }
-                            catch(e){}
+                            this.log_alert =  logs.data[index]
+                            this.dialog = true
                         }
-                        index++
-                        // console.log(element);
-                    });
+                    }
+                    catch(e){}
                 }
             }
 

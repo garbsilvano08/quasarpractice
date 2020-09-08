@@ -264,13 +264,12 @@ module.exports =
         let person_info = {}
         let key = ['Traffic']
         let date_string = new Date(new Date(req.body.time ? req.body.time : req.body.checkTime))
-        date_string.setHours(date_string.getHours() + 8)
+        // date_string.setHours(date_string.getHours())
         date_string = date_string.toISOString().split('T')[0]
         
         date_string = date_string.split("-")
         let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.personId ? req.body.personId : req.body.userId})
         let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey ? req.body.deviceKey : req.body.mac})
-        console.log(device);
         if (person.length) key.push(person[0].category)
         else key.push('Stranger')
 

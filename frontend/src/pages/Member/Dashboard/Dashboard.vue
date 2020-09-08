@@ -127,7 +127,7 @@
       <div class="dashboard__overview-logs">
          <div class="swiper-container">
             <div class="swiper-wrapper">
-               <div class="swiper-slide" v-for="(data, i) in this.logs_card.data" :key="i" v-on:click="personInformation(0)">
+               <div class="swiper-slide" v-for="(data, i) in this.logs_card.data" :key="i" v-on:click="personInformation(i)">
                   <div class="content__card-info content__card">
                      <div class="content__info">
                         <q-img :src="data.person_img"></q-img>
@@ -146,7 +146,7 @@
                            <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{data.date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{data.device_id}}
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{ deviceInfo(data.device_id, 'name') + "-" + deviceInfo(data.device_id, 'type')}}
                         </div>
                         <div class="content__location">
                            <q-icon name="mdi-briefcase" size="16px"></q-icon> {{data.company_name}}
@@ -316,16 +316,14 @@
          </div> -->
 
          <!-- VISITORS PURPOSE -->
-         <div class="dashboard__graph-item">
+         <!-- <div class="dashboard__graph-item">
             <div class="dashboard__graph-header">
                <div class="dashboard__graph-title">
                   Visitors Purpose
                </div>
                <div class="dashboard__graph-filter">
                   <q-select v-model="purpose_filter" :options="option_purpose" outlined dense></q-select>
-                  <!-- <q-input v-model="visitors_date" type='date' outlined dense></q-input> -->
                </div>
-               <!-- <q-select v-model="select_date" :options="options" outlined dense></q-select> -->
             </div>
             <div class="dashboard__graph-content">
                <pie-chart :data="{
@@ -389,22 +387,7 @@
                   </q-card-actions>
                </q-card>
             </q-dialog>
-
-            <!-- <div class="dashboard__graph-content">
-               <pie-chart style="position: relative; height:250px; width:100%"
-                  suffix=""
-                  :data="{
-                     'Official Business': purpose_visit.data.official_business,
-                     'Collection & Pickup': purpose_visit.data.collection_pickup,
-                     'Delivery': purpose_visit.data.delivery,
-                     'Corporate Meeting': purpose_visit.data.corporate_meeting,
-                     'Client/Customer': purpose_visit.data.client_customer,
-                     'Guest': purpose_visit.data.guest,
-                  }"
-               >
-               </pie-chart>
-            </div> -->
-         </div>
+         </div> -->
 
          <!-- VISITORS PURPOSE NEW PIE CHART-->
          <div class="dashboard__graph-item">
@@ -520,6 +503,23 @@
                   </div>
                </div>
             </div>
+            <q-dialog v-model="purpose_popup" persistent>
+               <q-card>
+                  <q-card-section>
+                  <div class="text-h6">Custom Date</div>
+                  </q-card-section>
+
+                  <q-card-section class="q-pt-none">
+                     <q-input v-model="purposeStart" type='date' outlined dense></q-input>
+                     <q-input v-model="purposeEnd" type='date' outlined dense></q-input>
+                  </q-card-section>
+
+                  <q-card-actions align="right">
+                     <q-btn @click="purpose_popup = false, select_date = last_option_registered" flat label="Cancel" color="primary" v-close-popup />
+                     <q-btn @click="getPurposeVisit('Registered')" flat label="Search" color="primary" v-close-popup />
+                  </q-card-actions>
+               </q-card>
+            </q-dialog>
          </div>
 
          <!-- VISITOR LOGS -->
@@ -560,6 +560,7 @@
 </template>
 
 <script>
+import { base64StringToBlob } from 'blob-util';
 import  ComPicker from "../../../components/companyPicker/ComPicker"
 import "./Dashboard.scss";
 import Vue from 'vue';
@@ -586,6 +587,10 @@ import DashboardClass from '../../../classes/DashboardClass';
 import { date } from 'quasar';
 import { log } from 'util';
 import LoginVue from '../../Front/Login.vue';
+
+import Swiper from 'swiper';
+import 'swiper/swiper-bundle.css';
+import swiper from 'swiper/bundle';
 
 Vue.use(Chartkick.use(Chart))
 
@@ -689,7 +694,16 @@ export default
       alert_date: new Date().toISOString().split('T')[0],
       employee_date: new Date().toISOString().split('T')[0],
 
-      purpose_visit: {data: []},
+      purpose_visit: {
+         data: [],
+         percentage: {
+            official_business: 0,
+            delivery: 0,
+            corporate_meeting: 0,
+            client_customer: 0,
+            guest: 0
+         }
+      },
       company_details: {data: []},
       traffic_weekly:{data: []},
       staff_visitors: {data: []},
@@ -737,6 +751,7 @@ export default
       today_visitors: 0,
       today_staff: 0,
       if_fever_detected_alert_dialog: true,
+      device_list: {data: []}
    }),
 
    watch:
@@ -937,8 +952,17 @@ export default
          }
          // else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
 
-         let devices =  await this.$_post(postGetDevice, params);
-         this.device_number = devices.data.length
+         this.device_list =  await this.$_post(postGetDevice, params);
+         this.device_number = this.device_list.data.length
+      },
+
+      deviceInfo(id, type)
+      {
+         for (let index = 0; index < this.device_list.data.length; index++) {
+            if (this.device_list.data[index].device_id == id)
+            if (type == 'name') return this.device_list.data[index].device_name
+            else return this.device_list.data[index].log_type
+         }
       },
 
       async getMonthlyAlert()
@@ -1013,7 +1037,6 @@ export default
             client_customer: this.purpose_visit.total ? (this.purpose_visit.data.client_customer/this.purpose_visit.total)*100 : 0,
             guest: this.purpose_visit.total ? (this.purpose_visit.data.guest/this.purpose_visit.total)*100: 0,
          }
-         console.log(this.purpose_visit);
       },
 
       async getAlertLogs()
@@ -1060,7 +1083,6 @@ export default
             params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key:  'Visitor'}}
          }
          this.staff_visitors = await this.$_post(postGetWeeklyCount, params);
-         // console.log(data, 'data');
       },
 
       async getTotalScannedToday()
@@ -1069,13 +1091,13 @@ export default
          let filter = {}
          if (this.company_details)
          {
-            params = {find_by: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 1, sort_by:{temperature: -1}}
+            // params = {find_by: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 1, sort_by:{temperature: -1}}
             filter = {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}}
          }
          else
          {
-            params = {find_by: {date_logged: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}}
-            filter = {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id: 'global'}}
+            // params = {find_by: {date_logged: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}}
+            filter = {find_by_category: {date_logged: new Date().toISOString().split('T')[0]}}
          }
 
          let date_string = new Date().toISOString().split('T')[0].split("-")
@@ -1083,16 +1105,6 @@ export default
 
          let data = await this.$_post('member/get/count_logs', filter);
          this.traffic_data = data.data
-         
-         // for (let logs of data.data)
-         // {
-         //    if (logs.key == 'Traffic')
-         //    {
-         //       this.traffic_data = logs
-         //       this.traffic_data.date_string = new Date(logs.date_string).toUTCString().split(" ")
-         //       this.traffic_data.date_string = this.traffic_data.date_string[0] + " " + this.traffic_data.date_string[1] + " " + this.traffic_data.date_string[2] + " " + this.traffic_data.date_string[3]
-         //    }
-         // }
       },
 
       async getTrafficData(params = {}, type)
@@ -1133,19 +1145,25 @@ export default
             })
       },
       personInformation(daily_logs_info){
-         this.$router.push({
-               name: "member_personal-information",
-               params: {
-                  daily_logs_info: this.logs_card.data[daily_logs_info],
-                  from_daily_logs : 'daily_logs'
-               },
-         })
+         if (this.logs_card.data[daily_logs_info].category != 'Stranger')
+         {
+            this.$router.push({
+                  name: "member_personal-information",
+                  params: {
+                     daily_logs_info: this.logs_card.data[daily_logs_info],
+                     from_daily_logs : 'daily_logs'
+                  },
+            })
+         }
       },
       async getLatestLogs(){
+         let find_by_category = {}
          await this.getTotalScannedToday()
          let sort = {} , flag = 0
          sort['date_saved'] = -1
-         this.logs_card = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.company_details._id}, sort: sort, limit:8} );
+         if (this.company_details) find_by_category = {company_id: this.company_details._id}
+         // console.log(find_by_category);
+         this.logs_card = await this.$_post(postPersonByCateg, {find_by_category: find_by_category, sort: sort, limit:8} );
          for (let index = 0; index < this.logs_card.data.length; index++) {
                this.logs_card.data[index].date_saved = date.formatDate(this.logs_card.data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
          }
@@ -1157,40 +1175,37 @@ export default
          // await this.getStaffVisitors()
          // await this.getEmployeeVisitor()
 
-         setTimeout(this.getLatestLogs, 10000);
+         setTimeout(this.getLatestLogs, 15000);
       },
       async uploadImage()
       {
          if (this.company_details)
-            {
-               let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, sort: {date_saved: -1}});
-               console.log(logs, 'kljkljlkjlk');
-                for (let index = 0; index < logs.data.length; index++) {                
-                    logs.data.forEach(async log => {
-                        if (!log.person_img.startsWith('http')) 
-                        {
-                            let imageName = 'vision-' + Date.now().toString() + ".png"
-                            let blob = "";
-                            var formDatatoBackend = new FormData();
-                            let contentType = 'image/png';
-                            blob = "";
-                            blob = base64StringToBlob(log.person_img, contentType);
-                            blob.lastModifiedDate = new Date();
-                            formDatatoBackend.append('image', blob, imageName);
-                            let res
-                            try
-                            {
-                                res = await this.$_post_file(formDatatoBackend);
-                                logs.data[index].person_img = res
-                                await this.$_post('member/save/image', {info: {id: log._id, image: res}});
-                            }
-                            catch(e){}
-                        }
-                        index++
-                        // console.log(element);
-                    });
-                }
-            }
+         {
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, sort: {date_saved: -1}});
+            // console.log(logs, 'kljkljlkjlk');
+               for (let index = 0; index < logs.data.length; index++) { 
+                  if (!logs.data[index].person_img.startsWith('http'))
+                  {
+                     console.log(logs.data[index]);   
+                     let imageName = 'vision-' + Date.now().toString() + ".png"
+                     let blob = "";
+                     var formDatatoBackend = new FormData();
+                     let contentType = 'image/png';
+                     blob = "";
+                     blob = base64StringToBlob(logs.data[index].person_img, contentType);
+                     blob.lastModifiedDate = new Date();
+                     formDatatoBackend.append('image', blob, imageName);
+                     let res
+                     try
+                     {
+                        res = await this.$_post_file(formDatatoBackend);
+                        logs.data[index].person_img = res
+                        await this.$_post('member/save/image', {info: {id: logs.data[index]._id, image: res}});
+                     }
+                     catch(e){}
+                  }  
+               }
+         }
       }
    },
 
@@ -1200,7 +1215,7 @@ export default
       sample_date.setHours(sample_date.getHours())
       sample_date.toISOString().split('T')[0].split("-")
 
-      console.log(sample_date);
+      // console.log(sample_date);
       this.company_details = this.$user_info.company ? this.$user_info.company : {}
       let params = {}
 

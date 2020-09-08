@@ -231,6 +231,36 @@ export default {
     },
     methods:
     {
+        async updateImage()
+        {
+            if (this.$user_info.company)
+            {
+                let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company._id, person_img: { $regex: '/9j/'}}});
+                for (let index = 0; index < logs.data.length; index++) {   
+                    let imageName = 'vision-' + Date.now().toString() + ".png"
+                    let blob = "";
+                    var formDatatoBackend = new FormData();
+                    let contentType = 'image/png';
+                    blob = "";
+                    blob = base64StringToBlob(logs.data[index].person_img, contentType);
+                    blob.lastModifiedDate = new Date();
+                    formDatatoBackend.append('image', blob, imageName);
+                    let res
+                    try
+                    {
+                        res = await this.$_post_file(formDatatoBackend);
+                        logs.data[index].person_img = res
+                        await this.$_post('member/save/image', {info: {id: logs.data[index]._id, image: res}});
+                        if (logs.data[index].has_fever ==  true)
+                        {
+                            this.log_alert =  logs.data[index]
+                            this.dialog = true
+                        }
+                    }
+                    catch(e){}
+                }
+            }
+        },
         exportData()
         {
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
@@ -481,6 +511,7 @@ export default {
 
         await this.getDevice()
         await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
+        // await this.updateImage()
     }
 }
 </script>
