@@ -189,7 +189,6 @@ export default {
                     let report_list = Object.entries(this.data_line_graph.data[index].data)
                     
                     for (let x = 0; x < report_list.length; x++) {
-                        console.log(report_list[x][0]);
                         person_with_fever_data.push({
                             date_time: report_list[x][0],
                             value: report_list[x][1],
@@ -206,8 +205,6 @@ export default {
                 label: 'Value',
                 value: 'value'
             },);
-            console.log(person_with_fever_data);
-            console.log(fields);
 
             const { Parser } = require('json2csv');
 
