@@ -507,33 +507,6 @@
             </div>
          </div> -->
       </div>
-
-      <q-dialog v-model="if_fever_detected_alert_dialog" position="bottom">
-         <div class="fever-detected__alert">
-            <div class="fever-detected__alert-header">
-               <div class="alert-header__title">VCOP ALERT</div>
-               <q-btn flat dense rounded icon="mdi-close" size="10px" color="white" class="alert-header__close" @click="if_fever_detected_alert_dialog = false"></q-btn>
-            </div>
-            <div class="fever-detected__alert-body">
-               <div class="fever-detected__alert-temp">
-                  <div class="alert-temp__status">
-                     <q-icon name="mdi-alert-circle-outline" size="20px"></q-icon> Fever Detected
-                  </div>
-                  <div class="alert-temp__temperature">38.3 °C</div>
-                  <div class="alert-temp__label">Body Temperature</div>
-               </div>
-               <div class="fever-detected__alert-people">
-                  <q-img src="https://images.unsplash.com/photo-1598914092202-fcda08ea052e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=751&q=80" class="alert-people__img"></q-img>
-                  <div class="alert-people__name">Roberto M. Solomon</div>
-                  <div class="alert-people__position">Staff</div>
-                  <div class="alert-people__note">
-                     Please bring the person to your staff to get<br>
-                     further information.
-                  </div>
-               </div>
-            </div>
-         </div>
-      </q-dialog>
    </div>
 </template>
 

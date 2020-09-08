@@ -62,7 +62,36 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
-        <q-dialog v-model="dialog" :position="position" persistent>
+
+
+        <q-dialog v-model="dialog" position="bottom">
+            <div class="fever-detected__alert">
+                <div class="fever-detected__alert-header">
+                <div class="alert-header__title">VCOP ALERT</div>
+                <q-btn flat dense rounded icon="mdi-close" size="10px" color="white" class="alert-header__close" @click="if_fever_detected_alert_dialog = false"></q-btn>
+                </div>
+                <div class="fever-detected__alert-body">
+                <div class="fever-detected__alert-temp">
+                    <div class="alert-temp__status">
+                        <q-icon name="mdi-alert-circle-outline" size="20px"></q-icon> Fever Detected
+                    </div>
+                    <div class="alert-temp__temperature">{{log_alert.temperature}} °C</div>
+                    <div class="alert-temp__label">Body Temperature</div>
+                </div>
+                <div class="fever-detected__alert-people">
+                    <q-img :src="log_alert.person_img" class="alert-people__img"></q-img>
+                    <div class="alert-people__name">{{log_alert.full_name == 'Stranger' ? "" : log_alert.full_name}}</div>
+                    <div class="alert-people__position">{{log_alert.category}}</div>
+                    <div class="alert-people__note">
+                        Please bring the person to your staff to get<br>
+                        further information.
+                    </div>
+                </div>
+                </div>
+            </div>
+        </q-dialog>
+
+        <!-- <q-dialog v-model="dialog" :position="position" persistent>
             <q-card class="bg-red text-white" style="width: 300px">
                 <q-card-section>
                     <div class="text-h6">VCOP ALLERT</div>
@@ -90,7 +119,7 @@
                     <q-btn @click="logCheck()" flat label="OK" v-close-popup />
                 </q-card-actions>
             </q-card>
-        </q-dialog>
+        </q-dialog> -->
     </q-layout>
 </template>
 <script>
@@ -329,7 +358,7 @@ export default
                                 res = await this.$_post_file(formDatatoBackend);
                                 logs.data[index].person_img = res
                                 await this.$_post('member/save/image', {info: {id: log._id, image: res}});
-                                if (logs.data[index].has_fever ==  true)
+                                if (logs.data[index].has_fever ==  false)
                                 {
                                     this.log_alert =  logs.data[index]
                                     this.dialog = true
