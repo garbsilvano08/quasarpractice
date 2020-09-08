@@ -264,7 +264,7 @@ module.exports =
         let person_info = {}
         let key = ['Traffic']
         let date_string = new Date(new Date(req.body.time ? req.body.time : req.body.checkTime))
-        date_string.setHours(date_string.getHours())
+        date_string.setHours(date_string.getHours() + 8)
         date_string = date_string.toISOString().split('T')[0]
         
         date_string = date_string.split("-")
