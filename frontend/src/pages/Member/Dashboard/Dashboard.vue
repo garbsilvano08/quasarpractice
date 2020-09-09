@@ -763,7 +763,7 @@ export default
             {
                this.purpose_popup = true
             }
-            else
+             else if( val == 'Daily' && val == 'Weekly' && val == 'Monthly' && val == 'Yearly')
             {
                await this.getPurposeVisit()
             }
@@ -777,7 +777,7 @@ export default
            {
               this.date_filter_dialog = true
            }
-           else
+            else if( val == 'Daily' && val == 'Weekly' && val == 'Monthly' && val == 'Yearly')
            {
               if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
               else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
@@ -792,7 +792,7 @@ export default
             {
                this.date_filter_registered = true
             }
-            else
+            else if( val == 'Daily' && val == 'Weekly' && val == 'Monthly' && val == 'Yearly')
             {
                await this.getEmployeeVisitor()
             }
@@ -851,7 +851,6 @@ export default
       },
       async getEmployeeVisitor()
       {
-         
          let data
          let registered_type = ['Staff', 'Visitor', , 'Stranger']
          this.data_bar_graph.data = []
@@ -870,25 +869,21 @@ export default
 
       async getCustomTraffic(type)
       {  
-         console.log(this.company_details);
          let data
-         this.data_bar_graph.data = []
+         let option_filter = ['Staff', 'Visitor', 'Stranger']
          if (type == 'Registered')
          {  
-            let option_filter = ['Staff', 'Visitor', 'Stranger']
+            let bar_data = []
             if (new Date(this.startDateRegistered) <= new Date(this.endDateRegistered))
             {  
                this.registered_filter = date.formatDate(this.startDateRegistered, 'MMM DD') + " - " + date.formatDate(this.endDateRegistered , 'MMM DD YYYY')
+               this.data_bar_graph = {data: []}
                for (let index = 0; index < option_filter.length; index++) {
                   if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id: this.company_details._id, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
                   else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered')
-                  data.data.forEach(reg => {
-                     if (reg.name == option_filter[index])
-                     {
-                        this.data_bar_graph.data.push(reg)
-                     }
-                  });
+                    if (data.data[0].data) bar_data.push(data.data[0])
                }  
+               this.data_bar_graph.data = bar_data
             }
             else
             {  
@@ -1115,8 +1110,6 @@ export default
       {
          if (type == 'Registered') return await this.$_post('member/dashbord/counting', params);
          else this.data_line_graph = await this.$_post('member/dashbord/counting', params);
-
-         console.log(this.data_line_graph);
       },
 
       async getTotalRegistered()
@@ -1191,8 +1184,7 @@ export default
             // console.log(logs, 'kljkljlkjlk');
                for (let index = 0; index < logs.data.length; index++) { 
                   if (!logs.data[index].person_img.startsWith('http'))
-                  {
-                     console.log(logs.data[index]);   
+                  {  
                      let imageName = 'vision-' + Date.now().toString() + ".png"
                      let blob = "";
                      var formDatatoBackend = new FormData();

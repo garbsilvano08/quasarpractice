@@ -289,7 +289,7 @@ module.exports =
                     frontdesk_person_id:    req.body.personId,
                     date_logged:            req.body.time,
                     record_id:              req.body.id,
-                    company_id:             person.length ? person[0].company_id : device[0].company_id
+                    company_id:             device.length ? device[0].company_id : person[0].company_id
                 }
             }
         }
@@ -309,7 +309,7 @@ module.exports =
                     frontdesk_person_id:    req.body.userId,
                     date_logged:            req.body.checkTime,
                     record_id:              1,
-                    company_id:             person.length ? person[0].company_id : device[0].company_id
+                    company_id:             device.length ? device[0].company_id : person[0].company_id
                 }
                 
                 // console.log(req.body.personId, req.body.type);

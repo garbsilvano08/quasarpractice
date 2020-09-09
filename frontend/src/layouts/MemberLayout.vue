@@ -362,6 +362,7 @@ export default
         },
         async checkQueueSync()
         {
+            // console.log(this.$user_info);
             if (this.$user_info && this.$user_info.company)
             {
                 let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company._id, person_img: { $regex: '/9j/'}}});
