@@ -758,12 +758,13 @@ export default
     { 
        async purpose_filter(val)
        {
+          console.log();
             this.last_option_purpose = val
             if (val == 'Custom Date')
             {
                this.purpose_popup = true
             }
-             else if( val == 'Daily' && val == 'Weekly' && val == 'Monthly' && val == 'Yearly')
+             else if( val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Yearly')
             {
                await this.getPurposeVisit()
             }
@@ -777,7 +778,7 @@ export default
            {
               this.date_filter_dialog = true
            }
-            else if( val == 'Daily' && val == 'Weekly' && val == 'Monthly' && val == 'Yearly')
+            else if(val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Yearly')
            {
               if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
               else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
@@ -792,7 +793,7 @@ export default
             {
                this.date_filter_registered = true
             }
-            else if( val == 'Daily' && val == 'Weekly' && val == 'Monthly' && val == 'Yearly')
+            else if(val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Yearly')
             {
                await this.getEmployeeVisitor()
             }

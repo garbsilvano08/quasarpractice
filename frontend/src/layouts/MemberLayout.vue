@@ -127,7 +127,7 @@
 import EssentialLink    from 'components/EssentialLink.vue'
 import Layout           from './MemberLayout.scss'
 import navigation       from '../references/nav'
-import { postAddPerson , postSavePerson , postGetDevice, postGetLogsSettings, postVisionSky, postPersonByCateg }                        from '../references/url';
+import { postAddPerson , postSavePerson , postGetDevice, postGetLogsSettings, postVisionSky, postPersonByCateg, postGetCompany }                        from '../references/url';
 import Model from "../models/Model";
 import { base64StringToBlob } from 'blob-util';
 import { log } from 'util';
@@ -223,6 +223,10 @@ export default
     },
     methods:
     {
+        async getCompany(company_id)
+        {
+            return await this.$_post(postGetCompany, {id: company_id})
+        },
         logCheck()
         {
             this.dialog = false
@@ -259,57 +263,60 @@ export default
             else return true
         },
 
-        userAccess(key)
+        async userAccess(key)
         {
-            if (this.$user_info.user_type == 'Super Admin')
+            if (this.$user_info && this.$user_info.user_type)
             {
-                if ( key == 'frontdesk_visitor' || key == 'personnel_management') return false
-                else return true
-            }
-            else if (this.$user_info.user_type == 'Officer')
-            {
-                if ( key == 'member_logout')
+                if (this.$user_info.user_type == 'Super Admin')
                 {
-                    return true
-                }
-                else return false
-            }
-            else if (this.$user_info.user_type == 'Admin')
-            {
-                if (this.$user_info.company.device_owner != 'Device Owner')
-                {
-                    if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
-                    {
-                        return true
-                    }
-                    else return false
-                }
-                else
-                {
-                    if ( key == 'company_management' )
-                    {
-                        return false
-                    }
+                    if ( key == 'frontdesk_visitor' || key == 'personnel_management') return false
                     else return true
                 }
-            }
-            else
-            {
-                 if (this.$user_info.company.device_owner != 'Device Owner')
+                else if (this.$user_info.user_type == 'Officer')
                 {
-                    if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
+                    if ( key == 'member_logout')
                     {
                         return true
                     }
                     else return false
                 }
+                else if (this.$user_info.user_type == 'Admin')
+                {
+                    if (await this.getCompany(this.$user_info.company_id).device_owner != 'Device Owner')
+                    {
+                        if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
+                        {
+                            return true
+                        }
+                        else return false
+                    }
+                    else
+                    {
+                        if ( key == 'company_management' )
+                        {
+                            return false
+                        }
+                        else return true
+                    }
+                }
                 else
                 {
-                    if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'account_directory' || key == 'daily')
+                     if (await this.getCompany(this.$user_info.company_id).device_owner != 'Device Owner')
                     {
-                        return true
+                        if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
+                        {
+                            return true
+                        }
+                        else return false
                     }
-                    else return false
+                    else
+                    {
+                        if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'account_directory' || key == 'daily')
+                        {
+                            return true
+                        }
+                        else return false
+                    }
                 }
             }
         },
