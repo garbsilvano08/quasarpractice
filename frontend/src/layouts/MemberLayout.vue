@@ -173,7 +173,8 @@ export default
         person_uploads: 50000,
         total: 60000,
         image: null,
-        log_alert: {}
+        log_alert: {},
+        company_list: []
         
     }),
     computed:
@@ -205,6 +206,18 @@ export default
     {
         if (this.$user_info)
         {
+            if (this.$user_info.company)
+            {
+                this.company_list.push(this.$user_info.company._id)
+                let company = await this.getCompany(this.$user_info.company._id)
+                if (company.data.tenants && company.data.tenants.length)
+                {
+                    for (let index = 0; index < company.data.tenants.length; index++) {
+                    this.company_list.push(company.data.tenants[index])
+                    }
+                }
+            }
+
             await this.getDevices()
     
             this.is_app = this.$user_info.user_type == 'Officer' ? false : true
@@ -372,7 +385,7 @@ export default
             // console.log(this.$user_info);
             if (this.$user_info && this.$user_info.company)
             {
-                let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company._id, person_img: { $regex: '/9j/'}}});
+                let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: {$in: this.company_list}, person_img: { $regex: '/9j/'}}});
                     // console.log(logs);
                 for (let index = 0; index < logs.data.length; index++) {   
                     let imageName = 'vision-' + Date.now().toString() + ".png"

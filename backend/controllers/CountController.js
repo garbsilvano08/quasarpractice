@@ -103,11 +103,10 @@ module.exports =
                     
                     let date = new Date(date_string)
                     date.setHours(0,0,0,0)
-                    let end = new Date()
-                    end.setHours(0,0,0,0)
+                    let end = new Date(date_string).setDate(new Date(date_string).getDate() + 1)
+                    end = new Date(end).setHours(0,0,0,0)
                     startDate = date
-                    endDate = end
-                    
+                    endDate = new Date(end)
                     
                     for (let index = 0; index < 7; index++) {
                         // console.log(startDate, endDate);
@@ -145,19 +144,19 @@ module.exports =
                     let date = new Date(date_string)
                     date.setHours(0,0,0,0)
                     let end = new Date(date_string).setDate(2)
-                    end = new Date(end).setHours(0,0,0,0)
+                    end = new Date(end).setHours(23,59,59,100)
                     startDate = date
                     endDate = new Date(end)
                     // console.log(startDate, endDate, 'Monthly');
                     for (let index = 0; new Date(date).getMonth() <= new Date().getMonth(); index++) {
                         // console.log(startDate, endDate, 'Monthly');
                          if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
-                            else params = {date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            else params = {date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
                         else {
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
-                            else params = {category: options_people[x], date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            else params = {category: options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
                         // if (req.body.filter.person === 'All'){
                         //     if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
@@ -173,6 +172,7 @@ module.exports =
                         // traffic[new Date(date).getDate()] = monthly.length ? monthly[0].count : 0
                         let monthly = await new MDB_PERSON_LOGS().collection.countDocuments(params)
                         traffic[new Date(date).getDate()] = monthly
+                        console.log(monthly, params, 'weekly');
 
                         // date = new Date().setDate(new Date(date).getDate() + 1)
                         startDate.setDate(startDate.getDate() + 1)

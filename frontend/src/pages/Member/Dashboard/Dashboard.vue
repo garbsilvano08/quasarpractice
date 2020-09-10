@@ -579,7 +579,8 @@ import { postGetCompanies,
    postGetPurposeVisit,
    postGetAlertCount,
    postGetDevice,
-   postDashboard
+   postDashboard,
+   postGetCompany
 } from '../../../references/url';
 
 // Classes
@@ -751,7 +752,8 @@ export default
       today_visitors: 0,
       today_staff: 0,
       if_fever_detected_alert_dialog: true,
-      device_list: {data: []}
+      device_list: {data: []},
+      company_list: []
    }),
 
    watch:
@@ -780,7 +782,7 @@ export default
            }
             else if(val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Yearly')
            {
-              if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+              if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id:{$in: this.company_list }, date_filter: this.select_date , person: this.select_people}})
               else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
            }
         },
@@ -807,7 +809,7 @@ export default
            }
            else
            {
-              if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+              if (this.company_details._id) await this.getTrafficData({filter: {company_id:{$in: this.company_list }, date_filter: this.select_date , person: this.select_people}})
               else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
            }
          //   await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
@@ -837,6 +839,10 @@ export default
     },
 
    methods: {
+      async getCompany(company_id)
+      {
+         return await this.$_post(postGetCompany, {id: company_id})
+      },
       async getFootTraffic()
       {  
          if (this.select_date == 'Custom Date')
@@ -845,7 +851,7 @@ export default
          }
          else
          {
-            if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+            if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id:{$in: this.company_list }, date_filter: this.select_date , person: this.select_people}})
             else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
          }
          // this.last_option = this.select_date
@@ -857,7 +863,7 @@ export default
          this.data_bar_graph.data = []
 
          for (let index = 0; index < registered_type.length; index++) {
-            if (this.company_details._id) data = await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.registered_filter , person: registered_type[index]}}, 'Registered')
+            if (this.company_details._id) data = await this.getTrafficData({filter: {company_id:{$in: this.company_list }, date_filter: this.registered_filter , person: registered_type[index]}}, 'Registered')
             else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: registered_type[index]}}, 'Registered')
             data.data.forEach(reg => {
                if (reg.name == registered_type[index])
@@ -880,7 +886,7 @@ export default
                this.registered_filter = date.formatDate(this.startDateRegistered, 'MMM DD') + " - " + date.formatDate(this.endDateRegistered , 'MMM DD YYYY')
                this.data_bar_graph = {data: []}
                for (let index = 0; index < option_filter.length; index++) {
-                  if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id: this.company_details._id, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
+                  if (this.company_details._id) data = await this.getTrafficData({filter: {start_date: this.startDateRegistered, end_date: this.endDateRegistered, company_id:{$in: this.company_list }, date_filter: this.registered_filter , person: option_filter[index]}}, 'Registered')
                   else data = await this.getTrafficData({filter: {date_filter: this.registered_filter , person: option_filter[index], end_date: this.endDateRegistered, start_date: this.startDateRegistered}}, 'Registered')
                     if (data.data[0].data) bar_data.push(data.data[0])
                }  
@@ -901,7 +907,7 @@ export default
             this.select_date = date.formatDate(this.startDate, 'MMM DD') + " - " + date.formatDate(this.endDate , 'MMM DD YYYY') // Foot Traffic
             if (new Date(this.startDate) <= new Date(this.endDate))
             {
-               if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.startDate, end_date: this.endDate, company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+               if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.startDate, end_date: this.endDate, company_id:{$in: this.company_list }, date_filter: this.select_date , person: this.select_people}})
                else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people, end_date: this.endDate, start_date: this.startDate}})
                // this.date_filter_dialog = false
             }
@@ -921,10 +927,21 @@ export default
 
       async getCompanyData(value)
       {
+         this.company_list = []
          let date_string = new Date().toISOString().split('T')[0].split("-")
          this.company_details = value
-         this.staff_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Staff', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
-         this.visitor_number = await this.personsData({find_person: {company_name: this.company_details.company_name, category: 'Visitor', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
+
+         this.company_list.push(this.company_details._id)
+         let company = await this.getCompany(this.company_details._id)
+         if (company.data.tenants && company.data.tenants.length)
+         {
+            for (let index = 0; index < company.data.tenants.length; index++) {
+               this.company_list.push(company.data.tenants[index])
+            }
+         }
+         
+         this.staff_number = await this.personsData({find_person: {company_id:{$in: this.company_list }, category: 'Staff', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
+         this.visitor_number = await this.personsData({find_person: {company_id:{$in: this.company_list }, category: 'Visitor', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
          await this.getMonthlyAlert()
          await this.getDevices()
          await this.getPurposeVisit()
@@ -968,7 +985,7 @@ export default
          if (this.company_details || this.company_details.company_name != "All Company" ){
             params = {find_by_category: {date_saved: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date() },
             has_fever: true,
-            company_name: this.company_details.company_name}}
+            company_id:{$in: this.company_list }}}
          }
          else {
             params = {find_by_category: {date_saved: { '$gt' : new Date(this.date_range) , '$lt' : new Date() }, has_fever: true}}
@@ -994,11 +1011,11 @@ export default
                      color: 'red',
                      message: 'Invalid date'
                   });
-                  params = {find_all: {date_string: new Date(this.visitors_date).toISOString().split('T')[0], company_id: this.company_details._id}}
+                  params = {find_all: {date_string: new Date(this.visitors_date).toISOString().split('T')[0], company_id:{$in: this.company_list }}}
                }
-               else params = {find_all: {date_saved: { $gte: new Date(this.purposeStart), $lt: new Date(this.purposeEnd)}, company_id: this.company_details._id}}
+               else params = {find_all: {date_saved: { $gte: new Date(this.purposeStart), $lt: new Date(this.purposeEnd)}, company_id:{$in: this.company_list }}}
             }
-            else params = {find_all: {date_string: new Date(this.visitors_date).toISOString().split('T')[0], company_id: this.company_details._id}}
+            else params = {find_all: {date_string: new Date(this.visitors_date).toISOString().split('T')[0], company_id:{$in: this.company_list }}}
 
          }
          else {
@@ -1044,8 +1061,8 @@ export default
          let params = {}
          let current_params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-           params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0], company_id: this.company_details._id}, limit: 3}
-           current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}}
+           params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0], company_id:{$in: this.company_list }}, limit: 3}
+           current_params =  {find_by_category: {has_fever: true, date_logged: new Date().toISOString().split('T')[0], company_id:{$in: this.company_list }}}
          }
          else {
             params =  {find_by_category: {has_fever: true, date_logged: new Date(this.alert_date).toISOString().split('T')[0]}, limit: 3}
@@ -1064,7 +1081,7 @@ export default
          this.traffic_weekly = {}
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-           params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: 'Traffic'}}
+           params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id:{$in: this.company_list }, key: 'Traffic'}}
          }
          else {
             params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: 'Traffic'}}
@@ -1076,7 +1093,7 @@ export default
       {
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
-           params =  {find_count: {date_string: new Date(this.employee_date).toISOString().split('T')[0], company_id: this.company_details.company_id, key: 'Visitor'}}
+           params =  {find_count: {date_string: new Date(this.employee_date).toISOString().split('T')[0], company_id:{$in: this.company_list }, key: 'Visitor'}}
 
          }
          else {
@@ -1095,7 +1112,7 @@ export default
          if (this.company_details)
          {
             // params = {find_by: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 1, sort_by:{temperature: -1}}
-            filter = {date_saved: {'$gte' : new Date(current_date.setHours(0,0,0,0)), '$lte' : new Date(current_date.setHours(23,59,59,100))}, company_id: this.company_details._id}
+            filter = {date_saved: {'$gte' : new Date(current_date.setHours(0,0,0,0)), '$lte' : new Date(current_date.setHours(23,59,59,100))}, company_id:{$in: this.company_list }}
          }
          else
          {
@@ -1118,7 +1135,7 @@ export default
          let total = 0
           let params = {}
          // if (this.company_details)
-         if (this.company_details) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? this.company_details._id : null, key: {$in: ['Staff', 'Visitor']}}}
+         if (this.company_details) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? {$in: this.company_list } : null, key: {$in: ['Staff', 'Visitor']}}}
          if (params.find_count.company_id == null) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitor']}}}
 
          // console.log(params);
@@ -1161,7 +1178,7 @@ export default
          await this.getTotalScannedToday()
          let sort = {} , flag = 0
          sort['date_saved'] = -1
-         if (this.company_details) find_by_category = {company_id: this.company_details._id}
+         if (this.company_details) find_by_category = {company_id:{$in: this.company_list }}
          // console.log(find_by_category);
          this.logs_card = await this.$_post(postPersonByCateg, {find_by_category: find_by_category, sort: sort, limit:8} );
          for (let index = 0; index < this.logs_card.data.length; index++) {
@@ -1181,7 +1198,7 @@ export default
       {
          if (this.company_details)
          {
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, sort: {date_saved: -1}});
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id:{$in: this.company_list }}, sort: {date_saved: -1}});
             // console.log(logs, 'kljkljlkjlk');
                for (let index = 0; index < logs.data.length; index++) { 
                   if (!logs.data[index].person_img.startsWith('http'))
@@ -1215,7 +1232,18 @@ export default
       sample_date.toISOString().split('T')[0].split("-")
 
       // console.log(sample_date);
-      this.company_details = this.$user_info.company ? this.$user_info.company : {}
+      if (this.$user_info.company)
+      {
+         this.company_details = this.$user_info.company
+         this.company_list.push(this.company_details._id)
+         let company = await this.getCompany(this.company_details._id)
+         if (company.data.tenants && company.data.tenants.length)
+         {
+            for (let index = 0; index < company.data.tenants.length; index++) {
+               this.company_list.push(company.data.tenants[index])
+            }
+         }
+      }
       let params = {}
 
       await this.uploadImage()
