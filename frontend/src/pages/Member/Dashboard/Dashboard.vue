@@ -1089,21 +1089,21 @@ export default
       {
          let params = {}
          let filter = {}
+         let current_date = new Date()
+
+
          if (this.company_details)
          {
             // params = {find_by: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 1, sort_by:{temperature: -1}}
-            filter = {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}}
+            filter = {date_saved: {'$gte' : new Date(current_date.setHours(0,0,0,0)), '$lte' : new Date(current_date.setHours(23,59,59,100))}, company_id: this.company_details._id}
          }
          else
          {
             // params = {find_by: {date_logged: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}}
-            filter = {find_by_category: {date_logged: new Date().toISOString().split('T')[0]}}
+            filter = {date_saved: {'$gte' : new Date(current_date.setHours(0,0,0,0)), '$lte' : new Date(current_date.setHours(23,59,59,100))}}
          }
 
-         let date_string = new Date().toISOString().split('T')[0].split("-")
-         // this.highest_log = await this.$_post(postLatestLog, params);
-
-         let data = await this.$_post('member/get/count_logs', filter);
+         let data = await this.$_post('member/get/count_logs', {find_by_category: filter});
          this.traffic_data = data.data
       },
 
