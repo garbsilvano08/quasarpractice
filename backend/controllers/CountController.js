@@ -172,7 +172,6 @@ module.exports =
                         // traffic[new Date(date).getDate()] = monthly.length ? monthly[0].count : 0
                         let monthly = await new MDB_PERSON_LOGS().collection.countDocuments(params)
                         traffic[new Date(date).getDate()] = monthly
-                        console.log(monthly, params, 'weekly');
 
                         // date = new Date().setDate(new Date(date).getDate() + 1)
                         startDate.setDate(startDate.getDate() + 1)
