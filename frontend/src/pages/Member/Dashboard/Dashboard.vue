@@ -191,15 +191,7 @@
             <div class="dashboard__graph-content">
                <line-chart
                   :data="data_line_graph.data"
-                  :colors="[
-                     '#4151b3',
-                     '#9825f2',
-                     '#fd8e22',
-                     '#f8fe22',
-                     '#2089fe',
-                     '#23dea7',
-                     '#00af50',
-                  ]"
+                  :legend="false"
                />
             </div>
             <!-- FILTER DIALOG -->
@@ -714,13 +706,13 @@ export default
       select__company: 'All Caompanies',
       options_company: ['All Caompanies'],
       options_date: [
-         'Daily' , 'Weekly', 'Monthly' , 'Yearly', 'Custom Date'
+         'Today', 'Daily' , 'Weekly', 'Monthly' , 'Custom Date'
       ],
       select_people: 'All',
       options_people: [
          'All' , 'Staff', 'Visitor', 'Stranger'
       ],
-      select_date: 'Daily',
+      select_date: 'Today',
       traffic_data: {count: 0},
       highest_log: {data: []},
       current_date: new Date().toUTCString().split(" "),
@@ -741,9 +733,9 @@ export default
       startDateRegistered: new Date().toISOString().split('T')[0],
       endDateRegistered: new Date().toISOString().split('T')[0],
       last_option_registered: '',
-      registered_filter: 'Daily',
-      purpose_filter: 'Daily',
-      option_purpose: ['Daily', 'Custom Date'],
+      registered_filter: 'Today',
+      purpose_filter: 'Today',
+      option_purpose: ['Today', 'Custom Date'],
       purpose_popup: false,
       purposeStart: new Date().toISOString().split('T')[0],
       purposeEnd: new Date().toISOString().split('T')[0],
@@ -760,13 +752,12 @@ export default
     { 
        async purpose_filter(val)
        {
-          console.log();
             this.last_option_purpose = val
             if (val == 'Custom Date')
             {
                this.purpose_popup = true
             }
-             else if( val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Yearly')
+             else if( val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Today')
             {
                await this.getPurposeVisit()
             }
@@ -780,7 +771,7 @@ export default
            {
               this.date_filter_dialog = true
            }
-            else if(val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Yearly')
+            else if(val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Today')
            {
               if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id:{$in: this.company_list }, date_filter: this.select_date , person: this.select_people}})
               else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
@@ -795,7 +786,7 @@ export default
             {
                this.date_filter_registered = true
             }
-            else if(val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Yearly')
+            else if(val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Today')
             {
                await this.getEmployeeVisitor()
             }

@@ -210,10 +210,10 @@ export default
             {
                 this.company_list.push(this.$user_info.company._id)
                 let company = await this.getCompany(this.$user_info.company._id)
-                if (company.data.tenants && company.data.tenants.length)
+                if (company.tenants && company.tenants.length)
                 {
-                    for (let index = 0; index < company.data.tenants.length; index++) {
-                    this.company_list.push(company.data.tenants[index])
+                    for (let index = 0; index < company.tenants.length; index++) {
+                    this.company_list.push(company.tenants[index])
                     }
                 }
             }
@@ -238,7 +238,8 @@ export default
     {
         async getCompany(company_id)
         {
-            return await this.$_post(postGetCompany, {id: company_id})
+            let data = await this.$_post(postGetCompany, {id: company_id})
+            return data.data
         },
         logCheck()
         {
@@ -278,6 +279,7 @@ export default
 
         async userAccess(key)
         {
+            let company = await this.getCompany(this.$user_info.company_id)
             if (this.$user_info && this.$user_info.user_type)
             {
                 if (this.$user_info.user_type == 'Super Admin')
@@ -295,15 +297,7 @@ export default
                 }
                 else if (this.$user_info.user_type == 'Admin')
                 {
-                    if (await this.getCompany(this.$user_info.company_id).device_owner != 'Device Owner')
-                    {
-                        if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
-                        {
-                            return true
-                        }
-                        else return false
-                    }
-                    else
+                    if ( company.device_owner == 'Device Owner')
                     {
                         if ( key == 'company_management' )
                         {
@@ -311,10 +305,7 @@ export default
                         }
                         else return true
                     }
-                }
-                else
-                {
-                     if (await this.getCompany(this.$user_info.company_id).device_owner != 'Device Owner')
+                    else
                     {
                         if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
                         {
@@ -322,9 +313,20 @@ export default
                         }
                         else return false
                     }
-                    else
+                }
+                else
+                {
+                     if (company.device_owner == 'Device Owner')
                     {
                         if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'account_directory' || key == 'daily')
+                        {
+                            return true
+                        }
+                        else return false
+                    }
+                    else
+                    {
+                        if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
                         {
                             return true
                         }

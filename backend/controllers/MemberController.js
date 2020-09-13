@@ -411,9 +411,9 @@ module.exports =
         if (req.body.find_company) 
         {
             // console.log('lkjlkjlkj');
-            return await new MDB_COMPANIES().collection.find(req.body.find_company)
+            res.send(await new MDB_COMPANIES().collection.find(req.body.find_company))
         }
-        else return res.send(await new MDB_COMPANIES().docs());
+        else res.send(await new MDB_COMPANIES().docs());
     },
     async deleteCompany(req, res)
     {

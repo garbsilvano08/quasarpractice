@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="company-management__container content__grid-3x3">
-            <div v-for="(company, i) in this.company_list.data" :key="i"  class="company-management__content content__card">
+            <div v-for="(company, i) in this.company_list" :key="i"  class="company-management__content content__card">
                 <div class="company-management__info-logo">
                     <img :src=company.company_logo_url>
                 </div>
@@ -46,6 +46,7 @@ import "./CompanyManagement.scss";
 import { postGetCompanies }                         from '../../../references/url';
 import { postDeleteCompany }                        from '../../../references/url';
 import EditCompany                                  from './Dialogs/EditCompany';
+import { log } from 'util';
 export default {
     components: { EditCompany },
     data: () =>
@@ -55,9 +56,38 @@ export default {
         pasData: {},
     }),
     async mounted(){
-        this.company_list = await this.$_post(postGetCompanies);
+        if (this.$user_info.user_type == 'Super Admin')
+        {
+            await this.$_post(postGetCompanies);
+        }
+        else if (this.$user_info.company)
+        {
+            let companies = null
+            if (this.$user_info.company.subcompanies && this.$user_info.company.subcompanies.length)
+            {
+                companies = this.$user_info.company.subcompanies
+            }
+
+            companies.push(this.$user_info.company._id)
+            await this.getCompanyList({_id: {$in: companies}})
+        }
     },
     methods:{
+        async getCompanyList(params)
+        {
+            let subcompanies = []
+            let companies = await this.$_post(postGetCompanies, {find_company: params});
+            for (let index = 0; index < companies.data.length; index++) {
+               this.company_list.push(companies.data[index])
+               if (companies.data[index].subcompanies && companies.data[index].subcompanies.length)
+               {
+                   for (let i = 0; i < companies.data[index].subcompanies.length; i++) {
+                       subcompanies.push(companies.data[index].subcompanies[i])
+                   }
+               }
+            }
+            if (subcompanies.length) this.getCompanyList({_id: {$in: subcompanies}})
+        },
         addCompany()
         {
             this.$router.push({ name: 'member_addcompany' });
@@ -76,16 +106,12 @@ export default {
                 this.$q.loading.show();
                 await this.$_post(postDeleteCompany, { id:this.company_list.data[index]._id} )
                 this.$q.loading.hide();
-                console.log(this.company_list.data)
                 this.company_list.data.splice(index, 1);
             });
-
-            // let asd = await this.$_post(postDeleteCompany, {id:this.company_list.data[index]._id});
         },
         editCompany(index)
         {
             this.is_edit_company_dialog_open = true;
-            // console.log(this.company_list.data[index]);
             this.pasData = this.company_list.data[index];
             return this.company_list.data[index];
 

@@ -103,9 +103,9 @@
                 </div>
 
                 <div class="content__filter-people content__filter-item">
-                    <q-input outlined dense v-model="input__people" @keypress.exact.native="filteredList()" class="search-people" placeholder="Search People...">
+                    <q-input outlined dense v-model="input__people" @keypress.exact.native="searchPerson()" class="search-people" placeholder="Search People...">
                         <template v-slot:append>
-                            <q-icon name="mdi-magnify" />
+                            <q-icon @click="getLogList(start_date, end_date, start_time, end_time, '', 'generate')" name="mdi-magnify" />
                         </template>
                     </q-input>
                 </div>
@@ -129,11 +129,11 @@
             </div>
 
             <div v-if="view_as=='grid'" class="daily-logs__content-body content__grid-4x4">
-                <div id='dailyLogs' v-for="(logs, index) in filteredList" :key="index">
+                <div id='dailyLogs' v-for="(logs, index) in this.log_list" :key="index">
                     <DailyLogCards :all_logs="logs"></DailyLogCards>
                 </div>
             </div>
-            <q-table v-else dense flat :data="this.filteredList" :hide-pagination="true" :rows-per-page-options="[20]" :columns="table_column"></q-table>
+            <q-table v-else dense flat :data="this.log_list" :hide-pagination="true" :rows-per-page-options="[20]" :columns="table_column"></q-table>
             <div class="q-pa-lg flex flex-center">
                 <q-pagination
                     v-model="current_page"
@@ -257,11 +257,11 @@ export default {
 
     }),
     computed:{
-        filteredList() {
-            return this.log_list.filter((logs) => {
-                return logs.full_name.toLowerCase().includes(this.input__people.toLowerCase());
-            });
-        }
+        // filteredList() {
+        //     return this.log_list.filter((logs) => {
+        //         return logs.full_name.toLowerCase().includes(this.input__people.toLowerCase());
+        //     });
+        // }
     },
     watch:
     {
@@ -317,6 +317,26 @@ export default {
     },
     methods:
     {
+        async searchPerson()
+        {
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: {full_name: { $regex: this.input__people}}, limit: 20, sort: {date_saved: -1}});
+             for (let index = 0; index < logs.data.length; index++) {
+                logs.data.forEach(async log => {
+                    logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
+                    logs.data[index].device = this.deviceId("", logs.data[index].device_id)
+                    index++
+                });
+            }
+            this.log_list = logs.data
+            if (this.current_page == 1)
+            {
+                let count = await this.$_post('member/get/count_logs', {find_by_category: {full_name: { $regex: this.input__people}}, sort: {date_saved: -1}} );
+                // console.log(count);
+                this.log_items = count.data.count
+                this.page_number = Math.ceil(count.data.count / 20)
+            }
+            console.log(this.log_list);
+        },
         async updateImage()
         {
             if (this.$user_info.company)
@@ -545,7 +565,16 @@ export default {
             if (this.item_sort == 'temp') sort['temperature'] = Number(this.sort_type)
             if (this.current_page > 1) skip = 20 * (this.current_page - 1)
 
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20,  skip: skip} );
+            let logs = {}
+            console.log(params, 'params');
+            if (this.input__people) 
+            {
+                params.full_name = { $regex: this.input__people}
+                console.log(params);
+                logs = await this.$_post(postPersonByCateg, {find_by_category: params, skip: skip, limit: 20, sort: {date_saved: -1}});
+            }
+            else logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20,  skip: skip} );
+            console.log(logs);
             // if (sort_reverse) logs.data.reverse()
             for (let index = 0; index < logs.data.length; index++) {
                 logs.data.forEach(async log => {

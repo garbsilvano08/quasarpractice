@@ -65,7 +65,7 @@ module.exports =
 
             if (options_people[x] == req.body.filter.person)
             {
-                if (req.body.filter.date_filter == 'Daily') 
+                if (req.body.filter.date_filter == 'Today') 
                 {
                     let params = {}
                     let date = new Date()
@@ -95,7 +95,7 @@ module.exports =
                         endDate.setHours(endDate.getHours() + 1,59,59,999)
                     }
                 }
-                else if (req.body.filter.date_filter == 'Weekly')
+                else if (req.body.filter.date_filter == 'Daily')
                 {   
                     let day_list = ['Sun','Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat']
                     let date_string = new Date()
@@ -138,25 +138,25 @@ module.exports =
                         endDate.setDate(startDate.getDate() + 1)                   
                     }
                 }
-                else if (req.body.filter.date_filter == 'Monthly' )
+                else if (req.body.filter.date_filter == 'Weekly' )
                 {
-                    let date_string = new Date().setDate(1)
+                    let date_string = new Date().getFullYear().toString() + "-" + (new Date().getMonth() + 1).toString().padStart(2, "0") + "-01";
                     let date = new Date(date_string)
-                    date.setHours(0,0,0,0)
-                    let end = new Date(date_string).setDate(2)
-                    end = new Date(end).setHours(23,59,59,100)
+                    // date.setHours(0,0,0,0)
+                    // let end = new Date(date)
+                    end = new Date(date_string).setDate(new Date(date_string).getDate() + 1)
                     startDate = date
                     endDate = new Date(end)
                     // console.log(startDate, endDate, 'Monthly');
                     for (let index = 0; new Date(date).getMonth() <= new Date().getMonth(); index++) {
-                        // console.log(startDate, endDate, 'Monthly');
+                        console.log(startDate, endDate, 'Monthly');
                          if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
-                            else params = {date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
+                            else params = {date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
                         }
                         else {
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
-                            else params = {category: options_people[x], date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category:options_people[x], date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
+                            else params = {category: options_people[x], date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
                         }
                         // if (req.body.filter.person === 'All'){
                         //     if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
@@ -178,7 +178,7 @@ module.exports =
                         endDate.setDate(startDate.getDate() + 1)       
                     }
                 }
-                else if (req.body.filter.date_filter == 'Yearly' )
+                else if (req.body.filter.date_filter == 'Monthly' )
                 {
                     let date = new Date()
                     let month_list = ['Jan','Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
@@ -209,38 +209,41 @@ module.exports =
                 {   
                     let date = new Date(req.body.filter.start_date)
                     let month_list = ['Jan','Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
-
+                    // console.log(date, req.body.filter);
                     // let date_string = new Date().setDate(1)
                     // let date = new Date(date_string)
-                    date.setHours(0,0,0,0)
+                    // end = new Date(end).setDate(new Date(end).getDate() + 1)
+                    // date.setHours(0,0,0,0)
                     let end = new Date(req.body.filter.start_date)
-                    end = new Date(end).setDate(new Date(end).getDate() + 1)
-                    end = new Date(end).setHours(0,59,59,999)
-                    startDate = date
+                    // end = new Date(end).setDate(new Date(end).getDate() + 1)
+                    end = new Date(end).setHours(23,59,59,999)
+                    startDate = new Date(date)
                     endDate = new Date(end)
 
-                    for (let index = 0; new Date(startDate) <= new Date(req.body.filter.end_date); index++) {
+                    for (let index = 0; new Date(startDate) <= new Date(req.body.filter.end_date).setHours(23,59,59,999); index++) {
                         if (req.body.filter.person === 'All'){
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
-                            else params = {date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gte' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            else params = {date_saved: {'$gte' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
                         else {
-                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category: req.body.filter.person, date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
-                            else params = {category: req.body.filter.person, date_saved: {'$gt' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id,category: req.body.filter.person, date_saved: {'$gte' : new Date(startDate) , '$lte' : new Date(endDate)}}
+                            else params = {category: req.body.filter.person, date_saved: {'$gte' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
+                        
                         // if (req.body.filter.person === 'All'){
-                        //     if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
-                        //     else params = {company_id: 'global',key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
+                            //     if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
+                            //     else params = {company_id: 'global',key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
                         // }
                         // else {
-                        //     if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: req.body.filter.person, date_string: new Date(date).toISOString().split('T')[0]}
+                            //     if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: req.body.filter.person, date_string: new Date(date).toISOString().split('T')[0]}
                         //     params = {company_id: 'global', key: req.body.filter.person, date_string:new Date(date).toISOString().split('T')[0]}
 
                         // }
-
+                        
                         let daily = await new MDB_PERSON_LOGS().collection.countDocuments(params)
+                        console.log(startDate, endDate, daily, 'gsdgsdgsdg');
                         // traffic[month_list[new Date(date).getMonth()] + " " + new Date(date).getDate()] = daily.length ? daily[0].count : 0
-                        traffic[month_list[new Date(date).getMonth()] + " " + new Date(date).getDate()] = daily
+                        traffic[month_list[new Date(startDate).getMonth()] + " " + new Date(startDate).getDate()] = daily
                         // date = new Date(date).setDate(new Date(date).getDate() + 1)
                         startDate.setDate(startDate.getDate() + 1)
                         endDate.setDate(endDate.getDate() + 1) 
@@ -249,6 +252,7 @@ module.exports =
                 traffic_data.push({name: options_people[x], data: traffic})
             }
         }
+        // console.log(traffic_data,'data');
         res.send(traffic_data)
     },
 

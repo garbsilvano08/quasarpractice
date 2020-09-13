@@ -149,7 +149,7 @@
                                 <q-select v-model="visitor_purpose.purpose_visit" :options="options_visit_purpose" outlined dense></q-select>
                             </div>
                             <div class="content__select" v-if="visitor_purpose.purpose_visit == 'Delivery'">
-                                <div class="content__select-label">Delivery Name</div>
+                                <div class="content__select-label">Delivery Group</div>
                                 <q-select v-model="visitor_purpose.delivery_name" :options="options_delivery_name" outlined dense></q-select>
                             </div>
                             <!-- Visitor Details -->

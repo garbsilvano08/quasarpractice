@@ -20,15 +20,7 @@
         <div class="report__container content__box">
             <line-chart
                 :data="data_line_graph.data"
-                :colors="[
-                    '#4151b3',
-                    '#9825f2',
-                    '#fd8e22',
-                    '#f8fe22',
-                    '#2089fe',
-                    '#23dea7',
-                    '#00af50',
-                ]"
+                :legend="false"
             />
         </div>
         <q-dialog v-model="date_filter_dialog" persistent>

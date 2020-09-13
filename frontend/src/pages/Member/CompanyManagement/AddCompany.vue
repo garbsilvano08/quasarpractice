@@ -22,24 +22,24 @@
                 <div class="content__input">
                     <div class="content__input-label">Location</div>
                      <q-select
-                            outlined
-                            dense
-                            v-model="input_location"
-                            use-input
-                            input-debounce="1000"
-                            :options="options_location"
-                            @filter="getNearbyPlaces"
-                            option-value="place_id"
-                            option-label="description"
-                        >
-                            <template v-slot:no-option>
-                                <q-item>
-                                    <q-item-section class="text-grey">
-                                    No results
-                                    </q-item-section>
-                                </q-item>
-                            </template>
-                        </q-select>
+                        outlined
+                        dense
+                        v-model="input_location"
+                        use-input
+                        input-debounce="1000"
+                        :options="options_location"
+                        @filter="getNearbyPlaces"
+                        option-value="place_id"
+                        option-label="description"
+                    >
+                        <template v-slot:no-option>
+                            <q-item>
+                                <q-item-section class="text-grey">
+                                No results
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
                 </div>
             </div>
             <div class="company-add__content-info company-add__content-grid">
@@ -57,7 +57,18 @@
                             <q-checkbox v-model="is_device_owner" label="Device Owner"/>
                             <!-- Device Owner -->
                         </div>
-                        <com-picker v-show="is_open" :user="this.$user_info" @select=getDeviceOwner></com-picker>
+                        <!-- <com-picker v-show="is_open" :user="this.$user_info" @select=getDeviceOwner></com-picker> -->
+                        <q-select
+                            v-show="is_open"
+                            outlined
+                            dense
+                            v-model="owner_name"
+                            use-input
+                            input-debounce="1000"
+                            :options="company_owners"
+                            option-value="place_id"
+                            option-label="description"
+                        />
                     </div>
                     <div class="company-add__content-info">
                     </div>
@@ -144,7 +155,10 @@ export default {
         company_details: {},
         is_device_owner: true,
         is_open: false,
-        device_owner: {}
+        device_owner: {},
+        company_owners: [],
+        company_list: [],
+        owner_name: '',
     }),
     async mounted()
     {
@@ -155,9 +169,18 @@ export default {
     
     watch:
     {
-        is_device_owner(val)
+        owner_name(val)
+        {
+            this.getDeviceOwner(val)
+        },
+
+        async is_device_owner(val)
         {
             this.is_open = !this.is_open
+            this.company_owners.push(this.company_details.company_name)
+            this.company_list.push(this.company_details)
+            this.owner_name = this.company_details.company_name
+            await this.getCompanies(this.company_details)
         }
     },
 
@@ -168,9 +191,16 @@ export default {
             this.company_details = value
         },
 
-        getDeviceOwner(value)
+        getDeviceOwner(name)
         {
-            this.device_owner = value
+            // this.device_owner = value
+            for (let index = 0; index < this.company_list.length; index++) {
+                if ( this.company_list[index].company_name == name ) 
+                {
+                    this.device_owner = this.company_list[index];
+                    return
+                }
+            }
         },
         getValue()
         {
@@ -193,29 +223,17 @@ export default {
             })
         },
 
-        async getCompanies()
+        async getCompanies(company)
         {
-            // console.log(this.$user_info);
-            // this.company_list.push(this.$user_info.company);
-            // console.log(this.company_list);
-            // let com_list = [];
-            // if(this.company_list.data.length>=1)
-            // {
-            //     this.company_list.data.forEach((com) => {
-            //         if(com.parent_id=="No Parent")
-            //         com_list.push( {"_id" : com._id, "company_name" : com.company_name});
-            //     })
-            //     com_list.splice(0, 0, "No Parent");
-            // }
-            // else
-            // {
-            //     com_list.push("No Parent");
-            // }
-            // this.company_list = com_list;
-            // // console.log("etos", this.company_list);
-            //  this.parent= this.company_list[0];
+            
+            if (company.parent_id && company.parent_id != 'No Parent')
+            {
+                let parent = await this.$_post(postGetCompany, {id: company.parent_id})
+                this.company_owners.push(parent.data.company_name)
+                this.company_list.push(parent.data)
 
-
+                if(parent.data && parent.data.parent_id != 'No Parent') this.getCompanies(parent.data)
+            }
         },
         async submit()
         {
