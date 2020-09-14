@@ -133,7 +133,9 @@
                     <DailyLogCards :all_logs="logs"></DailyLogCards>
                 </div>
             </div>
-            <q-table v-else dense flat :data="this.log_list" :hide-pagination="true" :rows-per-page-options="[20]" :columns="table_column"></q-table>
+            <div v-if="view_as!='grid'" class="account-directory__container content__box">
+                <q-table dense flat :data="this.log_list" :hide-pagination="true" :rows-per-page-options="[20]" :columns="table_column"></q-table>
+            </div>
             <div class="q-pa-lg flex flex-center">
                 <q-pagination
                     v-model="current_page"
