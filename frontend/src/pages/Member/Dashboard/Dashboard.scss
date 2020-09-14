@@ -167,6 +167,7 @@
             padding: 40px 30px;
             display: flex;
             align-items: center;
+            text-align: center;
 
             .q-img {
                 object-fit: contain;
@@ -175,7 +176,7 @@
 
             .dashboard__total-info {
                 color: #233b61;
-
+                width: 100%;
                 .dashboard__total-title {
                     font-size: 14px;
                     font-weight: 500;
@@ -186,18 +187,21 @@
                     font-weight: 700;
                 }
 
-                .dashboard__total-date {
-                    font-size: 12px;
-                    font-weight: 500;
-                    opacity: .6;
-                }
+                // .dashboard__total-date {
+                //     font-size: 12px;
+                //     font-weight: 500;
+                //     opacity: .6;
+                // }
             }
         }
     }
 
     .dashboard__overview-logs {
         margin-bottom: 20px;
-
+        .header__title{
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
         .swiper-container {
             width: 100%;
             height: auto;
@@ -310,7 +314,7 @@
 
         .content__card-seemore {
             width: auto;
-            height: 133px;
+            height: 110px;
             display: flex;
             flex-direction: column;
             cursor: pointer;
