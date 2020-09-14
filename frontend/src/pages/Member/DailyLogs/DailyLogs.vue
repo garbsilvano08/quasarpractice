@@ -349,6 +349,7 @@ export default {
         },
         exportData()
         {
+            console.log(this.log_list.length);
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let params = {}
             let start = new Date(this.start_date)
@@ -545,7 +546,7 @@ export default {
             if (this.item_sort == 'temp') sort['temperature'] = Number(this.sort_type)
             if (this.current_page > 1) skip = 20 * (this.current_page - 1)
 
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20,  skip: skip} );
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, skip: skip} );
             // if (sort_reverse) logs.data.reverse()
             for (let index = 0; index < logs.data.length; index++) {
                 logs.data.forEach(async log => {
