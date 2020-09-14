@@ -48,6 +48,7 @@ import './Report.scss';
 import { postGetPersonLogs , postGetPerson, postPersonByCateg, postExpFeverDeteted}                        from '../../../references/url';
 import  ComPicker from "../../../components/companyPicker/ComPicker"
 import { log } from 'util';
+import { date } from 'quasar';
 import LoginVue from '../../Front/Login.vue';
 
 function calculate_age(dob) {
@@ -62,9 +63,9 @@ export default {
         ComPicker,
     },
      data: () => ({
-        select_date: 'Daily',
+        select_date: 'Today',
         options_date: [
-            'Daily' , 'Weekly', 'Monthly' , 'Yearly', 'Custom Date'
+            'Today' , 'Daily', 'Weekly' , 'Monthly', 'Custom Date'
         ],
         select_people: 'All',
         options_people: [
@@ -115,7 +116,8 @@ export default {
               await this.getCustomTraffic()
            }
            else
-           {
+           {  
+              
               if (this.company_details._id) await this.getTrafficData({filter: {company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
               else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
            }
@@ -128,7 +130,8 @@ export default {
         {
             let data
             if (new Date(this.start__date) <= new Date(this.end__date))
-            {
+            {   
+                this.select_date = date.formatDate(this.start__date, 'MMM DD') + " - " + date.formatDate(this.end__date , 'MMM DD YYYY')
                 if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.start__date, end_date: this.end__date, company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
                 else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people, end_date: this.end__date, start_date: this.start__date}})
                 // this.date_filter_dialog = false
