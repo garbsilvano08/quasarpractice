@@ -274,7 +274,8 @@
                     <tbody v-if="this.person_logs">
                         <tr v-for="(logs, index) in this.person_logs.data" :key="index">
                             <td>{{logs.date_saved}}</td>
-                            <td class="td-green">{{logs.temperature}}°C</td>
+                            <td v-if="!logs.has_fever" class="td-green">{{logs.temperature}}°C</td>
+                            <td v-else class="td-red">{{logs.temperature}}°C</td>
                             <td>{{logs.device_id}}</td>
                             <td>{{logs.company_name}}</td>
                         </tr>
@@ -382,7 +383,7 @@ export default {
             if (this.account_info.type == 'Staff') this.$router.push({name: "member_accountdirectory"})
             else if (this.account_info.type == 'Blacklist') this.$router.push({name: "member_accountdirectory_blacklist"})
             else if (this.account_info.type == 'Visitor') this.$router.push({name: "member_accountdirectory_visitor"})
-            //else this.$router.push({name: "member_dailylogs"})
+            else if (this.$route.params.daily_logs_info)  this.$router.push({name: "member_log_report"})
         },
         getImgUrl(path){
 
