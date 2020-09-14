@@ -58,12 +58,12 @@
                         <q-list>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="sort_type" val='-1' dense label="Descending" />
+                                    <q-radio clickable v-close-popup v-model="sort_type" val='-1' dense label="Descending" />
                                 </q-item-section>
                             </q-item>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="sort_type" val='1' dense label="Ascending" />
+                                    <q-radio clickable v-close-popup v-model="sort_type" val='1' dense label="Ascending" />
                                 </q-item-section>
                             </q-item>
                             <q-separator />
@@ -74,12 +74,12 @@
                             </q-item>
                              <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="item_sort" val='name' dense label="Name" />
+                                    <q-radio clickable v-close-popup v-model="item_sort" val='name' dense label="Name" />
                                 </q-item-section>
                             </q-item>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="item_sort" val='temp' dense label="Temperature" />
+                                    <q-radio clickable v-close-popup v-model="item_sort" val='temp' dense label="Temperature" />
                                 </q-item-section>
                             </q-item>
                         </q-list>
@@ -90,12 +90,12 @@
                         <q-list>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="view_as" val='grid' dense label="Grid" />
+                                    <q-radio clickable v-close-popup v-model="view_as" val='grid' dense label="Grid" />
                                 </q-item-section>
                             </q-item>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio v-model="view_as" val='list' dense label="List" />
+                                    <q-radio clickable v-close-popup v-model="view_as" val='list' dense label="List" />
                                 </q-item-section>
                             </q-item>
                         </q-list>
@@ -154,7 +154,7 @@ import "./DailyLogs.scss";
 // Components
 import DailyLogCards from "components/DailyLogCards/DailyLogCards"
 import  ComPicker from "../../../components/companyPicker/ComPicker"
-import { postGetCompanies, postFindLogs, postPersonByCateg, postGetDevice } from '../../../references/url';
+import { postGetCompanies, postFindLogs, postPersonByCateg, postGetDevice, postGetCompany } from '../../../references/url';
 import { log } from 'util';
 import { base64StringToBlob } from 'blob-util';
 import { sort } from '../../../references/nav';
@@ -211,7 +211,6 @@ export default {
                 field   : row => row.home_address ? row.home_address : 'Unknown',
                 align   : 'left',
                 required: true,
-
                 sortable: true,
             },
             {
@@ -253,7 +252,8 @@ export default {
         company_details: {},
         device_list: [],
         log_list: [],
-        selected_device: {}
+        selected_device: {},
+        company_list: []
 
     }),
     computed:{
@@ -317,6 +317,11 @@ export default {
     },
     methods:
     {
+        async getCompany(company_id)
+        {
+            let data = await this.$_post(postGetCompany, {id: company_id})
+            return data.data
+        },
         async searchPerson()
         {
             let logs = await this.$_post(postPersonByCateg, {find_by_category: {full_name: { $regex: this.input__people}}, limit: 20, sort: {date_saved: -1}});
@@ -335,7 +340,6 @@ export default {
                 this.log_items = count.data.count
                 this.page_number = Math.ceil(count.data.count / 20)
             }
-            console.log(this.log_list);
         },
         async updateImage()
         {
@@ -436,6 +440,7 @@ export default {
         },
         async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "", generate = "")
         {
+           
             this.$q.loading.show();
             if (this.select__account_type == 'All') this.selected_option_account_type = 1
             else if (this.select__account_type == 'Staff') this.selected_option_account_type = 2
@@ -473,6 +478,17 @@ export default {
             //     date_start.setMilliseconds(date_start.getMilliseconds() + 1)
             //     date_end.setMilliseconds(date_end.getMilliseconds() + 1)
             // }
+
+            // console.log(this.company_details);
+            this.company_list = []
+            if (this.company_details && this.company_details.subcompanies && this.company_details.subcompanies.length)
+            {
+                for (let index = 0; index < this.company_details.subcompanies.length; index++) {
+                    this.company_list.push(this.company_details.subcompanies[index])
+                }
+            }
+            this.company_list.push(this.company_details ? this.company_details._id : null)
+
             if (this.select__account_type == 'All')
             {
                 if (this.company_details)
@@ -480,7 +496,7 @@ export default {
                     if (this.select__device_name == 'All')
                     {
                         params = {
-                            company_id: this.company_details._id ,
+                            company_id: {$in: this.company_list},
                             date_saved: { '$gte' : date_start , '$lte' : date_end},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -488,7 +504,7 @@ export default {
                     else
                     {
                         params = {
-                            company_id: this.company_details._id ,
+                            company_id: {$in: this.company_list} ,
                             date_saved: { '$gte' : date_start , '$lte' : date_end},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
@@ -522,7 +538,7 @@ export default {
                     {
                         params = {
                             category: this.select__account_type,
-                            company_id: this.company_details._id ,
+                            company_id: {$in: this.company_list} ,
                             date_saved: { '$gte' : date_start , '$lte' : date_end},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -531,7 +547,7 @@ export default {
                     {
                         params = {
                             category: this.select__account_type,
-                            company_id: this.company_details._id ,
+                            company_id: {$in: this.company_list} ,
                             date_saved: { '$gte' : date_start , '$lte' : date_end},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
@@ -566,22 +582,19 @@ export default {
             if (this.current_page > 1) skip = 20 * (this.current_page - 1)
 
             let logs = {}
-            console.log(params, 'params');
             if (this.input__people) 
             {
                 params.full_name = { $regex: this.input__people}
-                console.log(params);
                 logs = await this.$_post(postPersonByCateg, {find_by_category: params, skip: skip, limit: 20, sort: {date_saved: -1}});
             }
             else logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20,  skip: skip} );
-            console.log(logs);
             // if (sort_reverse) logs.data.reverse()
             for (let index = 0; index < logs.data.length; index++) {
-                logs.data.forEach(async log => {
+                // logs.data.forEach(async log => {
                     logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
                     logs.data[index].device = this.deviceId("", logs.data[index].device_id)
                     index++
-                });
+                // });
             }
             this.log_list = logs.data
             if (this.current_page == 1)
@@ -619,8 +632,11 @@ export default {
         async getDevice()
         {
             let params = {}
-            if (this.company_details || this.company_details.company_name != "All Company" ){
-                params = {find_device: {company_name: this.company_details.company_name}}
+            if (this.company_details && this.company_details.device_owner != "Device Owner" ){
+                params = {find_device: {company_id: this.company_details.device_owner}}
+            }
+            else if (this.company_details && this.company_details.company_name != "All Company" ){
+                params = {find_device: {company_id: this.company_details.company_id}}
             }
             else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
 
@@ -645,7 +661,7 @@ export default {
             }
         }
 
-        this.company_details = this.$user_info.company ? this.$user_info.company : {}
+        this.company_details = this.$user_info.company ? await this.getCompany(this.$user_info.company._id) : {}
 
         await this.getDevice()
         await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)

@@ -29,7 +29,7 @@
 			<div class="nav-title">MY ACCOUNT</div>
 			<q-list class="nav-list">
 				<template v-for="nav of navigation">
-					<q-item class="nav" v-if="!nav.hasOwnProperty('sub') && userAccess(nav.key)" @click="$router.push({ name: nav.route })" clickable v-ripple :active="$route.name == nav.route">
+					<q-item class="nav" v-if="!nav.hasOwnProperty('sub') && userAccess(nav.key)" @click="$router.push({ name: nav.route }).catch(err => {})" clickable v-ripple :active="$route.name == nav.route">
 						<q-item-section avatar>
 							<q-icon :name="nav.icon" />
 						</q-item-section>
@@ -279,17 +279,25 @@ export default
 
         async userAccess(key)
         {
-            let company = await this.getCompany(this.$user_info.company_id)
+            let company = this.$user_info.company ? this.$user_info.company : {}
             if (this.$user_info && this.$user_info.user_type)
             {
-                if (this.$user_info.user_type == 'Super Admin')
+                 if (this.$user_info.user_type === 'Super Admin')
                 {
-                    if ( key == 'frontdesk_visitor' || key == 'personnel_management') return false
+                    if ( key === 'frontdesk_visitor' || key === 'personnel_management') return false
                     else return true
                 }
-                else if (this.$user_info.user_type == 'Officer')
+                else if (company.device_owner != 'Device Owner')
                 {
-                    if ( key == 'member_logout')
+                    if ( key === 'reports' || key === 'dashboard' || key === 'member_logout')
+                    {
+                        return true
+                    }
+                    else return false
+                }
+                else if (this.$user_info.user_type === 'Officer')
+                {
+                    if ( key === 'member_logout')
                     {
                         return true
                     }
@@ -297,41 +305,16 @@ export default
                 }
                 else if (this.$user_info.user_type == 'Admin')
                 {
-                    if ( company.device_owner == 'Device Owner')
-                    {
-                        if ( key == 'company_management' )
-                        {
-                            return false
-                        }
-                        else return true
-                    }
-                    else
-                    {
-                        if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
-                        {
-                            return true
-                        }
-                        else return false
-                    }
+                    if ( key === 'user_management' ) return false
+                    else return true
                 }
-                else
+                else if (this.$user_info.user_type == 'Receptionist')
                 {
-                     if (company.device_owner == 'Device Owner')
+                    if ( key === 'member_logout' || key === 'dashboard' || key === 'frontdesk_visitor' || key === 'account_directory' || key === 'daily')
                     {
-                        if ( key == 'member_logout' || key == 'dashboard' || key == 'frontdesk_visitor' || key == 'account_directory' || key == 'daily')
-                        {
-                            return true
-                        }
-                        else return false
+                        return true
                     }
-                    else
-                    {
-                        if ( key == 'reports' || key == 'dashboard' || key == 'member_logout')
-                        {
-                            return true
-                        }
-                        else return false
-                    }
+                    else return false
                 }
             }
         },
