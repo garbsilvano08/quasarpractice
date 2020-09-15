@@ -216,7 +216,7 @@ module.exports =
                     // date.setHours(0,0,0,0)
                     let end = new Date(req.body.filter.start_date)
                     // end = new Date(end).setDate(new Date(end).getDate() + 1)
-                    end = new Date(end).setHours(23,59,59,999)
+                    end = new Date(end).setHours(31,59,59,999)
                     startDate = new Date(date)
                     endDate = new Date(end)
 
