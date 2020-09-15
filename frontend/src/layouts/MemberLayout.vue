@@ -23,6 +23,7 @@
                 <q-img class="nav-profile__img" :src="this.$user_info.user_picture"></q-img>
                 <div class="nav-profile__info">
                     <div class="nav-profile__name">{{this.$user_info.full_name}}</div>
+                    <div class="nav-profile__position">{{this.$user_info.company ? this.$user_info.company.company_name : null}}</div>
                     <div class="nav-profile__position">{{this.$user_info.user_type}}</div>
                 </div>
             </div>
