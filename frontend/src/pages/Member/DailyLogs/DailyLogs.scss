@@ -279,3 +279,15 @@
         padding-left: 10px !important;
     }
 }
+.account-directory__container{
+    th{
+        font-weight: bold;
+        font-size: 15px;
+    }
+    tr>td{
+        font-size: 15px;
+    }
+    // tbody>tr>:nth-child(1):hover {
+    //     text-decoration: underline;
+    // }
+}
