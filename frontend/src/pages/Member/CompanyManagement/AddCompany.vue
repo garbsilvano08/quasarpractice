@@ -176,6 +176,7 @@ export default {
 
         async is_device_owner(val)
         {
+            this.company_owners = []
             this.is_open = !this.is_open
             this.company_owners.push(this.company_details.company_name)
             this.company_list.push(this.company_details)
@@ -189,16 +190,16 @@ export default {
         {
             // console.log(value);
             this.company_details = value
+            this.is_device_owner = true
         },
 
         getDeviceOwner(name)
         {
-            // this.device_owner = value
+            this.device_owner = []
             for (let index = 0; index < this.company_list.length; index++) {
                 if ( this.company_list[index].company_name == name ) 
                 {
                     this.device_owner = this.company_list[index];
-                    return
                 }
             }
         },

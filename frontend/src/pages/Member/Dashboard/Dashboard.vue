@@ -146,7 +146,7 @@
                            <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{data.date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{ deviceInfo(data.device_id, 'name') + "-" + deviceInfo(data.device_id, 'type')}}
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{ data.device.device_name + "-" + data.device.log_type}}
                         </div>
                         <div class="content__location">
                            <q-icon name="mdi-briefcase" size="16px"></q-icon> {{data.company_name}}
@@ -155,7 +155,7 @@
                   </div>
                </div>
                <div class="swiper-slide">
-                  <div class="content__card-seemore content__card" @click="seeMore">
+                  <div class="content__card-seemore content__card" @click="seeMore()">
                      <q-img src="../../../assets/dashboard-logs-more.svg"></q-img>
                      <div class="seemore-label">See more ..</div>
                   </div>
@@ -991,7 +991,7 @@ export default
          let params = {}
          if (this.company_details || this.company_details.company_name != "All Company" ){
             
-            if( this.purpose_filter != 'Daily')
+            if( this.purpose_filter != 'Today')
             {     
                this.purpose_filter = date.formatDate(this.purposeStart, 'MMM DD') + " - " + date.formatDate(this.purposeEnd , 'MMM DD YYYY') // Purpose Traffic
                if (new Date(this.purposeStart) > new Date(this.purposeEnd))
@@ -1010,7 +1010,7 @@ export default
 
          }
          else {
-            if( this.purpose_filter != 'Daily')
+            if( this.purpose_filter != 'Today')
             {  
                this.purpose_filter = date.formatDate(this.purposeStart, 'MMM DD') + " - " + date.formatDate(this.purposeEnd , 'MMM DD YYYY') // Purpose Traffic
                if (new Date(this.purposeStart) > new Date(this.purposeEnd))
@@ -1149,7 +1149,7 @@ export default
       },
       seeMore(){
          this.$router.push({
-                name: "member_dailylogs"
+                name: "member_log_report"
             })
       },
       personInformation(daily_logs_info){
@@ -1164,14 +1164,39 @@ export default
             })
          }
       },
+      async deviceId(device_id)
+      {
+         let params = {find_device: {device_id: device_id}}
+         let data = await this.$_post(postGetDevice, params);
+         return data.data[0]
+      },
+      convertDateFormat(date_saved)
+      {
+         let full_date = new Date(date_saved)
+         let date = full_date.toISOString().split('T')[0]
+         var hours = full_date.getHours() ; // gives the value in 24 hours format
+         var AmOrPm = hours >= 12 ? 'PM' : 'AM';
+         hours = (hours % 12) || 12;
+         var minutes = full_date.getMinutes() ;
+         var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm;
+         // console.log(date + ", " + finalTime);
+         return date + ", " + finalTime
+      },
+
       async getLatestLogs(){
          let find_by_category = {}
          await this.getTotalScannedToday()
          let sort = {} , flag = 0
          sort['date_saved'] = -1
-         if (this.company_details) find_by_category = {company_id:{$in: this.company_list }}
+         if (this.company_details) find_by_category = {company_id: {$in: this.company_list }}
          // console.log(find_by_category);
-         this.logs_card = await this.$_post(postPersonByCateg, {find_by_category: find_by_category, sort: sort, limit:8} );
+         let logs = await this.$_post(postPersonByCateg, {find_by_category: find_by_category, sort: sort, limit:8} );
+         for (let index = 0; index < logs.data.length; index++) {
+               logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
+               logs.data[index].device = await this.deviceId(logs.data[index].device_id)
+               // index++
+         }
+         this.logs_card = logs
          for (let index = 0; index < this.logs_card.data.length; index++) {
                this.logs_card.data[index].date_saved = date.formatDate(this.logs_card.data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
          }
@@ -1247,7 +1272,7 @@ export default
       this.visitor_number = await this.personsData({find_person: {category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
       await this.getTotalRegistered()
 
-      if (this.company_details) params = {filter: {current_date: new Date(), company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
+      if (this.company_details) params = {filter: {current_date: new Date(), company_id:{$in: this.company_list } ,date_filter: this.select_date , person: this.select_people}}
       else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
 
      if (this.$user_info.user_type == 'Officer')

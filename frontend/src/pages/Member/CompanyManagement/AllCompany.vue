@@ -43,7 +43,7 @@
 
 <script>
 import "./CompanyManagement.scss";
-import { postGetCompanies }                         from '../../../references/url';
+import { postGetCompanies, postGetCompany }                         from '../../../references/url';
 import { postDeleteCompany }                        from '../../../references/url';
 import EditCompany                                  from './Dialogs/EditCompany';
 import { log } from 'util';
@@ -62,10 +62,14 @@ export default {
         }
         else if (this.$user_info.company)
         {
-            let companies = null
-            if (this.$user_info.company.subcompanies && this.$user_info.company.subcompanies.length)
+            let sub_companies = await this.getCompany(this.$user_info.company._id)
+
+            let companies = []
+            if (sub_companies.subcompanies && sub_companies.subcompanies.length)
             {
-                companies = this.$user_info.company.subcompanies
+                for (let i = 0; i < sub_companies.subcompanies.length; i++) {
+                    companies.push(sub_companies.subcompanies[i])
+                }
             }
 
             companies.push(this.$user_info.company._id)
@@ -73,6 +77,11 @@ export default {
         }
     },
     methods:{
+        async getCompany(company_id)
+        {
+            let data = await this.$_post(postGetCompany, {id: company_id})
+            return data.data
+        },
         async getCompanyList(params)
         {
             let subcompanies = []
@@ -82,7 +91,7 @@ export default {
                if (companies.data[index].subcompanies && companies.data[index].subcompanies.length)
                {
                    for (let i = 0; i < companies.data[index].subcompanies.length; i++) {
-                       subcompanies.push(companies.data[index].subcompanies[i])
+                       if (this.$user_info.company._id != companies.data[index]._id) subcompanies.push(companies.data[index].subcompanies[i])
                    }
                }
             }

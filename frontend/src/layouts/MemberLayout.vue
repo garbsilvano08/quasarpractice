@@ -277,7 +277,7 @@ export default
             else return true
         },
 
-        async userAccess(key)
+        userAccess(key)
         {
             let company = this.$user_info.company ? this.$user_info.company : {}
             if (this.$user_info && this.$user_info.user_type)

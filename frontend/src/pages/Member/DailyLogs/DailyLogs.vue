@@ -488,7 +488,7 @@ export default {
                 }
             }
             this.company_list.push(this.company_details ? this.company_details._id : null)
-
+            console.log(this.company_list);
             if (this.select__account_type == 'All')
             {
                 if (this.company_details)
@@ -589,14 +589,16 @@ export default {
             }
             else logs = await this.$_post(postPersonByCateg, {find_by_category: params, sort: sort, limit: 20,  skip: skip} );
             // if (sort_reverse) logs.data.reverse()
-            for (let index = 0; index < logs.data.length; index++) {
+            for (let x = 0; x < logs.data.length; x++) {
                 // logs.data.forEach(async log => {
-                    logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
-                    logs.data[index].device = this.deviceId("", logs.data[index].device_id)
-                    index++
+                    console.log(logs.data, 'kjhkjhj');
+                    logs.data[x].date = this.convertDateFormat(logs.data[x].date_saved)
+                    logs.data[x].device = this.deviceId("", logs.data[x].device_id)
+                    // index++
                 // });
             }
             this.log_list = logs.data
+            console.log(this.log_list);
             if (this.current_page == 1)
             {
                 let count = await this.$_post('member/get/count_logs', {find_by_category: params, sort: sort} );
@@ -662,6 +664,7 @@ export default {
         }
 
         this.company_details = this.$user_info.company ? await this.getCompany(this.$user_info.company._id) : {}
+        console.log(this.company_details);
 
         await this.getDevice()
         await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
