@@ -84,26 +84,20 @@ export default {
                 name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
             }
         ]},
+        last_option: ''
     }),
-    async mounted()
-    {
-        this.company_details = this.$user_info.company ? this.$user_info.company : {}
-        let params = {}
-        if (this.company_details) params = {filter: {current_date: new Date(), company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
-        else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
-        await this.getTrafficData(params)
-    },
      watch:
     {
         async select_date(val, old)
         {
            this.last_option = old
+           console.log(old);
            if (val == 'Custom Date')
            {
 
               this.date_filter_dialog = true
            }
-           else
+           else if(val == 'Daily' || val == 'Weekly' || val == 'Monthly' || val == 'Today')
            {
               if (this.company_details._id) await this.getTrafficData({filter: {current_date: new Date(), company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
               else await this.getTrafficData({filter: {current_date: new Date(), date_filter: this.select_date , person: this.select_people}})
@@ -124,30 +118,16 @@ export default {
          //   await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people}})
         },
     },
+    async mounted()
+    {
+        this.company_details = this.$user_info.company ? this.$user_info.company : {}
+        let params = {}
+        if (this.company_details) params = {filter: {current_date: new Date(), company_id: this.company_details._id,date_filter: this.select_date , person: this.select_people}}
+        else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
+        await this.getTrafficData(params)
+    },
     methods:
     {
-        async getCustomTraffic()
-        {
-            let data
-            if (new Date(this.start__date) <= new Date(this.end__date))
-            {   
-                this.select_date = date.formatDate(this.start__date, 'MMM DD') + " - " + date.formatDate(this.end__date , 'MMM DD YYYY')
-                if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.start__date, end_date: this.end__date, company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
-                else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people, end_date: this.end__date, start_date: this.start__date}})
-                // this.date_filter_dialog = false
-            }
-            else
-            {
-                // this.select_date = this.last_option
-                this.$q.notify(
-                    {
-                        color: 'red',
-                        message: 'Invalid date'
-                });
-            }
-            this.date_filter_dialog = false
-        },
-
         async getFootTraffic()
         {
             if (this.select_date == 'Custom Date')
@@ -162,6 +142,27 @@ export default {
             }
             // this.last_option = this.select_date
         },
+        async getCustomTraffic()
+        {
+            this.select_date = date.formatDate(this.start__date, 'MMM DD') + " - " + date.formatDate(this.end__date , 'MMM DD YYYY')
+            if (new Date(this.start__date) <= new Date(this.end__date))
+            {   
+                if (this.company_details._id) await this.getTrafficData({filter: {start_date: this.start__date, end_date: this.end__date, company_id: this.company_details._id, date_filter: this.select_date , person: this.select_people}})
+                else await this.getTrafficData({filter: {date_filter: this.select_date , person: this.select_people, end_date: this.end__date, start_date: this.start__date}})
+            }
+            else
+            {
+                this.select_date = this.last_option
+                this.$q.notify(
+                    {
+                        color: 'red',
+                        message: 'Invalid date'
+                });
+            }
+            this.date_filter_dialog = false
+        },
+
+        
         async getTrafficData(params = {}, type)
         {
             if (type == 'Registered') return await this.$_post('member/dashbord/counting', params);
