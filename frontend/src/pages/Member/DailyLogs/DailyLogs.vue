@@ -375,6 +375,7 @@ export default {
         },
         exportData()
         {
+            console.log(this.log_list.length);
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let params = {}
             let start = new Date(this.start_date)
