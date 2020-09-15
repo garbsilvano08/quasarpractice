@@ -81,50 +81,9 @@
             </div>
          </div>
       </div>
-      <div class="dashboard__overview">
-         <div class="dashboard__overview-total">
-            <div class="dashboard__total-info">
-               <div class="dashboard__total-number">{{staff_number}}</div>
-               <div class="dashboard__total-title">Registered Staff</div>
-               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
-            </div>
-            <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img>
-         </div>
-         <div class="dashboard__overview-total">
-            <div class="dashboard__total-info">
-               <div class="dashboard__total-number">{{visitor_number}}</div>
-               <div class="dashboard__total-title">Registered Visitors</div>
-               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
-            </div>
-            <q-img src="../../../assets/Member/total-visitors.svg" width="70px"></q-img>
-         </div>
-         <!-- <div class="dashboard__overview-total">
-            <q-img src="../../../assets/Member/total-alerts.svg" width="45px"></q-img>
-            <div class="dashboard__total-info">
-               <div class="dashboard__total-title">Total Alerts</div>
-               <div class="dashboard__total-number">{{monthly_alert}}</div>
-               <div class="dashboard__total-date">Since {{current_month}}</div>
-            </div>
-         </div> -->
-         <div class="dashboard__overview-total">
-            <div class="dashboard__total-info">
-               <div class="dashboard__total-number">{{device_number}}</div>
-               <div class="dashboard__total-title">Devices Installed</div>
-               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
-            </div>
-            <q-img src="../../../assets/Member/total-devices.svg" width="30px"></q-img>
-         </div>
-         <div class="dashboard__overview-total">
-            <div class="dashboard__total-info">
-               <div class="dashboard__total-number">0</div>
-               <div class="dashboard__total-title">Fever Cases</div>
-               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
-            </div>
-            <q-img src="../../../assets/Member/total-cases.svg" width="23px"></q-img>
-         </div>
-      </div>
-
+      
       <div class="dashboard__overview-logs">
+         <div class="header__title">RECENT LOGS</div>
          <div class="swiper-container">
             <div class="swiper-wrapper">
                <div class="swiper-slide" v-for="(data, i) in this.logs_card.data" :key="i" v-on:click="personInformation(i)">
@@ -547,6 +506,48 @@
                </div>
             </div>
          </div> -->
+      </div>
+      <div class="dashboard__overview">
+         <div class="dashboard__overview-total">
+            <div class="dashboard__total-info">
+               <div class="dashboard__total-number">{{staff_number}}</div>
+               <div class="dashboard__total-title">Registered Staff</div>
+               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
+            </div>
+            <!-- <q-img src="../../../assets/Member/total-employees.svg" width="45px"></q-img> -->
+         </div>
+         <div class="dashboard__overview-total">
+            <div class="dashboard__total-info">
+               <div class="dashboard__total-number">{{visitor_number}}</div>
+               <div class="dashboard__total-title">Registered Visitors</div>
+               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
+            </div>
+            <!-- <q-img src="../../../assets/Member/total-visitors.svg" width="70px"></q-img> -->
+         </div>
+         <!-- <div class="dashboard__overview-total">
+            <q-img src="../../../assets/Member/total-alerts.svg" width="45px"></q-img>
+            <div class="dashboard__total-info">
+               <div class="dashboard__total-title">Total Alerts</div>
+               <div class="dashboard__total-number">{{monthly_alert}}</div>
+               <div class="dashboard__total-date">Since {{current_month}}</div>
+            </div>
+         </div> -->
+         <div class="dashboard__overview-total">
+            <div class="dashboard__total-info">
+               <div class="dashboard__total-number">{{device_number}}</div>
+               <div class="dashboard__total-title">Devices Installed</div>
+               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
+            </div>
+            <!-- <q-img src="../../../assets/Member/total-devices.svg" width="30px"></q-img> -->
+         </div>
+         <div class="dashboard__overview-total">
+            <div class="dashboard__total-info">
+               <div class="dashboard__total-number">0</div>
+               <div class="dashboard__total-title">Fever Cases</div>
+               <!-- <div class="dashboard__total-date">Since {{current_month}}</div> -->
+            </div>
+            <!-- <q-img src="../../../assets/Member/total-cases.svg" width="23px"></q-img> -->
+         </div>
       </div>
    </div>
 </template>
