@@ -227,7 +227,7 @@ export default {
         async getCompanies(company)
         {
             
-            if (company.parent_id && company.parent_id != 'No Parent')
+            if (company && company.parent_id && company.parent_id != 'No Parent')
             {
                 let parent = await this.$_post(postGetCompany, {id: company.parent_id})
                 this.company_owners.push(parent.data.company_name)
@@ -248,7 +248,6 @@ export default {
                     throw new Error("Logo is required.");
                 }
                 else{
-                    // console.log(this.company_details);
                     let location_coordinates = null
                     if (this.input_location) location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.input_location.place_id }).then(res => res.data);
                     const formData = new FormData();

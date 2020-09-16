@@ -47,6 +47,7 @@ import { postGetCompanies, postGetCompany }                         from '../../
 import { postDeleteCompany }                        from '../../../references/url';
 import EditCompany                                  from './Dialogs/EditCompany';
 import { log } from 'util';
+import LoginVue from '../../Front/Login.vue';
 export default {
     components: { EditCompany },
     data: () =>
@@ -56,27 +57,35 @@ export default {
         pasData: {},
     }),
     async mounted(){
+        let sub_companies = {subcompanies: []}
         if (this.$user_info.user_type == 'Super Admin')
         {
-            await this.$_post(postGetCompanies);
+            let data = await this.$_post(postGetCompanies);
+            sub_companies.subcompanies = data.data
         }
         else if (this.$user_info.company)
         {
             let sub_companies = await this.getCompany(this.$user_info.company._id)
 
-            let companies = []
-            if (sub_companies.subcompanies && sub_companies.subcompanies.length)
-            {
-                for (let i = 0; i < sub_companies.subcompanies.length; i++) {
-                    companies.push(sub_companies.subcompanies[i])
-                }
-            }
-
-            companies.push(this.$user_info.company._id)
-            await this.getCompanyList({_id: {$in: companies}})
         }
+        let companies = []
+        if (sub_companies.subcompanies && sub_companies.subcompanies.length)
+        {
+            for (let i = 0; i < sub_companies.subcompanies.length; i++) {
+                companies.push(sub_companies.subcompanies[i])
+            }
+        }
+        if (this.$user_info.company) companies.push(this.$user_info.company._id)
+        await this.getCompanyList({_id: {$in: companies}})
     },
     methods:{
+        checkCompany(company_id)
+        {
+            for (let index = 0; index < this.company_list.length; index++) {
+                if (company_id == this.company_list[index]._id) return false
+            }
+            return true
+        },
         async getCompany(company_id)
         {
             let data = await this.$_post(postGetCompany, {id: company_id})
@@ -87,13 +96,16 @@ export default {
             let subcompanies = []
             let companies = await this.$_post(postGetCompanies, {find_company: params});
             for (let index = 0; index < companies.data.length; index++) {
-               this.company_list.push(companies.data[index])
-               if (companies.data[index].subcompanies && companies.data[index].subcompanies.length)
-               {
-                   for (let i = 0; i < companies.data[index].subcompanies.length; i++) {
-                       if (this.$user_info.company._id != companies.data[index]._id) subcompanies.push(companies.data[index].subcompanies[i])
-                   }
-               }
+                if (this.checkCompany(companies.data[index]._id))
+                {
+                    this.company_list.push(companies.data[index])
+                    if (companies.data[index].subcompanies && companies.data[index].subcompanies.length)
+                    {
+                        for (let i = 0; i < companies.data[index].subcompanies.length; i++) {
+                                subcompanies.push(companies.data[index].subcompanies[i])
+                            }
+                    }
+                }
             }
             if (subcompanies.length) this.getCompanyList({_id: {$in: subcompanies}})
         },
