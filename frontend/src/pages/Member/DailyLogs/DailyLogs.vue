@@ -376,7 +376,7 @@ export default {
                 let current_start = new Date().setHours(0,0,0,0)
 
                 let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company._id, date_saved: { '$gte' : current_start, '$lte' : new Date()}}});
-                console.log(logs, 'logs');
+                // console.log(logs, 'logs');
                 for (let index = 0; index < logs.data.length; index++) {   
                     if (!logs.data[index].person_img.startsWith('http')) await this.updateImage(logs.data[index].person_img)
                 }
@@ -501,7 +501,7 @@ export default {
             this.company_list.push(this.company_details ? this.company_details._id : null)
             if (this.select__account_type == 'All')
             {
-                if (this.company_details)
+                if (this.company_details._id)
                 {
                     if (this.select__device_name == 'All')
                     {
@@ -542,7 +542,7 @@ export default {
             }
             else
             {
-                if (this.company_details)
+                if (this.company_details._id)
                 {
                     if (this.select__device_name == 'All')
                     {
@@ -643,16 +643,17 @@ export default {
         async getDevice()
         {
             let params = {}
-            if (this.company_details && this.company_details.device_owner != "Device Owner" ){
+            if (this.company_details._id && this.company_details.device_owner != "Device Owner" ){
                 params = {find_device: {company_id: this.company_details.device_owner}}
             }
-            else if (this.company_details && this.company_details.company_name != "All Company" ){
+            else if (this.company_details._id && this.company_details.company_name != "All Company" ){
                 params = {find_device: {company_id: this.company_details.company_id}}
             }
-            else params = {find_device: {date_installed: { '$gt' : new Date(this.date_range) , '$lt' : new Date()}}}
+            else params = ''
 
             let {data: devices} =  await this.$_post(postGetDevice, params);
             devices.forEach(device => {
+                
                 this.options_device_name.push(device.device_name)
                 this.device_list.push(device)
             });
