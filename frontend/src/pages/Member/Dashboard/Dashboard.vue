@@ -1072,7 +1072,7 @@ export default
       {
          this.traffic_weekly = {}
          let params = {}
-         if (this.company_details || this.company_details.company_name != "All Company" ){
+         if (this.company_details_id || this.company_details.company_name != "All Company" ){
            params =  {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id:{$in: this.company_list }, key: 'Traffic'}}
          }
          else {
@@ -1084,7 +1084,7 @@ export default
       async getStaffVisitors()
       {
          let params = {}
-         if (this.company_details || this.company_details.company_name != "All Company" ){
+         if (this.company_details._id || this.company_details.company_name != "All Company" ){
            params =  {find_count: {date_string: new Date(this.employee_date).toISOString().split('T')[0], company_id:{$in: this.company_list }, key: 'Visitor'}}
 
          }
@@ -1101,7 +1101,7 @@ export default
          let current_date = new Date()
 
 
-         if (this.company_details)
+         if (this.company_details._id)
          {
             // params = {find_by: {date_logged: new Date().toISOString().split('T')[0], company_id: this.company_details._id}, limit: 1, sort_by:{temperature: -1}}
             filter = {date_saved: {'$gte' : new Date(current_date.setHours(0,0,0,0)), '$lte' : new Date(current_date.setHours(23,59,59,100))}, company_id:{$in: this.company_list }}
@@ -1127,8 +1127,8 @@ export default
          let total = 0
           let params = {}
          // if (this.company_details)
-         if (this.company_details) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? {$in: this.company_list } : null, key: {$in: ['Staff', 'Visitor']}}}
-         if (params.find_count.company_id == null) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitor']}}}
+         if (this.company_details._id) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? {$in: this.company_list } : null, key: {$in: ['Staff', 'Visitor']}}}
+         else params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitor']}}}
 
          // console.log(params);
          let today_logs = await this.$_post(postGetDailyLog, params);
@@ -1186,12 +1186,19 @@ export default
 
       async getLatestLogs(){
          let find_by_category = {}
+         let logs = {data: []}
          await this.getTotalScannedToday()
          let sort = {} , flag = 0
          sort['date_saved'] = -1
-         if (this.company_details) find_by_category = {company_id: {$in: this.company_list }}
-         // console.log(find_by_category);
-         let logs = await this.$_post(postPersonByCateg, {find_by_category: find_by_category, sort: sort, limit:8} );
+         if (this.company_details._id) 
+         {
+            find_by_category = {company_id: {$in: this.company_list }}
+            logs = await this.$_post(postPersonByCateg, {find_by_category: find_by_category, sort: sort, limit:8} );
+         }
+         else
+         {
+            logs = await this.$_post(postPersonByCateg, {sort: sort, limit:8} );
+         }
          for (let index = 0; index < logs.data.length; index++) {
                if (!logs.data[index].person_img.startsWith('http')) logs.data[index].person_img = await this.imageUpload(logs.data[index].person_img, logs.data[index]._id)
                logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
@@ -1235,7 +1242,7 @@ export default
 
       async uploadImage()
       {
-         if (this.company_details)
+         if (this.company_details._id)
          {
             let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id:{$in: this.company_list }}, sort: {date_saved: -1}});
             // console.log(logs, 'kljkljlkjlk');
@@ -1280,7 +1287,7 @@ export default
       this.visitor_number = await this.personsData({find_person: {category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
       await this.getTotalRegistered()
 
-      if (this.company_details) params = {filter: {current_date: new Date(), company_id:{$in: this.company_list } ,date_filter: this.select_date , person: this.select_people}}
+      if (this.company_details._id) params = {filter: {current_date: new Date(), company_id:{$in: this.company_list } ,date_filter: this.select_date , person: this.select_people}}
       else params = {filter: {current_date: new Date(), date_filter: this.select_date, person: this.select_people}}
 
      if (this.$user_info.user_type == 'Officer')

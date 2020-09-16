@@ -273,7 +273,12 @@ export default
 
         checkUser()
         {
-            if (this.$user_info && this.$user_info.user_type == 'Super Admin' || this.$user_info.user_type == 'Officer') return false
+            if (this.$user_info && this.$user_info.user_type == 'Super Admin' ||
+                this.$user_info.user_type == 'Officer' || 
+                (this.$user_info.company && this.$user_info.company.device_owner != 'Device Owner') ) 
+            {
+                return false
+            }
 
             else return true
         },
