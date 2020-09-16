@@ -343,39 +343,47 @@ export default {
                 this.page_number = Math.ceil(count.data.count / 20)
             }
         },
+        async uploadimage(image, id)
+        {
+            let imageName = 'vision-' + Date.now().toString() + ".png"
+                let blob = "";
+                var formDatatoBackend = new FormData();
+                let contentType = 'image/png';
+                blob = "";
+                blob = base64StringToBlob(image, contentType);
+                blob.lastModifiedDate = new Date();
+                formDatatoBackend.append('image', blob, imageName);
+                let res
+                try
+                {
+                    res = await this.$_post_file(formDatatoBackend);
+                    logs.data[index].person_img = res
+                    await this.$_post('member/save/image', {info: {id: id, image: res}});
+                    // if (logs.data[index].has_fever ==  true)
+                    // {
+                    //     this.log_alert =  logs.data[index]
+                    //     this.dialog = true
+                    // }
+                }
+                catch(e){}
+                return res
+        },
+
         async updateImage()
         {
             if (this.$user_info.company)
             {
-                let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company._id, person_img: { $regex: '/9j/'}}});
+                let current_start = new Date().setHours(0,0,0,0)
+
+                let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: this.$user_info.company._id, date_saved: { '$gte' : current_start, '$lte' : new Date()}}});
+                console.log(logs, 'logs');
                 for (let index = 0; index < logs.data.length; index++) {   
-                    let imageName = 'vision-' + Date.now().toString() + ".png"
-                    let blob = "";
-                    var formDatatoBackend = new FormData();
-                    let contentType = 'image/png';
-                    blob = "";
-                    blob = base64StringToBlob(logs.data[index].person_img, contentType);
-                    blob.lastModifiedDate = new Date();
-                    formDatatoBackend.append('image', blob, imageName);
-                    let res
-                    try
-                    {
-                        res = await this.$_post_file(formDatatoBackend);
-                        logs.data[index].person_img = res
-                        await this.$_post('member/save/image', {info: {id: logs.data[index]._id, image: res}});
-                        if (logs.data[index].has_fever ==  true)
-                        {
-                            this.log_alert =  logs.data[index]
-                            this.dialog = true
-                        }
-                    }
-                    catch(e){}
+                    if (!logs.data[index].person_img.startsWith('http')) await this.updateImage(logs.data[index].person_img)
                 }
             }
         },
         exportData()
         {
-            console.log(this.log_list.length);
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let params = {}
             let start = new Date(this.start_date)
@@ -491,7 +499,6 @@ export default {
                 }
             }
             this.company_list.push(this.company_details ? this.company_details._id : null)
-            console.log(this.company_list);
             if (this.select__account_type == 'All')
             {
                 if (this.company_details)
@@ -594,14 +601,13 @@ export default {
             // if (sort_reverse) logs.data.reverse()
             for (let x = 0; x < logs.data.length; x++) {
                 // logs.data.forEach(async log => {
-                    console.log(logs.data, 'kjhkjhj');
+                    if (!logs.data[x].person_img.startsWith('http')) logs.data[x].person_img = await this.uploadimage(logs.data[x].person_img, logs.data[x]._id)
                     logs.data[x].date = this.convertDateFormat(logs.data[x].date_saved)
                     logs.data[x].device = this.deviceId("", logs.data[x].device_id)
                     // index++
                 // });
             }
             this.log_list = logs.data
-            console.log(this.log_list);
             if (this.current_page == 1)
             {
                 let count = await this.$_post('member/get/count_logs', {find_by_category: params, sort: sort} );
@@ -667,7 +673,6 @@ export default {
         }
 
         this.company_details = this.$user_info.company ? await this.getCompany(this.$user_info.company._id) : {}
-        console.log(this.company_details);
 
         await this.getDevice()
         await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)

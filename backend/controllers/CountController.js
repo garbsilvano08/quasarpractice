@@ -149,7 +149,6 @@ module.exports =
                     endDate = new Date(end)
                     // console.log(startDate, endDate, 'Monthly');
                     for (let index = 0; new Date(date).getMonth() <= new Date().getMonth(); index++) {
-                        console.log(startDate, endDate, 'Monthly');
                          if (req.body.filter.person === 'All'){
                             if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
                             else params = {date_saved: {'$gte' : new Date(startDate) , '$lt' : new Date(endDate)}}
@@ -241,7 +240,6 @@ module.exports =
                         // }
                         
                         let daily = await new MDB_PERSON_LOGS().collection.countDocuments(params)
-                        console.log(startDate, endDate, daily, 'gsdgsdgsdg');
                         // traffic[month_list[new Date(date).getMonth()] + " " + new Date(date).getDate()] = daily.length ? daily[0].count : 0
                         traffic[month_list[new Date(startDate).getMonth()] + " " + new Date(startDate).getDate()] = daily
                         // date = new Date(date).setDate(new Date(date).getDate() + 1)

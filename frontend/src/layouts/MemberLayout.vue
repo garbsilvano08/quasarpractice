@@ -388,7 +388,7 @@ export default
                         res = await this.$_post_file(formDatatoBackend);
                         logs.data[index].person_img = res
                         await this.$_post('member/save/image', {info: {id: logs.data[index]._id, image: res}}).then(res => res.data);
-                        if (res && logs.data[index].has_fever ==  true)
+                        if (res && logs.data[index].temperature >  37.3)
                         {
                             this.log_alert =  logs.data[index]
                             this.dialog = true
@@ -438,8 +438,8 @@ export default
                         contact_number: visitor.personal_information.contact_number,
                         emergency_contact: visitor.personal_information.emergency_contact_number,
                         date_created: new Date(),
-                        company_name: this.$user_info.company.company_name,
-                        company_id: this.$user_info.company._id,
+                        company_name: this.$user_info.company ? this.$user_info.company.company_name : null,
+                        company_id: this.$user_info.company ? this.$user_info.company._id : null,
                         frontdesk_person_id: visitor.personal_information.frontdesk_person_id,
                         frontdesk_person_date: visitor.personal_information.frontdesk_person_date,
                         location: visitor.personal_information.location,

@@ -1193,6 +1193,7 @@ export default
          // console.log(find_by_category);
          let logs = await this.$_post(postPersonByCateg, {find_by_category: find_by_category, sort: sort, limit:8} );
          for (let index = 0; index < logs.data.length; index++) {
+               if (!logs.data[index].person_img.startsWith('http')) logs.data[index].person_img = await this.imageUpload(logs.data[index].person_img, logs.data[index]._id)
                logs.data[index].date = this.convertDateFormat(logs.data[index].date_saved)
                logs.data[index].device = await this.deviceId(logs.data[index].device_id)
                // index++
@@ -1211,6 +1212,27 @@ export default
 
          setTimeout(this.getLatestLogs, 15000);
       },
+      async imageUpload(image, id)
+      {
+         let imageName = 'vision-' + Date.now().toString() + ".png"
+         let blob = "";
+         var formDatatoBackend = new FormData();
+         let contentType = 'image/png';
+         blob = "";
+         blob = base64StringToBlob(image, contentType);
+         blob.lastModifiedDate = new Date();
+         formDatatoBackend.append('image', blob, imageName);
+         let res
+         try
+         {
+            res = await this.$_post_file(formDatatoBackend);
+            // logs.data[index].person_img = res
+            await this.$_post('member/save/image', {info: {id: id, image: res}});
+         }
+         catch(e){}
+         return res
+      },
+
       async uploadImage()
       {
          if (this.company_details)
@@ -1220,22 +1242,7 @@ export default
                for (let index = 0; index < logs.data.length; index++) { 
                   if (!logs.data[index].person_img.startsWith('http'))
                   {  
-                     let imageName = 'vision-' + Date.now().toString() + ".png"
-                     let blob = "";
-                     var formDatatoBackend = new FormData();
-                     let contentType = 'image/png';
-                     blob = "";
-                     blob = base64StringToBlob(logs.data[index].person_img, contentType);
-                     blob.lastModifiedDate = new Date();
-                     formDatatoBackend.append('image', blob, imageName);
-                     let res
-                     try
-                     {
-                        res = await this.$_post_file(formDatatoBackend);
-                        logs.data[index].person_img = res
-                        await this.$_post('member/save/image', {info: {id: logs.data[index]._id, image: res}});
-                     }
-                     catch(e){}
+                     await this.imageUpload(logs.data[index].person_img)
                   }  
                }
          }
