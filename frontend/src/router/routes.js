@@ -23,6 +23,9 @@ const routes = [
             { name: 'member_frontdesk_feverlogs', path: '/frontdesk/add-fever-logs', component: () => import('pages/Member/Frontdesk/AddFeverLogs.vue') },
             { name: 'member_frontdesk_blacklist', path: '/frontdesk/blacklist', component: () => import('pages/Member/Frontdesk/BlackList.vue') },
             { name: 'member_frontdesk_addreport', path: '/frontdesk/add-report', component: () => import('pages/Member/Frontdesk/AddReport') },
+            { name: 'member_frontdesk_import', path: '/frontdesk/import', component: () => import('pages/Member/Frontdesk/ImportStaff.vue') },
+
+            
             // DAILY LOGS ROUTES
             { name: 'member_log_report', path: 'report/log-report', component: () => import('pages/Member/DailyLogs/DailyLogs.vue') },
             { name: 'member_foot_traffic_report', path: 'report/foot-traffic-report', component: () => import('pages/Member/Report/FootTrafficReport.vue') },
