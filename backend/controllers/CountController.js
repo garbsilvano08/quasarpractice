@@ -229,16 +229,6 @@ module.exports =
                             else params = {category: req.body.filter.person, date_saved: {'$gte' : new Date(startDate) , '$lte' : new Date(endDate)}}
                         }
                         
-                        // if (req.body.filter.person === 'All'){
-                            //     if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
-                            //     else params = {company_id: 'global',key: 'Traffic', date_string: new Date(date).toISOString().split('T')[0]}
-                        // }
-                        // else {
-                            //     if (req.body.filter.company_id) params = {company_id: req.body.filter.company_id, key: req.body.filter.person, date_string: new Date(date).toISOString().split('T')[0]}
-                        //     params = {company_id: 'global', key: req.body.filter.person, date_string:new Date(date).toISOString().split('T')[0]}
-
-                        // }
-                        
                         let daily = await new MDB_PERSON_LOGS().collection.countDocuments(params)
                         // traffic[month_list[new Date(date).getMonth()] + " " + new Date(date).getDate()] = daily.length ? daily[0].count : 0
                         traffic[month_list[new Date(startDate).getMonth()] + " " + new Date(startDate).getDate()] = daily
