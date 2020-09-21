@@ -1242,14 +1242,14 @@ export default
 
       async uploadImage()
       {
-         if (this.company_details._id)
+         if (this.company_details._id && this.company_list.length)
          {
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id:{$in: this.company_list }}, sort: {date_saved: -1}});
+            let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id:{'$in': this.company_list }, person_img: { $regex: '/9j/'}}, sort: {date_saved: -1}});
             // console.log(logs, 'kljkljlkjlk');
                for (let index = 0; index < logs.data.length; index++) { 
                   if (!logs.data[index].person_img.startsWith('http'))
                   {  
-                     await this.imageUpload(logs.data[index].person_img)
+                     await this.imageUpload(logs.data[index].person_img, logs.data[index]._id)
                   }  
                }
          }
@@ -1277,7 +1277,6 @@ export default
       }
       let params = {}
 
-      await this.uploadImage()
       await this.getLatestLogs()
       let date_string = new Date().toISOString().split('T')[0].split("-")
       this.getTotalScannedToday(new Date(), 'global')
@@ -1318,6 +1317,7 @@ export default
 
       await this.getTrafficData(params)
 
+      await this.uploadImage()
    },
    
    updated() {
