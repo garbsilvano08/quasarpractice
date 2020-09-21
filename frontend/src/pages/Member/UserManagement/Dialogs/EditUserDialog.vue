@@ -89,7 +89,7 @@ export default {
             username: '',
             password: '',
             user_type: '',
-            company: {company_name:""},
+            company: { company_name: null},
             does_picture_change : false,
         },
         options_user_type: [
@@ -101,11 +101,13 @@ export default {
             'Green Sun Hotel'
         ]
     }),
+
     mounted()
     {
         // console.log(this.user_info);
         if(this.user_info){
             this.user_information = this.user_info;
+            this.user_information.company = this.user_info.company ? this.user_info.company : {company_name: 'Super Admin'}
         }
         // console.log(this.user_information)
     },
@@ -114,8 +116,6 @@ export default {
 
         async submit()
         {
-
-            
             try
             {
                 if (this.user_information.full_name <= 2 ){
@@ -145,14 +145,13 @@ export default {
                         this.user_information.user_picture = res;
                     }
                     
-                    // console.log(this.user_information);
+                    console.log(this.user_information);
                     this.$q.loading.show();
                     await this.$_post('member/update/user',  this.user_information );
-                    this.$q.loading.hide();
                     this.$emit('closePopup');
 
                     this.user_information={
-                        full_name: '',
+                            full_name: '',
                         email: '',
                         username: '',
                         password: '',
@@ -160,6 +159,7 @@ export default {
                         company: {},
                     }
                     document.getElementById("userImage").value = "";
+                    this.$q.loading.hide();
                     // document.getElementById("imagePreview").src = "../../assets/Member/placeholder-img.jpg";
                     
                 }

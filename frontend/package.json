@@ -22,6 +22,7 @@
     "json2csv": "^5.0.1",
     "node-input-validator": "^4.2.1",
     "quasar": "^1.0.0",
+    "read-excel-file": "^4.0.7",
     "rn-fetch-blob": "^0.12.0",
     "swiper": "^6.1.2",
     "tesseract.js": "^2.1.1",

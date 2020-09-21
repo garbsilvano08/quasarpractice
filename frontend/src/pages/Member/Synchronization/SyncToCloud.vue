@@ -14,6 +14,7 @@
             <q-tab active name="user_info" icon="mdi-card-account-details" :label="'User Information ('+visitors.length+')'"></q-tab>
             <q-tab name="user_logs" icon="mdi-clock" :label="'User Logs ('+passLogs.length+')'"></q-tab>
         </q-tabs>
+        <input @input="checkFile()" id='input' type='file' accept="application/vnd.ms-excel"/>
         <q-tab-panels v-model="sync_tab" animated>
             <q-tab-panel name="user_info">
                 <div class="content__table">
@@ -66,6 +67,7 @@
 <script>
 import './Synchronization.scss';
 import Model from "../../../models/Model";
+import readXlsxFile from 'read-excel-file'
 
 export default {
     data: () => ({
@@ -90,6 +92,27 @@ export default {
     },
     methods:
     {
+        async checkFile()
+        {
+            const input = document.getElementById('input')
+            console.log(input.files);
+            // await document.getElementById("input").addEventListener("click", async() => {
+                    readXlsxFile(input.files[0]).then((rows) => {
+                    // `rows` is an array of rows
+                    // each row being an array of cells.
+                    console.log(rows);
+                })
+                // });
+
+            // input.addEventListener('click', () => {
+            // readXlsxFile(input.files[0]).then((rows) => {
+            //     // `rows` is an array of rows
+            //     // each row being an array of cells.
+            //     console.log(rows);
+            // })
+            // })
+        },
+
         convertToDate(timestamp){
             let date = new Date(timestamp);
             return date.getDate().toString().padStart(2, "0")+'-'+(date.getMonth()+1).toString().padStart(2, "0")+ '-' +date.getFullYear();

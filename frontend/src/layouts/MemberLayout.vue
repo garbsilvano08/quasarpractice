@@ -19,7 +19,7 @@
         </q-header>
 
         <q-drawer v-model="leftDrawerOpen"  behavior="mobile" show-if-above bordered overlay content-class="bg-grey-1">
-            <div class="nav-profile">
+            <div @click="editUser()" class="nav-profile">
                 <q-img class="nav-profile__img" :src="this.$user_info.user_picture"></q-img>
                 <div class="nav-profile__info">
                     <div class="nav-profile__name">{{this.$user_info.full_name}}</div>
@@ -27,6 +27,11 @@
                     <div class="nav-profile__position">{{this.$user_info.user_type}}</div>
                 </div>
             </div>
+
+            <q-dialog v-model="is_edit_user_dialog_open" full-width>
+                <edit-user-dialog :user_info="pasData" ></edit-user-dialog>
+            </q-dialog>
+
 			<div class="nav-title">MY ACCOUNT</div>
 			<q-list class="nav-list">
 				<template v-for="nav of navigation">
@@ -132,6 +137,7 @@ import { postAddPerson , postSavePerson , postGetDevice, postGetLogsSettings, po
 import Model from "../models/Model";
 import { base64StringToBlob } from 'blob-util';
 import { log } from 'util';
+import EditUserDialog from "../pages/Member/UserManagement/Dialogs/EditUserDialog"
 
 function toDataUrl(url, callback) {
     var xhr = new XMLHttpRequest();
@@ -152,6 +158,7 @@ export default
     name: 'MemberLayout',
     components:
     {
+        EditUserDialog,
         EssentialLink
     },
 	data: () =>
@@ -175,7 +182,9 @@ export default
         total: 60000,
         image: null,
         log_alert: {},
-        company_list: []
+        company_list: [],
+        is_edit_user_dialog_open: false,
+        pasData: {}
         
     }),
     computed:
@@ -237,6 +246,11 @@ export default
     },
     methods:
     {
+        editUser(user_info)
+        {
+            this.pasData= this.$user_info
+            this.is_edit_user_dialog_open = true;
+        },
         async getCompany(company_id)
         {
             let data = await this.$_post(postGetCompany, {id: company_id})
@@ -313,6 +327,7 @@ export default
                 {
                     if ( key === 'user_management' ) return false
                     else return true
+                    // return true
                 }
                 else if (this.$user_info.user_type == 'Receptionist')
                 {
