@@ -1,6 +1,7 @@
 <template>
     <div>
         <q-btn dense no-caps flat class="btn-outline btn-choose" align="between">
+            <q-tooltip>Company Name</q-tooltip>
             <span>{{value.company_name ? value.company_name : "Super Admin"}}</span>
             <q-icon size="small" class="icon" name="fa fa-caret-down"></q-icon>
             <q-menu fit>
@@ -111,8 +112,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-choose {
+.btn-choose[data-v-6ba98f6a] {
     padding: 3px 10px !important;
-    width: 200px !important;
+    width: fit-content !important;
 }
 </style>
