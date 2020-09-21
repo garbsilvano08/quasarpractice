@@ -14,7 +14,7 @@
             <q-tab active name="user_info" icon="mdi-card-account-details" :label="'User Information ('+visitors.length+')'"></q-tab>
             <q-tab name="user_logs" icon="mdi-clock" :label="'User Logs ('+passLogs.length+')'"></q-tab>
         </q-tabs>
-        <input @input="checkFile()" id='input' type='file' accept="application/vnd.ms-excel"/>
+        <!-- <input @input="checkFile()" id='input' type='file' accept="application/vnd.ms-excel"/> -->
         <q-tab-panels v-model="sync_tab" animated>
             <q-tab-panel name="user_info">
                 <div class="content__table">

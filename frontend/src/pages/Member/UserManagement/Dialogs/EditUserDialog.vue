@@ -65,6 +65,7 @@
 
 <script>
 import "../UserManagement.scss";
+import { Notify } from 'quasar';
 // import  ComPicker from "../../../components/companyPicker/ComPicker"
 
 function isEmpty(obj) {
@@ -145,7 +146,6 @@ export default {
                         this.user_information.user_picture = res;
                     }
                     
-                    console.log(this.user_information);
                     this.$q.loading.show();
                     await this.$_post('member/update/user',  this.user_information );
                     this.$emit('closePopup');
@@ -158,6 +158,10 @@ export default {
                         user_type: '',
                         company: {},
                     }
+                    Notify.create({
+                        color: 'green',
+                        message: 'User information was successfully updated!'
+                    });
                     document.getElementById("userImage").value = "";
                     this.$q.loading.hide();
                     // document.getElementById("imagePreview").src = "../../assets/Member/placeholder-img.jpg";

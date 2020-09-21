@@ -48,6 +48,7 @@ export default {
     }),
     async mounted(){
         let company_id = []
+        console.log(this.$user_info);
         if (this.$user_info.user_type =='Super Admin')
         {
             console.log('kjhkhjk');

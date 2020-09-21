@@ -29,7 +29,7 @@
             </div>
 
             <q-dialog v-model="is_edit_user_dialog_open" full-width>
-                <edit-user-dialog :user_info="pasData" ></edit-user-dialog>
+                <edit-user-dialog :user_info="pasData" @closePopup="is_edit_user_dialog_open=false"></edit-user-dialog>
             </q-dialog>
 
 			<div class="nav-title">MY ACCOUNT</div>
