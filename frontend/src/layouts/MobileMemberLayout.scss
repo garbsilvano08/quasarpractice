@@ -1,0 +1,268 @@
+* {
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+}
+.q-drawer--left.q-drawer--bordered {
+    border: none;
+}
+.q-header {
+    .q-toolbar {
+        background-color: #3f51b5 !important;
+        height: 60px;
+        padding: 0px 20px;
+
+        .q-img {
+            object-fit: contain;
+            width: 120px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header__content {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+
+            .q-btn-toggle {
+                margin-right: 20px;
+            }
+
+            .btn-sync {
+                position: relative;
+                margin-right: 20px;
+
+                .notification-indicator {
+                    background-color: #ff0000;
+                    width: 22px;
+                    height: 15px;
+                    text-align: center;
+                    border-radius: 30px;
+                    font-size: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: absolute;
+                    top: 3px;
+                    right: -10px;
+                }
+            }
+
+            .btn-sync:last-child {
+                margin-right: 0px !important;
+            }
+        }
+    }
+}
+
+.main {
+    .nav-profile {
+        padding: 30px 30px 30px 20px;
+        text-align: left;
+        width: 100%;
+        color: #ffffff;
+        margin-bottom: 20px;
+        .nav-profile__img {
+            margin: auto;
+            width: 70px;
+            height: 70px;
+            border-radius: 100%;
+            border: solid 3px #FFFFFF;
+        }
+
+        .nav-profile__info {
+            float: right;
+            margin: 15px 130px 0px 0px;
+            .nav-profile__name {
+                font-size: 14px;
+                font-weight: 500;
+                font-weight: bold;
+            }
+            .nav-profile__position {
+                color: #B3B6B7;
+                font-size: 12px;
+                font-weight: 600;
+            }
+        }
+    }
+    .nav-profile:after{
+        position: absolute;
+        content: '';
+        border-bottom: 1px solid #d2d7da;
+        width: 90%;
+        transform: translateX(-50%);
+        left: 50%;
+        margin-top: 100px;
+    }
+    .absolute-bottom{
+        margin-bottom: 10px;
+    }
+    .absolute-bottom:after{
+        position: absolute;
+        content: '';
+        border-bottom: 1px solid #d2d7da;
+        width: 90%;
+        transform: translateX(-50%);
+        left: 50%;
+        margin-top: -15px;
+    }
+    .nav-title {
+        padding-left: 15px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #3f51b5;
+        margin-bottom: 15px;
+    }
+
+    .nav-list {
+        color: #FFFFFF;
+
+        .nav {
+            font-weight: 500;
+            font-size: 14px;
+
+            .q-icon {
+                color: #1ABC9C;
+                font-size: 18px;
+            }
+
+            .nav-sub {
+                overflow: auto;
+                background-color: #fafafa;
+                border: none !important;
+
+                .nav-item {
+                    font-weight: normal;
+                    cursor: pointer;
+                    margin-left: 0;
+                    padding: 10px 0px 10px 73px;
+
+                    &:hover {
+                        background-color: #e2e2e2;
+                    }
+
+                    &.active {
+                        background-color: #f1f2ef;
+                        color: #3f51b5 !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.documentation {
+    width: 1000px;
+    max-width: 95%;
+    margin: auto;
+    margin-top: 40px;
+    border: 1px solid #eee;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px 40px;
+    color: #333;
+    margin-bottom: 40px;
+
+
+    .component {
+
+        border: 1px dashed #eee;
+        background-color: #fafafa;
+        padding: 30px;
+        text-align: center;
+        border-radius: 5px;
+    }
+    .form-container {
+        text-align: left;
+        background-color: #fff;
+        width: 500px;
+        margin: auto;
+        border-radius: 5px;
+        padding: 25px;
+        border: 1px solid #ccc;
+    }
+}
+
+.fever-detected__alert {
+    width: 350px;
+    background-color: #ffffff;
+    margin-bottom: 24px;
+    margin-left: auto;
+
+    .fever-detected__alert-header {
+        background-color: #3F51B5;
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+
+        .alert-header__title {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .alert-header__close {
+            margin-left: auto;
+            opacity: .4;
+        }
+    }
+
+    .fever-detected__alert-body {
+        .fever-detected__alert-temp {
+            background-color: #FD2E1E;
+            padding: 16px;
+            color: #ffffff;
+            text-align: center;
+            line-height: 1.4rem;
+
+            .alert-temp__status {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .alert-temp__temperature {
+                font-size: 24px;
+                font-weight: 500;
+            }
+
+            .alert-temp__label {
+                font-size: 12px;
+                font-weight: 400;
+            }
+        }
+
+        .fever-detected__alert-people {
+            padding: 16px 16px 24px;
+            text-align: center;
+
+            .alert-people__img {
+                object-fit: cover;
+                height: 60px;
+                width: 60px;
+                border-radius: 100%;
+                margin-bottom: 5px;
+            }
+
+            .alert-people__name {
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            .alert-people__position {
+                font-size: 14px;
+                font-weight: 700;
+                opacity: .6;
+                margin-bottom: 5px;
+            }
+
+            .alert-people__note {
+                font-size: 12px;
+                font-weight: 500;
+                opacity: .6;
+                line-height: 1.2rem;
+            }
+        }
+    }
+}
