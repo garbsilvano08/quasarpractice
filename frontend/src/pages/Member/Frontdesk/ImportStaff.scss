@@ -68,8 +68,11 @@
         }
     }
     .table-container{
-        tbody>tr>:nth-child(1){
-            font-size: 15px;
+        .content__table table tbody>tr>:nth-child(1){
+            font-size: 18px;
+        }
+        .content__table table tbody tr td {
+            font-size: 14px;
         }
         .q-btn__wrapper:before {
             content: '';

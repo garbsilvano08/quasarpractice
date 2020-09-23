@@ -37,9 +37,14 @@
                             <th>First name</th>
                             <th>Last name</th>
                             <th>Middle name</th>
-                            <th>Email Address</th>
+                            <th>Email address</th>
                             <th>Gender</th>
                             <th>Birthday</th>
+                            <th>Position</th>
+                            <th>Nationality</th>
+                            <th>Home address</th>
+                            <th>Contact number</th>
+                            <th>Emergency contact</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,6 +73,11 @@
                             <td>rem@gmail.com</td>
                             <td>Female</td>
                             <td>01/01/1996</td>
+                            <td>Staff</td>
+                            <td>Filipino</td>
+                            <td>Malolos, Bulacan</td>
+                            <td>09123456789</td>
+                            <td>09123456789</td>
                         </tr>
                         <!-- <tr>
                             <td>
@@ -83,6 +93,11 @@
                             <td>rem@gmail.com</td>
                             <td>Male</td>
                             <td>01/01/1996</td>
+                            <td>Staff</td>
+                            <td>Filipino</td>
+                            <td>Malolos, Bulacan</td>
+                            <td>09123456789</td>
+                            <td>09123456789</td>
                         </tr>
                         <tr>
                             <td>
@@ -98,6 +113,11 @@
                             <td>rem@gmail.com</td>
                             <td>Male</td>
                             <td>01/01/1996</td>
+                            <td>Staff</td>
+                            <td>Filipino</td>
+                            <td>Malolos, Bulacan</td>
+                            <td>09123456789</td>
+                            <td>09123456789</td>
                         </tr>
                         <tr>
                             <td>
@@ -113,6 +133,11 @@
                             <td>rem@gmail.com</td>
                             <td>Male</td>
                             <td>01/01/1996</td>
+                            <td>Staff</td>
+                            <td>Filipino</td>
+                            <td>Malolos, Bulacan</td>
+                            <td>09123456789</td>
+                            <td>09123456789</td>
                         </tr>
                         <tr>
                             <td>
