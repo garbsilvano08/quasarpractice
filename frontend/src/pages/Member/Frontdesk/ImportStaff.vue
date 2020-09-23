@@ -46,7 +46,8 @@
                             <td> 
                                 <q-icon class="background_active loader-2" name="fas fa-circle-notch"/> &nbsp
                                 <q-icon class="background_stop" name="fas fa-stop-circle"/> &nbsp
-                                <q-icon class="background_disable" name="fas fa-trash-alt"/>
+                                <q-icon class="background_disable" name="fas fa-trash-alt"/> &nbsp
+                                <q-icon @click="editStaffData" class="background_primary" name="fas fa-edit"/>
                             </td>
                             <td>
                                 <q-btn class="no-shadow"><q-icon name="fas fa-upload"></q-icon></q-btn>
@@ -68,7 +69,8 @@
                             <td>
                                 <q-icon class="background_disable" name="fas fa-circle-notch"/> &nbsp
                                 <q-icon class="background_primary" name="fas fa-play-circle"/> &nbsp
-                                <q-icon class="background_primary" name="fas fa-trash-alt"/>
+                                <q-icon class="background_primary" name="fas fa-trash-alt"/> &nbsp
+                                <q-icon @click="editStaffData" class="background_primary" name="fas fa-edit"/>
                             </td>
                             <td><q-btn class="no-shadow"><q-icon name="fas fa-upload"></q-icon></q-btn></td>
                             <td>Green Sun</td>
@@ -88,7 +90,8 @@
                             <td>
                                 <q-icon class="background_active" name="fas fa-check"/> &nbsp
                                 <q-icon class="background_disable" name="fas fa-stop-circle"/> &nbsp
-                                <q-icon class="background_primary" name="fas fa-trash-alt"/>
+                                <q-icon class="background_primary" name="fas fa-trash-alt"/> &nbsp
+                                <q-icon @click="editStaffData" class="background_primary" name="fas fa-edit"/>
                             </td>
                             <td><q-btn class="no-shadow"><q-icon name="fas fa-upload"></q-icon></q-btn></td>
                             <td>Green Sun</td>
@@ -108,7 +111,8 @@
                             <td>
                                 <q-icon class="background_stop" name="fas fa-exclamation-circle"/> &nbsp
                                 <q-icon class="background_disable" name="fas fa-stop-circle"/> &nbsp
-                                <q-icon class="background_primary" name="fas fa-trash-alt"/>
+                                <q-icon class="background_primary" name="fas fa-trash-alt"/> &nbsp
+                                <q-icon @click="editStaffData" class="background_primary" name="fas fa-edit"/>
                             </td>
                             <td><q-btn class="no-shadow"><q-icon name="fas fa-upload"></q-icon></q-btn></td>
                             <td>Green Sun</td>
@@ -128,7 +132,8 @@
                             <td>
                                 <q-icon class="background_disable" name="fas fa-circle-notch"/> &nbsp
                                 <q-icon class="background_disable" name="fas fa-play-circle"/> &nbsp
-                                <q-icon class="background_disable" name="fas fa-trash-alt"/>
+                                <q-icon class="background_disable" name="fas fa-trash-alt"/> &nbsp
+                                <q-icon @click="editStaffData" class="background_primary" name="fas fa-edit"/>
                             </td>
                             <td><q-btn class="no-shadow"><q-icon name="fas fa-upload"></q-icon></q-btn></td>
                             <td>Green Sun</td>
@@ -147,6 +152,14 @@
                     </tbody>
                 </table>
             </div>
+            <q-dialog v-model="edit_dialog">
+               <q-card style="width: 80%; max-width: 80vw;">
+                  <q-card-section>
+                    <EditImportStaff></EditImportStaff>
+                  </q-card-section>
+
+               </q-card>
+            </q-dialog>
         </div>
         <div class="flex flex-center">
             <q-pagination 
@@ -161,20 +174,28 @@
 </template>
 
 <script>
+import EditImportStaff from './EditImportStaff'
 import "../../../../node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css";
 import "./ImportStaff.scss";
 export default
 {
+    components: {
+        EditImportStaff,
+    },
     filters: { },
     data:() =>(
     {
-        show_upload : false
+        show_upload : false,
+        edit_dialog: false,
     }),
     mounted() { },
     methods: { 
         showUploadTable()
         {
             this.show_upload = true
+        },
+        editStaffData(){
+            this.edit_dialog = true
         }
     },
     computed: { }
