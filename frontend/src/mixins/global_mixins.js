@@ -1,5 +1,20 @@
 import axios from 'axios';
-
+import { postGetCompanies,
+    postAddPerson,
+    postUpdateStaff,
+    postSavePerson,
+    postGetDailyLog,
+    postGetWeeklyCount,
+    postLatestLog,
+    postPersonByCateg,
+    postGetAllLogs,
+    postGetPersons,
+    postGetPurposeVisit,
+    postGetAlertCount,
+    postGetDevice,
+    postDashboard,
+    postGetCompany
+ } from '../references/url';
 
 export default
 {
@@ -142,6 +157,11 @@ export default
             }); 
             // console.log(res.data);
             return res.data;
+        },
+        async $_company(params)
+        {
+            let company = await this.$_post(postGetCompanies, {find_company: params})
+            return company.data
         },
         $_logout()
         {

@@ -25,7 +25,7 @@
                </div>
             </q-img>
          </div> -->
-         <div class="dashboard__overview-item">
+         <div @click="redirectToReport()" class="dashboard__overview-item">
             <div class="dashboard__overview-bg bg-first">
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-desc">
@@ -39,7 +39,7 @@
                <q-img src="../../../assets/Member/overview-1.svg" width="40px"></q-img>
             </div>
          </div>
-         <div class="dashboard__overview-item">
+         <div @click="redirectToReport({category: 'Staff'})" class="dashboard__overview-item">
             <div class="dashboard__overview-bg bg-second">
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-desc">
@@ -55,7 +55,7 @@
 
             <!-- </q-img> -->
          </div>
-         <div class="dashboard__overview-item">
+         <div @click="redirectToReport({category: 'Visitor'})" class="dashboard__overview-item">
             <div class="dashboard__overview-bg bg-third">
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-desc">
@@ -67,7 +67,7 @@
                <q-img src="../../../assets/Member/overview-3.svg" width="70px"></q-img>
             </div>
          </div>
-         <div class="dashboard__overview-item">
+         <div @click="redirectToReport({category: 'Fever'})" class="dashboard__overview-item">
             <div class="dashboard__overview-bg bg-fourth">
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-desc">
@@ -831,6 +831,22 @@ export default
     },
 
    methods: {
+      redirectToReport(params = {})
+      {
+          if (params)
+          {
+             this.$router.push({
+               name: 'member_log_report',
+               params: params
+            })
+          }
+          else
+          {
+            this.$router.push({
+               name: 'member_log_report'
+            })
+          }
+      },
       async getCompany(company_id)
       {
          return await this.$_post(postGetCompany, {id: company_id})
@@ -932,8 +948,8 @@ export default
             }
          }
          
-         this.staff_number = await this.personsData({find_person: {company_id:{$in: this.company_list }, category: 'Staff', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
-         this.visitor_number = await this.personsData({find_person: {company_id:{$in: this.company_list }, category: 'Visitor', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
+         this.staff_number = await this.personsData({find_person: {company_id:{'$in': this.company_list }, category: 'Staff', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
+         this.visitor_number = await this.personsData({find_person: {company_id:{'$in': this.company_list }, category: 'Visitor', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
          await this.getMonthlyAlert()
          await this.getDevices()
          await this.getPurposeVisit()
@@ -1282,8 +1298,17 @@ export default
       this.getTotalScannedToday(new Date(), 'global')
       this.current_date = this.current_date[0] + " " + this.current_date[1] + " " + this.current_date[2] + " " + this.current_date[3]
       this.current_month = this.current_month[2] + " " + this.current_month[3]
-      this.staff_number = await this.personsData({find_person: {category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
-      this.visitor_number = await this.personsData({find_person: {category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
+         // console.log(this.company_list, 'check');
+      if (this.company_list.length)
+      {
+          this.staff_number = await this.personsData({find_person: {company_id: {$in: this.company_list}, category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
+         this.visitor_number = await this.personsData({find_person: {company_id: {$in: this.company_list}, category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
+      }
+      else
+      {
+         this.staff_number = await this.personsData({find_person: {category: 'Staff', date_string: date_string[0] + "-" + date_string[1]}})
+         this.visitor_number = await this.personsData({find_person: {category: 'Visitor', date_string: date_string[0] + "-" + date_string[1]}})
+      }
       await this.getTotalRegistered()
 
       if (this.company_details._id) params = {filter: {current_date: new Date(), company_id:{$in: this.company_list } ,date_filter: this.select_date , person: this.select_people}}

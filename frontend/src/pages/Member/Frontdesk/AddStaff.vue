@@ -31,14 +31,17 @@
                     <!-- EMPLOYMENT INFORMATION -->
                     <div class="frontdesk__content-info">
                         <div class="content__title">Employment Information</div>
-                        <div class="content__select">
-                            <div class="content__select-label">Tag a Company</div>
-                            <q-select v-model="staff_class.company_name" :options="options_company" outlined dense></q-select>
-                        </div>
-                        <div class="content__input">
-                            <div class="content__input-label">Position</div>
-                            <q-input v-model="staff_class.position"  outlined dense></q-input>
-                        </div>
+                        <!-- <div class="frontdesk__content-grid"> -->
+                            <div class="content__select">
+                                <div class="content__select-label">Tag a Company</div>
+                                <com-picker :user="this.$user_info" @select=getCompanyData class="btn-choose"></com-picker>
+                                <!-- <q-select v-model="staff_class.company_name" :options="options_company" outlined dense></q-select> -->
+                            </div>
+                            <div class="content__input">
+                                <div class="content__input-label">Position</div>
+                                <q-input v-model="staff_class.position"  outlined dense></q-input>
+                            </div>
+                        <!-- </div> -->
                     </div>
                     <!-- CHOOSE ID -->
                     <!-- <div class="frontdesk__content-info">
@@ -198,6 +201,7 @@
 </template>
 
 <script>
+import  ComPicker from "../../../components/companyPicker/ComPicker"
 import { Notify } from 'quasar';
 import "./Frontdesk.scss";
 
@@ -213,6 +217,7 @@ import {base64StringToBlob} from 'blob-util';
 import { log } from 'util';
 
 export default {
+    components: { ComPicker },
     data:() =>
     ({
         show : true,
@@ -252,7 +257,8 @@ export default {
         is_done: false,
         company_list: [],
         account_info : {},
-        flag : 0
+        flag : 0,
+        company_details: {}
     }),
     watch:
     {
@@ -283,6 +289,10 @@ export default {
 
     methods:
     {
+        getCompanyData(value)
+        {
+            this.company_details = value
+        },
         test()
         {
             this.staff_class =
@@ -425,15 +435,15 @@ export default {
                 contact_number: this.staff_class.contact_number,
                 emergency_contact: this.staff_class.emergency_contact,
                 date_created: new Date(),
-                company_name: this.staff_class.company_name,
-                company_id: this.getCompany( this.staff_class.company_name),
+                company_name: this.company_details.company_name,
+                company_id: this.company_details._id,
                 is_active: true,
                 email: this.staff_class.email,
                 position: this.staff_class.position,
                 category: 'Staff',
                 frontdesk_person_id: result,
                 frontdesk_person_date: new Date(),
-                saved_from: this.staff_class.company_name._id
+                saved_from: this.company_details._id
             }
 
             if (this.flag == 1) {
@@ -444,7 +454,7 @@ export default {
             }
             for (let validate in this.staff_class)
             {   
-                if(!this.staff_class.account_img || !this.staff_class.given_name || !this.staff_class.middle_name || !this.staff_class.last_name
+                if(!this.staff_class.account_img || !this.staff_class.given_name || !this.staff_class.last_name
                     || !this.staff_class.email || !this.staff_class.gender || !this.staff_class.birthday || !this.staff_class.nationality
                     || !this.staff_class.home_address || !this.staff_class.contact_number || !this.staff_class.emergency_contact 
                     || !this.staff_class.position ){ 
@@ -522,6 +532,7 @@ export default {
     },
     async mounted()
     {   
+        if (this.$user_info.user_type != 'Super Admin') this.company_details = this.$user_info.company
         if (this.$route.params.is_edit)
         {   
             this.account_info = await this.$_post(postGetPerson, {id: this.$route.params.account_info._id})

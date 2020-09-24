@@ -9,10 +9,10 @@
                     <!-- <label>{{person_uploads}}</label> -->
                     <q-btn-toggle v-show="show_toggle" color="red" dense @input="getTabletLogsSwitch" v-model="getLogsSwitch" :options="[{label: 'On', value: 'on'},{label: 'Off', value: 'off'},]"/>
 
-                    <q-btn v-show="checkUser()" class="btn-sync" @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
-                        <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div>
+                    <!-- <q-btn v-show="checkUser()" class="btn-sync" @click="$router.push('/synchronization/sync-to-cloud')" flat dense rounded icon="mdi-cloud-upload" size="13px" :ripple="false">
+                        <div class="notification-indicator" v-if="visitors.length">{{ visitors.length + passLogs.length }}</div> -->
                         <!-- <div class="notification-indicator">100</div> -->
-                    </q-btn>
+                    <!-- </q-btn> -->
                     <q-btn v-show="checkUser()" class="btn-sync" @click="$router.push('/synchronization/sync-from-cloud')" flat dense rounded icon="mdi-cloud-download" size="13px" :ripple="false"></q-btn>
                 </div>
             </q-toolbar>
@@ -35,7 +35,7 @@
 			<div class="nav-title">MY ACCOUNT</div>
 			<q-list class="nav-list">
 				<template v-for="nav of navigation">
-					<q-item class="nav" v-if="!nav.hasOwnProperty('sub') && userAccess(nav.key)" @click="$router.push({ name: nav.route }).catch(err => {})" clickable v-ripple :active="$route.name == nav.route">
+					<q-item class="nav" v-if="!nav.hasOwnProperty('sub') && userAccess(nav.key)" @click="$router.push({ name: nav.route }).catch(err => {leftDrawerOpen = false})" clickable v-ripple :active="$route.name == nav.route">
 						<q-item-section avatar>
 							<q-icon :name="nav.icon" />
 						</q-item-section>
@@ -43,7 +43,7 @@
 					</q-item>
 					<q-expansion-item group="sidenav" v-if="nav.hasOwnProperty('sub') && userAccess(nav.key)" expand-separator class="nav" :icon="nav.icon" :label="nav.label">
 						<q-card class="nav-sub">
-							<div v-for="sub in nav.sub" class="nav-item" :class="$route.name == sub.route ? 'active' : ''" @click="$router.push({ name: sub.route, params: sub.params }).catch(err => {})">{{ sub.label }}</div>
+							<div v-for="sub in nav.sub" class="nav-item" :class="$route.name == sub.route ? 'active' : ''" @click="$router.push({ name: sub.route, params: sub.params }).catch(err => {leftDrawerOpen= false})">{{ sub.label }}</div>
 						</q-card>
 					</q-expansion-item>
 				</template>

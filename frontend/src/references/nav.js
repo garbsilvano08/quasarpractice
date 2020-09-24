@@ -27,7 +27,7 @@ module.exports =
             { label: '+ Add New Staff', route: 'member_frontdesk_staff' },
             { label: '+ Add Fever Logs', route: 'member_frontdesk_feverlogs' },
             { label: '+ Add Blacklist', route: 'member_frontdesk_blacklist' },
-            { label: 'Import', route: 'member_frontdesk_import' },
+            { label: 'Import Staff', route: 'member_frontdesk_import' },
         ]
     },
     // {

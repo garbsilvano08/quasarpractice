@@ -57,13 +57,13 @@
                                 <q-icon v-if="staff.status === 'done'" class="background_active" name="fas fa-check"/> 
 
                                 <!-- Play & Pause -->
-                                <q-icon v-if="!is_saving && staff.status != 'ongoing'" class="background_disable" name="fas fa-stop-circle"/> 
+                                <!-- <q-icon v-if="!is_saving && staff.status != 'ongoing'" class="background_disable" name="fas fa-stop-circle"/> 
                                 <q-icon v-if="is_saving && staff.status != 'pending'" class="background_stop" name="fas fa-stop-circle"/> 
-                                <q-icon v-if="is_saving && staff.status != 'ongoing'" class="background_primary" name="fas fa-play-circle"/> 
+                                <q-icon v-if="is_saving && staff.status != 'ongoing'" class="background_primary" name="fas fa-play-circle"/>  -->
 
                                 <!-- Delete -->
                                 <q-icon v-if="staff.status === 'ongoing'" class="background_disable" name="fas fa-trash-alt"/> 
-                                <q-icon v-else class="background_primary" name="fas fa-trash-alt"/> 
+                                <q-icon @click="remove(i)" v-else class="background_primary" name="fas fa-trash-alt"/> 
 
                                 <q-icon v-if="staff.status === 'ongoing'" class="background_disable" name="fas fa-edit"/> 
                                 <q-icon v-else @click="editStaffData(i)" class="background_primary" name="fas fa-edit"/>
@@ -237,30 +237,43 @@ export default
         }
     },
     methods: { 
+        remove(index)
+        {
+            this.staff_list.splice(index, 1);
+        },
         async submit()
         {
-            let devices = await this.getDevices()
-            // person_img:         { type: String,  required: true },
-            // last_name:          { type: String,  required: true },
-            // middle_name:        { type: String,  required: true },
-            // given_name:         { type: String,  required: true },
-            // email:              { type: String,  required: false },
-            // gender:             { type: String,  required: false, default: 'Unknown'},
-            // birthday:           { type: Date,    required: true},
-            // nationality:        { type: String,  required: false, default: 'Unknown' },
-            // home_address:       { type: String,  required: true },
-            // contact_number:     { type: String,  required: true },
-            // emergency_contact:  { type: String,  required: false, default: 'Unknown' },
-            // date_created:       { type: Date  ,  required: true },
-            // is_active:          { type: Boolean, required: false, default: true },
-            // category:           { type: String,  required: true, default: 'Visitor' },
             
-            // // Staff
-            // position:           { type: String, required: false },
-            // location:           { type: Object, required: false},
-            // location_coordinates:{ type: Object, required: false},
+            let devices = await this.getDevices()
 
             for (let index = 0; index < this.staff_list.length; index++) {
+                 let data = {
+                    // id_img: this.staff_class.id_img,
+                    // id_num: this.staff_class.id_num,
+                    // id_type: this.staff_class.id_type,
+    
+                    // company_details: this.getCompany( this.staff_class.company_name),
+                    person_img: this.staff_list[index].person_img,
+                    last_name: this.staff_list[index].last_name,
+                    middle_name: this.staff_list[index].middle_name,
+                    given_name: this.staff_list[index].given_name,
+                    gender: this.staff_list[index].gender,
+                    birthday: this.staff_list[index].birthday,
+                    nationality: this.staff_list[index].nationality,
+                    home_address: this.staff_list[index].home_address,
+                    contact_number: this.staff_list[index].contact_number,
+                    emergency_contact: this.staff_list[index].emergency_contact,
+                    date_created: new Date(),
+                    company_name: this.staff_list[index].company_name,
+                    company_id: this.staff_list[index].company._id,
+                    is_active: true,
+                    email: this.staff_list[index].email,
+                    position: this.staff_list[index].position,
+                    category: 'Staff',
+                    frontdesk_person_id: this.staff_list[index].frontdesk_person_id,
+                    frontdesk_person_date: new Date(),
+                    saved_from: this.staff_list[index].company._id
+                }
                 this.staff_list[index].status = 'ongoing'
                 if ( !this.staff_list[index].person_img
                         || !this.staff_list[index].last_name
@@ -274,36 +287,49 @@ export default
                 }
                 else
                 {
-                    toDataUrl(person.person_img, async(myBase64) =>
-                    {
-                        devices.forEach(async device => {
-                            if (device.device_type == 'vision_sky')
-                            {
-                                try
-                                {
-                                    let data = new FormData();
-                                    data.append('pass', 'abc123');
-                                    data.append("person", "{'id': '"+ this.staff_list[index].frontdesk_person_id +"', 'name': '" + this.staff_list[index].given_name + " " + this.staff_list[index].middle_name + " " + this.staff_list[index].last_name + "', 'idcardNum': '', 'departmentId': '1'}" );
+                    console.log(this.staff_list[index], 'kjhkjhkjh');
+                    let save = await this.$_post(postSavePerson, {person_info: data});
+                    console.log(save);
+                    if(save.data) this.staff_list[index].status = 'done'
+                    else this.staff_list[index].status = 'error'
+                    // toDataUrl(this.staff_list[index].person_img, async(myBase64) =>
+                    // {
+                    //     devices.forEach(async device => {
+                    //         console.log(device, 'device');
+                    //         let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
+                    //         if (device.device_type == 'vision_sky')
+                    //         {
+                    //             try
+                    //             {
+                    //                 let data = new FormData();
+                    //                 data.append('pass', 'abc123');
+                    //                 data.append("person", "{'id': '"+ this.staff_list[index].frontdesk_person_id +"', 'name': '" + this.staff_list[index].given_name + " " + this.staff_list[index].middle_name + " " + this.staff_list[index].last_name + "', 'idcardNum': '', 'departmentId': '1'}" );
+                    //                 console.log(data, 'data');
                     
-                                    let upload = await this.$axios.post("http://"+ device_ip +":8090/person/create", data).then(res => res.data);
+                    //                 let upload = await this.$axios.post("http://"+ device.device_ip +":8090/person/create", data).then(res => res.data);
+                    //                 console.log(upload, 'upload');
 
-                                    let image = new FormData();
-                                    image.append('pass', 'abc123');
-                                    image.append("personId", this.staff_list[index].frontdesk_person_id );
-                                    image.append("faceId", this.staff_list[index].frontdesk_person_id );
-                                    image.append("imgBase64", b64 );
-                                    let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data);
-                                }
-                                catch(e){}
-                            }
-                            else
-                            {
-                                tabletFormData.append("pass", "123456");
-                                tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+this.staff_list.first_name+" "+ this.staff_list.middle_name +" "+ this.staff_list.last_name +"', 'person_id' : '"+ visitor.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+visitor.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ visitor.personal_information.birth_day +"', 'address' : '"+ visitor.personal_information.home_address +"', 'vipId': '"+visitor.personal_information.frontdesk_person_id+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
-                                let rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/create", tabletFormData).then(res => res.data);
-                            }
-                        });
-                    })
+                    //                 let image = new FormData();
+                    //                 image.append('pass', 'abc123');
+                    //                 image.append("personId", this.staff_list[index].frontdesk_person_id );
+                    //                 image.append("faceId", this.staff_list[index].frontdesk_person_id );
+                    //                 image.append("imgBase64", b64 );
+                    //                 let img = await this.$axios.post("http://"+ device.device_ip +":8090/face/create", image).then(res => res.data);
+                    //                 console.log(img, 'img');
+                    //             }
+                    //             catch(e){}
+                    //         }
+                    //         else
+                    //         {
+                    //             console.log(this.staff_list[index].frontdesk_person_id);
+                    //             let tabletFormData = new FormData();
+                    //             let type = 3;
+                    //             tabletFormData.append("pass", "123456");
+                    //             tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : 'Jeric Laderas', 'person_id' : '1234', 'sex' : 'Male', 'group_id' : 20, 'phone' : '09667676767',  'address' : 'Balagtas', 'vipId': '909090',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : 3, 'reg_type' : 0}");
+                    //             let createRes = await this.$axios.post("http://" + device.device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
+                    //         }
+                    //     });
+                    // })
                     
                 }
             }
@@ -344,8 +370,7 @@ export default
 
         updateStaff(value)
         {
-            console.log(this.index);
-            this.staff_list[this.index] = value
+            if (value) this.staff_list[this.index] = value
             this.edit_dialog = false
         },
 
@@ -365,6 +390,7 @@ export default
                     let company = await this.$_company({company_name: rows[index][3]})
                     this.staff_list.push({
                         status: 'pending',
+
                         // person_img:         { type: String,  required: true },
                         last_name:          rows[index][0],
                         given_name:         rows[index][1],
