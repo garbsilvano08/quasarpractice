@@ -54,7 +54,7 @@
     
       <div class="dashboard__overview-logs">
         
-        <div class="header__title">Fever Logs  <q-icon class="icon-float" name="fas fa-sliders-h"/></div>
+        <div class="header__title">Fever Logs  <q-icon class="icon-float" name="fas fa-sliders-h" @click="goToFilterLogs"/></div>
          <div class="content__card-info content__card">
             <div class="content__info">
                 <div class="flex flex-center">
@@ -110,7 +110,7 @@
             </div>
          </div>
       </div>
-        <div class="add_fever_logs-btn">
+        <div class="add_fever_logs-btn" @click="goToAddUserLogs">
             <q-icon name="fas fa-plus"></q-icon>
         </div>
       
@@ -147,7 +147,16 @@ export default
     },
 
    methods: {
-   
+       goToFilterLogs(){
+            this.$router.push({
+                name: "member_mobile_filter_fever"
+            })
+        },
+        goToAddUserLogs(){
+            this.$router.push({
+                name: "member_mobile_add_fever"
+            })
+        }
 
    },
    

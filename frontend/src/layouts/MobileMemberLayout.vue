@@ -10,7 +10,7 @@
         </q-header>
         <q-header v-if="$route.name == 'member_mobile_filter_fever'">
             <q-toolbar>
-                <q-btn flat dense round icon="fas fa-times" aria-label="Close"/>
+                <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
                 <div class="header_title">
                     <div class="title">Filter</div>
                 </div>
@@ -19,7 +19,7 @@
         </q-header>
         <q-header v-if="$route.name == 'member_mobile_add_fever'">
             <q-toolbar>
-                <q-btn flat dense round icon="fas fa-times" aria-label="Close"/>
+                <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
                 <div class="header_title">
                     <div class="title">Add Fever Logs</div>
                 </div>
@@ -28,7 +28,7 @@
         </q-header>
         <q-header v-if="$route.name == 'member_mobile_user_logs'">
             <q-toolbar>
-                <q-btn flat dense round icon="fas fa-times" aria-label="Close"/>
+                <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
                 <div class="header_title">
                     <div class="title">User Logs</div>
                 </div>
@@ -51,7 +51,7 @@
 						</q-item-section>
 						<q-item-section>Dashboard</q-item-section>
 					</q-item>
-                    <q-item class="nav" clickable v-ripple>
+                    <q-item class="nav" clickable v-ripple @click="goToUserLogs">
 						<q-item-section avatar>
 							<q-icon name="fas fa-clock" />
 						</q-item-section>
@@ -277,7 +277,18 @@ export default
         setInterval(this.getLog, 60000);
     },
     methods:
-    {
+    {   
+        goToDashboard()
+        {
+            this.$router.push({
+                    name: "member_mobile_dashboard"
+                })   
+        },
+        goToUserLogs(){
+            this.$router.push({
+                name: "member_mobile_user_logs"
+            })
+        },
         async getCompany(company_id)
         {
             let data = await this.$_post(postGetCompany, {id: company_id})
