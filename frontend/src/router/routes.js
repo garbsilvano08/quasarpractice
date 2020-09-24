@@ -86,7 +86,9 @@ const routes = [
         children:[
             //MOBILE APPLICATION PAGES
             { name: 'member_mobile_dashboard', path: '/mobile/dashboard', component: () => import('pages/Member/MobileApplication/MobileDashboard.vue') },
-            { name: 'member_mobile_dashboard', path: '/mobile/filter-fever-logs', component: () => import('pages/Member/MobileApplication/MobileFilterFeverLogs.vue') },
+            { name: 'member_mobile_filter_fever', path: '/mobile/filter-fever-logs', component: () => import('pages/Member/MobileApplication/MobileFilterFeverLogs.vue') },
+            { name: 'member_mobile_add_fever', path: '/mobile/add-fever-logs', component: () => import('pages/Member/MobileApplication/MobileAddFeverLogs.vue') },
+            { name: 'member_mobile_user_logs', path: '/mobile/user-logs', component: () => import('pages/Member/MobileApplication/MobileUserLogs.vue') },
         ]
     }
 ]

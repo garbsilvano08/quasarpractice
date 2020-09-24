@@ -13,21 +13,22 @@
                         width="150px"
                         height="150px"
                         :colors="[
-                            '#9825f2',
-                            '#fd8e22',
-                            '#f8fe22',
-                            '#2089fe',
-                            '#23dea7',
-                            '#00af50',
+                            '#972CF3',
+                            '#FF8B29',
+                            '#EDFF00',
+                            '#2F84FF',
+                            '#27E4AB',
+                            '#00B347',
                         ]"
                         :data="{
-                            'Official Business': 1,
-                            'Collection & Pickup': 2,
-                            'Delivery': 3,
-                            'Corporate Meeting': 5,
-                            'Client/Customer': 2,
-                            'Guest': 2,
-                        }">
+                            'Official Business': 0,
+                            'Collection & Pickup': 6,
+                            'Delivery': 0,
+                            'Corporate Meeting': 4,
+                            'Client/Customer': 0,
+                            'Guest': 0,
+                        }"
+                        :library="{cutoutPercentage: 85}">
                     </pie-chart>
                     <div class="dashboard__pie-total">
                         <div class="pie-total__amount">10</div>

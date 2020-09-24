@@ -1,11 +1,38 @@
 <template>
     <q-layout class="main" view="hHh Lpr lFf">
-        <q-header>
+        <q-header v-if="$route.name == 'member_mobile_dashboard'">
             <q-toolbar>
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
                 <q-img @click="showToggle" src="../assets/vcop-logo-white.svg"></q-img>
                 
+            </q-toolbar>
+        </q-header>
+        <q-header v-if="$route.name == 'member_mobile_filter_fever'">
+            <q-toolbar>
+                <q-btn flat dense round icon="fas fa-times" aria-label="Close"/>
+                <div class="header_title">
+                    <div class="title">Filter</div>
+                </div>
+
+            </q-toolbar>
+        </q-header>
+        <q-header v-if="$route.name == 'member_mobile_add_fever'">
+            <q-toolbar>
+                <q-btn flat dense round icon="fas fa-times" aria-label="Close"/>
+                <div class="header_title">
+                    <div class="title">Add Fever Logs</div>
+                </div>
+
+            </q-toolbar>
+        </q-header>
+        <q-header v-if="$route.name == 'member_mobile_user_logs'">
+            <q-toolbar>
+                <q-btn flat dense round icon="fas fa-times" aria-label="Close"/>
+                <div class="header_title">
+                    <div class="title">User Logs</div>
+                </div>
+
             </q-toolbar>
         </q-header>
 
@@ -193,7 +220,7 @@ export default
         
     }),
     computed:
-    {
+    {   
         visitors()
         {
             return this.$store.state.sync.visitors;
