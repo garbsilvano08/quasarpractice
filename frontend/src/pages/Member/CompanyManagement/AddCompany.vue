@@ -68,7 +68,9 @@
                             :options="company_owners"
                             option-value="place_id"
                             option-label="description"
+                            class="q-mb-sm"
                         />
+                        <div class="content__title-sub">Device owner is a settings for those establishments who have a tenant inside the building. Check this box if the parent company has the only station inside the building. If unchecked, please choose the company there your staff and visitors are being scanned.</div>
                     </div>
                     <div class="company-add__content-info">
                     </div>
