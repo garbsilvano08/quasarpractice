@@ -46,28 +46,28 @@
                     <q-list>
                         <q-item clickable v-close-popup>
                             <q-item-section>
+                                <q-radio v-model="item_sort" val='date' dense label="Date Saved" />
+                            </q-item-section>
+                        </q-item>
+                            <q-item clickable v-close-popup>
+                            <q-item-section>
+                                <q-radio clickable v-close-popup v-model="item_sort" val='name' dense label="Name" />
+                            </q-item-section>
+                        </q-item>
+                        <q-item clickable v-close-popup>
+                            <q-item-section>
+                                <q-radio clickable v-close-popup v-model="item_sort" val='temp' dense label="Temperature" />
+                            </q-item-section>
+                        </q-item>
+                        <q-separator />
+                        <q-item clickable v-close-popup>
+                            <q-item-section>
                                 <q-radio v-model="sort_type" val='1' dense label="Ascending" />
                             </q-item-section>
                         </q-item>
                         <q-item clickable v-close-popup>
                             <q-item-section>
                                 <q-radio v-model="sort_type" val='-1' dense label="Descending" />
-                            </q-item-section>
-                        </q-item>
-                        <q-separator />
-                        <q-item clickable v-close-popup>
-                            <q-item-section>
-                                <q-checkbox v-model="checkbox_date_saved" dense label="Date Saved" />
-                            </q-item-section>
-                        </q-item>
-                            <q-item clickable v-close-popup>
-                            <q-item-section>
-                                <q-checkbox v-model="checkbox_name" dense label="Name" />
-                            </q-item-section>
-                        </q-item>
-                        <q-item clickable v-close-popup>
-                            <q-item-section>
-                                <q-checkbox v-model="checkbox_temperature" dense label="Temperature" />
                             </q-item-section>
                         </q-item>
                     </q-list>
@@ -179,7 +179,8 @@ export default {
         checkbox_date_saved: '',
         checkbox_name: '',
         checkbox_temperature: '',
-        sort_type: '1'
+        sort_type: '1',
+        item_sort: 'date',
     }),
     watch:
     {
