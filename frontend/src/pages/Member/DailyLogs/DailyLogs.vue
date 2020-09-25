@@ -58,17 +58,6 @@
                         <q-list>
                             <q-item clickable v-close-popup>
                                 <q-item-section>
-                                    <q-radio clickable v-close-popup v-model="sort_type" val='-1' dense label="Descending" />
-                                </q-item-section>
-                            </q-item>
-                            <q-item clickable v-close-popup>
-                                <q-item-section>
-                                    <q-radio clickable v-close-popup v-model="sort_type" val='1' dense label="Ascending" />
-                                </q-item-section>
-                            </q-item>
-                            <q-separator />
-                            <q-item clickable v-close-popup>
-                                <q-item-section>
                                     <q-radio v-model="item_sort" val='date' dense label="Date Saved" />
                                 </q-item-section>
                             </q-item>
@@ -80,6 +69,17 @@
                             <q-item clickable v-close-popup>
                                 <q-item-section>
                                     <q-radio clickable v-close-popup v-model="item_sort" val='temp' dense label="Temperature" />
+                                </q-item-section>
+                            </q-item>
+                            <q-separator />
+                            <q-item clickable v-close-popup>
+                                <q-item-section>
+                                    <q-radio clickable v-close-popup v-model="sort_type" val='-1' dense label="Descending" />
+                                </q-item-section>
+                            </q-item>
+                            <q-item clickable v-close-popup>
+                                <q-item-section>
+                                    <q-radio clickable v-close-popup v-model="sort_type" val='1' dense label="Ascending" />
                                 </q-item-section>
                             </q-item>
                         </q-list>
