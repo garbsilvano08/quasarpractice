@@ -75,8 +75,8 @@ export default
 .login {
     background-color: #fff;
     margin: auto;
-    width: 600px;
-    margin-top: 100px;
+    // width: 600px;
+    // margin-top: 100px;
     border-radius: 5px;
 
     .title {
