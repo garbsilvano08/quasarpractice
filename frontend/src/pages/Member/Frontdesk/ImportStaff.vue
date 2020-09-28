@@ -349,13 +349,13 @@ export default
             let oFReader = new FileReader();
             const formData = new FormData();
             formData.append('image', document.getElementById(this.staff_list[this.image_index].frontdesk_person_id).files[0]);
-            return await this.$_post_file(formData);
+            return document.getElementById(this.staff_list[this.image_index].frontdesk_person_id).files[0] ? await this.$_post_file(formData) : null;
         },
         async uploadImage()
         {
             this.$q.loading.show();
             let image = await this.getImageURL()
-            this.staff_list[this.image_index].person_img = image
+            if (image) this.staff_list[this.image_index].person_img = image
             this.$q.loading.hide();
         },
         openFilemanager(index)

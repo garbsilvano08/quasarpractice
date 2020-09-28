@@ -36,7 +36,7 @@
                     </div>
                     <div class="content__input">
                         <div class="content__input-label">Password</div>
-                        <q-input v-model="user_information.password" type="password" outlined dense></q-input>
+                        <q-input disable v-model="user_information.password" type="password" outlined dense></q-input>
                     </div>
                 </div>
                 <div class="user-add__content-info">
