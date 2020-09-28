@@ -1,0 +1,7 @@
+{
+  "appId": "com.mysolid.vcop",
+  "appName": "Quasar App",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}
