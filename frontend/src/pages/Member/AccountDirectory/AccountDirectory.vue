@@ -46,7 +46,7 @@
                     <q-list>
                         <q-item clickable v-close-popup>
                             <q-item-section>
-                                <q-radio v-model="item_sort" val='date' dense label="Date Saved" />
+                                <q-radio clickable v-close-popup v-model="item_sort" val='date' dense label="Date Saved" />
                             </q-item-section>
                         </q-item>
                             <q-item clickable v-close-popup>
@@ -54,20 +54,20 @@
                                 <q-radio clickable v-close-popup v-model="item_sort" val='name' dense label="Name" />
                             </q-item-section>
                         </q-item>
-                        <q-item clickable v-close-popup>
+                        <!-- <q-item clickable v-close-popup>
                             <q-item-section>
                                 <q-radio clickable v-close-popup v-model="item_sort" val='temp' dense label="Temperature" />
                             </q-item-section>
-                        </q-item>
+                        </q-item> -->
                         <q-separator />
                         <q-item clickable v-close-popup>
                             <q-item-section>
-                                <q-radio v-model="sort_type" val='1' dense label="Ascending" />
+                                <q-radio clickable v-close-popup v-model="sort_type" val='-1' dense label="Descending" />
                             </q-item-section>
                         </q-item>
                         <q-item clickable v-close-popup>
                             <q-item-section>
-                                <q-radio v-model="sort_type" val='-1' dense label="Descending" />
+                                <q-radio clickable v-close-popup v-model="sort_type" val='1' dense label="Ascending" />
                             </q-item-section>
                         </q-item>
                     </q-list>
@@ -179,11 +179,19 @@ export default {
         checkbox_date_saved: '',
         checkbox_name: '',
         checkbox_temperature: '',
-        sort_type: '1',
+        sort_type: '-1',
         item_sort: 'date',
     }),
     watch:
     {
+        async sort_type()
+        {
+            await this.getStaffList()
+        },
+        async item_sort()
+        {
+            await this.getStaffList()
+        },
         async start_date(val)
         {
 
@@ -359,9 +367,9 @@ export default {
                 if (this.select__account_type == "All") parameter = {date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
                else  parameter = {category: this.select__account_type, date_created: {'$gte': new Date(this.start_date), '$lte': new Date(this.end_date)}}
             }
-            if (this.checkbox_date_saved) sort_item['date_created'] = Number(this.sort_type)
-            if (this.checkbox_name) sort_item['given_name'] = Number(this.sort_type)
-            if (this.checkbox_temperature) sort_item['temperature'] = Number(this.sort_type)
+            if (this.item_sort == 'date') sort_item['date_created'] =  Number(this.sort_type)
+            if (this.item_sort == 'name') sort_item['given_name'] =  Number(this.sort_type)
+            // if (this.item_sort == 'temp') sort_item['temperature'] = Number(this.sort_type)
 
             this.start_date = new Date(this.start_date).toISOString().split('T')[0]
             this.end_date = new Date(this.end_date).toISOString().split('T')[0]

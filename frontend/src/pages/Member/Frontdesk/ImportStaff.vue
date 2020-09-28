@@ -14,10 +14,10 @@
         <div class="import-staff__header">
             <div class="header__title">IMPORT STAFF </div>
             <div class="header__filter">
-                <q-btn class="btn-outline btn-export" flat dense no-caps>
+                <q-btn @click="clearAll()" :disabled="staff_list.length ? false : true" class="btn-outline btn-export" flat dense no-caps>
                     Clear All
                 </q-btn>
-                <q-btn @click="submit" class="btn-primary btn-export" flat dense no-caps>
+                <q-btn :disabled="staff_list.length ? false : true" @click="submit" class="btn-primary btn-export" flat dense no-caps>
                     Save
                 </q-btn>
             </div>
@@ -48,7 +48,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr  v-for="(staff, i) in this.staff_list" :key="i">
+                        <tr v-for="(staff, i) in this.list_staff" :key="i">
                             <td> 
                                 <!-- Loading -->
                                 <q-icon v-if="staff.status === 'pending'" class="background_disable" name="fas fa-circle-notch"/> 
@@ -178,6 +178,16 @@
             </q-dialog>
         </div>
         <div class="flex flex-center">
+            <div class="q-pa-lg flex flex-center">
+                <q-pagination
+                    v-model="current_page"
+                    :max="page_number"
+                    :max-pages="5"
+                    :boundary-numbers="false"
+                    :direction-links="true"
+                    >
+                </q-pagination>
+            </div>
             <!-- <q-pagination 
                 :max="5"
                 :direction-links="true"
@@ -221,29 +231,58 @@ export default
     filters: { },
     data:() =>(
     {
+        list_staff: [],
+        current_page: 1,
+        page_number: 1,
         show_upload : false,
         staff_list: [],
         edit_dialog: false,
         is_saving: false,
         index: 0,
-        image_index: 0
+        image_index: 0,
+        index_page: 0,
+        ongoing: false
     }),
     mounted() { },
     watch:
     {
+        current_page(val)
+        {
+            if (val) this.getStaffList()
+        },
         async staff_list(val)
         {
-            // console.log(val, 'staff');
+           this.getStaffList()
         }
     },
     methods: { 
+        clearAll()
+        {
+            this.list_staff = []
+            this.staff_list = []
+            this.ongoing = false
+            this.page_number = 1
+            this.current_page = 1
+            this.index_page = 0
+            this.index = 0
+            
+            document.getElementById("input").value = '';
+        },
+        getStaffList()
+        {
+            this.list_staff = []
+            for (let i = (this.current_page * 20) - 20; i < (this.current_page * 20); i++) {
+                if (i < this.staff_list.length) this.list_staff.push(this.staff_list[i])
+            }
+            this.page_number = Math.ceil( this.staff_list.length / 20)
+        },
         remove(index)
         {
-            this.staff_list.splice(index, 1);
+            this.staff_list.splice((((this.current_page * 20) - 20) + index), 1);
         },
         async submit()
         {
-            
+            this.ongoing = true
             let devices = await this.getDevices()
 
             for (let index = 0; index < this.staff_list.length; index++) {
@@ -287,9 +326,7 @@ export default
                 }
                 else
                 {
-                    console.log(this.staff_list[index], 'kjhkjhkjh');
                     let save = await this.$_post(postSavePerson, {person_info: data});
-                    console.log(save);
                     if(save.data) this.staff_list[index].status = 'done'
                     else this.staff_list[index].status = 'error'
                     // toDataUrl(this.staff_list[index].person_img, async(myBase64) =>
@@ -333,6 +370,12 @@ export default
                     
                 }
             }
+                    this.ongoing = false
+                    this.$q.notify(
+                    {
+                        color: 'green',
+                        message: 'Importation of staff is done.'
+                    });
         },
 
         async getDevices()
@@ -360,7 +403,7 @@ export default
         },
         openFilemanager(index)
         {
-            this.image_index = index
+            this.image_index = ((this.current_page * 20) - 20) + index 
             this.$refs.uploader[index].click();
         },
         showUploadTable()
@@ -376,6 +419,7 @@ export default
 
         async checkFile()
         {
+            this.$q.loading.show();
             this.staff_list = []
             const input = document.getElementById('input')
             readXlsxFile(input.files[0]).then(async (rows) => {
@@ -396,8 +440,8 @@ export default
                         given_name:         rows[index][1],
                         middle_name:        rows[index][2],
 
-                        company_name: company[0].company_name,
-                        company_id: company[0].id,
+                        company_name: company.length ? company[0].company_name : "Invalid",
+                        company_id: company.length ? company[0].id : "null",
                         position: rows[index][4],
                         email: rows[index][5],
                         gender: rows[index][6],
@@ -412,16 +456,19 @@ export default
                         category: 'Staff',
                         frontdesk_person_id: result,
                         frontdesk_person_date: new Date(),
-                        saved_from: company[0].id,
-                        company: company[0],
+                        saved_from: company.length ? company[0].id : null,
+                        company: company.length ? company[0] : {},
 
                         person_img: null,
                     })
                 }
+                this.page_number = Math.ceil( this.staff_list.length / 20)
+                this.getStaffList()
             })
+            this.$q.loading.hide();
         },
         editStaffData(index){
-            this.index = index
+            this.index = ((this.current_page * 20) - 20) + index
             this.edit_dialog = true
         }
     },
