@@ -143,6 +143,11 @@ module.exports = function (/* ctx */) {
       }
     },
 
+    capacitor: {
+      // Quasar handles app exit on mobile phone back button
+      // Requires Quasar v1.9.3+ for true/false, v1.12.6+ for '*' wildcard and array values
+      backButtonExit: true/false/'*'/['/login', '/home', '/my-page']
+    },
     // Full list of options: https://quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
     cordova: {
       // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
