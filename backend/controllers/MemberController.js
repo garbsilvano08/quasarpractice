@@ -25,6 +25,7 @@ const MDB_PERSON        = require('../models/MDB_PERSON');
 const MDB_IDENTIFICATION= require('../models/MDB_IDENTIFICATION');
 const MDB_PURPOSE       = require('../models//MDB_PURPOSE');
 const MDB_PERSON_LOGS   = require('../models//MDB_PERSON_LOGS');
+const MDB_USER_LOGS   = require('../models//MDB_USER_LOGS');
 const parseJson         = require('parse-json');
 
 const storage = multer.diskStorage({
@@ -152,6 +153,12 @@ module.exports =
             }
     })
         // let response = await new AccountClass().addingPerson();
+    },
+    async updateUserLogOut(req, res)
+    {
+        let data = await new MDB_USER_LOGS().collection.find({is_active: true})
+        await new MDB_USER_LOGS().update(data[0]._id, {is_active : false, time_log_out: new Date()})
+        res.send(true)
     },
     async addVisitor(req, res)
     {

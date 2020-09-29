@@ -174,6 +174,13 @@ export default
         {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         },
+        async $_convertFileToBlob(file)
+        {
+            // Convert image to blob
+            let selected = await fetch(Capacitor.convertFileSrc('file://' + file));
+            let blob = await selected.blob();
+            return blob;
+        },
         async $_callGallery()
         {
             let res = {}
