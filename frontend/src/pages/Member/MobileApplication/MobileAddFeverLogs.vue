@@ -12,6 +12,7 @@
                                 <!-- <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video> -->
                                 <!-- <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img> -->
                                 <!-- <input style="display:none" capture="camera" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file"> -->
+                                Picture
                                 <q-btn class="btn-upload btn-primary" flat dense no-caps>
                                     <q-icon style="font-size: 13px; margin-right: 3px" name="fas fa-camera"></q-icon> Capture
                                 </q-btn>
@@ -21,6 +22,7 @@
                                 <!-- <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video> -->
                                 <!-- <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img> -->
                                 <!-- <input style="display:none" capture="camera" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file"> -->
+                                ID
                                 <q-btn class="btn-upload btn-primary" flat dense no-caps>
                                     <q-icon style="font-size: 13px; margin-right: 3px" name="fas fa-camera"></q-icon> Capture
                                 </q-btn>
@@ -71,7 +73,7 @@
 </template>
 
 <script>
-import "./MobileFilterFeverLogs.scss";
+import "./MobileInput.scss";
 // Classes
 import OpticalReadClass from '../../../classes/OpticalReadClass';
 import { postGetDevice } from '../../../references/url';
