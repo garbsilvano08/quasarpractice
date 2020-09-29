@@ -13,7 +13,7 @@ const routes = [
         path: '/member',
         component: () => import('layouts/MemberLayout.vue'),
         children:
-        [
+        [   
             // DASHBOARD ROUTES
             { name: 'member_dashboard', path: '', component: () => import('pages/Member/Dashboard/Dashboard.vue') },
             { name: 'member_testing', path: 'testing', component: () => import('pages/Member/Dashboard.vue') },
@@ -24,7 +24,6 @@ const routes = [
             { name: 'member_frontdesk_blacklist', path: '/frontdesk/blacklist', component: () => import('pages/Member/Frontdesk/BlackList.vue') },
             { name: 'member_frontdesk_addreport', path: '/frontdesk/add-report', component: () => import('pages/Member/Frontdesk/AddReport') },
             { name: 'member_frontdesk_import', path: '/frontdesk/import', component: () => import('pages/Member/Frontdesk/ImportStaff.vue') },
-
             
             // DAILY LOGS ROUTES
             { name: 'member_log_report', path: 'report/log-report', component: () => import('pages/Member/DailyLogs/DailyLogs.vue') },
@@ -80,6 +79,17 @@ const routes = [
     {
         path: '*',
         component: () => import('pages/Error404.vue')
+    },
+    {
+        path: '/mobile',
+        component: () => import('layouts/MobileMemberLayout.vue'),
+        children:[
+            //MOBILE APPLICATION PAGES
+            { name: 'member_mobile_dashboard', path: '/mobile/dashboard', component: () => import('pages/Member/MobileApplication/MobileDashboard.vue') },
+            { name: 'member_mobile_filter_fever', path: '/mobile/filter-fever-logs', component: () => import('pages/Member/MobileApplication/MobileFilterFeverLogs.vue') },
+            { name: 'member_mobile_add_fever', path: '/mobile/add-fever-logs', component: () => import('pages/Member/MobileApplication/MobileAddFeverLogs.vue') },
+            { name: 'member_mobile_user_logs', path: '/mobile/user-logs', component: () => import('pages/Member/MobileApplication/MobileUserLogs.vue') },
+        ]
     }
 ]
 
