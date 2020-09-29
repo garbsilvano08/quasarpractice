@@ -13,7 +13,8 @@ import { postGetCompanies,
     postGetAlertCount,
     postGetDevice,
     postDashboard,
-    postGetCompany
+    postGetCompany,
+    postUserLogOut
  } from '../references/url';
 
 export default
@@ -117,7 +118,7 @@ export default
             }).then((r) => { res = r; }).catch((e) =>
             {
                 if(e.response.status === 500)
-                {
+                {   
                     this.$q.dialog({ title: `You have been logged-out`, message: e.response.data.message });
                     this.$router.push({ name: 'front_login' });
                 }
@@ -163,10 +164,15 @@ export default
             let company = await this.$_post(postGetCompanies, {find_company: params})
             return company.data
         },
-        $_logout()
-        {
+        async $_logout()
+        {   
+            await this.$_post(postUserLogOut)
             localStorage.removeItem("auth");
             this.$store.commit('user/updateUser', null);
-        }
+        },
+        $_isMobile()
+        {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        },
     }
 }
