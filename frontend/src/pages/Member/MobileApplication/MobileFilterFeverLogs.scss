@@ -35,7 +35,10 @@
             }
             .frontdesk__content-info {
                 margin-bottom: 20px;
-
+                .content__select-img{
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                }
                 .frontdesk__content-temperature {
                     font-size: 14px;
                     font-weight: 500;
