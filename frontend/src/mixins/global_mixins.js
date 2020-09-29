@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { Plugins, CameraResultType, CameraSource, Capacitor } from "@capacitor/core";
+const { GalleryPlugin, Filesystem, Camera, VideoBackgroundMusic } = Plugins;
 import { postGetCompanies,
     postAddPerson,
     postUpdateStaff,
@@ -167,6 +169,52 @@ export default
         {
             localStorage.removeItem("auth");
             this.$store.commit('user/updateUser', null);
-        }
+        },
+        $_isMobile()
+        {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        },
+        async $_callGallery()
+        {
+            let res = {}
+            try
+            {
+                try
+                {
+                    const image = await Camera.getPhoto(
+                    {
+                        quality: 100,
+                        correctOrientation: true,
+                        source: CameraSource.Camera,
+                        allowEditing: false,
+                        resultType: CameraResultType.Uri
+                    });
+
+                    res =
+                    {
+                        data:
+                        {
+                            data: [ image.webPath ],
+                            is_camera: true
+                        }
+                    };
+                }
+                catch (error)
+                {
+                    if (error.message === "User cancelled photos app")
+                    {
+                        this.$_callGallery();
+                    }
+
+                    return false;
+                }
+
+                return res;
+            }
+            catch (e)
+            {
+                alert(e.message);
+            }
+        },
     }
 }

@@ -90,7 +90,10 @@ export default
             {
                 this.$store.commit('user/updateUser', res.data)
                 localStorage.setItem("auth", JSON.stringify(res.data));
-                this.$router.push({ name: 'member_dashboard' });
+                this.$_isMobile() ?
+                    this.$router.push({ name: 'member_mobile_dashboard' }) :
+                    this.$router.push({ name: 'member_dashboard' })
+
             }
 
             this.$q.loading.hide();
