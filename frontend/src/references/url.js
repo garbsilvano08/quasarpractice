@@ -28,6 +28,8 @@ exports.postDeleteDevice    = 'member/delete/device';
 exports.postGetPersonLogs   = 'member/get/db_person_logs';
 exports.postUpdatePersonLogs= 'member/update/person_logs'
 
+exports.postUserLogOut      = 'member/update/user_logs'
+exports.postGetMobileUserLogs='member/get/mobile_user_logs'
 
 // Person
 exports.postSavePerson      = 'member/save/person';

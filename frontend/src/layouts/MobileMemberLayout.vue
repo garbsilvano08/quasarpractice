@@ -286,7 +286,9 @@ export default
                 },
                 persistent: true
             }).onOk(() => {
-                // console.log('>>>> OK')
+                this.$router.push({
+                    name: "member_mobile_dashboard"
+                })
             }).onOk(() => {
                 // console.log('>>>> second OK catcher')
             }).onCancel(() => {

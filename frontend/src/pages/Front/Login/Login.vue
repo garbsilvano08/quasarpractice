@@ -9,12 +9,12 @@
                 <div class="login__title-sub">Client Login</div>
             </div>
             <div class="login__input">
-                <q-input v-model="form_data.email" placeholder="Username" dense borderless>
+                <q-input v-model="form_data.email" placeholder="Username" dense borderless @keypress.enter.native="submitLogin">
                     <template v-slot:prepend>
                         <q-icon name="mdi-account-outline" />
                     </template>
                 </q-input>
-                <q-input v-model="form_data.password" type="password" placeholder="Password" dense borderless>
+                <q-input v-model="form_data.password" type="password" placeholder="Password" dense borderless  @keypress.enter.native="submitLogin">
                     <template v-slot:prepend>
                         <q-icon name="mdi-lock-outline" />
                     </template>

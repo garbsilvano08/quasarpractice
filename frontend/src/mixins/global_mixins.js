@@ -1,5 +1,23 @@
 import axios from 'axios';
-
+import { Plugins, CameraResultType, CameraSource, Capacitor } from "@capacitor/core";
+const { GalleryPlugin, Filesystem, Camera, VideoBackgroundMusic } = Plugins;
+import { postGetCompanies,
+    postAddPerson,
+    postUpdateStaff,
+    postSavePerson,
+    postGetDailyLog,
+    postGetWeeklyCount,
+    postLatestLog,
+    postPersonByCateg,
+    postGetAllLogs,
+    postGetPersons,
+    postGetPurposeVisit,
+    postGetAlertCount,
+    postGetDevice,
+    postDashboard,
+    postGetCompany,
+    postUserLogOut
+ } from '../references/url';
 
 export default
 {
@@ -143,10 +161,69 @@ export default
             // console.log(res.data);
             return res.data;
         },
-        $_logout()
+        async $_company(params)
+        {
+            let company = await this.$_post(postGetCompanies, {find_company: params})
+            return company.data
+        },
+        async $_logout()
         {
             localStorage.removeItem("auth");
             this.$store.commit('user/updateUser', null);
-        }
+            await this.$_post(postUserLogOut)
+        },
+        $_isMobile()
+        {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        },
+        async $_convertFileToBlob(file)
+        {
+            // Convert image to blob
+            let selected = await fetch(Capacitor.convertFileSrc('file://' + file));
+            let blob = await selected.blob();
+            return blob;
+        },
+        async $_callGallery()
+        {
+            let res = {}
+            try
+            {
+                try
+                {
+                    const image = await Camera.getPhoto(
+                    {
+                        quality: 100,
+                        correctOrientation: true,
+                        source: CameraSource.Camera,
+                        allowEditing: false,
+                        resultType: CameraResultType.Uri
+                    });
+
+                    res =
+                    {
+                        data:
+                        {
+                            data: [ image.webPath ],
+                            is_camera: true
+                        }
+                    };
+                }
+                catch (error)
+                {
+                    if (error.message === "User cancelled photos app")
+                    {
+                        this.$_callGallery();
+                    }
+
+                    return false;
+                }
+
+                return res;
+            }
+            catch (e)
+            {
+                alert(e.message);
+            }
+        },
     }
 }
