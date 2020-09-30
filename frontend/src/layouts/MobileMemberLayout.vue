@@ -11,19 +11,15 @@
         <q-header v-if="$route.name == 'member_mobile_filter_fever'">
             <q-toolbar>
                 <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
-                <div class="header_title">
-                    <div class="title">Filter</div>
-                </div>
-
+                <div class="header_title">Filter</div>
+            <q-btn flat dense round icon="fas fa-check" aria-label="Generate" @click="goToDashboard()"/>
             </q-toolbar>
         </q-header>
         <q-header v-if="$route.name == 'member_mobile_add_fever'">
             <q-toolbar>
                 <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
-                <div class="header_title">
-                    <div class="title">Add Fever Logs</div>
-                </div>
-
+                <div class="header_title">Add Fever Logs</div>
+                <q-btn flat dense round icon="fas fa-check" aria-label="Save" @click="dialogSaveUserLogs()"/>
             </q-toolbar>
         </q-header>
         <q-header v-if="$route.name == 'member_mobile_user_logs'">
@@ -32,7 +28,6 @@
                 <div class="header_title">
                     <div class="title">User Logs</div>
                 </div>
-
             </q-toolbar>
         </q-header>
 
@@ -278,6 +273,28 @@ export default
     },
     methods:
     {   
+        dialogSaveUserLogs() {
+            this.$q.dialog({
+                title: 'Add User Logs',
+                message: 'Confirm Message, Please edit',
+                ok: {
+                    push: true
+                },
+                cancel:{
+                    push:  true,
+                    color: 'negative'
+                },
+                persistent: true
+            }).onOk(() => {
+                // console.log('>>>> OK')
+            }).onOk(() => {
+                // console.log('>>>> second OK catcher')
+            }).onCancel(() => {
+                // console.log('>>>> Cancel')
+            }).onDismiss(() => {
+                // console.log('I am triggered on both OK and Cancel')
+            })
+        },
         goToDashboard()
         {
             this.$router.push({

@@ -35,7 +35,10 @@
             }
             .frontdesk__content-info {
                 margin-bottom: 20px;
-
+                .content__select-img{
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                }
                 .frontdesk__content-temperature {
                     font-size: 14px;
                     font-weight: 500;
@@ -108,8 +111,8 @@
         justify-content: center;
 
         @media screen and (max-width: 425px) {
-            width: 50%;
-            height: 50%;
+            width: 80%;
+            height: 80%;
             border-radius: 10px;
         }
 
@@ -121,9 +124,8 @@
     .btn-upload {
         font-size: 12px !important;
         max-width: 60%;
-        margin-top: 10px;
         margin-left: 0px;
-        
+        margin-bottom: 10px;
     }
 }
 .content__box {
