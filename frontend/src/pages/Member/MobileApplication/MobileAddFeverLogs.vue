@@ -5,27 +5,33 @@
                 <div class="frontdesk__content content__box">
                     <!-- PERSONAL INFORMATION -->
                     <div class="frontdesk__content-info">
-                        <div class="frontdesk__content-grid">
-                            <div class="content__select">
-                                <div class="content__img-border">
-                                    <q-img class="content__img" border icon="mdi-camera" id="canvas" width="340" height="280" :src="image_person ? image_person : '/img/placeholder-img.jpg'"></q-img> 
-                                    <!-- <canvas class="content__img"  border icon="mdi-camera" id="canvas" width="340" height="280"></canvas> -->
-                                    <q-btn @click="captureImage()" class="btn-upload btn-primary" flat dense no-caps>
-                                        <q-icon style="font-size: 13px; margin-right: 3px" name="fas fa-camera"></q-icon> Capture
-                                    </q-btn>
-                                </div>
+                        <div class="content__select-img">
+                            <div class="content__img-border">
+                                <q-img class="content__img" border icon="mdi-camera" id="canvas" width="340" height="280" :src="image_person ? image_person : '/img/placeholder-img.jpg'"></q-img> 
+                                <!-- <canvas class="content__img"  border icon="mdi-camera" id="canvas" width="340" height="280"></canvas> -->
+                                <!-- <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video> -->
+                                <!-- <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img> -->
+                                <!-- <input style="display:none" capture="camera" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file"> -->
+                                Picture
+                                <q-btn @click="captureImage()" class="btn-upload btn-primary" flat dense no-caps>
+                                    <q-icon style="font-size: 13px; margin-right: 3px" name="fas fa-camera"></q-icon> Capture
+                                </q-btn>
                             </div>
-                            <div class="content__select">
-                                <div class="content__img-border">
-                                    <q-img class="content__img" border icon="mdi-camera" id="canvas" width="340" height="280" :src="image_id ? image_id : '/img/placeholder-img.jpg'"></q-img> 
-                                    <!-- <canvas class="content__img"  border icon="mdi-camera" id="canvas" width="340" height="280"></canvas> -->
-                                    <q-btn @click="captureID()" class="btn-upload btn-primary" flat dense no-caps>
-                                        <q-icon style="font-size: 13px; margin-right: 3px" name="fas fa-camera"></q-icon> Capture
-                                    </q-btn>
-                                </div>
+                            <div class="content__img-border">
+                                <q-img class="content__img" border icon="mdi-camera" id="canvas" width="340" height="280" :src="image_id ? image_id : '/img/placeholder-img.jpg'"></q-img> 
+                                <!-- <canvas class="content__img"  border icon="mdi-camera" id="canvas" width="340" height="280"></canvas> -->
+                                <!-- <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video> -->
+                                <!-- <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img> -->
+                                <!-- <input style="display:none" capture="camera" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file"> -->
+                                ID
+                                <q-btn @click="captureID()" class="btn-upload btn-primary" flat dense no-caps>
+                                    <q-icon style="font-size: 13px; margin-right: 3px" name="fas fa-camera"></q-icon> Capture
+                                </q-btn>
                             </div>
                         </div>
+                        
                         <div class="frontdesk__content">
+                            <div class="header__title">Personal Information</div>
                             <div class="content__select">
                                 <div class="content__select-label">Type of Account*</div>
                                 <q-select v-model="person_information.category" :options="options_account" outlined dense></q-select>
@@ -96,7 +102,8 @@
 <script>
 import Model from "../../../models/Model";
 import MobileModel from "../../../models/MobileModel";
-import "./MobileFilterFeverLogs.scss";
+// import "./MobileFilterFeverLogs.scss";
+import "./MobileInput.scss";
 // Classes
 import OpticalReadClass from '../../../classes/OpticalReadClass';
 import PersonalInformation from '../../../classes/PersonalInformation';
@@ -221,7 +228,9 @@ export default {
                 frontdesk_person_id: result,
                 frontdesk_person_date: new Date(),
                 saved_from: this.company_details._id ? this.company_details._id : 'none',
-                temperature: this.person_information.temperature
+                temperature: this.person_information.temperature,
+                location_coordinates: location,
+                location: ''
             }
             
             await this.mobile_db.save(data, result)

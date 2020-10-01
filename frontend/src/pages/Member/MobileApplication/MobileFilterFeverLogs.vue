@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import "./MobileFilterFeverLogs.scss";
+import "./MobileInput.scss";
 import Model from "../../../models/Model";
 
 function toDataUrl(url, callback) {
