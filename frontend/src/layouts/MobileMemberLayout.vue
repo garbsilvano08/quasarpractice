@@ -30,6 +30,14 @@
                 </div>
             </q-toolbar>
         </q-header>
+        <q-header v-if="$route.name == 'member_mobile_sync_to_cloud'">
+            <q-toolbar>
+                <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
+                <div class="header_title">
+                    <div class="title">Sync to Cloud</div>
+                </div>
+            </q-toolbar>
+        </q-header>
 
         <q-drawer v-model="leftDrawerOpen"  behavior="mobile" show-if-above bordered overlay content-class="bg-primary">
             <div class="nav-profile">
