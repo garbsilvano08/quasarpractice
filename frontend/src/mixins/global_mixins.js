@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Plugins, CameraResultType, CameraSource, Capacitor } from "@capacitor/core";
-const { GalleryPlugin, Filesystem, Camera, VideoBackgroundMusic } = Plugins;
+const { GalleryPlugin, Filesystem, Camera, VideoBackgroundMusic, Geolocation, Storage } = Plugins;
 import { postGetCompanies,
     postAddPerson,
     postUpdateStaff,
@@ -194,34 +194,38 @@ export default
                         correctOrientation: true,
                         source: CameraSource.Camera,
                         allowEditing: false,
-                        resultType: CameraResultType.Uri
+                        resultType: CameraResultType.Uri,
+                        // saveToGallery: true
                     });
+                    res = image.webPath
+                    console.log(image, 'image');
+                    
+                    // let contents = await Filesystem.readFile({
+                    // path: image.webPath,
+                    // directory: FilesystemDirectory.Documents
+                    // });
 
-                    res =
-                    {
-                        data:
-                        {
-                            data: [ image.webPath ],
-                            is_camera: true
-                        }
-                    };
+                    // console.log(contents);
+                    
+
+                   
                 }
                 catch (error)
                 {
-                    if (error.message === "User cancelled photos app")
-                    {
-                        this.$_callGallery();
-                    }
-
                     return false;
                 }
-
                 return res;
             }
             catch (e)
             {
                 alert(e.message);
             }
+        },
+        async $_current_position()
+        {
+            const coordinates = await Geolocation.getCurrentPosition();
+            console.log('Current', coordinates);
+            return coordinates
         },
     }
 }

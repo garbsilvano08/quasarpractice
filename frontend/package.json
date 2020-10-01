@@ -10,6 +10,7 @@
     "dev": "quasar dev"
   },
   "dependencies": {
+    "@capacitor/core": "^2.4.2",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@mdi/font": "^5.3.45",
     "@quasar/extras": "^1.0.0",
