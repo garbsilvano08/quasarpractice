@@ -266,6 +266,23 @@ module.exports =
         res.send(true)
     },
 
+    async saveReport(req, res)
+    {
+        let person_info = {
+            mask:                   1,
+            temperature:            extra.bodyTemp,
+            person_img:             req.body.person_img,
+            full_name:              req.body.given_name + " " + req.body.middle_name + " " + req.body.last_name,
+            device_id:              req.body.deviceKey,
+            frontdesk_person_id:    req.body.personId,
+            date_logged:            req.body.time,
+            record_id:              req.body.id,
+            company_id:             person.length ? person[0].company_id : device[0].company_id
+        }
+        await new PersonLogsClass(person_info).submit()
+        return res.send({"success":true, "result":1});
+    },
+
     async visionSkyLogs(req, res)
     {
         let person_info = {}

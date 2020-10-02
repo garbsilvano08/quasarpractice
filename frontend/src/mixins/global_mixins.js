@@ -140,25 +140,32 @@ export default
 
             // http://128.199.130.24:81/
             // http://157.245.55.109:4000/
-            await axios.post('https://vcop-image.geer.solutions/', data,{
-                headers: {
-                'content-type': 'multipart/form-data',
-                }
-            }).then((r) => { res = r; }).catch((e) =>
+            try
             {
-                if(e.response.status === 500)
+                await axios.post('https://vcop-image.geer.solutions/', data,{
+                    headers: {
+                    'content-type': 'multipart/form-data',
+                    }
+                }).then((r) => { res = r; }).catch((e) =>
                 {
-                    this.$q.dialog({ title: `You have been logged-out`, message: e.response.data.message });
-                    this.$router.push({ name: 'front_login' });
-                }
-                else
-                {
-                    return
-                    // this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
-                }
-            }); 
-            // console.log(res.data);
-            return res.data;
+                    if(e.response.status === 500)
+                    {
+                        this.$q.dialog({ title: `You have been logged-out`, message: e.response.data.message });
+                        this.$router.push({ name: 'front_login' });
+                    }
+                    else
+                    {
+                        return
+                        // this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
+                    }
+                }); 
+                // console.log(res.data);
+                return res.data;
+            }
+            catch(e)
+            {
+                return null
+            }
         },
         async $_company(params)
         {

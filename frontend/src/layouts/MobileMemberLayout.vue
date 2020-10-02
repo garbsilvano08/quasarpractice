@@ -4,7 +4,7 @@
             <q-toolbar>
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
-                <q-img @click="showToggle" src="../assets/vcop-logo-white.svg"></q-img>
+                <q-img src="../assets/vcop-logo-white.svg"></q-img>
                 
             </q-toolbar>
         </q-header>
@@ -262,13 +262,10 @@ export default
     {   
         async checkQueueSync()
         {
-            // await this.mobile_db.clear()
-            console.log('kjhjkhjkh');
             let keys = await this.mobile_db.keys()
             for (let i = 0; i < keys.length; i++) {
                 let visitor = await this.mobile_db.get(keys[i])
                 visitor = JSON.parse(visitor)
-                console.log(visitor);
                 let id_src = await this.savePicsLocal(visitor.id_image, 'person' + Date.now().toString() + '.png')
                 let person_src = await this.savePicsLocal(visitor.person_img, 'person' + Date.now().toString() + '.png')
                 let data = {
@@ -307,9 +304,9 @@ export default
                 
                 }
             
-                console.log(data, 'data');
                 let save = await this.$_post(postSavePerson, {person_info: data} );
-                console.log(save);
+
+                
                 await this.mobile_db.delete(keys[i])
 
             }
@@ -328,7 +325,6 @@ export default
                 res =  await this.$_post_file(formData);
             }
             catch(e){}
-            console.log(res, 'image');
 
             return res;
         },

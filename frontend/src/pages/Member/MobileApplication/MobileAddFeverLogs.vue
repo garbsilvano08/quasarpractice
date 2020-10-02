@@ -234,6 +234,12 @@ export default {
             }
             
             await this.mobile_db.save(data, result)
+
+
+
+            this.$router.push({
+                name: "member_mobile_sync_to_cloud"
+            })   
             // let db = new Model()
             // db.initialize()
             // let person = await this.db.add(

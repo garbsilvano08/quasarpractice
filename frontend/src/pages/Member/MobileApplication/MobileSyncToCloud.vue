@@ -14,30 +14,15 @@
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr class="syncing">
-                                                <td>0974812374123</td>
-                                                <td>Juan Dela Cruz</td>
+                                        <tbody v-for="(person, a) in this.person_list" :key="a">
+                                            <tr v-if="a==0" class="syncing">
+                                                <td>{{person.frontdesk_person_id}}</td>
+                                                <td>{{person.given_name + " " + person.middle_name + " " + person.last_name}}</td>
                                                 <td class="background_primary"><q-icon class="loader-2" name="fas fa-sync-alt"/> Syncing </td>
                                             </tr>
-                                            <tr>
-                                                <td class="background_disable">0974812374123</td>
-                                                <td class="background_disable">Juan Dela Cruz</td>
-                                                <td class="background_disable">In Queue</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="background_disable">0974812374123</td>
-                                                <td class="background_disable">Juan Dela Cruz</td>
-                                                <td class="background_disable">In Queue</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="background_disable">0974812374123</td>
-                                                <td class="background_disable">Juan Dela Cruz</td>
-                                                <td class="background_disable">In Queue</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="background_disable">0974812374123</td>
-                                                <td class="background_disable">Juan Dela Cruz</td>
+                                            <tr v-else>
+                                                <td class="background_disable">{{person.frontdesk_person_id + " " + a}}</td>
+                                                <td class="background_disable">{{person.given_name + " " + person.middle_name + " " + person.last_name}}</td>
                                                 <td class="background_disable">In Queue</td>
                                             </tr>
                                         </tbody>
@@ -58,11 +43,14 @@ import OpticalReadClass from '../../../classes/OpticalReadClass';
 import { postGetDevice } from '../../../references/url';
 import { log } from 'util';
 import {base64StringToBlob} from 'blob-util';
+import MobileModel from "../../../models/MobileModel";
 
 export default {
     data:() =>
     ({  
-        
+        mobile_db: new MobileModel(),
+        person_list: [],
+        keys: []
     }),
     watch:
     {
@@ -70,11 +58,48 @@ export default {
     },
     async mounted()
     {
-        
+        await this.getSyncPerson()
     },
     methods:
     {
-        
+        async addPerson(id)
+        {
+            for (let i = 0; i < this.person_list.length; i++) {
+                if (this.person_list[i].frontdesk_person_id == id) return false
+            }
+            return true
+        },
+        async getSyncPerson()
+        {
+            // this.person_list = []
+            this.keys = await this.mobile_db.keys()
+            this.check()
+            for (let i = 0; i < this.keys.length; i++) {
+
+                let is_new = await this.addPerson(this.keys[i])
+                if (is_new)
+                {
+                    let person = await this.mobile_db.get(this.keys[i])
+                    this.person_list.push(JSON.parse(person))
+                }
+            }
+            setTimeout(() => this.getSyncPerson(), 1000);
+        },
+        check()
+        {
+            for (let i = 0; i < this.person_list.length; i++) {
+                if (this.keys.length) {
+                    for (let x = 0; x < this.keys.length; x++) {
+                        // console.log(this.person_list[i].frontdesk_person_id !=  this.keys[x], 'remove');
+                        if (this.person_list[i].frontdesk_person_id !=  this.keys[x]) this.person_list.splice(i, 1)
+                    }
+                }
+                else this.person_list = []
+                
+                
+            }
+        }
+
     },
 }
 </script>
