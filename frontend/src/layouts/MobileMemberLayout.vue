@@ -24,7 +24,7 @@
         </q-header>
         <q-header v-if="$route.name == 'member_mobile_user_logs'">
             <q-toolbar>
-                <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
+                <q-btn flat dense round icon="fas fa-arrow-left" aria-label="Close" @click="goToDashboard()"/>
                 <div class="header_title">
                     <div class="title">User Logs</div>
                 </div>
@@ -32,7 +32,7 @@
         </q-header>
         <q-header v-if="$route.name == 'member_mobile_sync_to_cloud'">
             <q-toolbar>
-                <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
+                <q-btn flat dense round icon="fas fa-arrow-left" aria-label="Close" @click="goToDashboard()"/>
                 <div class="header_title">
                     <div class="title">Sync to Cloud</div>
                 </div>

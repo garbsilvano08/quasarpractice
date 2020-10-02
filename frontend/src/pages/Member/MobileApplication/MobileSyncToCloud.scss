@@ -23,6 +23,24 @@
 
     .frontdesk__container {
         .frontdesk__content {
+            .offline_note {
+                color: #FFFFFF;
+                display: grid;
+                grid-template-columns: 20% 80%;
+                background-color: #C0392B;
+                border-radius: 5px;
+                width: 95%;
+                margin: 10px auto 0 auto;
+                padding: 10px;
+                .q-icon{
+                    font-size: 30px;
+                    margin: auto;
+                }
+                p{
+                    font-size: 13px;
+                    margin: auto; 
+                }
+            }
             .content__input{
                 margin-bottom: 10px;
                 .content__input-label{
@@ -153,7 +171,7 @@
                     100% { transform: rotate(360deg); }
                 }
         
-                .background_stop{
+                .background_danger{
                     color: red;
                 }
                 .background_disable{

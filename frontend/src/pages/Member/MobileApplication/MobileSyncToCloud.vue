@@ -3,6 +3,10 @@
         <div class="frontdesk__container">
                 <div class="content__grid">
                     <div class="frontdesk__content">
+                        <div class="offline_note" v-if="!online">
+                        <q-icon name="fas fa-exclamation-circle"></q-icon>   
+                        <p>Your network is unavailable. Please make sure that you are connected to any wifi or mobile network.</p>
+                        </div>
                         <div class="header__title">Health Cloud Synchronization</div>
                             <div class="table-container">
                                 <div class="content__table">
@@ -23,7 +27,8 @@
                                             <tr v-else>
                                                 <td class="background_disable">{{person.frontdesk_person_id + " " + a}}</td>
                                                 <td class="background_disable">{{person.given_name + " " + person.middle_name + " " + person.last_name}}</td>
-                                                <td class="background_disable">In Queue</td>
+                                                <td class="background_disable" v-if="online">In Queue</td>
+                                                <td class="background_danger" v-else>Pending</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -50,7 +55,8 @@ export default {
     ({  
         mobile_db: new MobileModel(),
         person_list: [],
-        keys: []
+        keys: [],
+        online: true
     }),
     watch:
     {
