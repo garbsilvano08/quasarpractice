@@ -14,6 +14,7 @@ const excel             = require('exceljs');
 
 // Models
 const MDB_USER_LOGS   = require('../models/MDB_USER_LOGS');
+const MDB_PERSON_LOGS   = require('../models/MDB_PERSON_LOGS');
 
 const parseJson         = require('parse-json');
 
@@ -57,5 +58,9 @@ module.exports =
     async getMobileUserLogs(req, res)
     {  
         return res.send(await new MDB_USER_LOGS().collection.find({is_active : false}).sort({time_log_in: -1}));
+    },
+    async getMobileFeverLogs(req, res)
+    {
+        return res.send(await new MDB_PERSON_LOGS().collection.find({has_fever : true}).sort({date_saved: -1}).limit(5));
     }
 }

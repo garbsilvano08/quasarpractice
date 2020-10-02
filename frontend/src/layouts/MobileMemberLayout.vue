@@ -58,7 +58,7 @@
 						</q-item-section>
 						<q-item-section>About</q-item-section>
 					</q-item>
-                    <q-item class="nav absolute-bottom" clickable v-ripple>
+                    <q-item class="nav absolute-bottom" clickable v-ripple @click="logout">
 						<q-item-section avatar>
 							<q-icon name="fas fa-sign-out-alt" />
 						</q-item-section>
@@ -349,46 +349,9 @@ export default
             else return true
         },
 
-        async userAccess(key)
+        logout()
         {
-            let company = this.$user_info.company ? this.$user_info.company : {}
-            if (this.$user_info && this.$user_info.user_type)
-            {
-                 if (this.$user_info.user_type === 'Super Admin')
-                {
-                    if ( key === 'frontdesk_visitor' || key === 'personnel_management') return false
-                    else return true
-                }
-                else if (company.device_owner != 'Device Owner')
-                {
-                    if ( key === 'reports' || key === 'dashboard' || key === 'member_logout')
-                    {
-                        return true
-                    }
-                    else return false
-                }
-                else if (this.$user_info.user_type === 'Officer')
-                {
-                    if ( key === 'member_logout')
-                    {
-                        return true
-                    }
-                    else return false
-                }
-                else if (this.$user_info.user_type == 'Admin')
-                {
-                    if ( key === 'user_management' ) return false
-                    else return true
-                }
-                else if (this.$user_info.user_type == 'Receptionist')
-                {
-                    if ( key === 'member_logout' || key === 'dashboard' || key === 'frontdesk_visitor' || key === 'account_directory' || key === 'daily')
-                    {
-                        return true
-                    }
-                    else return false
-                }
-            }
+            this.$_logout();
         },
 
         showToggle()
