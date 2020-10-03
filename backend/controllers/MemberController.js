@@ -263,7 +263,7 @@ module.exports =
     {
         let person_info = {}
         let key = ['Traffic']
-        let log = await new MDB_PERSON_LOGS().docs({date_saved: new Date(req.body.time ? req.body.time : req.body.checkTime)})
+        let log = await new MDB_PERSON_LOGS().docs({date_saved: req.body.time ? new Date(req.body.time) : new Date(req.body.checkTime), device_id: req.body.deviceKey ? req.body.deviceKey : req.body.mac})
         // console.log(log, 'log');
         if (!log.length)
         {
