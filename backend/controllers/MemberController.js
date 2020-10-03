@@ -263,59 +263,64 @@ module.exports =
     {
         let person_info = {}
         let key = ['Traffic']
-        let date_string = new Date(new Date(req.body.time ? req.body.time : req.body.checkTime))
-        // date_string.setHours(date_string.getHours())
-        date_string = date_string.toISOString().split('T')[0]
-        
-        date_string = date_string.split("-")
-        let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.personId ? req.body.personId : req.body.userId})
-        let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey ? req.body.deviceKey : req.body.mac})
-        if (person.length) key.push(person[0].category)
-        else key.push('Stranger')
-
-        if (req.body.deviceKey)
+        let log = await new MDB_PERSON_LOGS().docs({date_saved: new Date(req.body.time ? req.body.time : req.body.checkTime)})
+        // console.log(log, 'log');
+        if (!log.length)
         {
-            let extra = parseJson(req.body.extra)
-
-            if (device.length > 0)
+            let date_string = new Date(new Date(req.body.time ? req.body.time : req.body.checkTime))
+            // date_string.setHours(date_string.getHours())
+            date_string = date_string.toISOString().split('T')[0]
+            
+            date_string = date_string.split("-")
+            let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.personId ? req.body.personId : req.body.userId})
+            let device = await new MDB_DEVICE().docs({device_id: req.body.deviceKey ? req.body.deviceKey : req.body.mac})
+            if (person.length) key.push(person[0].category)
+            else key.push('Stranger')
+    
+            if (req.body.deviceKey)
             {
-                await new CounterClass().counterActivities(device[0].company_id, key, date_string, req.body.deviceKey)
-                person_info = {
-                    mask:                   1,
-                    temperature:            extra.bodyTemp,
-                    person_img:             req.body.path,
-                    full_name:              person.length ? person[0].given_name + " " + person[0].middle_name + " " + person[0].last_name : "Stranger",
-                    device_id:              req.body.deviceKey,
-                    frontdesk_person_id:    req.body.personId,
-                    date_logged:            req.body.time,
-                    record_id:              req.body.id,
-                    company_id:             person.length ? person[0].company_id : device[0].company_id
+                let extra = parseJson(req.body.extra)
+    
+                if (device.length > 0)
+                {
+                    await new CounterClass().counterActivities(device[0].company_id, key, date_string, req.body.deviceKey)
+                    person_info = {
+                        mask:                   1,
+                        temperature:            extra.bodyTemp,
+                        person_img:             req.body.path,
+                        full_name:              person.length ? person[0].given_name + " " + person[0].middle_name + " " + person[0].last_name : "Stranger",
+                        device_id:              req.body.deviceKey,
+                        frontdesk_person_id:    req.body.personId,
+                        date_logged:            req.body.time,
+                        record_id:              req.body.id,
+                        company_id:             person.length ? person[0].company_id : device[0].company_id
+                    }
                 }
             }
-        }
-        
-        else if (req.body.mac)
-        {
-            if (device.length > 0)
+            
+            else if (req.body.mac)
             {
-                await new CounterClass().counterActivities(device[0].company_id, key, date_string, req.body.deviceKey)
-                
-                person_info = {
-                    mask:                   req.body.mask,
-                    temperature:            req.body.temperature,
-                    person_img:             req.body.checkPic,
-                    full_name:              person.length ? person[0].given_name + " " + person[0].middle_name + " " + person[0].last_name : "Stranger",
-                    device_id:              req.body.mac,
-                    frontdesk_person_id:    req.body.userId,
-                    date_logged:            req.body.checkTime,
-                    record_id:              1,
-                    company_id:             person.length ? person[0].company_id : device[0].company_id
+                if (device.length > 0)
+                {
+                    await new CounterClass().counterActivities(device[0].company_id, key, date_string, req.body.deviceKey)
+                    
+                    person_info = {
+                        mask:                   req.body.mask,
+                        temperature:            req.body.temperature,
+                        person_img:             req.body.checkPic,
+                        full_name:              person.length ? person[0].given_name + " " + person[0].middle_name + " " + person[0].last_name : "Stranger",
+                        device_id:              req.body.mac,
+                        frontdesk_person_id:    req.body.userId,
+                        date_logged:            req.body.checkTime,
+                        record_id:              1,
+                        company_id:             person.length ? person[0].company_id : device[0].company_id
+                    }
+                    
+                    // console.log(req.body.personId, req.body.type);
                 }
-                
-                // console.log(req.body.personId, req.body.type);
             }
+            await new PersonLogsClass(person_info).submit()
         }
-        await new PersonLogsClass(person_info).submit()
         return res.send({"success":true, "result":1});
         // return res.send(true);
     },
@@ -515,7 +520,7 @@ module.exports =
 
     async savePerson(req, res)
     {
-        console.log('sasas');
+        // console.log('asas');
         let date_string = new Date().toISOString().split('T')[0]
         // await new CounterClass().counterActivities(req.body.person_info.saved_from, req.body.person_info.category, date_string)
         date_string = date_string.split("-")

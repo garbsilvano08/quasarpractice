@@ -1258,17 +1258,17 @@ export default
 
       async uploadImage()
       {
-         if (this.company_details._id && this.company_list.length)
-         {
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id:{'$in': this.company_list }, person_img: { $regex: '/9j/'}}, sort: {date_saved: -1}});
-            // console.log(logs, 'kljkljlkjlk');
-               for (let index = 0; index < logs.data.length; index++) { 
-                  if (!logs.data[index].person_img.startsWith('http'))
-                  {  
-                     await this.imageUpload(logs.data[index].person_img, logs.data[index]._id)
-                  }  
-               }
-         }
+         // if (this.company_details._id && this.company_list.length)
+         // {
+         //    let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id:{'$in': this.company_list }, person_img: { $regex: '/9j/'}}, sort: {date_saved: -1}});
+         //    // console.log(logs, 'kljkljlkjlk');
+         //       for (let index = 0; index < logs.data.length; index++) { 
+         //          if (!logs.data[index].person_img.startsWith('http'))
+         //          {  
+         //             await this.imageUpload(logs.data[index].person_img, logs.data[index]._id)
+         //          }  
+         //       }
+         // }
       }
    },
 

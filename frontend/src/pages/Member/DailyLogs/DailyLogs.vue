@@ -451,7 +451,7 @@ export default {
         },
         async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "", generate = "")
         {
-           
+           console.log(sort_date_start, 'start');
             this.$q.loading.show();
             if (this.select__account_type == 'All') this.selected_option_account_type = 1
             else if (this.select__account_type == 'Staff') this.selected_option_account_type = 2
@@ -507,7 +507,7 @@ export default {
                     {
                         params = {
                             company_id: {$in: this.company_list},
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
                     }
@@ -515,7 +515,7 @@ export default {
                     {
                         params = {
                             company_id: {$in: this.company_list} ,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -526,14 +526,14 @@ export default {
                     if (this.select__device_name == 'All')
                     {
                         params = {
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
                     }
                     else
                     {
                         params = {
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -549,7 +549,7 @@ export default {
                         params = {
                             category: this.select__account_type,
                             company_id: {$in: this.company_list} ,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
                     }
@@ -558,7 +558,7 @@ export default {
                         params = {
                             category: this.select__account_type,
                             company_id: {$in: this.company_list} ,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -570,7 +570,7 @@ export default {
                     {
                         params = {
                             category: this.select__account_type,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
                     }
@@ -578,7 +578,7 @@ export default {
                     {
                         params = {
                             category: this.select__account_type,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -592,6 +592,7 @@ export default {
             if (this.current_page > 1) skip = 20 * (this.current_page - 1)
 
             let logs = {}
+            console.log(new Date(date_start), new Date(date_end));
             if (this.input__people) 
             {
                 params.full_name = { $regex: this.input__people}
