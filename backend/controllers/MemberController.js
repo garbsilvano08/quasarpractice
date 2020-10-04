@@ -261,6 +261,7 @@ module.exports =
 
     async visionSkyLogs(req, res)
     {
+        let message_return = {}
         let person_info = {}
         let key = ['Traffic']
         let log = await new MDB_PERSON_LOGS().docs({date_saved: req.body.time ? new Date(req.body.time) : new Date(req.body.checkTime), device_id: req.body.deviceKey ? req.body.deviceKey : req.body.mac})
@@ -296,6 +297,7 @@ module.exports =
                         company_id:             person.length ? person[0].company_id : device[0].company_id
                     }
                 }
+                message_return = {"success":true, "result":1}
             }
             
             else if (req.body.mac)
@@ -318,10 +320,11 @@ module.exports =
                     
                     // console.log(req.body.personId, req.body.type);
                 }
+                message_return = {"data": "http://" + device.device_ip + ":8080/setIdentifyCallback", "success":true, "result":1}
             }
             await new PersonLogsClass(person_info).submit()
         }
-        return res.send({"success":true, "result":1});
+        return res.send();
         // return res.send(true);
     },
 

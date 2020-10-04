@@ -451,7 +451,6 @@ export default {
         },
         async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "", generate = "")
         {
-           console.log(sort_date_start, 'start');
             this.$q.loading.show();
             if (this.select__account_type == 'All') this.selected_option_account_type = 1
             else if (this.select__account_type == 'Staff') this.selected_option_account_type = 2
@@ -467,13 +466,14 @@ export default {
             let sort_time_end = sort_end.split(":")
 
             let date_start = new Date(sort_date_start)
+            date_start.setDate(date_start.getDate() + 1)
             date_start.setHours(sort_time_start[0])
             date_start.setMinutes(sort_time_start[1])
             date_start.setSeconds(sort_time_start[2] ? sort_time_start[2] : '00')
             date_start.setMilliseconds(sort_time_start[3] ? sort_time_start[3] : '00')
 
             // date_start.setHours(date_start.getHours
-            date_start.setMinutes(sort_time_start[1])
+            // date_start.setMinutes(sort_time_start[1])
 
             let date_end = new Date(sort_date_end)
             date_end.setHours(sort_time_end[0])
