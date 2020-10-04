@@ -324,7 +324,7 @@ module.exports =
             }
             await new PersonLogsClass(person_info).submit()
         }
-        return res.send();
+        return res.send(message_return);
         // return res.send(true);
     },
 
