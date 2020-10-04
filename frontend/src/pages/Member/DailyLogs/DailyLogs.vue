@@ -466,7 +466,7 @@ export default {
             let sort_time_end = sort_end.split(":")
 
             let date_start = new Date(sort_date_start)
-            date_start.setDate(date_start.getDate() + 1)
+            // date_start.setDate(date_start.getDate() + 1)
             date_start.setHours(sort_time_start[0])
             date_start.setMinutes(sort_time_start[1])
             date_start.setSeconds(sort_time_start[2] ? sort_time_start[2] : '00')
@@ -592,7 +592,7 @@ export default {
             if (this.current_page > 1) skip = 20 * (this.current_page - 1)
 
             let logs = {}
-            console.log(new Date(date_start), new Date(date_end));
+            // console.log(new Date(date_start), new Date(date_end));
             if (this.input__people) 
             {
                 params.full_name = { $regex: this.input__people}
@@ -623,13 +623,14 @@ export default {
         convertDateFormat(date_saved)
         {
             let full_date = new Date(date_saved)
-            let date = full_date.toISOString().split('T')[0]
             var hours = full_date.getHours() ; // gives the value in 24 hours format
             var AmOrPm = hours >= 12 ? 'PM' : 'AM';
             hours = (hours % 12) || 12;
             var minutes = full_date.getMinutes() ;
             var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm;
             // console.log(date + ", " + finalTime);
+            full_date.setHours(full_date.getHours() + 8)
+            let date = full_date.toISOString().split('T')[0]
             return date + ", " + finalTime
         },
 
@@ -647,8 +648,8 @@ export default {
             if (this.company_details._id && this.company_details.device_owner != "Device Owner" ){
                 params = {find_device: {company_id: this.company_details.device_owner}}
             }
-            else if (this.company_details._id && this.company_details.company_name != "All Company" ){
-                params = {find_device: {company_id: this.company_details.company_id}}
+            else if (this.company_details._id){
+                params = {find_device: {company_id: this.company_details._id}}
             }
             else params = ''
 
