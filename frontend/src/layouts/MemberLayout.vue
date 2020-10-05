@@ -233,7 +233,7 @@ export default
             this.is_app = this.$user_info.user_type == 'Officer' ? false : true
             // Edward
             await this.db.initialize();
-            await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+            // await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
             await this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
             await this.checkQueueSync();
     
@@ -431,7 +431,7 @@ export default
             if ( this.$user_info && this.$user_info.user_type)
             {
                 // console.log('kjkjkj');
-                this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+                // this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
                 // Info
     
                 for (let visitor of this.visitors)
@@ -534,27 +534,27 @@ export default
                     }
     
                     await this.db.delete(visitor.id, "visitors");
-                    this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+                    // this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
                 }
     
                 // Logs
                 for (let log of this.passLogs)
                 {
                     // console.log(log, this.$user_info.company);
-                    log.company_id = this.$user_info.company ? this.$user_info.company._id : '';
+                    // log.company_id = this.$user_info.company ? this.$user_info.company._id : '';
     
-                    // await this.$_post('member/add/pass_log', { data: log });
-                    await this.db.delete(log.id, "passLogs");
-                    this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
+                    // // await this.$_post('member/add/pass_log', { data: log });
+                    // await this.db.delete(log.id, "passLogs");
+                    // this.$store.commit('sync/storePassLogs', await this.db.get("passLogs"));
 
-                    for (let index = 0; index < this.device_list.length; index++) {
-                        if (log.device_id == this.device_list[index].device_id)
-                        {
-                            this.device_list[index].count_logs = this.device_list[index].count_logs + 1
+                    // for (let index = 0; index < this.device_list.length; index++) {
+                    //     if (log.device_id == this.device_list[index].device_id)
+                    //     {
+                    //         this.device_list[index].count_logs = this.device_list[index].count_logs + 1
                             
-                        }
-                    }
-                    this.checkDevice()
+                    //     }
+                    // }
+                    // this.checkDevice()
                 }
                 
                 // await this.$_post('member/count/logs');
