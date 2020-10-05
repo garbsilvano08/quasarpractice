@@ -29,7 +29,9 @@ exports.postGetPersonLogs   = 'member/get/db_person_logs';
 exports.postUpdatePersonLogs= 'member/update/person_logs'
 
 exports.postUserLogOut      = 'member/update/user_logs'
-
+// Mobile
+exports.postGetMobileUserLogs   = 'member/get/mobile_user_logs'
+exports.postGetMobileFeverLogs  = 'member/get/mobile_fever_logs'
 
 // Person
 exports.postSavePerson      = 'member/save/person';

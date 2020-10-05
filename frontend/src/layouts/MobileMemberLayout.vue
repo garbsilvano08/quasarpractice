@@ -11,19 +11,15 @@
         <q-header v-if="$route.name == 'member_mobile_filter_fever'">
             <q-toolbar>
                 <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
-                <div class="header_title">
-                    <div class="title">Filter</div>
-                </div>
-
+                <div class="header_title">Filter</div>
+            <q-btn flat dense round icon="fas fa-check" aria-label="Generate" @click="goToDashboard()"/>
             </q-toolbar>
         </q-header>
         <q-header v-if="$route.name == 'member_mobile_add_fever'">
             <q-toolbar>
                 <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
-                <div class="header_title">
-                    <div class="title">Add Fever Logs</div>
-                </div>
-
+                <div class="header_title">Add Fever Logs</div>
+                <q-btn flat dense round icon="fas fa-check" aria-label="Save" @click="dialogSaveUserLogs()"/>
             </q-toolbar>
         </q-header>
         <q-header v-if="$route.name == 'member_mobile_user_logs'">
@@ -32,7 +28,6 @@
                 <div class="header_title">
                     <div class="title">User Logs</div>
                 </div>
-
             </q-toolbar>
         </q-header>
 
@@ -57,13 +52,19 @@
 						</q-item-section>
 						<q-item-section>User Logs</q-item-section>
 					</q-item>
+                    <q-item class="nav" clickable v-ripple @click="goToSync">
+						<q-item-section avatar>
+							<q-icon name="fas fa-sync-alt" />
+						</q-item-section>
+						<q-item-section>Sync to Cloud</q-item-section>
+					</q-item>
                     <q-item class="nav" clickable v-ripple>
 						<q-item-section avatar>
 							<q-icon name="fas fa-question-circle" />
 						</q-item-section>
 						<q-item-section>About</q-item-section>
 					</q-item>
-                    <q-item class="nav absolute-bottom" clickable v-ripple>
+                    <q-item class="nav absolute-bottom" clickable v-ripple @click="logout">
 						<q-item-section avatar>
 							<q-icon name="fas fa-sign-out-alt" />
 						</q-item-section>
@@ -277,7 +278,34 @@ export default
         setInterval(this.getLog, 60000);
     },
     methods:
-    {   
+    {   goToSync()
+        {
+
+        },
+        dialogSaveUserLogs() {
+            this.$q.dialog({
+                title: 'Add User Logs',
+                message: 'Confirm Message, Please edit',
+                ok: {
+                    push: true
+                },
+                cancel:{
+                    push:  true,
+                    color: 'negative'
+                },
+                persistent: true
+            }).onOk(() => {
+                this.$router.push({
+                    name: "member_mobile_dashboard"
+                })
+            }).onOk(() => {
+                // console.log('>>>> second OK catcher')
+            }).onCancel(() => {
+                // console.log('>>>> Cancel')
+            }).onDismiss(() => {
+                // console.log('I am triggered on both OK and Cancel')
+            })
+        },
         goToDashboard()
         {
             this.$router.push({
@@ -330,46 +358,9 @@ export default
             else return true
         },
 
-        async userAccess(key)
+        logout()
         {
-            let company = this.$user_info.company ? this.$user_info.company : {}
-            if (this.$user_info && this.$user_info.user_type)
-            {
-                 if (this.$user_info.user_type === 'Super Admin')
-                {
-                    if ( key === 'frontdesk_visitor' || key === 'personnel_management') return false
-                    else return true
-                }
-                else if (company.device_owner != 'Device Owner')
-                {
-                    if ( key === 'reports' || key === 'dashboard' || key === 'member_logout')
-                    {
-                        return true
-                    }
-                    else return false
-                }
-                else if (this.$user_info.user_type === 'Officer')
-                {
-                    if ( key === 'member_logout')
-                    {
-                        return true
-                    }
-                    else return false
-                }
-                else if (this.$user_info.user_type == 'Admin')
-                {
-                    if ( key === 'user_management' ) return false
-                    else return true
-                }
-                else if (this.$user_info.user_type == 'Receptionist')
-                {
-                    if ( key === 'member_logout' || key === 'dashboard' || key === 'frontdesk_visitor' || key === 'account_directory' || key === 'daily')
-                    {
-                        return true
-                    }
-                    else return false
-                }
-            }
+            this.$_logout();
         },
 
         showToggle()

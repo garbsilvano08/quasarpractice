@@ -20,6 +20,7 @@ app.post('/api/front/register',         front_controller.register);
 
 const member_controller     = require('./controllers/MemberController');
 const count_controller     = require('./controllers/CountController');
+const mobile_controller     = require('./mobilecontrollers/MobileMemberController');
 const member_only           = require('./middleware/MemberOnly');
 
 app.post('/api/member/add/staff', member_controller.addNewStaff);
@@ -94,6 +95,9 @@ app.post('/api/member/save/image',member_only, member_controller.saveImage);
 app.post('/api/member/add/fever_detected_identification',member_only, member_controller.addVisitorIdentification);
 app.post('/api/member/get/identification',member_only, member_controller.getIdentification);
 
+//Mobile
+app.post('/api/member/get/mobile_user_logs',member_only, mobile_controller.getMobileUserLogs);
+app.post('/api/member/get/mobile_fever_logs',member_only, mobile_controller.getMobileFeverLogs);
 app.listen({port: 4001}, (err) =>
 {
     if(err)

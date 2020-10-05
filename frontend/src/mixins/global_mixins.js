@@ -15,7 +15,8 @@ import { postGetCompanies,
     postGetAlertCount,
     postGetDevice,
     postDashboard,
-    postGetCompany
+    postGetCompany,
+    postUserLogOut
  } from '../references/url';
 
 export default
@@ -165,10 +166,11 @@ export default
             let company = await this.$_post(postGetCompanies, {find_company: params})
             return company.data
         },
-        $_logout()
+        async $_logout()
         {
             localStorage.removeItem("auth");
             this.$store.commit('user/updateUser', null);
+            await this.$_post(postUserLogOut)
         },
         $_isMobile()
         {
