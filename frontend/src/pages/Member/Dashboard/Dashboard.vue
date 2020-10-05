@@ -105,7 +105,7 @@
                            <q-icon name="mdi-clock-outline" size="18px"></q-icon> {{data.date_saved}}
                         </div>
                         <div class="content__room">
-                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{ data.device.device_name + "-" + data.device.log_type}}
+                           <q-icon name="mdi-cellphone-iphone" size="16px"></q-icon> {{ data.device ? data.device.device_name + "-" + data.device.log_type : 'UNKNOWN'}}
                         </div>
                         <div class="content__location">
                            <q-icon name="mdi-briefcase" size="16px"></q-icon> {{data.company_name}}
@@ -1190,13 +1190,13 @@ export default
       convertDateFormat(date_saved)
       {
          let full_date = new Date(date_saved)
-         let date = full_date.toISOString().split('T')[0]
          var hours = full_date.getHours() ; // gives the value in 24 hours format
          var AmOrPm = hours >= 12 ? 'PM' : 'AM';
          hours = (hours % 12) || 12;
          var minutes = full_date.getMinutes() ;
          var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm;
-         // console.log(date + ", " + finalTime);
+         full_date.setHours(full_date.getHours() + 8)
+         let date = full_date.toISOString().split('T')[0]
          return date + ", " + finalTime
       },
 
@@ -1258,17 +1258,17 @@ export default
 
       async uploadImage()
       {
-         if (this.company_details._id && this.company_list.length)
-         {
-            let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id:{'$in': this.company_list }, person_img: { $regex: '/9j/'}}, sort: {date_saved: -1}});
-            // console.log(logs, 'kljkljlkjlk');
-               for (let index = 0; index < logs.data.length; index++) { 
-                  if (!logs.data[index].person_img.startsWith('http'))
-                  {  
-                     await this.imageUpload(logs.data[index].person_img, logs.data[index]._id)
-                  }  
-               }
-         }
+         // if (this.company_details._id && this.company_list.length)
+         // {
+         //    let logs = await this.$_post(postPersonByCateg, {find_by_category: {date_logged: new Date().toISOString().split('T')[0], company_id:{'$in': this.company_list }, person_img: { $regex: '/9j/'}}, sort: {date_saved: -1}});
+         //    // console.log(logs, 'kljkljlkjlk');
+         //       for (let index = 0; index < logs.data.length; index++) { 
+         //          if (!logs.data[index].person_img.startsWith('http'))
+         //          {  
+         //             await this.imageUpload(logs.data[index].person_img, logs.data[index]._id)
+         //          }  
+         //       }
+         // }
       }
    },
 

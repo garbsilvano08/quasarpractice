@@ -34,7 +34,7 @@ module.exports =
 
     async getPersonLogs(req, res)
     {
-        // console.log(req.body); 
+        console.log(req.body.find_by_category); 
         if (req.body.skip) 
         {
             let data = await new MDB_PERSON_LOGS().collection.find(req.body.find_by_category).skip(req.body.skip).sort(req.body.sort).limit(req.body.limit)
@@ -306,7 +306,7 @@ module.exports =
             //     count: daily_log.length ? daily_log[0].count : 0
             // }
             // weekly_count.unshift(daily_info) 
-            date_string.setDate(date_string.getDate() - 1)
+            date_string.setDate(date_string.getDate())
             req.body.find_count.date_string = date_string.toISOString().split('T')[0]
             
         }

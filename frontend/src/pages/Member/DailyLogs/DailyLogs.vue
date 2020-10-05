@@ -451,7 +451,6 @@ export default {
         },
         async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "", generate = "")
         {
-           
             this.$q.loading.show();
             if (this.select__account_type == 'All') this.selected_option_account_type = 1
             else if (this.select__account_type == 'Staff') this.selected_option_account_type = 2
@@ -467,13 +466,14 @@ export default {
             let sort_time_end = sort_end.split(":")
 
             let date_start = new Date(sort_date_start)
+            // date_start.setDate(date_start.getDate() + 1)
             date_start.setHours(sort_time_start[0])
             date_start.setMinutes(sort_time_start[1])
             date_start.setSeconds(sort_time_start[2] ? sort_time_start[2] : '00')
             date_start.setMilliseconds(sort_time_start[3] ? sort_time_start[3] : '00')
 
             // date_start.setHours(date_start.getHours
-            date_start.setMinutes(sort_time_start[1])
+            // date_start.setMinutes(sort_time_start[1])
 
             let date_end = new Date(sort_date_end)
             date_end.setHours(sort_time_end[0])
@@ -507,7 +507,7 @@ export default {
                     {
                         params = {
                             company_id: {$in: this.company_list},
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
                     }
@@ -515,7 +515,7 @@ export default {
                     {
                         params = {
                             company_id: {$in: this.company_list} ,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -526,14 +526,14 @@ export default {
                     if (this.select__device_name == 'All')
                     {
                         params = {
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
                     }
                     else
                     {
                         params = {
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -549,7 +549,7 @@ export default {
                         params = {
                             category: this.select__account_type,
                             company_id: {$in: this.company_list} ,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
                     }
@@ -558,7 +558,7 @@ export default {
                         params = {
                             category: this.select__account_type,
                             company_id: {$in: this.company_list} ,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -570,7 +570,7 @@ export default {
                     {
                         params = {
                             category: this.select__account_type,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
                     }
@@ -578,7 +578,7 @@ export default {
                     {
                         params = {
                             category: this.select__account_type,
-                            date_saved: { '$gte' : date_start , '$lte' : date_end},
+                            date_saved: { '$gte' : new Date(date_start) , '$lte' : new Date(date_end)},
                             device_id: this.selected_device.device_id,
                             has_fever: this.select__body_temperature == 'Normal' ? false : true
                         }
@@ -592,6 +592,7 @@ export default {
             if (this.current_page > 1) skip = 20 * (this.current_page - 1)
 
             let logs = {}
+            // console.log(new Date(date_start), new Date(date_end));
             if (this.input__people) 
             {
                 params.full_name = { $regex: this.input__people}
@@ -622,13 +623,14 @@ export default {
         convertDateFormat(date_saved)
         {
             let full_date = new Date(date_saved)
-            let date = full_date.toISOString().split('T')[0]
             var hours = full_date.getHours() ; // gives the value in 24 hours format
             var AmOrPm = hours >= 12 ? 'PM' : 'AM';
             hours = (hours % 12) || 12;
             var minutes = full_date.getMinutes() ;
             var finalTime = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + AmOrPm;
             // console.log(date + ", " + finalTime);
+            full_date.setHours(full_date.getHours() + 8)
+            let date = full_date.toISOString().split('T')[0]
             return date + ", " + finalTime
         },
 
@@ -646,8 +648,8 @@ export default {
             if (this.company_details._id && this.company_details.device_owner != "Device Owner" ){
                 params = {find_device: {company_id: this.company_details.device_owner}}
             }
-            else if (this.company_details._id && this.company_details.company_name != "All Company" ){
-                params = {find_device: {company_id: this.company_details.company_id}}
+            else if (this.company_details._id){
+                params = {find_device: {company_id: this.company_details._id}}
             }
             else params = ''
 
