@@ -55,15 +55,42 @@
       <div class="dashboard__overview-logs">
         
         <div class="header__title">Fever Logs  <q-icon class="icon-float" name="fas fa-sliders-h" @click="goToFilterLogs"/></div>
-         <div class="content__card-info content__card">
+         <div class="content__card-info content__card" v-for="(logs, index) in this.has_fever_logs.data" :key="index">
+            <div class="content__info">
+                <div class="flex flex-center">
+                    <q-img :src="logs.person_img"></q-img>
+                </div>
+            <div class="content__temperature">
+                {{logs.temperature}}<br>
+                <span class="abnormal-temperature">Has fever</span>
+                <!-- <span class="normal-temperature" v-if="!logs.has_fever">Normal</span> -->
+            </div>
+            </div>
+            <div class="content__info">
+                <div class="content__name">
+                    {{logs.full_name}} <br>
+                    <span>{{logs.category}}</span>
+                </div>
+                <div class="content__location">
+                    <label>Tagged to:</label> {{logs.company_name}}
+                </div>
+                <div class="content__room">
+                    <label>Device Scanned:</label> {{deviceInfo(logs.device_id, 'name') + "-" + deviceInfo(logs.device_id, 'type')}}
+                </div>
+                <div class="content__datetime">
+                   <label>Date & Time:</label> {{logs.date_saved}}
+                </div>
+            </div>
+         </div>
+        <!-- <div class="content__card-info content__card">
             <div class="content__info">
                 <div class="flex flex-center">
                     <q-img src=""></q-img>
                 </div>
             <div class="content__temperature">
                 37<br>
-                <span class="abnormal-temperature">Normal</span>
-                <!-- <span class="normal-temperature" v-if="!data.has_fever">Normal</span> -->
+                <span class="abnormal-temperature">Has fever</span>
+                <span class="normal-temperature" v-if="!data.has_fever">Normal</span>
             </div>
             </div>
             <div class="content__info">
@@ -81,34 +108,7 @@
                    <label>Date & Time:</label> Sep 11 2020 - 5:45:12 PM
                 </div>
             </div>
-         </div>
-        <div class="content__card-info content__card">
-            <div class="content__info">
-                <div class="flex flex-center">
-                    <q-img src=""></q-img>
-                </div>
-            <div class="content__temperature">
-                37<br>
-                <span class="abnormal-temperature">Normal</span>
-                <!-- <span class="normal-temperature" v-if="!data.has_fever">Normal</span> -->
-            </div>
-            </div>
-            <div class="content__info">
-                <div class="content__name">
-                    Juan Dela Cruz <br>
-                    <span>Staff</span>
-                </div>
-                <div class="content__location">
-                    <label>Tagged to:</label> Green Sun
-                </div>
-                <div class="content__room">
-                    <label>Device Scanned:</label> Vision Sky - Public
-                </div>
-                <div class="content__datetime">
-                   <label>Date & Time:</label> Sep 11 2020 - 5:45:12 PM
-                </div>
-            </div>
-         </div>
+         </div> -->
       </div>
         <div class="add_fever_logs-btn" @click="goToAddUserLogs">
             <q-icon name="fas fa-plus"></q-icon>
@@ -124,7 +124,7 @@ import "./MobileDashboard.scss";
 import Vue from 'vue';
 import Chartkick from 'vue-chartkick';
 import "chart.js"
-
+import { postGetMobileFeverLogs, postGetDevice } from '../../../references/url';
 // Classes
 import { date } from 'quasar';
 import { log } from 'util';
@@ -138,13 +138,11 @@ export default
    //pointerdata
    data:() =>
    ({
-      
+      has_fever_logs: {},
+      device_list: {}
    }),
 
-   watch:
-    { 
-       
-    },
+   watch:{},
 
    methods: {
        goToFilterLogs(){
@@ -156,12 +154,31 @@ export default
             this.$router.push({
                 name: "member_mobile_add_fever"
             })
-        }
-
+        },
+        async getDevices()
+        {
+            let params = {}
+            params = {find_device: {company_name: this.has_fever_logs.company_name}}
+            this.device_list =  await this.$_post(postGetDevice, params);
+        },
+        deviceInfo(id, type)
+        {
+            for (let index = 0; index < this.device_list.data.length; index++) {
+                if (this.device_list.data[index].device_id == id)
+                if (type == 'name') return this.device_list.data[index].device_name
+                else return this.device_list.data[index].log_type
+            }
+        },
    },
    
-   updated() {
-      
-   },
+   updated() {},
+   async mounted()
+   {
+       this.has_fever_logs = await this.$_post(postGetMobileFeverLogs)
+        for(let index = 0; index < this.has_fever_logs.data.length; index++) {
+            this.has_fever_logs.data[index].date_saved = date.formatDate(this.has_fever_logs.data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
+        }
+        await this.getDevices();
+   }
 }
 </script>

@@ -97,6 +97,7 @@ app.post('/api/member/get/identification',member_only, member_controller.getIden
 
 //Mobile
 app.post('/api/member/get/mobile_user_logs',member_only, mobile_controller.getMobileUserLogs);
+app.post('/api/member/get/mobile_fever_logs',member_only, mobile_controller.getMobileFeverLogs);
 app.listen({port: 4001}, (err) =>
 {
     if(err)
