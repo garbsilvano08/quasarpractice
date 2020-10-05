@@ -288,7 +288,9 @@ export default
     methods:
     {   goToSync()
         {
-
+            this.$router.push({
+                    name: "member_mobile_sync_to_cloud"
+                })
         },
         dialogSaveUserLogs() {
             this.$q.dialog({

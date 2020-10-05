@@ -6,7 +6,7 @@ const routes = [
         component: () => import('layouts/FrontLayout.vue'),
         children:
         [
-            { name: 'front_login', path: '', component: () => import('pages/Front/Login/Login.vue') },
+            { name: 'front_login', path: '', component: () => import('pages/Front/Login/MobileLogin.vue') },
         ]
     },
     {
