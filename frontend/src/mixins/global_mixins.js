@@ -50,7 +50,6 @@ export default
             {
                 openGeocoder().reverse(data.lon, data.lat).end(async (err,res) =>
                 {
-                    console.log(data, res);
                     let location_details = [];
                     if (res.address.hasOwnProperty('village')) location_details.push(res.address.village)
                     if (res.address.hasOwnProperty('city')) location_details.push(res.address.city)
@@ -176,10 +175,8 @@ export default
                     else
                     {
                         return
-                        // this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
                     }
                 }); 
-                // console.log(res.data);
                 return res.data;
             }
             catch(e)
@@ -231,17 +228,6 @@ export default
                         // saveToGallery: true
                     });
                     res = image.webPath
-                    console.log(image, 'image');
-                    
-                    // let contents = await Filesystem.readFile({
-                    // path: image.webPath,
-                    // directory: FilesystemDirectory.Documents
-                    // });
-
-                    // console.log(contents);
-                    
-
-                   
                 }
                 catch (error)
                 {

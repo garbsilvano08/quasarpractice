@@ -266,6 +266,28 @@ export default
     },
     methods:
     {   
+        async getLocation()
+        {
+            let coordinates = {}
+            let location_desc = ''
+            try
+            {
+                let location = await this.$_current_position()
+                coordinates = {
+                    lat: location.coords.latitude,
+                    lon: location.coords.longitude
+                }
+                let loc_details = await this.$_nearby_places(coordinates)
+                for (let x = 0; x < loc_details.length; x++) {
+                    if (location_desc) location_desc = location_desc + ', '
+                    location_desc = location_desc + loc_details[x];  
+                }
+                return {location: location_desc, coords: coordinates}
+            }
+            catch(e){
+                return {}
+            }
+        },
         async checkQueueSync()
         {
             let keys = await this.mobile_db.keys()
@@ -276,11 +298,13 @@ export default
                     person_details = JSON.parse(person_details)
                     let id_src = await this.savePicsLocal(person_details.id_image, 'person' + Date.now().toString() + '.png')
                     let person_src = await this.savePicsLocal(person_details.person_img, 'person' + Date.now().toString() + '.png')
+                    if (person_details.location) 
+                    {
+                        let location = await this.getLocation()
+                        person_details.location_coordinates = location.coords ? location.coords : {}
+                        person_details.location = location.location ? location.location : ''
+                    }
                     let data = {
-                        // visit_purpose:      visitor.visitor_purpose.purpose_visit,
-                        // contact_person:     visitor.visitor_purpose.contact_person,
-                        // destination:        visitor.visitor_purpose.destination,
-                        // delivery_name:      visitor.visitor_purpose.delivery_name,
                         temperature: person_details.temperature,
                         id_img: id_src,
                         id_num: person_details.id_number,
@@ -297,8 +321,8 @@ export default
                         contact_number: person_details.contact_number,
                         emergency_contact: person_details.emergency_contact,
                         date_created: new Date(),
-                        company_name: person_details.company_name,
-                        company_id: person_details.company_id,
+                        company_name: person_details.company_name == 'none' ? this.$user_info.company.company_name :person_details.company_name,
+                        company_id: person_details.company_id == 'none' ? this.$user_info.company._id : person_details.company_id,
                         frontdesk_person_id: person_details.frontdesk_person_id,
                         frontdesk_person_date: person_details.frontdesk_person_date,
                         location: person_details.location,

@@ -218,12 +218,6 @@ export default {
         },
         async submit()
         {
-            if(navigator.onLine){
-                alert('online');
-            } else {
-                alert('offline');
-            }
-
             let error = ''
             const capitalize = (str) =>
             {
