@@ -60,6 +60,12 @@
 						</q-item-section>
 						<q-item-section>User Logs</q-item-section>
 					</q-item>
+                    <q-item class="nav" clickable v-ripple @click="goToSync">
+						<q-item-section avatar>
+							<q-icon name="fas fa-sync-alt" />
+						</q-item-section>
+						<q-item-section>Sync to Cloud</q-item-section>
+					</q-item>
                     <q-item class="nav" clickable v-ripple>
 						<q-item-section avatar>
 							<q-icon name="fas fa-question-circle" />
@@ -328,6 +334,12 @@ export default
             catch(e){}
 
             return res;
+        },
+        goToSync()
+        {
+            this.$router.push({
+                    name: "member_mobile_sync_to_cloud"
+                })
         },
         dialogSaveUserLogs() {
             this.$q.dialog({
