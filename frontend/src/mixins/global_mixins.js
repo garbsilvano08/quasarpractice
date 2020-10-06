@@ -1,3 +1,4 @@
+const openGeocoder = require('node-open-geocoder')
 import axios from 'axios';
 import { Plugins, CameraResultType, CameraSource, Capacitor } from "@capacitor/core";
 const { GalleryPlugin, Filesystem, Camera, VideoBackgroundMusic, Geolocation, Storage } = Plugins;
@@ -43,6 +44,24 @@ export default
     },
     methods:
     {
+        async $_nearby_places(data)
+        {
+            return new Promise(resolve =>
+            {
+                openGeocoder().reverse(data.lon, data.lat).end(async (err,res) =>
+                {
+                    console.log(data, res);
+                    let location_details = [];
+                    if (res.address.hasOwnProperty('village')) location_details.push(res.address.village)
+                    if (res.address.hasOwnProperty('city')) location_details.push(res.address.city)
+                    if (res.address.hasOwnProperty('town')) location_details.push(res.address.town)
+                    if (res.address.hasOwnProperty('state')) location_details.push(res.address.state)
+                    if (res.address.hasOwnProperty('country')) location_details.push(res.address.country)
+                    // await this.getNearbyLocation(address);
+                    resolve(location_details);
+                })
+            });
+        },
         $_timeAgo(sec)
         {
             let timeDef = new Date() - new Date(sec * 1000);
@@ -173,10 +192,10 @@ export default
             let company = await this.$_post(postGetCompanies, {find_company: params})
             return company.data
         },
-        async $_company(params)
+        async $_devices(params)
         {
-            let company = await this.$_post(postGetCompanies, {find_company: params})
-            return company.data
+            let data = await this.$_post(postGetDevice, params);
+            return data.data
         },
         async $_logout()
         {
@@ -237,9 +256,13 @@ export default
         },
         async $_current_position()
         {
-            const coordinates = await Geolocation.getCurrentPosition();
-            console.log('Current', coordinates);
-            return coordinates
+            const coordinates = null
+            try{
+
+                const coordinates = await Geolocation.getCurrentPosition();
+                return coordinates
+            }
+            catch(e) {return null}
         },
     }
 }

@@ -9,7 +9,7 @@ const schema    = new Schema(
     date_installed:     { type: Date,    required: true },
     date_created:       { type: Date,    required: true },
     company_info:       { type: Object,  required: true },
-    device_ip:          { type: String,  required: true },
+    device_ip:          { type: String,  required: false },
     company_id:         { type: String,  required: true },
     log_type:           { type: String,  required: true },
     count_logs:         { type: Number,  required: false, default: 0},

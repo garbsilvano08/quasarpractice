@@ -175,10 +175,9 @@ module.exports =
     async addPassLog(req, res)
     {
         let key = ['Traffic']
-        // let person_log = []
-        let date_string = new Date(new Date(req.body.data.currentTime)).toISOString().split('T')[0]
+        date_string =req.body.data.frontdesk_person_date 
         req.body.data.date_string = date_string
-        if (Number(req.body.data.tempratrue) >= 37.3 ) req.body.data.has_fever = true
+        if (Number(req.body.data.temperature) >= 37.3 ) req.body.data.has_fever = true
         else req.body.data.has_fever = false
 
         // await new MDB_LOGS().add(req.body.data);
@@ -194,17 +193,16 @@ module.exports =
         await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
-            mask:                   req.body.data.mask,
-            temperature:            req.body.data.tempratrue,
-            
-            person_img:             req.body.data.image_path,
-            full_name:              req.body.data.name,
-
+            mask:                   1,
+            temperature:            req.body.data.temperature,
+            person_img:             req.body.data.person_img,
+            full_name:              req.body.data.given_name + " " + req.body.data.middle_name + " " + req.body.data.last_name,
             company_id:             req.body.data.company_id,
             device_id:              req.body.data.device_id,
-            
-            frontdesk_person_id:    req.body.data.idCardNum,
-            date_logged:            req.body.data.currentTime
+            frontdesk_person_id:    req.body.data.frontdesk_person_id,
+            date_logged:            req.body.data.frontdesk_person_date,
+            location:               req.body.data.location,
+            location_coordinates:   req.body.data.location_coordinates
         }
         
         await new PersonLogsClass(person_info).submit()
@@ -585,7 +583,7 @@ module.exports =
     },
     async getDeviceByUser(req, res)
     {
-        console.log(await new MDB_DEVICE.docs());
+        // console.log(await new MDB_DEVICE.docs());
     },
     async getDbPersonLogs(req, res)
     {

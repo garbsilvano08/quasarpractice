@@ -91,7 +91,14 @@ export default
                 this.$store.commit('user/updateUser', res.data)
                 localStorage.setItem("auth", JSON.stringify(res.data));
                 this.$_isMobile() ?
+                    ( res.data.device ? 
                     this.$router.push({ name: 'member_mobile_dashboard' }) :
+                    this.$q.notify(
+                    {
+                        color: 'red',
+                        message: 'This user is not allowed!'
+                    })
+                    ) :
                     this.$router.push({ name: 'member_dashboard' })
 
             }

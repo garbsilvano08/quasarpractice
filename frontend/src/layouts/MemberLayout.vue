@@ -388,7 +388,7 @@ export default
         },
         async checkQueueSync()
         {
-            console.log(this.$user_info);
+            // console.log(this.$user_info);
             if (this.$user_info && this.$user_info.company)
             {
                 let logs = await this.$_post(postPersonByCateg, {find_by_category: {company_id: {$in: this.company_list}, person_img: { $regex: '/9j/'}}});
@@ -518,7 +518,7 @@ export default
                             }
                             catch(e){}
                         }
-                        else
+                        else if (device.device_type == 'smart_pass')
                         {
                             tabletFormData.append("pass", "123456");
                             tabletFormData.append("person", "{'imgBase64': '"+b64+"', 'name' : '"+ visitor.personal_information.first_name+" "+ visitor.personal_information.middle_name +" "+ visitor.personal_information.last_name +"', 'person_id' : '"+ visitor.personal_information.id_number +"', 'sex' : "+ sex +", 'group_id' : 20, 'phone' : "+visitor.personal_information.contact_number+", 'email' : '', 'ic_card' : '', 'nation' : '', 'native_place' : '', 'birth_day' : '"+ visitor.personal_information.birth_day +"', 'address' : '"+ visitor.personal_information.home_address +"', 'vipId': '"+visitor.personal_information.frontdesk_person_id+"', 'remarks' : '', 'att_flag' : 0 , 'banci_id' : '', 'device_group_id' : '', 'device_group' : 1, 'type' : 1.1, 'reg_type' : 0, 'prescription' : '"+ expStartTime+","+expEndTime +"'}" );
@@ -588,7 +588,7 @@ export default
                     {
 
                     }
-                    else
+                    else if ( device.device_type == 'smart_pass' )
                     {
                         // var formData = new FormData();
                         // formData.append("startTime", startTime)// number 123456 is immediately converted to a string "123456"

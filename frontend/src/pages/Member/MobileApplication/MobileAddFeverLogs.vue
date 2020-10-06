@@ -180,7 +180,7 @@ export default {
     },
     async created()
     {
-        await this.db.initialize();
+        // await this.db.initialize();
         // this.check()
     },
     async mounted()
@@ -194,62 +194,112 @@ export default {
     },
     methods:
     {
+        async getLocation()
+        {
+            let coordinates = {}
+            let location_desc = ''
+            try
+            {
+                let location = await this.$_current_position()
+                coordinates = {
+                    lat: location.coords.latitude,
+                    lon: location.coords.longitude
+                }
+                let loc_details = await this.$_nearby_places(coordinates)
+                for (let x = 0; x < loc_details.length; x++) {
+                    if (location_desc) location_desc = location_desc + ', '
+                    location_desc = location_desc + loc_details[x];  
+                }
+                return {location: location_desc, coords: coordinates}
+            }
+            catch(e){
+                return {}
+            }
+        },
         async submit()
         {
-            let result           = '';
-            let characters       = '0123456789';
-            let charactersLength = characters.length;
-            for ( let i = 0; i < 9; i++ ) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            if(navigator.onLine){
+                alert('online');
+            } else {
+                alert('offline');
             }
 
-            let location = await this.$_current_position()
-            console.log(location, 'location');
+            let error = ''
+            const capitalize = (str) =>
+            {
+                str = str.split(" ");
 
-            let data = {
-                id_image: this.person_information.id_image,
-                person_img: this.person_information.person_image,
-                last_name: this.person_information.last_name,
-                middle_name: this.person_information.middle_name,
-                given_name: this.person_information.given_name,
-                gender: this.person_information.gender,
-                birthday: new Date(this.person_information.birthday),
-                nationality: this.person_information.nationality,
-                home_address: this.person_information.home_address,
-                contact_number: this.person_information.contact_number,
-                emergency_contact: this.person_information.emergency_contact,
-                date_created: new Date(),
-                company_name: this.company_details.company_name ? this.company_details.company_name : 'none',
-                company_id: this.company_details._id ? this.company_details._id : 'none',
-                is_active: true,
-                email: this.person_information.email,
-                position: this.person_information.position,
-                category: this.person_information.category,
-                frontdesk_person_id: result,
-                frontdesk_person_date: new Date(),
-                saved_from: this.company_details._id ? this.company_details._id : 'none',
-                temperature: this.person_information.temperature,
-                location_coordinates: location,
-                location: ''
+                for (var i = 0, x = str.length; i < x; i++)
+                {
+                    str[i] = str[i][0].toUpperCase() + str[i].substr(1);
+                }
+
+                return str.join(" ");
             }
+
+            this.$q.loading.show();
+            let obj = this.person_information
+            Object.keys(obj).forEach(function(key) {
+                if (!obj[key]) 
+                {
+                    error = capitalize(key.replace('_', ' '))
+                }
+            });
+            if (error)
+            {
+                this.$q.notify(
+                {
+                    color: 'red',
+                    message: error + ' is required!'
+                });
+            }
+            else
+            {
+                let result           = '';
+                let characters       = '0123456789';
+                let charactersLength = characters.length;
+                for ( let i = 0; i < 9; i++ ) {
+                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                }
+                let location = {}
+                if(navigator.onLine) await this.getLocation()
+                let coordinates = location.coords ? location.coords : {}
+                let location_desc = location.location ? location.location : ''
+    
+                let data = {
+                    id_image: this.person_information.id_image,
+                    person_img: this.person_information.person_image,
+                    last_name: this.person_information.last_name,
+                    middle_name: this.person_information.middle_name,
+                    given_name: this.person_information.given_name,
+                    gender: this.person_information.gender,
+                    birthday: new Date(this.person_information.birthday),
+                    nationality: this.person_information.nationality,
+                    home_address: this.person_information.home_address,
+                    contact_number: this.person_information.contact_number,
+                    emergency_contact: this.person_information.emergency_contact,
+                    date_created: new Date(),
+                    company_name: this.company_details.company_name ? this.company_details.company_name : 'none',
+                    company_id: this.company_details._id ? this.company_details._id : 'none',
+                    is_active: true,
+                    email: this.person_information.email,
+                    position: this.person_information.position,
+                    category: this.person_information.category,
+                    frontdesk_person_id: result,
+                    frontdesk_person_date: new Date(),
+                    saved_from: this.company_details._id ? this.company_details._id : 'none',
+                    temperature: this.person_information.temperature,
+                    location_coordinates: coordinates,
+                    location: location_desc
+                }
+                await this.mobile_db.save(data, result)
+                this.$router.push({
+                    name: "member_mobile_sync_to_cloud"
+                })   
+            }
+
             
-            await this.mobile_db.save(data, result)
-
-
-
-            this.$router.push({
-                name: "member_mobile_sync_to_cloud"
-            })   
-            // let db = new Model()
-            // db.initialize()
-            // let person = await this.db.add(
-            // {
-            //     personal_information: data,
-            //     // visitor_purpose: this.visitor_purpose
-            // },
-            // 'visitors');
-            // let person_class = new PersonalInformation(data)
-            // await person_class.submit()
+            this.$q.loading.hide();
         },
 
         async checkImage(image)

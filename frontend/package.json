@@ -12,6 +12,7 @@
   "dependencies": {
     "@capacitor/core": "^2.4.2",
     "@fortawesome/fontawesome-free": "^5.14.0",
+    "@googlemaps/google-maps-services-js": "^3.1.13",
     "@mdi/font": "^5.3.45",
     "@quasar/extras": "^1.0.0",
     "axios": "^0.18.1",
@@ -23,6 +24,8 @@
     "image-downloader": "^4.0.1",
     "json2csv": "^5.0.1",
     "node-input-validator": "^4.2.1",
+    "node-open-geocoder": "^4.0.1",
+    "ping": "^0.3.0",
     "quasar": "^1.0.0",
     "read-excel-file": "^4.0.7",
     "rn-fetch-blob": "^0.12.0",

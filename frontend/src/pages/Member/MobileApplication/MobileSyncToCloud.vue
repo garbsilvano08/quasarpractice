@@ -97,8 +97,10 @@ export default {
                 if (this.keys.length) {
                     for (let x = 0; x < this.keys.length; x++) {
                         // console.log(this.person_list[i].frontdesk_person_id !=  this.keys[x], 'remove');
-                        if (this.person_list[i].frontdesk_person_id !=  this.keys[x]) this.person_list.splice(i, 1)
+                        if (this.person_list[i].frontdesk_person_id ==  this.keys[x]) return
                     }
+                    this.person_list.splice(i, 1)
+                    return false
                 }
                 else this.person_list = []
                 

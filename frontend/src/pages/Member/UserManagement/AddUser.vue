@@ -37,11 +37,13 @@
                 </div>
             </div>
             <div class="user-add__content-info user-add__content-grid">
-                <div class="content__select">
+                 <div class="content__select">
                     <div class="content__select-label">Tag a Company</div>
-                    <!-- <q-select v-model="user_information.select_tag_company" :options="options_tag_company" outlined dense></q-select> -->
-
                     <com-picker :user="this.$user_info" @select=getCompanyData class="btn-choose"></com-picker>
+                </div>
+                <div v-if="user_information.user_type == 'Helmet Officer'" class="content__select">
+                    <div class="content__select-label">Tag a VCOP Eye</div>
+                    <q-select v-model="selected_device" :options="device_options" outlined dense></q-select>
                 </div>
             </div>
             <div class="user-add__btn">
@@ -71,7 +73,6 @@ function isEmpty(obj) {
         if(obj.hasOwnProperty(prop))
             return false;
     }
-
     return true;
 }
 
@@ -89,28 +90,38 @@ export default {
             password: '',
             user_type: '',
             company: {},
+            device: '',
         },
+        selected_device: '',
+        device_options: [],
+        device_lists: [],
+        company_details: {},
         options_user_type: [
             'Admin',
             'Receptionist',
-            'Technician',
-            'Officer'
+            'Helmet Officer'
         ],
         options_tag_company: [
             'Green Sun Hotel'
         ]
     }),
-    mounted()
+    async mounted()
     {
         this.user_information.user_type = this.options_user_type[0];
+        this.company_details = this.$user_info.user_type != ' Super Admin' ? this.$user_info.company : {}
+        if (this.$user_info.user_type != ' Super Admin') await this.getDevices()
+    },
+    watch:
+    {
+        selected_device(val)
+        {
+            this.user_information.device = val.value
+        }
     },
     methods:
     {
-
         async submit()
         {
-
-
             try
             {
                 if (this.user_information.full_name <= 2 ){
@@ -137,6 +148,9 @@ export default {
                 else if ((this.user_information.user_type =="Receptionist") && (this.user_information.company.parent_id== "No Parent")){
                     throw new Error("Receptionist can only create on branch company.");
                 }
+                else if ((this.user_information.user_type =="Helmet Officer") && (!this.user_information.device)){
+                    throw new Error("VCOP eye device is required for creating Helmet Officer User");
+                }
                 else{
                     this.$q.loading.show();
                     const formData = new FormData();
@@ -144,7 +158,7 @@ export default {
                     let res = await this.$_post_file(formData);
                     this.user_information.company_id = this.user_information.company._id
                     this.user_information.user_picture = res;
-                    await this.$_post('member/add/user',  this.user_information );
+                    await this.$_post('member/add/user',  this.user_information);
 
                     this.user_information={
                         full_name: '',
@@ -180,9 +194,23 @@ export default {
             }
 
         },
-        getCompanyData(value)
+        async getDevices()
         {
+            this.device_lists 
+            let device = await this.$_devices({find_device: {company_id: this.company_details, device_type: 'vcop_eye'}})
+            for (let i = 0; i < device.length; i++) {
+                this.device_options.push({
+                    label: device[i].device_name,
+                    value: device[i].device_id
+                })
+                
+            }
+        },
+        async getCompanyData(value)
+        {   
+            this.company_details = value
             this.user_information.company = value;
+            await this.getDevices()
         },
         openFilemanager()
         {
@@ -196,7 +224,6 @@ export default {
             oFReader.onload = function (oFREvent) {
                 document.getElementById("imagePreview").src = oFREvent.target.result;
             };
-
 
         }
 

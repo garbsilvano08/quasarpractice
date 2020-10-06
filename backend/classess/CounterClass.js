@@ -50,7 +50,6 @@ module.exports = class CounterClass
         await this.getCompany(company_id)
         for ( let company of this.company_to_update )
         {
-            console.log(company);
             for(let category of key)
             {
                 if (category) await this.saveCount(company, category, date_string)
