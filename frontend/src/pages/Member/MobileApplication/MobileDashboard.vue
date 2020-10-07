@@ -109,11 +109,10 @@
                 </div>
             </div>
          </div> -->
-      </div>
+        </div>
         <div class="add_fever_logs-btn" @click="goToAddUserLogs">
             <q-icon name="fas fa-plus"></q-icon>
         </div>
-      
    </div>
 </template>
 
@@ -129,17 +128,19 @@ import { postGetMobileFeverLogs, postGetDevice } from '../../../references/url';
 import { date } from 'quasar';
 import { log } from 'util';
 
-
 Vue.use(Chartkick.use(Chart))
 
 export default
 {
-   components: { ComPicker },
+   components: { 
+       ComPicker,
+    },
    //pointerdata
    data:() =>
    ({
       has_fever_logs: {},
-      device_list: {}
+      device_list: {},
+      sample_device: '',
    }),
 
    watch:{},
@@ -173,12 +174,25 @@ export default
    
    updated() {},
    async mounted()
-   {
-       this.has_fever_logs = await this.$_post(postGetMobileFeverLogs)
-        for(let index = 0; index < this.has_fever_logs.data.length; index++) {
-            this.has_fever_logs.data[index].date_saved = date.formatDate(this.has_fever_logs.data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
+   {   
+       
+        if (this.$route.params.filter_fever_logs) {
+           let params = {
+                company_name : this.$route.params.filter_fever_logs.company_name,
+                date_saved : { '$gte' : this.$route.params.filter_fever_logs.start_date , '$lte' : this.$route.params.filter_fever_logs.end_date},
+                device_name :  this.$route.params.filter_fever_logs.device_name
+            }
+            this.has_fever_logs = await this.$_post(postGetMobileFeverLogs, { filter_logs : params})
         }
+        else{
+           this.has_fever_logs = await this.$_post(postGetMobileFeverLogs)
+             
+        }
+        for(let index = 0; index < this.has_fever_logs.data.length; index++) {
+                this.has_fever_logs.data[index].date_saved = date.formatDate(this.has_fever_logs.data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
+            }
         await this.getDevices();
+       
    }
 }
 </script>

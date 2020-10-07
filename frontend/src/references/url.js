@@ -29,9 +29,6 @@ exports.postGetPersonLogs   = 'member/get/db_person_logs';
 exports.postUpdatePersonLogs= 'member/update/person_logs'
 
 exports.postUserLogOut      = 'member/update/user_logs'
-// Mobile
-exports.postGetMobileUserLogs   = 'member/get/mobile_user_logs'
-exports.postGetMobileFeverLogs  = 'member/get/mobile_fever_logs'
 
 // Person
 exports.postSavePerson      = 'member/save/person';
@@ -58,3 +55,11 @@ exports.postDashboard       = 'member/dashboard/counting';
 exports.postAddFeverDetectedIdentification = 'member/add/fever_detected_identification';
 exports.postGetIdentification = 'member/get/identification';
 // exports.postAddPersonTablet     = 'member/user/addPersonTablet';
+
+// Mobile
+exports.postGetMobileUserLogs   = 'member/get/mobile_user_logs'
+exports.postGetMobileFeverLogs  = 'member/get/mobile_fever_logs'
+
+//Mobile Company
+exports.postGetMobileCompanies  = 'member/get/mobile_companies' 
+exports.postGetMobileDevices  = 'member/get/mobile_devices'

@@ -112,7 +112,7 @@ export default {
 
 <style lang="scss" scoped>
 .btn-choose {
-    padding: 3px 10px !important;
+    // padding: 3px 10px !important;
     width: 200px !important;
 }
 </style>

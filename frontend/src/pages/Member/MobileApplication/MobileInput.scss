@@ -47,8 +47,25 @@
 
                 .content__select {
                     margin-bottom: 20px;
+                    .btn-choose[data-v-6ba98f6a] {
+                        height: 40px;
+                        // padding: 3px -10px !important; 
+                        // padding: 3px 10px !important; 
+                        width: 100%!important;
+                        span{
+                            margin-left: 5px;
+                        }
+                        i{
+                            margin-right: 15px;
+                        }
+                    }
                 }
-
+                .content__select-device{
+                    margin-bottom: 20px;
+                    .q-field__native{
+                        background-color: black;
+                    }
+                }
                 .content__input {
                     .btn-choose[data-v-6ba98f6a]{
                         padding: 3px 10px !important;
