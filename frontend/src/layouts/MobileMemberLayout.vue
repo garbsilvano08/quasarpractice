@@ -56,13 +56,23 @@
 					</q-item>
                     <q-item class="nav" clickable v-ripple @click="goToUserLogs">
 						<q-item-section avatar>
-							<q-icon name="fas fa-clock" />
+							<q-icon name="fas fa-clock"/>
 						</q-item-section>
 						<q-item-section>User Logs</q-item-section>
 					</q-item>
                     <q-item class="nav" clickable v-ripple @click="goToSync">
 						<q-item-section avatar>
-							<q-icon name="fas fa-sync-alt" />
+							<q-icon name="fas fa-sync-alt">
+                                 <q-badge
+                                    v-if="this.keys.length"
+                                    class="badge-oval small"
+                                    align="middle"
+                                    style="right: -16px; z-index: 2; width: auto;"
+                                    color="red" text-color="white" :label="this.keys.length"
+                                    floating
+                                >
+                                </q-badge>
+							</q-icon>
 						</q-item-section>
 						<q-item-section>Sync to Cloud</q-item-section>
 					</q-item>
@@ -227,7 +237,8 @@ export default
         image: null,
         log_alert: {},
         company_list: [],
-        mobile_db: new MobileModel()
+        mobile_db: new MobileModel(),
+        keys: []
         
     }),
     computed:
@@ -290,11 +301,11 @@ export default
         },
         async checkQueueSync()
         {
-            let keys = await this.mobile_db.keys()
-            for (let i = 0; i < keys.length; i++) {
+            this.keys = await this.mobile_db.keys()
+            for (let i = 0; i < this.keys.length; i++) {
                 if(navigator.onLine)
                 {
-                    let person_details = await this.mobile_db.get(keys[i])
+                    let person_details = await this.mobile_db.get(this.keys[i])
                     person_details = JSON.parse(person_details)
                     let id_src = await this.savePicsLocal(person_details.id_image, 'person' + Date.now().toString() + '.png')
                     let person_src = await this.savePicsLocal(person_details.person_img, 'person' + Date.now().toString() + '.png')
@@ -338,7 +349,7 @@ export default
                 
                     let save = await this.$_post(postSavePerson, {person_info: data} );
                     await this.$_post('member/add/pass_log', { data: data });
-                    this.mobile_db.delete(keys[i])
+                    this.mobile_db.delete(this.keys[i])
                 }
             }
             setTimeout(() => this.checkQueueSync(), 1000);

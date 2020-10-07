@@ -4,8 +4,8 @@
                 <div class="content__grid">
                     <div class="frontdesk__content">
                         <div class="offline_note" v-if="!online">
-                        <q-icon name="fas fa-exclamation-circle"></q-icon>   
-                        <p>Your network is unavailable. Please make sure that you are connected to any wifi or mobile network.</p>
+                            <q-icon name="fas fa-exclamation-circle"></q-icon>   
+                            <p>Your network is unavailable. Please make sure that you are connected to any wifi or mobile network.</p>
                         </div>
                         <div class="header__title">Health Cloud Synchronization</div>
                             <div class="table-container">
@@ -19,7 +19,7 @@
                                             </tr>
                                         </thead>
                                         <tbody v-for="(person, a) in this.person_list" :key="a">
-                                            <tr v-if="a==0" class="syncing">
+                                            <tr v-if="a==0 && online" class="syncing">
                                                 <td>{{person.frontdesk_person_id}}</td>
                                                 <td>{{person.given_name + " " + person.middle_name + " " + person.last_name}}</td>
                                                 <td class="background_primary"><q-icon class="loader-2" name="fas fa-sync-alt"/> Syncing </td>
@@ -78,6 +78,8 @@ export default {
         async getSyncPerson()
         {
             // this.person_list = []
+            if(navigator.onLine) this.online = true
+            else this.online = false
             this.keys = await this.mobile_db.keys()
             this.check()
             for (let i = 0; i < this.keys.length; i++) {
