@@ -607,82 +607,8 @@ export default
             name: 'Stranger', data: {'Monday': 4, 'Tuesday': 2, 'Wednesday': 1, 'Thrusday': 5, 'Friday': 4,}
          }
       ]},
-      data_bar_graph: {data:[]},
-      data_line_graph:
-      {data: [
-         {
-            name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
-         },
-         {
-            name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
-         }
-      ]},
-      sample_alert: [
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-
-      ],
+      data_bar_graph: {data: []},
+      data_line_graph: {data: []},
       visitors_date: new Date().toISOString().split('T')[0],
       traffic_date: new Date().toISOString().split('T')[0],
       alert_date: new Date().toISOString().split('T')[0],

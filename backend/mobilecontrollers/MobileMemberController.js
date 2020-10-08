@@ -61,6 +61,12 @@ module.exports =
     },
     async getMobileFeverLogs(req, res)
     {
-        return res.send(await new MDB_PERSON_LOGS().collection.find({has_fever : true}).sort({date_saved: -1}).limit(5));
+        return res.send(await new MDB_PERSON_LOGS().collection.find(req.body.find_logs).sort({date_saved: -1}).limit(5));
+    },
+    async getLogsCount(req, res)
+    {
+        let count = {}
+        count.count = await new MDB_PERSON_LOGS().collection.countDocuments(req.body.find_logs)
+        res.send(count)
     }
 }

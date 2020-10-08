@@ -79,6 +79,15 @@ import {base64StringToBlob} from 'blob-util';
 export default {
     data:() =>
     ({  
+        filter_logs: {
+            company_list: [],
+            start_date: new Date().toISOString().split('T')[0],
+            end_date: new Date().toISOString().split('T')[0],
+            start_time: '00:00',
+            end_time: '23:59',
+            account_type: 'All',
+            device_name: 'All'
+        },
         select_company: 'CPIP',
         option_company: [
             'CPIP', 'Royal' , 'Others'
@@ -100,7 +109,7 @@ export default {
     },
     async mounted()
     {
-        
+        console.log(this.$route.params);        
     },
     methods:
     {

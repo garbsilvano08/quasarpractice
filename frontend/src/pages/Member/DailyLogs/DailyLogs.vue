@@ -466,31 +466,16 @@ export default {
             let sort_time_end = sort_end.split(":")
 
             let date_start = new Date(sort_date_start)
-            // date_start.setDate(date_start.getDate() + 1)
             date_start.setHours(sort_time_start[0])
             date_start.setMinutes(sort_time_start[1])
             date_start.setSeconds(sort_time_start[2] ? sort_time_start[2] : '00')
             date_start.setMilliseconds(sort_time_start[3] ? sort_time_start[3] : '00')
 
-            // date_start.setHours(date_start.getHours
-            // date_start.setMinutes(sort_time_start[1])
-
             let date_end = new Date(sort_date_end)
             date_end.setHours(sort_time_end[0])
             date_end.setMinutes(sort_time_end[1])
             date_end.setSeconds(sort_time_end[2] ? sort_time_end[2] : '00')
-            // date_end.setMilliseconds(sort_time_end[3] ? sort_time_end[3] : '00')
 
-            // date_end.setHours(date_end.getHours() + 8)
-            date_end.setMinutes(sort_time_end[1])
-            
-            // if (sort_reverse)
-            // {
-            //     date_start.setMilliseconds(date_start.getMilliseconds() + 1)
-            //     date_end.setMilliseconds(date_end.getMilliseconds() + 1)
-            // }
-
-            // console.log(this.company_details);
             this.company_list = []
             if (this.company_details && this.company_details.subcompanies && this.company_details.subcompanies.length)
             {

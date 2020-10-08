@@ -182,24 +182,20 @@ module.exports =
 
         // await new MDB_LOGS().add(req.body.data);
         date_string = date_string.split("-")
-        // console.log(req.body.data);
-        let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
-        if (person.length) key.push(person[0].category)
-        else key.push('Stranger')
-
-        // console.log(key);
-        // console.log(key);
-        // if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
+        console.log(req.body.data);
+        let person = await new MDB_PERSON().docs({contact_number: req.body.data.contact_number, birthday: new Date(req.body.data.birthday)})
+        console.log(person);
+        key.push(person[0].category)
         await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
             mask:                   1,
             temperature:            req.body.data.temperature,
             person_img:             req.body.data.person_img,
-            full_name:              req.body.data.given_name + " " + req.body.data.middle_name + " " + req.body.data.last_name,
+            full_name:              person[0].given_name + " " + person[0].middle_name + " " + person[0].last_name,
             company_id:             req.body.data.company_id,
             device_id:              req.body.data.device_id,
-            frontdesk_person_id:    req.body.data.frontdesk_person_id,
+            frontdesk_person_id:    person[0].frontdesk_person_id,
             date_logged:            req.body.data.frontdesk_person_date,
             location:               req.body.data.location,
             location_coordinates:   req.body.data.location_coordinates
