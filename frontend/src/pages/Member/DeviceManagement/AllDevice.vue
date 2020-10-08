@@ -16,6 +16,7 @@
                     <thead>
                         <tr>
                             <th>Device ID</th>
+                            <th>Device Name</th>
                             <th>Company</th>
                             <th>IP Address</th>
                             <th>Date Installed</th>
@@ -25,6 +26,7 @@
                     <tbody>
                         <tr v-for="(device, index) in this.device_list.data" :key="index">
                             <td>{{ device.device_id }}</td>
+                            <td>{{ device.device_name }}</td>
                             <td>{{ device.company_name }}</td>
                             <td>{{ device.device_ip }}</td>
                             <td>{{ convertToDate(device.date_installed)}}</td>
