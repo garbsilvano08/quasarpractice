@@ -8,13 +8,13 @@
                 
             </q-toolbar>
         </q-header>
-        <q-header v-if="$route.name == 'member_mobile_filter_fever'">
+        <!-- <q-header v-if="$route.name == 'member_mobile_filter_fever'">
             <q-toolbar>
                 <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>
                 <div class="header_title">Filter</div>
             <q-btn flat dense round icon="fas fa-check" aria-label="Generate" @click="goToDashboard()"/>
             </q-toolbar>
-        </q-header>
+        </q-header> -->
         <q-header v-if="$route.name == 'member_mobile_add_fever'">
             <q-toolbar>
                 <q-btn flat dense round icon="fas fa-times" aria-label="Close" @click="goToDashboard()"/>

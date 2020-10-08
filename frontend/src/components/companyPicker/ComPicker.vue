@@ -111,8 +111,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-choose[data-v-6ba98f6a] {
-    padding: 3px 10px !important;
-    width: fit-content !important;
+.btn-choose {
+    // padding: 3px 10px !important;
+    width: 200px !important;
 }
 </style>
