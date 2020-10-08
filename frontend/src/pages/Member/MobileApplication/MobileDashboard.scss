@@ -520,6 +520,15 @@
             overflow-y: auto;
         }
     }
+    
+    .add_fever_logs-spinner{
+        .q-spinner{
+            position: static;
+            left: 50%;
+            right: 50%;
+            width: 100%;
+        }
+    }
     .add_fever_logs-btn{
         height: 50px;
         width: 50px;

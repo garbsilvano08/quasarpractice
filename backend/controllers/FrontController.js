@@ -28,7 +28,7 @@ module.exports =
                 company_id:     response.data.company_id,
                 user_picture:   response.data.user_picture,
                 date_created:   response.data.date_created,
-                device:   response.data.device,
+                device:         response.data.device,
                 __v:            response.data.__v,
                 is_active:      true,
                 time_log_in:    new Date(),

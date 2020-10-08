@@ -1,6 +1,6 @@
 <template>
     <q-layout class="main" view="hHh Lpr lFf">
-        <q-header v-if="$route.name == 'member_mobile_dashboard'">
+        <q-header v-if="$route.name == 'member_mobile_dashboard'" >
             <q-toolbar>
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
