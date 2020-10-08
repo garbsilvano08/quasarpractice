@@ -233,7 +233,7 @@ export default
             this.is_app = this.$user_info.user_type == 'Officer' ? false : true
             // Edward
             await this.db.initialize();
-            // await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+            await this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
             await this.$store.commit('sync/storeLastRequestTime', await this.db.get("lastRequestTime"));
             await this.checkQueueSync();
     
@@ -431,7 +431,7 @@ export default
             if ( this.$user_info && this.$user_info.user_type)
             {
                 // console.log('kjkjkj');
-                // this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+                this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
                 // Info
     
                 for (let visitor of this.visitors)
@@ -528,13 +528,14 @@ export default
     
                     });
     //*********************************************************************************************************************************
+                    
                     if (this.visitors.length) 
                     {
                         await this.$_post(postSavePerson, {person_info: data} );
                     }
     
                     await this.db.delete(visitor.id, "visitors");
-                    // this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
+                    this.$store.commit('sync/storeVisitors', await this.db.get("visitors"));
                 }
     
                 // Logs

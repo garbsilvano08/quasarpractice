@@ -1,6 +1,6 @@
 <template>
     <div class="synchronization">
-        <div class="header__title">HEALTH CLOUD SYNCHRONIZATION <span>(1,080)</span></div>
+        <div class="header__title">HEALTH CLOUD SYNCHRONIZATION <span></span></div>
 
         <div class="content__grid-2x2">
             <div class="synchronization__content content__box">
@@ -9,7 +9,7 @@
                     <div class="sync-btn__name">SYNC</div>
                 </div>
                 <div class="synchronization__content-details">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aut, sapiente laborum labore eum blanditiis iste unde laudantium, voluptatem, pariatur qui ratione corrupti non iure tenetur! Earum ipsam harum rem enim?
+                   New data saved to the cloud will be automatically synced to all devices installed.
                 </div>
             </div>
             <div class="synchronization__content content__box">
@@ -18,7 +18,7 @@
                     <div class="sync-btn__name">SYNC ALL</div>
                 </div>
                 <div class="synchronization__content-details">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aut, sapiente laborum labore eum blanditiis iste unde laudantium, voluptatem, pariatur qui ratione corrupti non iure tenetur! Earum ipsam harum rem enim?
+                    All data saved to the cloud will be automaticall synced to all devices installed.
                 </div>
             </div>
         </div>

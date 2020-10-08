@@ -523,7 +523,7 @@ module.exports =
 
     async savePerson(req, res)
     {
-        // console.log('asas');
+        console.log(req.body, 'asas');
         let date_string = new Date().toISOString().split('T')[0]
         // await new CounterClass().counterActivities(req.body.person_info.saved_from, req.body.person_info.category, date_string)
         date_string = date_string.split("-")

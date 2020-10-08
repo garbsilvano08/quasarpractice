@@ -473,11 +473,18 @@ export default {
                 for (let validate in this.visitor_purpose)
                 {
                     let field = validate;
-
                     if (field === 'purpose_visit') field = "Purpose of Visit";
                     else field = capitalize(field.replace('_', ' '));
 
-                    if (!this.visitor_purpose[validate]) throw new Error(field + ' is required.');
+                    if (!this.visitor_purpose[validate]) 
+                    {
+                        if (validate === 'delivery_name')
+                        {
+                            console.log(validate, this.visitor_purpose);
+                            if (this.visitor_purpose.purpose_visit === 'Delivey' && !this.visitor_purpose.delivery_name) throw new Error(field + ' is required.')
+                        }
+                        else throw new Error(field + ' is required.');
+                    }
                 }
 
                 if (this.personal_information.location) this.personal_information.location_coordinates = await this.$_post('member/get/coordinates', { place_id: this.personal_information.location.place_id }).then(res => res.data);

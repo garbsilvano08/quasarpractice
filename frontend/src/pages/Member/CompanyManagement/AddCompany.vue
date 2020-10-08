@@ -4,7 +4,7 @@
         <div class="company-add__content content__box">
             <div class="header__title">Company Information</div>
             <div class="company-add__content-info">
-                <div class="content__title">Choose ID</div>
+                <div class="content__title">Company Photo</div>
                 <div class="content__img-holder">
                     <div></div>
                     <!-- <img id="uploadPreview" style="width: 200px; height: 200px;" /> -->
@@ -54,10 +54,8 @@
                 <div class="content__input">
                     <div class="company-add__content-info">
                         <div class="content__select-label">
-                            <q-checkbox v-model="is_device_owner" label="Device Owner"/>
-                            <!-- Device Owner -->
+                            <q-checkbox v-model="is_device_owner" label="Is this company a device owner?"/>
                         </div>
-                        <!-- <com-picker v-show="is_open" :user="this.$user_info" @select=getDeviceOwner></com-picker> -->
                         <q-select
                             v-show="is_open"
                             outlined
@@ -70,7 +68,7 @@
                             option-label="description"
                             class="q-mb-sm"
                         />
-                        <div class="content__title-sub">Device owner is a settings for those establishments who have a tenant inside the building. Check this box if the parent company has the only station inside the building. If unchecked, please choose the company there your staff and visitors are being scanned.</div>
+                        <!-- <div class="content__title-sub">Device owner is a settings for those establishments who have a tenant inside the building. Check this box if the parent company has the only station inside the building. If unchecked, please choose the company there your staff and visitors are being scanned.</div> -->
                     </div>
                     <div class="company-add__content-info">
                     </div>

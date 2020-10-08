@@ -609,80 +609,8 @@ export default
       ]},
       data_bar_graph: {data:[]},
       data_line_graph:
-      {data: [
-         {
-            name: 'Employee', data: {'Monday': 2, 'Tuesday': 5, 'Wednesday': 3, 'Thrusday': 6, 'Friday': 8}
-         },
-         {
-            name: 'Visitor', data: {'Monday': 3, 'Tuesday': 4, 'Wednesday': 7, 'Thrusday': 6, 'Friday': 5,}
-         }
-      ]},
-      sample_alert: [
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-         {
-            person_image: 'http://157.245.55.109/uploader/uploads/optimize_images/lebron.jpg',
-            full_name: 'Juan Dela Cruz',
-            date_saved: new Date(),
-            company_name: 'San Miguel Corp',
-            temperature: 27
-         },
-
-      ],
+      {data: []},
+      sample_alert: [],
       visitors_date: new Date().toISOString().split('T')[0],
       traffic_date: new Date().toISOString().split('T')[0],
       alert_date: new Date().toISOString().split('T')[0],
@@ -1233,7 +1161,7 @@ export default
          // await this.getStaffVisitors()
          // await this.getEmployeeVisitor()
 
-         setTimeout(this.getLatestLogs, 15000);
+         setTimeout(this.getLatestLogs, 1000);
       },
       async imageUpload(image, id)
       {
@@ -1274,6 +1202,7 @@ export default
 
    async mounted()
    {  //pointermount
+   
       let sample_date = new Date()
       sample_date.setHours(sample_date.getHours())
       sample_date.toISOString().split('T')[0].split("-")
@@ -1294,6 +1223,33 @@ export default
       let params = {}
 
       await this.getLatestLogs()
+      
+       var swiper = new Swiper('.swiper-container', {
+         slidesPerView: 4,
+         spaceBetween: 20,
+         navigation: {
+            nextEl: '.swiper-next',
+            prevEl: '.swiper-prev',
+         },
+         breakpoints: {
+        1366: {
+            slidesPerView: 4,
+        },
+        768: {
+				slidesPerView: 3,
+        },
+        425: {
+            slidesPerView: 1,
+        },
+        375: {
+            slidesPerView: 1,
+        },
+        320: {
+            slidesPerView: 1,
+        },
+      }
+      }); 
+
       let date_string = new Date().toISOString().split('T')[0].split("-")
       this.getTotalScannedToday(new Date(), 'global')
       this.current_date = this.current_date[0] + " " + this.current_date[1] + " " + this.current_date[2] + " " + this.current_date[3]
@@ -1343,34 +1299,35 @@ export default
       await this.getTrafficData(params)
 
       await this.uploadImage()
+     
    },
    
    updated() {
-      var swiper = new Swiper('.swiper-container', {
-         slidesPerView: 4,
-         spaceBetween: 20,
-         navigation: {
-            nextEl: '.swiper-next',
-            prevEl: '.swiper-prev',
-         },
-         breakpoints: {
-        1366: {
-            slidesPerView: 4,
-        },
-        768: {
-				slidesPerView: 3,
-        },
-        425: {
-            slidesPerView: 1,
-        },
-        375: {
-            slidesPerView: 1,
-        },
-        320: {
-            slidesPerView: 1,
-        },
-      }
-      });
+      // var swiper = new Swiper('.swiper-container', {
+      //    slidesPerView: 4,
+      //    spaceBetween: 20,
+      //    navigation: {
+      //       nextEl: '.swiper-next',
+      //       prevEl: '.swiper-prev',
+      //    },
+      //    breakpoints: {
+      //   1366: {
+      //       slidesPerView: 4,
+      //   },
+      //   768: {
+		// 		slidesPerView: 3,
+      //   },
+      //   425: {
+      //       slidesPerView: 1,
+      //   },
+      //   375: {
+      //       slidesPerView: 1,
+      //   },
+      //   320: {
+      //       slidesPerView: 1,
+      //   },
+      // }
+      // });
    },
 }
 </script>

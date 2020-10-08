@@ -194,8 +194,6 @@ export default {
         },
         async start_date(val)
         {
-
-            // await this.getStaffList()
         },
         async end_date(val)
         {
