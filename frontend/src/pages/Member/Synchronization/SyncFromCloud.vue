@@ -124,12 +124,12 @@ export default {
                         let tabletFormData = new FormData();
                         tabletFormData.append("pass", "abc123");
                         tabletFormData.append("id", person.frontdesk_person_id);
-                        let rsp = await this.$axios.post("http://"+device.device_ip+":8090/person/delete", tabletFormData).then(res => res.data);
+                        let rsp = await this.$axios.post("http://"+device.device_ip+":8090/person/delete", tabletFormData).then(res => res.data).catch(e =>{});
 
                         let personImage = new FormData();
                         personImage.append("pass", "abc123");
                         personImage.append("faceId", person.frontdesk_person_id);
-                        let img = await this.$axios.post("http://"+device.device_ip+":8090/face/delete", personImage).then(res => res.data);
+                        let img = await this.$axios.post("http://"+device.device_ip+":8090/face/delete", personImage).then(res => res.data).catch(e =>{});
                         // console.log(rsp, img);
                     })
                 }
@@ -137,7 +137,7 @@ export default {
                 {
                     let tabletFormData = new FormData();
                     tabletFormData.append("pass", "123456");
-                    let rsp = await this.$axios.post("http://"+device.device_ip+":8080/initialization", tabletFormData).then(res => res.data);
+                    let rsp = await this.$axios.post("http://"+device.device_ip+":8080/initialization", tabletFormData).then(res => res.data.catch(e =>{}));
                 }
                     
                 setTimeout(() => this.createAll(this.persons_list, device.device_ip, device.device_type), 2000);
@@ -151,7 +151,7 @@ export default {
                     let settingsFormData = new FormData();
                     settingsFormData.append("pass", "123456");
                     settingsFormData.append("config", "{'isBodyTempAlarm': 1 , 'isBodyTempStart' : 1, 'isHighFeverAdopt' : 0, 'isLowFeverAdopt' : 0, 'isLowTempAdopt' : 0, 'isStandardTempAdopt' : 1,  'isWearingMask' : 1, 'standardBodyTemp': '37.3',  'isStrangerRecord' : 1 , 'isStrangerMode' : 0, 'tempCompensation' : 0.3,  'isFan' : 1, }");
-                    await this.$axios.post("http://"+device.device_ip+":8080/tempAndMaskSetting", settingsFormData).then(res => res.data);
+                    await this.$axios.post("http://"+device.device_ip+":8080/tempAndMaskSetting", settingsFormData).then(res => res.data).catch(e =>{});
                 }
             })
 
@@ -160,7 +160,7 @@ export default {
                 let data = new FormData();
                 data.append('pass', '123456');
                 data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
-                let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data);
+                let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data).catch(e =>{});
                 // console.log(logs, 'logs');
             }
             for (let person of personToTablet)
@@ -185,37 +185,32 @@ export default {
                         }
                         let tabletFormData = new FormData();
                         let b64 = myBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-                        try
-                        {
-
                             if (person.category == "Visitor")
                             {
                                 prescription = "'" + expStart + "," + expEnd + "'";
                                 if (device_type == 'vision_sky')
                                 {
-                                    try
-                                    {
-                                        let date = new Date().getFullYear() + "-" + (new Date(person.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + "-" + new Date(person.frontdesk_person_date).getDate().toString().padStart(2, "0") + " 23:59:59"
-                                        let image = new FormData();
-                                        image.append('pass', 'abc123');
-                                        image.append("personId", person.frontdesk_person_id );
-                                        image.append("idcardNum", 1 );
-                                        image.append("name", person.given_name + " " + person.middle_name + " " + person.last_name );
-                                        image.append("imgBase64", b64 );
-                                        image.append("passTime", '01:00:00, 23:59:59' );
-                                        image.append("permissionTime", date);
-                                        image.append("type", 1 );
-                                        
-                                        let img = await this.$axios.post("http://"+ device_ip +":8090/person/quickCreate", image).then(res => res.data);
-                                    }
-                                    catch(e){}
+                                    let date = new Date().getFullYear() + "-" + (new Date(person.frontdesk_person_date).getMonth() + 1).toString().padStart(2, "0") + "-" + new Date(person.frontdesk_person_date).getDate().toString().padStart(2, "0") + " 23:59:59"
+                                    let image = new FormData();
+                                    image.append('pass', 'abc123');
+                                    image.append("personId", person.frontdesk_person_id );
+                                    image.append("idcardNum", 1 );
+                                    image.append("name", person.given_name + " " + person.middle_name + " " + person.last_name );
+                                    image.append("imgBase64", b64 );
+                                    image.append("passTime", '01:00:00, 23:59:59' );
+                                    image.append("permissionTime", date);
+                                    image.append("type", 1 );
+                                    
+                                    let img = await this.$axios.post("http://"+ device_ip +":8090/person/quickCreate", image).then(res => res.data).catch(e =>{})
+                                    .catch(e =>{});
+                                
                                 }
                                 else
                                 {
                                     type = 1.1;
                                     tabletFormData.append("pass", "123456");
                                     tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0, 'prescription' : " + prescription + "}");
-                                    let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
+                                    let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data).catch(e =>{}).catch(e =>{})
                                 }
                             }
                             else if (person.category == "Staff")
@@ -226,14 +221,14 @@ export default {
                                     data.append('pass', 'abc123');
                                     data.append("person", "{'id': '"+ person.frontdesk_person_id +"', 'name': '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'idcardNum': '', 'departmentId': '1'}" );
                     
-                                    let upload = await this.$axios.post("http://"+ device_ip +":8090/person/create", data).then(res => res.data);
+                                    let upload = await this.$axios.post("http://"+ device_ip +":8090/person/create", data).then(res => res.data).catch(e =>{})
     
                                     let image = new FormData();
                                     image.append('pass', 'abc123');
                                     image.append("personId", person.frontdesk_person_id );
                                     image.append("faceId", person.frontdesk_person_id );
                                     image.append("imgBase64", b64 );
-                                    let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data);
+                                    let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data).catch(e =>{});
                                 }
                                 else
                                 {
@@ -242,13 +237,12 @@ export default {
                                         type = 3;
                                         tabletFormData.append("pass", "123456");
                                         tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0}");
-                                        let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data);
+                                        let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data).catch(e =>{});
                                     }
                                     catch(e){}
                                 }
                             }
-                        }
-                        catch(e){}
+                        
                         resolve();
                     });
                 });
@@ -282,7 +276,7 @@ export default {
                                 getFormData.append("pass", "123456");
                                 getFormData.append("index", ""+ctr+"");
                                 getFormData.append("length", "50");
-                                rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data);
+                                rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data).catch(e =>{console.log(e);});
                                 totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
                                 // console.log(JSON.parse(rsp.data).pageInfo)
                                 rsp = JSON.parse(rsp.data).records;
@@ -312,7 +306,7 @@ export default {
                                         let VisionData = new FormData();
                                         VisionData.append("pass", "abc123");
                                         VisionData.append("id", person.frontdesk_person_id);
-                                        let vision = await this.$axios.post("http://"+device.device_ip+":8090/person/find", VisionData).then(res => res.data);
+                                        let vision = await this.$axios.post("http://"+device.device_ip+":8090/person/find", VisionData).then(res => res.data).catch(e =>{});
                                         if (vision.msg != 'personId does not exist') is = true;
                                     }
                                     catch(e){}
