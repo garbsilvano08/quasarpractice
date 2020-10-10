@@ -43,7 +43,7 @@
             <div class="dashboard__overview-bg bg-second">
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">{{today_staff}} </div>
+                     <div class="decs-total">{{today_staff.count}} </div>
                      <!-- <div class="desc-separator"></div>
                      <div class="decs-info">{{highest_log.data.length && highest_log.data[0].has_fever ? 'Has Fever' : 'Normal'}}</div> -->
                   </div>
@@ -59,7 +59,7 @@
             <div class="dashboard__overview-bg bg-third">
                <div class="dashboard__overview-info">
                   <div class="dashboard__overview-desc">
-                     <div class="decs-total">{{today_visitors}}</div>
+                     <div class="decs-total">{{today_visitors.count}}</div>
                      <div class="decs-info"></div>
                   </div>
                   <div class="dashboard__overview-title">Total Visitors Today</div>
@@ -573,7 +573,8 @@ import { postGetCompanies,
    postGetAlertCount,
    postGetDevice,
    postDashboard,
-   postGetCompany
+   postGetCompany,
+   postCountLogs
 } from '../../../references/url';
 
 // Classes
@@ -670,8 +671,8 @@ export default
       purposeEnd: new Date().toISOString().split('T')[0],
       last_option_purpose: '',
       registered_has_fever: 0,
-      today_visitors: 0,
-      today_staff: 0,
+      today_visitors: {count: 0},
+      today_staff: {count: 0},
       if_fever_detected_alert_dialog: true,
       device_list: {data: []},
       company_list: []
@@ -1049,12 +1050,19 @@ export default
          }
          else
          {
-            // params = {find_by: {date_logged: new Date().toISOString().split('T')[0]}, limit: 1, sort_by:{temperature: -1}}
             filter = {date_saved: {'$gte' : new Date(current_date.setHours(0,0,0,0)), '$lte' : new Date(current_date.setHours(23,59,59,100))}}
          }
 
          let data = await this.$_post('member/get/count_logs', {find_by_category: filter});
          this.traffic_data = data.data
+
+         filter.category = 'Staff'
+         let staff = await this.$_post('member/get/count_logs', {find_by_category: filter});
+         this.today_staff = staff.data
+
+         filter.category = 'Visitor'
+         let visitor = await this.$_post('member/get/count_logs', {find_by_category: filter});
+         this.today_visitors = visitor.data
       },
 
       async getTrafficData(params = {}, type)
@@ -1065,31 +1073,29 @@ export default
 
       async getTotalRegistered()
       {
-         if (log.key == 'Visitor') this.today_visitors = this.today_visitors + log.count
-         else if (log.key == 'Staff') this.today_staff = this.today_staff + log.count
          // let total = 0
          //  let params = {}
          // // if (this.company_details)
-         // if (this.company_details._id) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? {$in: this.company_list } : null, key: {$in: ['Staff', 'Visitor']}}}
+         // if (this.company_details._id) params = {find_by_category: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? {$in: this.company_list } : null, key: {$in: ['Staff', 'Visitor']}}}
          // else params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitor']}}}
 
          // // console.log(params);
-         // let today_logs = await this.$_post(postGetDailyLog, params);
-         // if (today_logs.data.length)
-         // {
-         //    this.today_visitors = 0
-         //    for (let log of today_logs.data) {
-         //       total = total + Number(log.count)
-         //       if (log.key == 'Visitor') this.today_visitors = this.today_visitors + log.count
-         //       else if (log.key == 'Staff') this.today_staff = this.today_staff + log.count
-         //    }
-         //    this.logged_today = (total/this.traffic_data.count) * 100
-         //    this.logged_today = this.logged_today.toFixed(0);
-         // }
-         // else
-         // {
-         //     this.logged_today = 0
-         // }
+         // let today_logs = await this.$_post(postCountLogs, params);
+         // // if (today_logs.data.length)
+         // // {
+         // //    this.today_visitors = 0
+         // //    for (let log of today_logs.data) {
+         // //       total = total + Number(log.count)
+         // //       if (log.key == 'Visitor') this.today_visitors = this.today_visitors + log.count
+         // //       else if (log.key == 'Staff') this.today_staff = this.today_staff + log.count
+         // //    }
+         // //    this.logged_today = (total/this.traffic_data.count) * 100
+         // //    this.logged_today = this.logged_today.toFixed(0);
+         // // }
+         // // else
+         // // {
+         // //     this.logged_today = 0
+         // // }
       },
       seeMore(){
          this.$router.push({
