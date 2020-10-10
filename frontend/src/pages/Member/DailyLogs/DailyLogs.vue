@@ -445,9 +445,14 @@ export default {
             file_name
             );
         },
-        getCompanyData(value)
+        async getCompanyData(value)
         {
             this.company_details = value
+            this.company_list.push(this.company_details._id)
+            await this.getCompanyList(this.company_details._id)
+            for (let i = 0; i < this.company_list.length; i++) {
+                await this.getCompanyList(this.company_list[i])
+            }
         },
         async getLogList(sort_date_start, sort_date_end, sort_start, sort_end, sort_reverse = "", generate = "")
         {
@@ -466,39 +471,24 @@ export default {
             let sort_time_end = sort_end.split(":")
 
             let date_start = new Date(sort_date_start)
-            // date_start.setDate(date_start.getDate() + 1)
             date_start.setHours(sort_time_start[0])
             date_start.setMinutes(sort_time_start[1])
             date_start.setSeconds(sort_time_start[2] ? sort_time_start[2] : '00')
             date_start.setMilliseconds(sort_time_start[3] ? sort_time_start[3] : '00')
 
-            // date_start.setHours(date_start.getHours
-            // date_start.setMinutes(sort_time_start[1])
-
             let date_end = new Date(sort_date_end)
             date_end.setHours(sort_time_end[0])
             date_end.setMinutes(sort_time_end[1])
             date_end.setSeconds(sort_time_end[2] ? sort_time_end[2] : '00')
-            // date_end.setMilliseconds(sort_time_end[3] ? sort_time_end[3] : '00')
-
-            // date_end.setHours(date_end.getHours() + 8)
             date_end.setMinutes(sort_time_end[1])
-            
-            // if (sort_reverse)
+            // this.company_list = []
+            // if (this.company_details && this.company_details.subcompanies && this.company_details.subcompanies.length)
             // {
-            //     date_start.setMilliseconds(date_start.getMilliseconds() + 1)
-            //     date_end.setMilliseconds(date_end.getMilliseconds() + 1)
+            //     for (let index = 0; index < this.company_details.subcompanies.length; index++) {
+            //         this.company_list.push(this.company_details.subcompanies[index])
+            //     }
             // }
-
-            // console.log(this.company_details);
-            this.company_list = []
-            if (this.company_details && this.company_details.subcompanies && this.company_details.subcompanies.length)
-            {
-                for (let index = 0; index < this.company_details.subcompanies.length; index++) {
-                    this.company_list.push(this.company_details.subcompanies[index])
-                }
-            }
-            this.company_list.push(this.company_details ? this.company_details._id : null)
+            // this.company_list.push(this.company_details ? this.company_details._id : null)
             if (this.select__account_type == 'All')
             {
                 if (this.company_details._id)
@@ -646,10 +636,10 @@ export default {
         {
             let params = {}
             if (this.company_details._id && this.company_details.device_owner != "Device Owner" ){
-                params = {find_device: {company_id: this.company_details.device_owner}}
+                params = {find_device: {company_id: {'$in' : this.company_list}}}
             }
             else if (this.company_details._id){
-                params = {find_device: {company_id: this.company_details._id}}
+                params = {find_device: {company_id: {'$in' : this.company_list}}}
             }
             else params = ''
 
@@ -659,7 +649,39 @@ export default {
                 this.options_device_name.push(device.device_name)
                 this.device_list.push(device)
             });
-        }
+        },
+
+        async getCompany(company_id)
+        {
+            return await this.$_post(postGetCompany, {id: company_id})
+        },
+
+        async getCompanyList(id)
+        {
+            let company = await this.getCompany(id)
+            if (company.data.tenants && company.data.tenants.length)
+            {
+                for (let index = 0; index < company.data.tenants.length; index++) {
+                let is_new = this.checkCompany(company.data.tenants[index])
+                    if (is_new) this.company_list.push(company.data.tenants[index])
+                }
+            }
+            if (company.data.subcompanies && company.data.subcompanies.length)
+            {
+                for (let index = 0; index < company.data.subcompanies.length; index++) {
+                let is_new = this.checkCompany(company.data.tenants[index])
+                if (is_new) this.company_list.push(company.data.subcompanies[index])
+                }
+            }
+        },
+
+        checkCompany(id)
+        {
+            for (let index = 0; index < this.company_list.length; index++) {
+                if (id == this.company_list[index]) return false
+            }
+            return true
+        },
     },
     async mounted()
     {
@@ -675,8 +697,15 @@ export default {
             }
         }
 
-        this.company_details = this.$user_info.company ? await this.getCompany(this.$user_info.company._id) : {}
-
+        if (this.$user_info.company)
+        {
+            this.company_details = this.$user_info.company
+            this.company_list.push(this.company_details._id)
+            await this.getCompanyList(this.company_details._id)
+            for (let i = 0; i < this.company_list.length; i++) {
+                await this.getCompanyList(this.company_list[i])
+            }
+        }
         await this.getDevice()
         await this.getLogList(this.start_date, this.end_date, this.start_time, this.end_time)
         // await this.updateImage()

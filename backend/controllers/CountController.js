@@ -247,6 +247,11 @@ module.exports =
     {
         return res.send(await new MDB_COUNT_OVERALL().docs(req.body.find_count));
     },
+
+    async getCountperson(req, res)
+    {
+        return res.send(await new MDB_COUNT_DAILY().collection.countDocuments(req.body.find_count));
+    },
     
     async getCountDaily(req, res)
     {

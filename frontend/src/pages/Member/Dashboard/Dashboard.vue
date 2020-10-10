@@ -868,12 +868,9 @@ export default
          this.company_details = value
 
          this.company_list.push(this.company_details._id)
-         let company = await this.getCompany(this.company_details._id)
-         if (company.data.tenants && company.data.tenants.length)
-         {
-            for (let index = 0; index < company.data.tenants.length; index++) {
-               this.company_list.push(company.data.tenants[index])
-            }
+         await this.getCompanyList(this.company_details._id)
+         for (let i = 0; i < this.company_list.length; i++) {
+            await this.getCompanyList(this.company_list[i])
          }
          
          this.staff_number = await this.personsData({find_person: {company_id:{'$in': this.company_list }, category: 'Staff', date_created: { '$gt' : new Date(this.company_details.date_created) , '$lt' : new Date()}}})
@@ -1068,29 +1065,31 @@ export default
 
       async getTotalRegistered()
       {
-         let total = 0
-          let params = {}
-         // if (this.company_details)
-         if (this.company_details._id) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? {$in: this.company_list } : null, key: {$in: ['Staff', 'Visitor']}}}
-         else params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitor']}}}
+         if (log.key == 'Visitor') this.today_visitors = this.today_visitors + log.count
+         else if (log.key == 'Staff') this.today_staff = this.today_staff + log.count
+         // let total = 0
+         //  let params = {}
+         // // if (this.company_details)
+         // if (this.company_details._id) params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: this.company_details._id ? {$in: this.company_list } : null, key: {$in: ['Staff', 'Visitor']}}}
+         // else params = {find_count: {date_string: new Date(this.traffic_date).toISOString().split('T')[0], company_id: 'global', key: {$in: ['Staff', 'Visitor']}}}
 
-         // console.log(params);
-         let today_logs = await this.$_post(postGetDailyLog, params);
-         if (today_logs.data.length)
-         {
-            this.today_visitors = 0
-            for (let log of today_logs.data) {
-               total = total + Number(log.count)
-               if (log.key == 'Visitor') this.today_visitors = this.today_visitors + log.count
-               else if (log.key == 'Staff') this.today_staff = this.today_staff + log.count
-            }
-            this.logged_today = (total/this.traffic_data.count) * 100
-            this.logged_today = this.logged_today.toFixed(0);
-         }
-         else
-         {
-             this.logged_today = 0
-         }
+         // // console.log(params);
+         // let today_logs = await this.$_post(postGetDailyLog, params);
+         // if (today_logs.data.length)
+         // {
+         //    this.today_visitors = 0
+         //    for (let log of today_logs.data) {
+         //       total = total + Number(log.count)
+         //       if (log.key == 'Visitor') this.today_visitors = this.today_visitors + log.count
+         //       else if (log.key == 'Staff') this.today_staff = this.today_staff + log.count
+         //    }
+         //    this.logged_today = (total/this.traffic_data.count) * 100
+         //    this.logged_today = this.logged_today.toFixed(0);
+         // }
+         // else
+         // {
+         //     this.logged_today = 0
+         // }
       },
       seeMore(){
          this.$router.push({
@@ -1184,9 +1183,9 @@ export default
          return res
       },
 
-      async getCompanyList()
+      async getCompanyList(id)
       {
-         let company = await this.getCompany(this.company_details._id)
+         let company = await this.getCompany(id)
          if (company.data.tenants && company.data.tenants.length)
          {
             for (let index = 0; index < company.data.tenants.length; index++) {
@@ -1228,18 +1227,18 @@ export default
    },
 
    async mounted()
-   {  //pointermount
-   
+   {  
       let sample_date = new Date()
       sample_date.setHours(sample_date.getHours())
       sample_date.toISOString().split('T')[0].split("-")
-
-      // console.log(sample_date);
       if (this.$user_info.company)
       {
          this.company_details = this.$user_info.company
          this.company_list.push(this.company_details._id)
-        
+         await this.getCompanyList(this.company_details._id)
+         for (let i = 0; i < this.company_list.length; i++) {
+            await this.getCompanyList(this.company_list[i])
+         }
       }
       let params = {}
 
