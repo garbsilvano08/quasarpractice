@@ -1081,8 +1081,8 @@ export default
             this.today_visitors = 0
             for (let log of today_logs.data) {
                total = total + Number(log.count)
-               if (log.key == 'Visitor') this.today_visitors = this.today_visitors + 1
-               else if (log.key == 'Staff') this.today_staff = this.today_staff + 1
+               if (log.key == 'Visitor') this.today_visitors = this.today_visitors + log.count
+               else if (log.key == 'Staff') this.today_staff = this.today_staff + log.count
             }
             this.logged_today = (total/this.traffic_data.count) * 100
             this.logged_today = this.logged_today.toFixed(0);
@@ -1184,6 +1184,33 @@ export default
          return res
       },
 
+      async getCompanyList()
+      {
+         let company = await this.getCompany(this.company_details._id)
+         if (company.data.tenants && company.data.tenants.length)
+         {
+            for (let index = 0; index < company.data.tenants.length; index++) {
+               let is_new = this.checkCompany(company.data.tenants[index])
+                if (is_new) this.company_list.push(company.data.tenants[index])
+            }
+         }
+         if (company.data.subcompanies && company.data.subcompanies.length)
+         {
+            for (let index = 0; index < company.data.subcompanies.length; index++) {
+               let is_new = this.checkCompany(company.data.tenants[index])
+               if (is_new) this.company_list.push(company.data.subcompanies[index])
+            }
+         }
+      },
+
+      checkCompany(id)
+      {
+         for (let index = 0; index < this.company_list.length; index++) {
+            if (id == this.company_list[index]) return false
+         }
+         return true
+      },
+
       async uploadImage()
       {
          // if (this.company_details._id && this.company_list.length)
@@ -1212,13 +1239,7 @@ export default
       {
          this.company_details = this.$user_info.company
          this.company_list.push(this.company_details._id)
-         let company = await this.getCompany(this.company_details._id)
-         if (company.data.tenants && company.data.tenants.length)
-         {
-            for (let index = 0; index < company.data.tenants.length; index++) {
-               this.company_list.push(company.data.tenants[index])
-            }
-         }
+        
       }
       let params = {}
 
