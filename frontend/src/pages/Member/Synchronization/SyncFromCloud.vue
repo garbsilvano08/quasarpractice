@@ -276,7 +276,7 @@ export default {
                                 getFormData.append("pass", "123456");
                                 getFormData.append("index", ""+ctr+"");
                                 getFormData.append("length", "50");
-                                rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data).catch(e =>{console.log(e);});
+                                rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data).catch(e =>{});
                                 totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
                                 // console.log(JSON.parse(rsp.data).pageInfo)
                                 rsp = JSON.parse(rsp.data).records;
