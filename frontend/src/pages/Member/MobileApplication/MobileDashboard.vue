@@ -46,7 +46,7 @@
                         <div class="pie-legend__percent">Visitor (6)</div>
                     </div>
                 </div>
-                <q-btn class="btn-primary" flat dense no-caps>Export</q-btn>
+                <q-btn class="btn-primary" flat dense no-caps @click="exportToExcel">Export</q-btn>
                 </div>
             </div>
          </div>
@@ -128,7 +128,7 @@ import { postGetMobileFeverLogs, postGetDevice } from '../../../references/url';
 // Classes
 import { date } from 'quasar';
 import { log } from 'util';
-
+import { saveAs } from 'file-saver';
 
 Vue.use(Chartkick.use(Chart))
 
@@ -145,6 +145,65 @@ export default
    watch:{},
 
    methods: {
+       exportToExcel()
+       {    
+           let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
+            let file_name = "fever-logs_" + date + '.xls'
+
+            let fields = [] , has_fever_data = [{}]
+            for (let index = 0; index < this.has_fever_logs.data.length; index++) {
+                has_fever_data.push({
+                    "full_name": this.has_fever_logs.data[index].full_name,
+                    "gender": this.has_fever_logs.data[index].gender,
+                    "temperature": this.has_fever_logs.data[index].temperature,
+                    "has_fever": this.has_fever_logs.data[index].has_fever ? "Yes" : this.has_fever_logs.data[index].has_fever,
+                    "company_name": this.has_fever_logs.data[index].company_name,
+                    "category": this.has_fever_logs.data[index].category,
+                    "home_address" : this.has_fever_logs.data[index].home_address,
+                    "date_logged" : this.has_fever_logs.data[index].date,
+                },)
+            }
+
+            fields.push({
+            label: 'Full name',
+            value: 'full_name'
+            },{
+            label: 'Gender',
+            value: 'gender'
+            },{
+            label: 'Temperature',
+            value: 'temperature'
+            },{
+            label: 'Has Fever',
+            value: 'has_fever'
+            },{
+            label: 'Company name',
+            value: 'company_name'
+            },{
+            label: 'Category',
+            value: 'category'
+            },{
+            label: 'Home address',
+            value: 'home_address'
+            },{
+            label: 'Date logged',
+            value: 'date_logged'
+            });
+    
+            const { Parser } = require('json2csv');
+
+            const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
+            const csv = json2csvParser.parse(has_fever_data);
+
+            var FileSaver = require('file-saver');
+            FileSaver.saveAs(
+            new Blob([csv], {
+                type:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }),
+            file_name
+            );
+       },
        goToFilterLogs(){
             this.$router.push({
                 name: "member_mobile_filter_fever"
