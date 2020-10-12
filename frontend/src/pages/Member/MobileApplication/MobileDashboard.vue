@@ -129,6 +129,8 @@ import { postGetMobileFeverLogs, postGetDevice } from '../../../references/url';
 import { date } from 'quasar';
 import { log } from 'util';
 import { saveAs } from 'file-saver';
+import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
+const { Filesystem } = Plugins;
 
 Vue.use(Chartkick.use(Chart))
 
@@ -145,8 +147,8 @@ export default
    watch:{},
 
    methods: {
-       exportToExcel()
-       {    
+        async exportToExcel()
+        {    
            let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let file_name = "fever-logs_" + date + '.xls'
 
@@ -195,15 +197,39 @@ export default
             const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
             const csv = json2csvParser.parse(has_fever_data);
 
-            var FileSaver = require('file-saver');
-            FileSaver.saveAs(
-            new Blob([csv], {
-                type:
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            }),
-            file_name
-            );
-       },
+            // var FileSaver = require('file-saver');
+            // FileSaver.saveAs(
+            // new Blob([csv], {
+            //     type:
+            //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            // }),
+            // file_name
+            // );
+
+            
+            // try {
+            //     let ret = await Filesystem.mkdir({
+            //     path: '/storage/self/primary/secrets',
+            //     directory: FilesystemDirectory.Data,
+            //     recursive: true // like mkdir -p
+            //     });
+            //     console.log("works");
+            // } catch(e) {
+            //     console.error('Unable to make directory', e);
+            // }
+            try {
+                const result = await Filesystem.writeFile({
+                path: file_name,
+                data: csv,
+                directory: FilesystemDirectory.Documents,
+                encoding: FilesystemEncoding.UTF8
+                })
+                console.log('Wrote file', result);
+            } catch(e) {
+                console.error('Unable to write file', e);
+            }
+
+        },
        goToFilterLogs(){
             this.$router.push({
                 name: "member_mobile_filter_fever"
