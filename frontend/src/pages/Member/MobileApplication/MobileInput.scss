@@ -155,6 +155,33 @@
         }
     }
 }
+.content__box-filter {
+    width: 100%;
+    padding: 30px;
+    // box-shadow: 0 2px 4px 0 rgba(#000, .1);
+    background-color: #F4F6F6;
+    border-radius: 2px;
+    .q-select {
+        width: 100%;
+        background-color: #FFFFFF;
+        .q-field__native {
+            color: #233b61 !important;
+            font-size: 12px;
+            font-weight: 500;
+            padding-left: 10px;
+        }
+    }
+    .q-input{
+        width: 100%;
+        background-color: #FFFFFF;
+        .q-field__native {
+            color: #233b61 !important;
+            font-size: 12px;
+            font-weight: 500;
+            padding-left: 10px;
+        }
+    }
+}
 // PROFILE LIST DIALOG
 .profile {
     width: 100%;
