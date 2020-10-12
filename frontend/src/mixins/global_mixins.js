@@ -1,4 +1,7 @@
+const openGeocoder = require('node-open-geocoder')
 import axios from 'axios';
+import { Plugins, CameraResultType, CameraSource, Capacitor } from "@capacitor/core";
+const { GalleryPlugin, Filesystem, Camera, VideoBackgroundMusic, Geolocation, Storage } = Plugins;
 import { postGetCompanies,
     postAddPerson,
     postUpdateStaff,
@@ -13,7 +16,8 @@ import { postGetCompanies,
     postGetAlertCount,
     postGetDevice,
     postDashboard,
-    postGetCompany
+    postGetCompany,
+    postUserLogOut
  } from '../references/url';
 
 export default
@@ -40,6 +44,23 @@ export default
     },
     methods:
     {
+        async $_nearby_places(data)
+        {
+            return new Promise(resolve =>
+            {
+                openGeocoder().reverse(data.lon, data.lat).end(async (err,res) =>
+                {
+                    let location_details = [];
+                    if (res.address.hasOwnProperty('village')) location_details.push(res.address.village)
+                    if (res.address.hasOwnProperty('city')) location_details.push(res.address.city)
+                    if (res.address.hasOwnProperty('town')) location_details.push(res.address.town)
+                    if (res.address.hasOwnProperty('state')) location_details.push(res.address.state)
+                    if (res.address.hasOwnProperty('country')) location_details.push(res.address.country)
+                    // await this.getNearbyLocation(address);
+                    resolve(location_details);
+                })
+            });
+        },
         $_timeAgo(sec)
         {
             let timeDef = new Date() - new Date(sec * 1000);
@@ -138,35 +159,106 @@ export default
 
             // http://128.199.130.24:81/
             // http://157.245.55.109:4000/
-            await axios.post('https://vcop-image.geer.solutions/', data,{
-                headers: {
-                'content-type': 'multipart/form-data',
-                }
-            }).then((r) => { res = r; }).catch((e) =>
+            try
             {
-                if(e.response.status === 500)
+                await axios.post('https://vcop-image.geer.solutions/', data,{
+                    headers: {
+                    'content-type': 'multipart/form-data',
+                    }
+                }).then((r) => { res = r; }).catch((e) =>
                 {
-                    this.$q.dialog({ title: `You have been logged-out`, message: e.response.data.message });
-                    this.$router.push({ name: 'front_login' });
-                }
-                else
-                {
-                    return
-                    // this.$q.dialog({ title: `Something's not quite right`, message: e.response.data.message });
-                }
-            }); 
-            // console.log(res.data);
-            return res.data;
+                    if(e.response.status === 500)
+                    {
+                        this.$q.dialog({ title: `You have been logged-out`, message: e.response.data.message });
+                        this.$router.push({ name: 'front_login' });
+                    }
+                    else
+                    {
+                        return
+                    }
+                }); 
+                return res.data;
+            }
+            catch(e)
+            {
+                return null
+            }
         },
         async $_company(params)
         {
             let company = await this.$_post(postGetCompanies, {find_company: params})
             return company.data
         },
-        $_logout()
+        async $_devices(params)
+        {
+            let data = await this.$_post(postGetDevice, params);
+            return data.data
+        },
+        async $_logout()
         {
             localStorage.removeItem("auth");
             this.$store.commit('user/updateUser', null);
+            await this.$_post(postUserLogOut)
+        },
+        $_isMobile()
+        {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        },
+        async $_convertFileToBlob(file)
+        {
+            // Convert image to blob
+            let selected = await fetch(Capacitor.convertFileSrc('file://' + file));
+            let blob = await selected.blob();
+            return blob;
+        },
+        async $_callGallery()
+        {
+            let res = {}
+            try
+            {
+                try
+                {
+                    const image = await Camera.getPhoto(
+                    {
+                        quality: 100,
+                        correctOrientation: true,
+                        source: CameraSource.Camera,
+                        allowEditing: false,
+                        resultType: CameraResultType.Uri,
+                        // saveToGallery: true
+                    });
+                    res = image.webPath
+                }
+                catch (error)
+                {
+                    return false;
+                }
+                return res;
+            }
+            catch (e)
+            {
+                alert(e.message);
+            }
+        },
+        async $_current_position()
+        {
+            const coordinates = null
+            try{
+
+                const coordinates = await Geolocation.getCurrentPosition();
+                return coordinates
+            }
+            catch(e) {return null}
+        },
+        $_random_id()
+        {
+            let result = ''
+            let characters       = '0123456789';
+            let charactersLength = characters.length;
+            for ( let i = 0; i < 9; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result
         }
     }
 }

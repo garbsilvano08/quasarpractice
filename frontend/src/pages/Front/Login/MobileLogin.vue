@@ -4,12 +4,12 @@
         <div class="login__content">
             <div class="login__title">
                 <div class="login__title-primary">
-                    <q-img @click="createAdmin()" src="../../../assets/vcop-logo.svg"></q-img>
+                    <q-img @click="createAdmin()" src="../../../assets/vcop_app_logo.png"></q-img>
                 </div>
-                <div class="login__title-sub">Client Login</div>
+                <!-- <div class="login__title-sub">Client Login</div> -->
             </div>
             <div class="login__input">
-                <q-input v-model="form_data.email" placeholder="Username" dense borderless @keypress.enter.native="submitLogin">
+                <q-input v-model="form_data.email" placeholder="Email" dense borderless @keypress.enter.native="submitLogin">
                     <template v-slot:prepend>
                         <q-icon name="mdi-account-outline" />
                     </template>
@@ -21,10 +21,10 @@
                 </q-input>
             </div>
             <div class="login__btn">
-                <q-btn flat dense no-caps class="btn-primary" label="Login" @click="submitLogin"></q-btn>
+                <q-btn flat dense no-caps class="btn-white"  label="LOGIN" @click="submitLogin"></q-btn>
             </div>
             <div class="login__footer">
-                Copyright © 2020 VCOP, All Rights Reserved.
+               my|solid tech
             </div>
         </div>
     </div>
@@ -57,7 +57,7 @@
 
 <script>
 // EXTERNAL CSS
-import "./Login.scss";
+import "./MobileLogin.scss";
 
 import { postLoginUser, postCreateAdmin } from '../../../references/url';
 
@@ -91,14 +91,7 @@ export default
                 this.$store.commit('user/updateUser', res.data)
                 localStorage.setItem("auth", JSON.stringify(res.data));
                 this.$_isMobile() ?
-                    ( res.data.device ? 
                     this.$router.push({ name: 'member_mobile_dashboard' }) :
-                    this.$q.notify(
-                    {
-                        color: 'red',
-                        message: 'This user is not allowed!'
-                    })
-                    ) :
                     this.$router.push({ name: 'member_dashboard' })
 
             }

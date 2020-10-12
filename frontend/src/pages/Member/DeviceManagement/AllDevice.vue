@@ -28,7 +28,7 @@
                             <td>{{ device.device_id }}</td>
                             <td>{{ device.device_name }}</td>
                             <td>{{ device.company_name }}</td>
-                            <td>{{ device.device_ip }}</td>
+                            <td>{{ device.device_ip ? device.device_ip : 'N/A' }}</td>
                             <td>{{ convertToDate(device.date_installed)}}</td>
                             <td @click="deleteDevice(device._id)" class="td-active">Uninstall</td>
 
@@ -71,6 +71,21 @@ export default {
 
     methods:
     {
+        async pingDevice(host)
+        {
+            console.log(host);
+             let logs = await this.$axios.post("http://" + host + ":8090/setIdentifyCallBack").then(res => res.data);
+             console.log(logs);
+            // var ping = require ("net-ping");
+            // var session = ping.createSession ();
+
+            // session.pingHost (host, function (error, host) {
+            //     if (error)
+            //         console.log (host + ": " + error.toString ());
+            //     else
+            //         console.log (host + ": Alive");
+            // });
+        },
         addDevice()
         {
             this.$router.push({ name: 'member_adddevice' });
@@ -96,7 +111,14 @@ export default {
                 console.log(this.$user_info.company);
                 params = {find_device: { company_id: {$in: company_id}}}
             }
-           this.device_list = await this.$_post(postGetDevice, params);
+           this.device_list =await this.$_post(postGetDevice, params);
+        //    console.log(devices);
+        //     for (let i = 0; i < devices.length; i++) {
+        //         console.log(devices[i].device_ip);
+        //         if (devices[i].device_ip) await this.pingDevice(devices[i].device_ip)
+        //     }
+            // this.device_list = devices
+            
         },
         convertToDate(timestamp){
             let date = new Date(timestamp);

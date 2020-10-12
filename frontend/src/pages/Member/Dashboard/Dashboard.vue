@@ -608,10 +608,8 @@ export default
             name: 'Stranger', data: {'Monday': 4, 'Tuesday': 2, 'Wednesday': 1, 'Thrusday': 5, 'Friday': 4,}
          }
       ]},
-      data_bar_graph: {data:[]},
-      data_line_graph:
-      {data: []},
-      sample_alert: [],
+      data_bar_graph: {data: []},
+      data_line_graph: {data: []},
       visitors_date: new Date().toISOString().split('T')[0],
       traffic_date: new Date().toISOString().split('T')[0],
       alert_date: new Date().toISOString().split('T')[0],

@@ -133,7 +133,7 @@ export default {
                         // console.log(rsp, img);
                     })
                 }
-                else
+                else if (device.device_type == 'smart_pass' )
                 {
                     let tabletFormData = new FormData();
                     tabletFormData.append("pass", "123456");
@@ -205,7 +205,7 @@ export default {
                                     .catch(e =>{});
                                 
                                 }
-                                else
+                                else if (device_type == 'smart_pass')
                                 {
                                     type = 1.1;
                                     tabletFormData.append("pass", "123456");
@@ -230,7 +230,7 @@ export default {
                                     image.append("imgBase64", b64 );
                                     let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data).catch(e =>{});
                                 }
-                                else
+                                else if (device_type == 'smart_pass')
                                 {
                                     try
                                     {
@@ -316,8 +316,6 @@ export default {
                                 {
                                     if (person.frontdesk_person_id == tabletRegistered.vipID) is = true;
                                 }
-                            
-                            
                         });
 
                         if (!is)

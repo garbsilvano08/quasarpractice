@@ -25,6 +25,7 @@ const MDB_PERSON        = require('../models/MDB_PERSON');
 const MDB_IDENTIFICATION= require('../models/MDB_IDENTIFICATION');
 const MDB_PURPOSE       = require('../models//MDB_PURPOSE');
 const MDB_PERSON_LOGS   = require('../models//MDB_PERSON_LOGS');
+const MDB_USER_LOGS   = require('../models//MDB_USER_LOGS');
 const parseJson         = require('parse-json');
 
 const storage = multer.diskStorage({
@@ -153,6 +154,12 @@ module.exports =
     })
         // let response = await new AccountClass().addingPerson();
     },
+    async updateUserLogOut(req, res)
+    {
+        let data = await new MDB_USER_LOGS().collection.find({is_active: true})
+        await new MDB_USER_LOGS().update(data[0]._id, {is_active : false, time_log_out: new Date()})
+        res.send(true)
+    },
     async addVisitor(req, res)
     {
         await new MDB_RAW_VISITOR().add(
@@ -168,36 +175,30 @@ module.exports =
     async addPassLog(req, res)
     {
         let key = ['Traffic']
-        // let person_log = []
-        let date_string = new Date(new Date(req.body.data.currentTime)).toISOString().split('T')[0]
+        date_string =req.body.data.frontdesk_person_date 
         req.body.data.date_string = date_string
-        if (Number(req.body.data.tempratrue) >= 37.3 ) req.body.data.has_fever = true
+        if (Number(req.body.data.temperature) >= 37.3 ) req.body.data.has_fever = true
         else req.body.data.has_fever = false
 
         // await new MDB_LOGS().add(req.body.data);
         date_string = date_string.split("-")
-        // console.log(req.body.data);
-        let person = await new MDB_PERSON().docs({frontdesk_person_id: req.body.data.idCardNum})
-        if (person.length) key.push(person[0].category)
-        else key.push('Stranger')
-
-        // console.log(key);
-        // console.log(key);
-        // if (person.length) person_log = await new MDB_PERSON_LOGS().docs({date_logged: date_string, person_id: person[0]._id})
+        console.log(req.body.data);
+        let person = await new MDB_PERSON().docs({contact_number: req.body.data.contact_number, birthday: new Date(req.body.data.birthday)})
+        console.log(person);
+        key.push(person[0].category)
         await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         
         let person_info = {
-            mask:                   req.body.data.mask,
-            temperature:            req.body.data.tempratrue,
-            
-            person_img:             req.body.data.image_path,
-            full_name:              req.body.data.name,
-
+            mask:                   1,
+            temperature:            req.body.data.temperature,
+            person_img:             req.body.data.person_img,
+            full_name:              person[0].given_name + " " + person[0].middle_name + " " + person[0].last_name,
             company_id:             req.body.data.company_id,
             device_id:              req.body.data.device_id,
-            
-            frontdesk_person_id:    req.body.data.idCardNum,
-            date_logged:            req.body.data.currentTime
+            frontdesk_person_id:    person[0].frontdesk_person_id,
+            date_logged:            req.body.data.frontdesk_person_date,
+            location:               req.body.data.location,
+            location_coordinates:   req.body.data.location_coordinates
         }
         
         await new PersonLogsClass(person_info).submit()
@@ -257,6 +258,23 @@ module.exports =
     {
         await new MDB_PERSON_LOGS().update(req.body.info.id, {person_img: req.body.info.image})
         res.send(true)
+    },
+
+    async saveReport(req, res)
+    {
+        let person_info = {
+            mask:                   1,
+            temperature:            extra.bodyTemp,
+            person_img:             req.body.person_img,
+            full_name:              req.body.given_name + " " + req.body.middle_name + " " + req.body.last_name,
+            device_id:              req.body.deviceKey,
+            frontdesk_person_id:    req.body.personId,
+            date_logged:            req.body.time,
+            record_id:              req.body.id,
+            company_id:             person.length ? person[0].company_id : device[0].company_id
+        }
+        await new PersonLogsClass(person_info).submit()
+        return res.send({"success":true, "result":1});
     },
 
     async visionSkyLogs(req, res)
@@ -561,7 +579,7 @@ module.exports =
     },
     async getDeviceByUser(req, res)
     {
-        console.log(await new MDB_DEVICE.docs());
+        // console.log(await new MDB_DEVICE.docs());
     },
     async getDbPersonLogs(req, res)
     {

@@ -36,6 +36,7 @@ export default class Model
                 db.createObjectStore("lastRequestTime", { autoIncrement: true, keyPath:'id' });
                 db.createObjectStore("passLogs", { autoIncrement: true, keyPath:'id' });
                 db.createObjectStore("getLogsSwitch", { autoIncrement: true, keyPath:'id' });
+                db.createObjectStore("feverReport", { autoIncrement: true, keyPath:'id' });
             };
         });
     }

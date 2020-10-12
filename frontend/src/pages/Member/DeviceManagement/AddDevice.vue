@@ -23,7 +23,7 @@
             <div class="device-add__content-info device-add__content-grid">
                 <div class="content__input">
                     <div class="content__input-label">Device IP Address</div>
-                    <q-input v-model="input_device_ip" outlined dense></q-input>
+                    <q-input :disable="is_eye" v-model="input_device_ip" outlined dense></q-input>
                 </div>
                 <div class="content__input">
                     <div class="content__input-label">Device Name</div>
@@ -40,6 +40,7 @@
                     >Device Type</div>
                     <q-radio class="content__input-label" v-model="device_type" val="vision_sky" label="Vision Sky" />
                     <q-radio class="content__input-label" v-model="device_type" val="smart_pass" label="Smart Pass" />
+                    <q-radio class="content__input-label" v-model="device_type" val="vcop_eye" label="VCOP EYE" />
                 </div>
             </div>
             <div class="device-add__btn">
@@ -89,8 +90,18 @@ export default {
             log_type_options: ['Public', 'In', 'Out'],
             log_type: 'Public',
             device_type: 'vision_sky',
-            device_name: ''
+            device_name: '',
+            is_eye: false
     }),
+
+    watch:
+    {
+        device_type(val)
+        {
+            if (val === 'vcop_eye') this.is_eye = true
+            else this.is_eye = false
+        }
+    },
 
     methods:
     {
@@ -109,7 +120,7 @@ export default {
                 else if (this.input_device_id.length<=0 ){
                     throw new Error("Device ID is required.");
                 }
-                else if (this.input_device_ip.length< 11){
+                else if (this.device_type != 'vcop_eye' && this.input_device_ip.length < 11){
                     throw new Error("Invalid IP Address.");
                 }
                 else if (!this.device_name){
@@ -133,8 +144,8 @@ export default {
                     let req = await this.$_post(postAddDevice, {device_info: device_info});
                     // let logs = await this.$_post('member/visionsky/logs');
                     // console.log(logs);
-                    // console.log(this.log_type);
-                    if (this.device_type == 'vision_sky')
+                    console.log(this.device_type);
+                    if (this.device_type === 'vision_sky')
                     {
                         // console.log(this.input_device_ip);
                         let data = new FormData();
@@ -142,7 +153,7 @@ export default {
                         data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
                         let logs = await this.$axios.post("http://" + this.input_device_ip + ":8090/setIdentifyCallBack", data).then(res => res.data);
                     }
-                    else
+                    else if (this.device_type === 'smart_pass')
                     {
                         // console.log(this.input_device_ip);
                         let data = new FormData();

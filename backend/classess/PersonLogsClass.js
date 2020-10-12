@@ -27,20 +27,21 @@ module.exports = class PersonLogsClass
         this.date_logged            = data.hasOwnProperty('date_logged') ? new Date(data.date_logged).toISOString().split('T')[0] : ''; 
         this.date_saved             = new Date(data.date_logged)
         this.has_fever              = false
-        this.location               = {}
-        this.location_coordinates   = {}
+        this.location               = data.hasOwnProperty('location') ? data.location : {};
+        this.location_coordinates   = data.hasOwnProperty('location_coordinates') ? data.location_coordinates : {};
     }
 
     async submit()
     {
+        console.log(this.convertObject());
         if (this.frontdesk_person_id.length < 9)
         {
             for (let index = 0; index <= (9 - this.frontdesk_person_id.length); index++) {
                 this.frontdesk_person_id = '0' + this.frontdesk_person_id
             }
         }
-
         let person_details = await new MDB_PERSON().docs({frontdesk_person_id: this.frontdesk_person_id})
+        console.log(person_details, 'person');
 
         this.category               = person_details.length ? person_details[0].category : 'Stranger'
         this.person_id              = person_details.length ? person_details[0]._id : new Date().toISOString()
@@ -49,8 +50,12 @@ module.exports = class PersonLogsClass
         this.home_address           = person_details.length ? person_details[0].home_address : ''
         
         let company                 = await new MDB_COMPANIES().doc(this.company_id)
-        this.location               = company.company_location
-        this.location_coordinates   = company.location_coordinates
+        if (!this.location)
+        {
+            this.location               = company.company_location
+            this.location_coordinates   = company.location_coordinates
+        }
+
         this.company_name           = company.company_name
         
         if (Number(this.temperature) >= 37.3) 
