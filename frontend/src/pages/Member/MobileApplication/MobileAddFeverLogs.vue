@@ -54,11 +54,11 @@
                                 <q-input v-model="person_information.last_name" outlined dense></q-input>
                             </div>
                             <div class="content__input">
-                                <div class="content__input-label">Middle name*</div>
+                                <div class="content__input-label">Middle Name</div>
                                 <q-input v-model="person_information.middle_name" outlined dense></q-input>
                             </div>
                             <div class="content__input">
-                                <div class="content__input-label">Email*</div>
+                                <div class="content__input-label">Email</div>
                                 <q-input v-model="person_information.email" outlined dense></q-input>
                             </div>
                             <div class="frontdesk__content-grid">
@@ -72,19 +72,19 @@
                                 </div>
                             </div>
                             <div class="content__input">
-                                <div class="content__input-label">Home Address</div>
+                                <div class="content__input-label">Home Address*</div>
                                 <q-input v-model="person_information.home_address" outlined dense></q-input>
                             </div>
                             <div class="content__input">
-                                <div class="content__input-label">Nationality</div>
+                                <div class="content__input-label">Nationality*</div>
                                 <q-input v-model="person_information.nationality" outlined dense></q-input>
                             </div>
                             <div class="content__input">
-                                <div class="content__input-label">Contact Number</div>
+                                <div class="content__input-label">Contact Number*</div>
                                 <q-input type="number" v-model="person_information.contact_number" outlined dense></q-input>
                             </div>
                             <div class="content__input">
-                                <div class="content__input-label">Emergency Contact Number</div>
+                                <div class="content__input-label">Emergency Contact Number*</div>
                                 <q-input type="number" v-model="person_information.emergency_contact" outlined dense></q-input>
                             </div>
                             <q-separator />
@@ -234,7 +234,7 @@ export default {
             this.$q.loading.show();
             let obj = this.person_information
             Object.keys(obj).forEach(function(key) {
-                if (!obj[key]) 
+                if (!obj[key] && (key != 'email' || key != 'middle_name')) 
                 {
                     error = capitalize(key.replace('_', ' '))
                 }
