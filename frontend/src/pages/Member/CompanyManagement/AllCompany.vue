@@ -133,7 +133,7 @@ export default {
         editCompany(index)
         {
             this.is_edit_company_dialog_open = true;
-            this.pasData = this.company_list.data[index];
+            this.pasData = this.company_list[index];
             return this.company_list.data[index];
 
         }

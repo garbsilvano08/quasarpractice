@@ -124,12 +124,12 @@ export default {
                         let tabletFormData = new FormData();
                         tabletFormData.append("pass", "abc123");
                         tabletFormData.append("id", person.frontdesk_person_id);
-                        let rsp = await this.$axios.post("http://"+device.device_ip+":8090/person/delete", tabletFormData).then(res => res.data).catch(e =>{});
+                        let rsp = await this.$axios.post("http://"+device.device_ip+":8090/person/delete", tabletFormData).then(res => res.data).catch(e =>{console.log(e)});
 
                         let personImage = new FormData();
                         personImage.append("pass", "abc123");
                         personImage.append("faceId", person.frontdesk_person_id);
-                        let img = await this.$axios.post("http://"+device.device_ip+":8090/face/delete", personImage).then(res => res.data).catch(e =>{});
+                        let img = await this.$axios.post("http://"+device.device_ip+":8090/face/delete", personImage).then(res => res.data).catch(e =>{console.log(e)});
                         // console.log(rsp, img);
                     })
                 }
@@ -137,7 +137,7 @@ export default {
                 {
                     let tabletFormData = new FormData();
                     tabletFormData.append("pass", "123456");
-                    let rsp = await this.$axios.post("http://"+device.device_ip+":8080/initialization", tabletFormData).then(res => res.data.catch(e =>{}));
+                    let rsp = await this.$axios.post("http://"+device.device_ip+":8080/initialization", tabletFormData).then(res => res.data.catch(e =>{console.log(e)}));
                 }
                     
                 setTimeout(() => this.createAll(this.persons_list, device.device_ip, device.device_type), 2000);
@@ -151,17 +151,21 @@ export default {
                     let settingsFormData = new FormData();
                     settingsFormData.append("pass", "123456");
                     settingsFormData.append("config", "{'isBodyTempAlarm': 1 , 'isBodyTempStart' : 1, 'isHighFeverAdopt' : 0, 'isLowFeverAdopt' : 0, 'isLowTempAdopt' : 0, 'isStandardTempAdopt' : 1,  'isWearingMask' : 1, 'standardBodyTemp': '37.3',  'isStrangerRecord' : 1 , 'isStrangerMode' : 0, 'tempCompensation' : 0.3,  'isFan' : 1, }");
-                    await this.$axios.post("http://"+device.device_ip+":8080/tempAndMaskSetting", settingsFormData).then(res => res.data).catch(e =>{});
+                    await this.$axios.post("http://"+device.device_ip+":8080/tempAndMaskSetting", settingsFormData).then(res => res.data).catch(e =>{console.log(e)});
                 }
             })
 
             if (device_type == 'smart_pass')
             {
-                let data = new FormData();
-                data.append('pass', '123456');
-                data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
-                let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data).catch(e =>{});
-                // console.log(logs, 'logs');
+                try
+                {
+                    let data = new FormData();
+                    data.append('pass', '123456');
+                    data.append('callbackUrl', 'https://vcop.geer.solutions/api/member/visionsky/logs');
+                    let logs = await this.$axios.post("http://" + device_ip + ":8080/setIdentifyCallback", data).then(res => res.data).catch(e =>{console.log(e)});
+                    // console.log(logs, 'logs');
+                }
+                catch(e){}
             }
             for (let person of personToTablet)
             {
@@ -201,8 +205,8 @@ export default {
                                     image.append("permissionTime", date);
                                     image.append("type", 1 );
                                     
-                                    let img = await this.$axios.post("http://"+ device_ip +":8090/person/quickCreate", image).then(res => res.data).catch(e =>{})
-                                    .catch(e =>{});
+                                    let img = await this.$axios.post("http://"+ device_ip +":8090/person/quickCreate", image).then(res => res.data).catch(e =>{console.log(e)})
+                                    .catch(e =>{console.log(e)});
                                 
                                 }
                                 else if (device_type == 'smart_pass')
@@ -210,7 +214,8 @@ export default {
                                     type = 1.1;
                                     tabletFormData.append("pass", "123456");
                                     tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0, 'prescription' : " + prescription + "}");
-                                    let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data).catch(e =>{}).catch(e =>{})
+                                    let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data).catch(e =>{console.log(e)})
+                                   
                                 }
                             }
                             else if (person.category == "Staff")
@@ -220,26 +225,21 @@ export default {
                                     let data = new FormData();
                                     data.append('pass', 'abc123');
                                     data.append("person", "{'id': '"+ person.frontdesk_person_id +"', 'name': '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'idcardNum': '', 'departmentId': '1'}" );
-                    
-                                    let upload = await this.$axios.post("http://"+ device_ip +":8090/person/create", data).then(res => res.data).catch(e =>{})
+                                    let upload = await this.$axios.post("http://"+ device_ip +":8090/person/create", data).then(res => res.data).catch(e =>{console.log(e)})
     
                                     let image = new FormData();
                                     image.append('pass', 'abc123');
                                     image.append("personId", person.frontdesk_person_id );
                                     image.append("faceId", person.frontdesk_person_id );
                                     image.append("imgBase64", b64 );
-                                    let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data).catch(e =>{});
+                                    let img = await this.$axios.post("http://"+ device_ip +":8090/face/create", image).then(res => res.data).catch(e =>{console.log(e)});
                                 }
                                 else if (device_type == 'smart_pass')
                                 {
-                                    try
-                                    {
-                                        type = 3;
-                                        tabletFormData.append("pass", "123456");
-                                        tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0}");
-                                        let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data).catch(e =>{});
-                                    }
-                                    catch(e){}
+                                    type = 3;
+                                    tabletFormData.append("pass", "123456");
+                                    tabletFormData.append("person", "{'imgBase64': '" + b64 + "', 'name' : '" + person.given_name + " " + person.middle_name + " " + person.last_name + "', 'person_id' : '1234', 'sex' : " + sex + ", 'group_id' : 20, 'phone' : " + person.contact_number + ",  'address' : '" + person.home_address + "', 'vipId': '" + person.frontdesk_person_id + "',  'att_flag' : 0 , 'banci_id' : '',  'device_group' : 1, 'type' : " + type + ", 'reg_type' : 0}");
+                                    let createRes = await this.$axios.post("http://" + device_ip + ":8080/person/create", tabletFormData).then(res => res.data).catch(e =>{console.log(e)});
                                 }
                             }
                         
@@ -255,13 +255,8 @@ export default {
             {
                 this.$q.loading.show();
                 let personCloud = this.persons_list;
-                
-                
-                // console.log("cloud",personCloud);
-                
                 for (let device of this.device_list) 
                 {
-                    // console.log(device.device_type)
                     let ctr=0;
                     let totalTabletRecord = [];
                     let totalTabletRecordCount = 0;
@@ -276,9 +271,8 @@ export default {
                                 getFormData.append("pass", "123456");
                                 getFormData.append("index", ""+ctr+"");
                                 getFormData.append("length", "50");
-                                rsp = await this.$axios.post("http://"+device.device_ip+":8080/person/findByPage", getFormData).then(res => res.data).catch(e =>{});
+                                rsp = await this.$axios.post("http://" + device.device_ip + ":8080/person/findByPage", getFormData).then(res => res.data).catch(e =>{console.log(e)});
                                 totalTabletRecordCount = JSON.parse(rsp.data).pageInfo.total
-                                // console.log(JSON.parse(rsp.data).pageInfo)
                                 rsp = JSON.parse(rsp.data).records;
                                 if (ctr===1) rsp.splice(0, 1);
                                 totalTabletRecord=totalTabletRecord.concat(rsp);
@@ -286,10 +280,10 @@ export default {
                             }
                             catch(e){}
                         }
-                            if (totalTabletRecord.length===totalTabletRecordCount)
-                            {
-                                break;
-                            }
+                        if (totalTabletRecord.length===totalTabletRecordCount)
+                        {
+                            break;
+                        }
                     }
                     let newRegistered = [];
                     personCloud.forEach(async (person, i) => 
@@ -298,24 +292,23 @@ export default {
                         let is = false;
                         totalTabletRecord.forEach(async tabletRegistered => 
                         {
-                           
-                                if (device.device_type == 'vision_sky')
+                            if (device.device_type == 'vision_sky')
+                            {
+                                try
                                 {
-                                    try
-                                    {
-                                        let VisionData = new FormData();
-                                        VisionData.append("pass", "abc123");
-                                        VisionData.append("id", person.frontdesk_person_id);
-                                        let vision = await this.$axios.post("http://"+device.device_ip+":8090/person/find", VisionData).then(res => res.data).catch(e =>{});
-                                        if (vision.msg != 'personId does not exist') is = true;
-                                    }
-                                    catch(e){}
+                                    let VisionData = new FormData();
+                                    VisionData.append("pass", "abc123");
+                                    VisionData.append("id", person.frontdesk_person_id);
+                                    let vision = await this.$axios.post("http://"+device.device_ip+":8090/person/find", VisionData).then(res => res.data).catch(e =>{console.log(e)});
+                                    if (vision.msg != 'personId does not exist') is = true;
                                 }
-                                
-                                else if(device.device_type == 'smart_pass')
-                                {
-                                    if (person.frontdesk_person_id == tabletRegistered.vipID) is = true;
-                                }
+                                catch(e){}
+                            }
+                            
+                            // else if(device.device_type == 'smart_pass')
+                            // {
+                            //     if (person.frontdesk_person_id == tabletRegistered.vipID) is = true;
+                            // }
                         });
 
                         if (!is)
@@ -324,7 +317,6 @@ export default {
                         }
                     });
 
-                    // console.log("walang kamuka",newRegistered);
                     if (newRegistered.length > 0)
                     {
                         this.createAll(newRegistered, device.device_ip, device.device_type);

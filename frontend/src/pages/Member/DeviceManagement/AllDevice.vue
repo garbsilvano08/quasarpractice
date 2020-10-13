@@ -73,9 +73,11 @@ export default {
     {
         async pingDevice(host)
         {
-            console.log(host);
-             let logs = await this.$axios.post("http://" + host + ":8090/setIdentifyCallBack").then(res => res.data);
-             console.log(logs);
+            // console.log(host);
+            // let getFormData = new FormData();
+            // getFormData.append("pass", "123456");
+            //  let logs = await this.$axios.get("http://192.168.254.147:8080").then(res => res.data);
+            //  console.log(logs);
             // var ping = require ("net-ping");
             // var session = ping.createSession ();
 
@@ -129,6 +131,7 @@ export default {
     async mounted()
     {
         await this.getAllDevice();
+        await this.pingDevice()
     }
 }
 </script>

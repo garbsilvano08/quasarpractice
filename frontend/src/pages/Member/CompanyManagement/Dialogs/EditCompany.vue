@@ -30,10 +30,10 @@
                             <div class="content__input-label">Company Name</div>
                             <q-input v-model="company_details.company_name" outlined dense></q-input>
                         </div>
-                        <div class="content__input">
+                        <!-- <div class="content__input">
                             <div class="content__input-label">Location</div>
-                            <q-input v-model="company_details.company_location" outlined dense></q-input>
-                        </div>
+                            <q-input v-model="typeof(company_details.company_location) == 'object' ? company_details.company_location.description : company_details.company_location" outlined dense></q-input>
+                        </div> -->
                     </div>
 
                     <div class="company-add__content-info">
@@ -42,6 +42,23 @@
                             <!-- {{company_list[0].company_info.company_name}} -->
                             <q-input disable v-model="parent" outlined dense></q-input>
                         </div>
+                    </div>
+                    <div class="company-add__content-info">
+                        <div class="content__select-label">
+                            <q-checkbox v-model="is_device_owner" label="Is this company a device owner?"/>
+                        </div>
+                        <q-select
+                            v-show="is_open"
+                            outlined
+                            dense
+                            v-model="owner_name"
+                            use-input
+                            input-debounce="1000"
+                            :options="company_owners"
+                            option-value="place_id"
+                            option-label="description"
+                            class="q-mb-sm"
+                        />
                     </div>
 
                     <div class="company-add__content-info">
@@ -56,7 +73,7 @@
                                     <q-item-section>
                                         <q-item-label class="content__radio-title">Private</q-item-label>
                                         <q-item-label class="content__radio-details" caption>
-                                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore, sint consequatur eveniet laudantium in laboriosam quas, nostrum magni quaerat, id eligendi totam nesciunt natus doloribus nemo nam. Porro, vel quis!
+                                            Receptionist’s access is limited only to adding of visitors in the company or building. The Front Desk is connected to the SMART PASS/VISION SKY in the tablet. The receptionist will collect information from the person using OCR (Optical Character Recognition, this enables to collect information from the ID presented by the person through scanning.  
                                         </q-item-label>
                                     </q-item-section>
                                 </q-item>
@@ -69,7 +86,7 @@
                                     <q-item-section>
                                         <q-item-label class="content__radio-title">Public</q-item-label>
                                         <q-item-label class="content__radio-details" caption>
-                                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore, sint consequatur eveniet laudantium in laboriosam quas, nostrum magni quaerat, id eligendi totam nesciunt natus doloribus nemo nam. Porro, vel quis!
+                                            Receptionist’s access is limited only to adding of fever detected person in the mall.  If the healthbox detected a person with unusual body temperature in the mall, the person will be asked to go to the front desk. The Front Desk will browse the person’s information from the logs which is consist of the Picture of the Person, Temperature, If the person id wearing a mask or not and timestamp.
                                         </q-item-label>
                                     </q-item-section>
                                 </q-item>
@@ -87,7 +104,7 @@
 
 <script>
 import { postAddPerson }                        from '../../../../references/url';
-import { postGetCompanies }                     from '../../../../references/url';
+import { postGetCompanies, postGetCompany }                     from '../../../../references/url';
 
 import "../CompanyManagement.scss";
 
@@ -98,31 +115,85 @@ export default {
         },
     data: () =>
     ({
+        is_device_owner: true,
+        is_open: false,
         company_type: '',
         input_company_name: '',
         input_location: '',
         parent: '',
         company_pic: "",
-        company_details: { },
+        company_details: {},
         company_list : [],
         does_picture_change : false,
+        company_owners: [],
+        owner_name: ''
     }),
+    watch:
+    {
+        owner_name(val)
+        {
+            this.getDeviceOwner(val)
+        },
+        async is_device_owner(val)
+        {
+            this.company_owners = []
+            this.is_open = !this.is_open
+            this.company_owners.push(this.company_details.company_name)
+            this.company_list.push(this.company_details)
+            this.owner_name = this.company_details.company_name
+            await this.getCompanies(this.company_details)
+        }
+    },
     async mounted()
     {   
         // this.company_type = this.company_details.company_info.company_type;
         if(this.company_info){
             this.company_details = this.company_info;
+            await this.getCompanies(this.company_details)
+            if (this.company_details.device_owner == 'Device Owner') this.is_device_owner = true
+            else
+            {
+                let company = await this.$_company({_id: this.company_details.device_owner})
+                this.owner_name = company[0].company_name
+                this.is_device_owner = false
+            }
         }
-        this.getParent();
+        await this.getParent();
         this.company_type = this.company_details.company_type
     },
     methods:{
+        getDeviceOwner(name)
+        {
+            this.device_owner = []
+            for (let index = 0; index < this.company_list.length; index++) {
+                if ( this.company_list[index].company_name == name ) 
+                {
+                    this.device_owner = this.company_list[index];
+                }
+            }
+        },
+        async getCompanies(company)
+        {
+            if (company && company.parent_id && company.parent_id != 'No Parent')
+            {
+                let parent = await this.$_post(postGetCompany, {id: company.parent_id})
+                this.company_owners.push(parent.data.company_name)
+                this.company_list.push(parent.data)
+
+                if (parent.data && parent.data.parent_id != 'No Parent')
+                {
+                    await this.getCompanies(parent.data)
+                }
+            }
+            console.log(this.company_list);
+            return
+        },
         async getParent()
         {
             this.company_list = await this.$_post(postGetCompanies);
             let com_list = [];
             
-            if(this.company_list.data.length>=1)
+            if(this.company_list.data.length >= 1)
             {
                 this.company_list.data.forEach((com) => {
                     if(com._id==this.company_details.parent_id)
@@ -146,8 +217,8 @@ export default {
                 if (this.company_details.company_name.length <= 2 ){
                     throw new Error("Company Name is required.");
                 }
-                else if (this.company_details.company_location.length <= 2 ){
-                    throw new Error("Location is required.");
+                else if (!company_details.company_logo_url){
+                    throw new Error("Company Logo is required.");
                 }
                 else{
                     if (this.does_picture_change)
@@ -185,14 +256,15 @@ export default {
         },
         PreviewImage()
         {
-            this.does_picture_change= true;
-            // console.log("Asd")
-            let oFReader = new FileReader();
-            oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
-
-            oFReader.onload = function (oFREvent) {
-                document.getElementById("uploadPreview").src = oFREvent.target.result;
-            };
+            try{
+                this.does_picture_change= true;
+                let oFReader = new FileReader();
+                oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
+                oFReader.onload = function (oFREvent) {
+                    document.getElementById("uploadPreview").src = oFREvent.target.result;
+                };
+            }
+            catch(e){}
             
         },
     }
