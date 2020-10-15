@@ -1101,15 +1101,18 @@ export default
             })
       },
       personInformation(daily_logs_info){
-         if (this.logs_card.data[daily_logs_info].category != 'Stranger')
+          if (this.$user_info.user_type != 'Receptionist')
          {
-            this.$router.push({
-                  name: "member_personal-information",
-                  params: {
-                     daily_logs_info: this.logs_card.data[daily_logs_info],
-                     from_daily_logs : 'daily_logs'
-                  },
-            })
+            if (this.logs_card.data[daily_logs_info].category != 'Stranger')
+            {
+               this.$router.push({
+                     name: "member_personal-information",
+                     params: {
+                        daily_logs_info: this.logs_card.data[daily_logs_info],
+                        from_daily_logs : 'daily_logs'
+                     },
+               })
+            }
          }
       },
       async deviceId(device_id)

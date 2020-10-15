@@ -11,8 +11,8 @@
                             width="150px"
                             height="150px"
                             :colors="[
-                                '#FF8B29',
                                 '#2F84FF',
+                                '#FF8B29',
                             ]"
                             :data="{
                                 'Staff': count_staff,
@@ -22,7 +22,7 @@
                         </pie-chart>
                         <div class="dashboard__pie-total">
                             <div class="pie-total__amount">{{count_staff + count_visitor}}</div>
-                            <div class="pie-total__label">Fever Logs</div>
+                            <div class="pie-total__label">Fever Detected Today</div>
                         </div>
                     </div>
 
@@ -184,6 +184,7 @@ export default
             date_end.setSeconds(sort_time_end[2] ? sort_time_end[2] : '00')
 
             params.date_saved = { '$gte' : new Date(date_start), '$lte' : new Date(date_end)}
+
             let {data: data} = await this.$_post(postGetMobileFeverLogs, {find_logs: params})
             for(let index = 0; index < data.length; index++) {
                 data[index].date_string = date.formatDate(data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
@@ -191,9 +192,18 @@ export default
             }
             if ((this.count_staff + this.count_visitor) == 0)
             {
-                this.count_staff = await this.getCount(params, 'Staff')
-                this.count_visitor = await this.getCount(params, 'Visitor')
+                if (params.category)
+                {
+                    if (params.category == 'Staff') this.count_staff = await this.getCount(params, 'Staff')
+                    else if (params.category == 'Visitor') this.count_staff = await this.getCount(params, 'Visitor')
+                }
+                else
+                {
+                    this.count_staff = await this.getCount(params, 'Staff')
+                    this.count_visitor = await this.getCount(params, 'Visitor')
+                }
             }
+            console.log(this.count_staff + this.count_visitor);
             if ((this.count_staff + this.count_visitor) > this.has_fever_logs.length ) await this.getLogs()
         },
         async getCount(params, category)
@@ -205,10 +215,6 @@ export default
         async exportData()
         {
             let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
-            // let params = {}
-            // let start = new Date(this.start_date)
-            // let end = new Date(this.end_date)
-            // end = end.setDate(end.getDate() + 1)
             let file_name = this.filter_logs.account_type + "_" + date + '.xls'
 
             let fields = [] , log_list_data = [{}]
@@ -267,21 +273,15 @@ export default
             } catch(e) {
                 console.error('Unable to write file', e);
             }
-            // var FileSaver = require('file-saver');
-            // FileSaver.saveAs(
-            //     new Blob([csv], {
-            //         type:
-            //         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            //     }),
-            //     file_name
-            // );
-            console.log('lkjkljklj');
         },
    },
    
    updated() {},
    async mounted()
    {
+       this.has_fever_logs = []
+       this.count_staff = 0
+       this.count_visitor = 0
        let company = {}
        if (this.$route.params.device_name)
         {

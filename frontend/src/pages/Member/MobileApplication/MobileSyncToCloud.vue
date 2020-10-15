@@ -25,7 +25,7 @@
                                                 <td class="background_primary"><q-icon class="loader-2" name="fas fa-sync-alt"/> Syncing </td>
                                             </tr>
                                             <tr v-else>
-                                                <td class="background_disable">{{person.frontdesk_person_id + " " + a}}</td>
+                                                <td class="background_disable">{{person.frontdesk_person_id}}</td>
                                                 <td class="background_disable">{{person.given_name + " " + person.middle_name + " " + person.last_name}}</td>
                                                 <td class="background_disable" v-if="online">In Queue</td>
                                                 <td class="background_danger" v-else>Pending</td>

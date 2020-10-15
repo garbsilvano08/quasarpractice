@@ -5,7 +5,7 @@
             <div class="header__filter">
                 <!-- <q-select class="select-lg" v-model="select__id_type" :options="options_company" outlined dense></q-select> -->
                 <com-picker :user="this.$user_info" @select=getCompanyData class="btn-choose"></com-picker>
-                <q-btn @click="exportData" class="btn-outline btn-export" flat dense no-caps>
+                <q-btn v-if="this.$user_info.user_type != 'Receptionist'" @click="exportData" class="btn-outline btn-export" flat dense no-caps>
                     Export &nbsp;<q-icon name="mdi-export"></q-icon>
                 </q-btn>
 

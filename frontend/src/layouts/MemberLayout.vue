@@ -331,7 +331,7 @@ export default
                 }
                 else if (this.$user_info.user_type == 'Receptionist')
                 {
-                    if ( key === 'member_logout' || key === 'dashboard' || key === 'frontdesk_visitor' || key === 'account_directory' || key === 'daily')
+                    if ( key === 'member_logout' || key === 'dashboard' || key === 'frontdesk_visitor')
                     {
                         return true
                     }

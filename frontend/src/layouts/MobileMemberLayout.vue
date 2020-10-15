@@ -68,7 +68,7 @@
                                     class="badge-oval small"
                                     align="middle"
                                     style="right: -16px; z-index: 2; width: auto;"
-                                    color="red" text-color="white" :label="this.keys.length"
+                                    color="red" text-color="white" label="2"
                                     floating
                                 >
                                 </q-badge>
