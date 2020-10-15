@@ -68,7 +68,7 @@
                                     class="badge-oval small"
                                     align="middle"
                                     style="right: -16px; z-index: 2; width: auto;"
-                                    color="red" text-color="white" label="2"
+                                    color="red" text-color="white" :label="keys.length"
                                     floating
                                 >
                                 </q-badge>
@@ -352,7 +352,7 @@ export default
                     this.mobile_db.delete(this.keys[i])
                 }
             }
-            setTimeout(() => this.checkQueueSync(), 1000);
+            setTimeout(() => this.checkQueueSync(), 10000);
         },
         async savePicsLocal(image_url, imageName)
         {

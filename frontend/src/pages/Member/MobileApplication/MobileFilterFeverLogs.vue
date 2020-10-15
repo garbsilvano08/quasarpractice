@@ -11,7 +11,7 @@
         <div class="frontdesk">
         <div class="frontdesk__container">
             <div class="content__grid">
-                <div class="frontdesk__content content__box"  style="padding-top: 100px">
+                <div class="frontdesk__content content__box-filter">
                     <!-- PERSONAL INFORMATION -->
                     <div class="frontdesk__content">
                         <div class="frontdesk__content-info">

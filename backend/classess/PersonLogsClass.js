@@ -33,7 +33,6 @@ module.exports = class PersonLogsClass
 
     async submit()
     {
-        console.log(this.convertObject());
         if (this.frontdesk_person_id.length < 9)
         {
             for (let index = 0; index <= (9 - this.frontdesk_person_id.length); index++) {
@@ -41,8 +40,7 @@ module.exports = class PersonLogsClass
             }
         }
         let person_details = await new MDB_PERSON().docs({frontdesk_person_id: this.frontdesk_person_id})
-        console.log(person_details, 'person');
-
+        
         this.category               = person_details.length ? person_details[0].category : 'Stranger'
         this.person_id              = person_details.length ? person_details[0]._id : new Date().toISOString()
         this.gender                 = person_details.length ? person_details[0].gender : ''

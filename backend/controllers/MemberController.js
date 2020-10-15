@@ -182,9 +182,8 @@ module.exports =
 
         // await new MDB_LOGS().add(req.body.data);
         date_string = date_string.split("-")
-        console.log(req.body.data);
         let person = await new MDB_PERSON().docs({contact_number: req.body.data.contact_number, birthday: new Date(req.body.data.birthday)})
-        console.log(person);
+        // console.log(person);
         key.push(person[0].category)
         await new CounterClass().counterActivities(req.body.data.company_id, key, date_string, req.body.data.device_id)
         

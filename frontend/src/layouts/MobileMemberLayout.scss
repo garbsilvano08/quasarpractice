@@ -72,6 +72,9 @@ body {
         width: 100%;
         color: #ffffff;
         margin-bottom: 20px;
+
+        display: grid;
+        grid-template-columns: 30% 70%;
         .nav-profile__img {
             margin: auto;
             width: 70px;
@@ -81,8 +84,8 @@ body {
         }
 
         .nav-profile__info {
-            float: right;
-            margin: 15px 130px 0px 0px;
+            
+            padding: 15px 0 0 10px;
             .nav-profile__name {
                 font-size: 14px;
                 font-weight: 500;

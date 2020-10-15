@@ -1,5 +1,11 @@
 .dashboard {
     .dashboard__overview-logs {
+        .date__label {
+            text-align: center;
+            left: 25px;
+            font-size: 10px;
+            font-weight: 500;
+        }
         .header__title {
             padding: 10px 0px 0px 20px;
             background-color: #FFFFFF;
@@ -379,6 +385,10 @@
 
                         .pie-total__label {
                             font-size: 10px;
+                            font-weight: 500;
+                        }
+                        .pie-total__label2 {
+                            font-size: 14px;
                             font-weight: 500;
                         }
                     }

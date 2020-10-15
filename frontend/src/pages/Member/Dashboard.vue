@@ -57,7 +57,7 @@ export default
         async getUserList()
         {
             let res = await this.$_post(postUserList);
-            console.log(postUserList);
+            // console.log(postUserList);
         },
         async submit()
         {
@@ -69,7 +69,7 @@ export default
             // console.log(formData.entries().next())
             // console.log(formData)
             let res = await this.$_post_file(formData);
-            console.log(res);
+            // console.log(res);
             // console.log(res.filename)    
 
             // console.log(res);

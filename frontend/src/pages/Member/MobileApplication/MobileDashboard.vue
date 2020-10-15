@@ -22,7 +22,8 @@
                         </pie-chart>
                         <div class="dashboard__pie-total">
                             <div class="pie-total__amount">{{count_staff + count_visitor}}</div>
-                            <div class="pie-total__label">Fever Detected Today</div>
+                            <div v-if="isToday()" class="pie-total__label">Fever Detected Today</div>
+                            <div v-else class="pie-total__label2">Fever Detected</div>
                         </div>
                     </div>
 
@@ -36,14 +37,17 @@
                             <div class="pie-legend__percent">Visitor ({{count_visitor}})</div>
                         </div>
                     </div>
-                    <q-btn @click="exportData()" class="btn-primary" flat dense no-caps>Export</q-btn>
+                    <!-- <q-btn @click="exportData()" class="btn-primary" flat dense no-caps>Export</q-btn> -->
+                    <q-btn class="btn-primary" flat dense no-caps @click="exportToExcel()">Export</q-btn>
                     </div>
+                <!-- </div> -->
                 </div>
             </div>
         </div>
     
         <div class="dashboard__overview-logs">
             <div class="header__title">Fever Logs  <q-icon class="icon-float" name="fas fa-sliders-h" @click="goToFilterLogs"/></div>
+                <div v-if="!isToday()" class="date__label" >{{this.filter_logs.start_date + "-"+ this.filter_logs.end_date}}</div>
                 <div class="content__card-info content__card" v-for="(logs, index) in this.has_fever_logs" :key="index">
                     <div class="content__info">
                         <div class="flex flex-center">
@@ -66,7 +70,7 @@
                         <label>Device Scanned:</label> {{deviceInfo(logs.device_id, 'name') + "-" + deviceInfo(logs.device_id, 'type')}}
                     </div>
                     <div class="content__datetime">
-                        <label>Date & Time:</label> {{logs.string}}
+                        <label>Date & Time:</label> {{logs.date_string}}
                     </div>
                 </div>
             </div>
@@ -95,9 +99,9 @@ import { postGetMobileFeverLogs, postGetDevice } from '../../../references/url';
 // Classes
 import { date } from 'quasar';
 import { log } from 'util';
-
-import {Plugins, FilesystemDirectory, FilesystemEncoding} from "@capacitor/core";
-const { Filesystem} = Plugins;
+import { saveAs } from 'file-saver';
+import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
+const { Filesystem } = Plugins;
 
 Vue.use(Chartkick.use(Chart))
 
@@ -128,6 +132,95 @@ export default
    watch:{},
 
    methods: {
+        isToday()
+        {
+            console.log(this.filter_logs.start_date, this.filter_logs.end_date, new Date().toISOString().split('T')[0], (this.filter_logs.start_date && this.filter_logs.end_date) === new Date().toISOString().split('T')[0]);
+            if (this.filter_logs.start_date  === new Date().toISOString().split('T')[0] && this.filter_logs.end_date === new Date().toISOString().split('T')[0]) return true
+            else return false
+        },
+        async exportToExcel()
+        {    
+           let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
+            let file_name = "fever-logs_" + date + '.xls'
+
+            let fields = [] , has_fever_data = [{}]
+            for (let index = 0; index < this.has_fever_logs.data.length; index++) {
+                has_fever_data.push({
+                    "full_name": this.has_fever_logs.data[index].full_name,
+                    "gender": this.has_fever_logs.data[index].gender,
+                    "temperature": this.has_fever_logs.data[index].temperature,
+                    "has_fever": this.has_fever_logs.data[index].has_fever ? "Yes" : this.has_fever_logs.data[index].has_fever,
+                    "company_name": this.has_fever_logs.data[index].company_name,
+                    "category": this.has_fever_logs.data[index].category,
+                    "home_address" : this.has_fever_logs.data[index].home_address,
+                    "date_logged" : this.has_fever_logs.data[index].date,
+                },)
+            }
+
+            fields.push({
+            label: 'Full name',
+            value: 'full_name'
+            },{
+            label: 'Gender',
+            value: 'gender'
+            },{
+            label: 'Temperature',
+            value: 'temperature'
+            },{
+            label: 'Has Fever',
+            value: 'has_fever'
+            },{
+            label: 'Company name',
+            value: 'company_name'
+            },{
+            label: 'Category',
+            value: 'category'
+            },{
+            label: 'Home address',
+            value: 'home_address'
+            },{
+            label: 'Date logged',
+            value: 'date_logged'
+            });
+    
+            const { Parser } = require('json2csv');
+
+            const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
+            const csv = json2csvParser.parse(has_fever_data);
+
+            // var FileSaver = require('file-saver');
+            // FileSaver.saveAs(
+            // new Blob([csv], {
+            //     type:
+            //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            // }),
+            // file_name
+            // );
+
+            
+            // try {
+            //     let ret = await Filesystem.mkdir({
+            //     path: '/storage/self/primary/secrets',
+            //     directory: FilesystemDirectory.Data,
+            //     recursive: true // like mkdir -p
+            //     });
+            //     console.log("works");
+            // } catch(e) {
+            //     console.error('Unable to make directory', e);
+            // }
+            try {
+                const result = await Filesystem.writeFile({
+                path: file_name,
+                data: csv,
+                directory: FilesystemDirectory.Documents,
+                encoding: FilesystemEncoding.UTF8
+                })
+                console.log('Wrote file', result);
+            } catch(e) {
+                console.error('Unable to write file', e);
+            }
+
+        },
        goToFilterLogs(){
             this.$router.push({
                 name: "member_mobile_filter_fever",
@@ -187,7 +280,7 @@ export default
 
             let {data: data} = await this.$_post(postGetMobileFeverLogs, {find_logs: params})
             for(let index = 0; index < data.length; index++) {
-                data[index].date_string = date.formatDate(data[index].date_saved, 'MMM D YYYY - hh:mm:ss A')
+                data[index].date_string = date.formatDate(data[index].date_saved, 'MMM D YYYY - hh:mm A')
                 this.has_fever_logs.push(data[index])
             }
             if ((this.count_staff + this.count_visitor) == 0)
