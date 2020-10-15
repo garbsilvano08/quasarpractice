@@ -4,7 +4,7 @@
             <div class="dashboard__graph">
                 <div class="dashboard__graph-item">
                     <div class="dashboard__graph-content dashboard__graph-pie">
-                    <div class="dashboard__pie-chart">
+                    <div class="dashboard__pie-chart"  v-if="this.has_fever_logs.length > 0">
                         <pie-chart
                             :donut="true"
                             :legend="false"
@@ -26,7 +26,26 @@
                             <div v-else class="pie-total__label2">Fever Detected</div>
                         </div>
                     </div>
-
+                    <div class="dashboard__pie-chart"  v-else>
+                        <pie-chart
+                            :donut="true"
+                            :legend="false"
+                            width="150px"
+                            height="150px"
+                            :colors="[
+                                '#28B463',
+                            ]"
+                            :data="{
+                                'Logs': .1
+                            }"
+                            :library="{cutoutPercentage: 85}">
+                        </pie-chart>
+                        <div class="dashboard__pie-total">
+                            <div class="pie-total__amount">0</div>
+                            <div v-if="isToday()" class="pie-total__label">Fever Detected Today</div>
+                            <div v-else class="pie-total__label2">Fever Detected</div>
+                        </div>
+                    </div>   
                     <div class="dashboard__pie-legend">
                         <div class="pie-legend__item">
                             <div class="pie-legend__color fourth-color"></div>
@@ -38,41 +57,61 @@
                         </div>
                     </div>
                     <!-- <q-btn @click="exportData()" class="btn-primary" flat dense no-caps>Export</q-btn> -->
-                    <q-btn class="btn-primary" flat dense no-caps @click="exportToExcel()">Export</q-btn>
+                    <q-btn v-if="this.has_fever_logs.length > 0" class="btn-primary" flat dense no-caps @click="exportToExcel(), export_alert = true">Export</q-btn>
                     </div>
                 <!-- </div> -->
+                    <q-dialog v-model="export_alert">
+                        <q-card>
+                            <q-card-section>
+                            <div class="text-h6">Information</div>
+                            </q-card-section>
+
+                            <q-card-section class="q-pt-none">
+                            Your export file is saved to Internal Storage/Documents/fever-logs_DATETODAY.xls
+                            </q-card-section>
+
+                            <q-card-actions align="right">
+                            <q-btn flat label="OK" color="primary" v-close-popup />
+                            </q-card-actions>
+                        </q-card>
+                    </q-dialog>
                 </div>
             </div>
         </div>
-    
+
         <div class="dashboard__overview-logs">
             <div class="header__title">Fever Logs  <q-icon class="icon-float" name="fas fa-sliders-h" @click="goToFilterLogs"/></div>
-                <div v-if="!isToday()" class="date__label" >{{this.filter_logs.start_date + "-"+ this.filter_logs.end_date}}</div>
+            <div v-if="!isToday()" class="date__label" >{{this.filter_logs.start_date + "-"+ this.filter_logs.end_date}}</div>
+            <div  v-if="this.has_fever_logs.length > 0">
                 <div class="content__card-info content__card" v-for="(logs, index) in this.has_fever_logs" :key="index">
                     <div class="content__info">
                         <div class="flex flex-center">
                             <q-img :src="logs.person_img"></q-img>
                         </div>
-                    <div class="content__temperature">
-                        {{logs.temperature}}<br>
-                        <span class="abnormal-temperature">Has fever</span>
+                        <div class="content__temperature">
+                            {{logs.temperature}}<br>
+                            <span class="abnormal-temperature">Has fever</span>
+                        </div>
+                    </div>
+                    <div class="content__info">
+                        <div class="content__name">
+                            {{logs.full_name}} <br>
+                            <span>{{logs.category}}</span>
+                        </div>
+                        <div class="content__location">
+                            <label>Tagged to:</label> {{logs.company_name}}
+                        </div>
+                        <div class="content__room">
+                            <label>Device Scanned:</label> {{deviceInfo(logs.device_id, 'name') + "-" + deviceInfo(logs.device_id, 'type')}}
+                        </div>
+                        <div class="content__datetime">
+                            <label>Date & Time:</label> {{logs.date_string}}
+                        </div>
                     </div>
                 </div>
-                <div class="content__info">
-                    <div class="content__name">
-                        {{logs.full_name}} <br>
-                        <span>{{logs.category}}</span>
-                    </div>
-                    <div class="content__location">
-                        <label>Tagged to:</label> {{logs.company_name}}
-                    </div>
-                    <div class="content__room">
-                        <label>Device Scanned:</label> {{deviceInfo(logs.device_id, 'name') + "-" + deviceInfo(logs.device_id, 'type')}}
-                    </div>
-                    <div class="content__datetime">
-                        <label>Date & Time:</label> {{logs.date_string}}
-                    </div>
-                </div>
+            </div>
+            <div v-else>
+                <div class="content__card no_fever_logs"><span class="fas fa-users"></span> <p>No Fever Logs Yet</p></div>
             </div>
         </div>
         <div v-if="(this.count_staff + this.count_visitor) > this.has_fever_logs.length" class="add_fever_logs-spinner">
@@ -127,6 +166,7 @@ export default
             account_type: 'All',
             device_name: 'All',
         },
+        export_alert: false,
    }),
 
    watch:{},
@@ -138,22 +178,21 @@ export default
             if (this.filter_logs.start_date  === new Date().toISOString().split('T')[0] && this.filter_logs.end_date === new Date().toISOString().split('T')[0]) return true
             else return false
         },
-        async exportToExcel()
+         async exportToExcel()
         {    
            let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
             let file_name = "fever-logs_" + date + '.xls'
-
             let fields = [] , has_fever_data = [{}]
-            for (let index = 0; index < this.has_fever_logs.data.length; index++) {
+            for (let index = 0; index < this.has_fever_logs.length; index++) {
                 has_fever_data.push({
-                    "full_name": this.has_fever_logs.data[index].full_name,
-                    "gender": this.has_fever_logs.data[index].gender,
-                    "temperature": this.has_fever_logs.data[index].temperature,
-                    "has_fever": this.has_fever_logs.data[index].has_fever ? "Yes" : this.has_fever_logs.data[index].has_fever,
-                    "company_name": this.has_fever_logs.data[index].company_name,
-                    "category": this.has_fever_logs.data[index].category,
-                    "home_address" : this.has_fever_logs.data[index].home_address,
-                    "date_logged" : this.has_fever_logs.data[index].date,
+                    "full_name": this.has_fever_logs[index].full_name,
+                    "gender": this.has_fever_logs[index].gender,
+                    "temperature": this.has_fever_logs[index].temperature,
+                    "has_fever": this.has_fever_logs[index].has_fever ? "Yes" : this.has_fever_logs[index].has_fever,
+                    "company_name": this.has_fever_logs[index].company_name,
+                    "category": this.has_fever_logs[index].category,
+                    "home_address" : this.has_fever_logs[index].home_address,
+                    "date_logged" : this.has_fever_logs[index].date,
                 },)
             }
 
@@ -304,68 +343,6 @@ export default
             params.category = category
             let {data: count} = await this.$_post('member/count/mobile_fever_logs', {find_logs: params})
             return count.count
-        },
-        async exportData()
-        {
-            let date = new Date().toISOString().split('T')[0].replace(/[^/0-9]/g, '')
-            let file_name = this.filter_logs.account_type + "_" + date + '.xls'
-
-            let fields = [] , log_list_data = [{}]
-            for (let index = 0; index < this.has_fever_logs.length; index++) {
-                log_list_data.push({
-                    "full_name": this.has_fever_logs[index].full_name,
-                    "gender": this.has_fever_logs[index].gender,
-                    "temperature": this.has_fever_logs[index].temperature,
-                    "has_fever": this.has_fever_logs[index].has_fever,
-                    "company_name": this.has_fever_logs[index].company_name,
-                    "category": this.has_fever_logs[index].category,
-                    "home_address" : this.has_fever_logs[index].home_address,
-                    "date_logged" : this.has_fever_logs[index].date_string,
-                },)
-            }
-
-            fields.push({
-                label: 'Full name',
-                value: 'full_name'
-                },{
-                label: 'Gender',
-                value: 'gender'
-                },{
-                label: 'Temperature',
-                value: 'temperature'
-                },{
-                label: 'Has Fever',
-                value: 'has_fever'
-                },{
-                label: 'Company name',
-                value: 'company_name'
-                },{
-                label: 'Category',
-                value: 'category'
-                },{
-                label: 'Home address',
-                value: 'home_address'
-                },{
-                label: 'Date logged',
-                value: 'date_logged'
-            });
-    
-            const { Parser } = require('json2csv');
-
-            const json2csvParser = new Parser({fields , quote: '', delimiter: '\t'});
-            const csv = json2csvParser.parse(log_list_data);
-
-            try {
-                const result = await Filesystem.writeFile({
-                    path: 'secrets/text.txt',
-                    data: "This is a test",
-                    directory: FilesystemDirectory.Download,
-                    encoding: FilesystemEncoding.UTF8
-                })
-                console.log('Wrote file', result);
-            } catch(e) {
-                console.error('Unable to write file', e);
-            }
         },
    },
    

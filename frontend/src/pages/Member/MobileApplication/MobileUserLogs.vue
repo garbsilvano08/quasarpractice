@@ -1,6 +1,6 @@
 <template>
     <div class="userlogs">
-        <div class="userlogs__overview">
+        <div class="userlogs__overview" v-if="this.user_logs.data.length > 0">
             <div class="user_card" v-for="(logs, index) in this.user_logs.data" :key="index">
                 <div class="content__info">
                     <div class="flex flex-center">
@@ -46,6 +46,10 @@
                     </div>
                 </div>
             </div> -->
+        </div>
+        <div v-else>
+            <div class="no_logs"><span class="fas fa-user-clock"></span> <p>No User Logs Yet</p>
+            </div>
         </div>
     </div>
 

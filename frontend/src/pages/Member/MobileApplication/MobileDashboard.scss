@@ -5,6 +5,7 @@
             left: 25px;
             font-size: 10px;
             font-weight: 500;
+            background-color: #ffffff;
         }
         .header__title {
             padding: 10px 0px 0px 20px;
@@ -110,7 +111,15 @@
                 color: #464DE4;
             }
         }
-
+        .content__card-no, .no_fever_logs{
+            text-align: center;  
+            padding: 20%;
+            font-weight: 600;
+            color: #2471A3;
+            span{
+                font-size: 50px;
+            }
+        }
         .dashboard__overview-btn {
            display: flex;
            align-items: center;
@@ -555,6 +564,17 @@
 }
 
 .userlogs{
+    .no_logs{
+        height: 90vh;
+        text-align: center;
+        padding-top: 55%;
+        font-weight: 600;
+        color: #2471A3;
+        span{
+            font-size: 60px;
+            margin-bottom: 5px;
+        }
+    }
     .userlogs__overview{
         padding: 30px;
         .user_card{

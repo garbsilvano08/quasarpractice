@@ -2,7 +2,7 @@
     <div class="frontdesk">
         <div class="frontdesk__container">
                 <div class="content__grid">
-                    <div class="frontdesk__content">
+                    <div class="frontdesk__content" v-if="this.person_list.length > 0">
                         <div class="offline_note" v-if="!online">
                             <q-icon name="fas fa-exclamation-circle"></q-icon>   
                             <p>Your network is unavailable. Please make sure that you are connected to any wifi or mobile network.</p>
@@ -34,6 +34,10 @@
                                     </table>
                                 </div>
                             </div>
+                    </div>
+                    <div v-else class="no_sync">
+                        <span class="fas fa-users-cog"></span>
+                        <p>There is no to Sync</p>
                     </div>
                 </div>
             </div>
