@@ -89,7 +89,7 @@
                             <q-img :src="logs.person_img"></q-img>
                         </div>
                         <div class="content__temperature">
-                            {{logs.temperature}}<br>
+                            {{logs.temperature}} °C<br>
                             <span class="abnormal-temperature">Has fever</span>
                         </div>
                     </div>

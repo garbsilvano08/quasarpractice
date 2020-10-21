@@ -42,7 +42,7 @@
                             </div>
                             <div class="content__input">
                                 <div class="content__input-label">Temperature Check</div>
-                                <q-input type="number" v-model="person_information.temperature" outlined dense></q-input>
+                                <q-input maxlength="2" type="number" v-model="person_information.temperature" outlined dense></q-input>
                             </div>
                             <div class="header__title">Personal Information</div>
                             <div class="content__input">
