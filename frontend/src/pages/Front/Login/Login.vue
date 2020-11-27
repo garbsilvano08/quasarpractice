@@ -22,6 +22,29 @@
             </div>
             <div class="login__btn">
                 <q-btn flat dense no-caps class="btn-primary" label="Login" @click="submitLogin"></q-btn>
+                <q-img v-show="this.show" class="content__img" :src="person_image"></q-img>
+                <canvas v-show="this.show == false" class="content__img"  border icon="mdi-camera" id="canvas" width="640" height="480"></canvas>
+                <!-- <video v-show="is_carturing" class="content__img" id="video" width="500" height="500" autoplay></video> -->
+                <!-- <q-img class="content__img" :src="personal_information.account_img ? personal_information.account_img : '/img/placeholder-img.jpg'"></q-img> -->
+                <!-- <input style="display:none" capture="camera" id="uploadImage" accept="image/*" @change="uploadImage()" ref="uploader" type="file"> -->
+                <q-btn class="btn-upload btn-primary" flat dense no-caps label="Capture Face"  @click="openCamera()"></q-btn>
+                  <q-dialog v-model="open_camera">
+                    <q-card>
+                        <q-card-section class="row items-center q-pb-none">
+                        <div class="text-h6">Capture Image</div>
+                        <q-space />
+                        <q-btn icon="close" flat round dense v-close-popup />
+                        </q-card-section>
+
+                        <q-card-section>
+                            <div class="text-center">
+                                <video id="video" width="500" height="500" autoplay></video>
+                                <q-btn icon="mdi-camera" @click="scanFace()" id='snap'></q-btn>
+                            </div>
+                        </q-card-section>
+                    </q-card>
+                  </q-dialog>
+                <!-- <q-btn flat dense no-caps class="btn-primary" label="Facial Scan" @click="scanFace"></q-btn> -->
             </div>
             <div class="login__footer">
                 Copyright © 2020 VCOP, All Rights Reserved.
@@ -60,11 +83,16 @@
 import "./Login.scss";
 
 import { postLoginUser, postCreateAdmin } from '../../../references/url';
+import { log } from 'util';
 
 export default
 {
     data:() =>
     ({
+        show: true,
+        person_img: '',
+        person_image: '',
+        open_camera: false,
         form_data:
         {
             email: '',
@@ -72,8 +100,38 @@ export default
         },
     }),
     mounted() {},
+    watch:
+    {
+        open_camera(val)
+        {
+            if (val)
+            {
+                console.log(navigator.mediaDevices);
+                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    // Not adding `{ audio: true }` since we only want video now
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                    //video.src = window.URL.createObjectURL(stream);
+                    video.srcObject = stream;
+                    video.play();
+                });
+                }
+            }
+        }
+    },
     methods:
     {
+        openCamera()
+        {
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            this.open_camera = true
+        },
+        async scanFace()
+        {
+
+        },
+
         async createAdmin()
         {
             this.$q.loading.show();

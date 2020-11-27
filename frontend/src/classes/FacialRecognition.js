@@ -1,5 +1,5 @@
 // import all the necessary files
-const cv = require('opencv4nodejs');
+//const cv = require('opencv4nodejs');
 // const MDB_USER = require('../models/MDB_USER');
 const globals = methods.methods;
 // const fs = require('fs');
@@ -17,11 +17,9 @@ module.exports = class FacialRecognition
         await this.$_call_gallery()
     }
 
-    async checkimage()
+    async checkimage(image)
     {
         const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT2);
-        
-        //Detecting faces that are converted to gray image
         const getFaceImage = (grayImg) => {
             const faceRects = classifier.detectMultiScale(grayImg).objects;
             if (!faceRects.length) {
