@@ -22,6 +22,7 @@
             </div>
             <div class="login__btn">
                 <q-btn flat dense no-caps class="btn-white"  label="LOGIN" @click="submitLogin"></q-btn>
+                <q-btn flat dense no-caps class="btn-white"  label="Scan Face" @click="scanFace"></q-btn>
             </div>
             <div class="login__footer">
                my|solid tech
@@ -58,7 +59,7 @@
 <script>
 // EXTERNAL CSS
 import "./MobileLogin.scss";
-
+import FacialRecognition from '../../../classes/FacialRecognition';
 import { postLoginUser, postCreateAdmin } from '../../../references/url';
 
 export default
@@ -74,6 +75,10 @@ export default
     mounted() {},
     methods:
     {
+        async scanFace()
+        {
+            new FacialRecognition().captureImage()
+        },
         async createAdmin()
         {
             this.$q.loading.show();
