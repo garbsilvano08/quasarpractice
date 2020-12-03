@@ -17,7 +17,7 @@ module.exports = function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
-    boot: ['axios','mixins','google-heatmap'],
+    boot: ['axios', 'mixins', 'google-heatmap'],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
@@ -59,8 +59,20 @@ module.exports = function (/* ctx */) {
       // extractCSS: false,
 
       // https://quasar.dev/quasar-cli/handling-webpack
-      extendWebpack (cfg) {
-      },
+      // extendWebpack (cfg) {
+      //   cfg.module.rules.push({
+      //     test: /\.(node)$/,
+      //     use: 'node-loader'
+      //   })
+      // }
+
+      // chainWebpack (config) {
+      //   config.module
+      //     .rule(/\.node$/)
+      //     .use('node-loader')
+      //     .loader('node-loader')
+      //     .end()
+      // }
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
@@ -87,7 +99,7 @@ module.exports = function (/* ctx */) {
       {
         loading:
         {
-            spinnerSize: 40,
+          spinnerSize: 40,
         },
       }
     },
@@ -146,7 +158,7 @@ module.exports = function (/* ctx */) {
     capacitor: {
       // Quasar handles app exit on mobile phone back button
       // Requires Quasar v1.9.3+ for true/false, v1.12.6+ for '*' wildcard and array values
-      backButtonExit: true/false/'*'/['/login', '/home', '/my-page']
+      backButtonExit: true / false / '*' / ['/login', '/home', '/my-page']
     },
     // Full list of options: https://quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
     cordova: {

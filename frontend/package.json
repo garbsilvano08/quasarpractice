@@ -25,9 +25,11 @@
     "json2csv": "^5.0.1",
     "node-input-validator": "^4.2.1",
     "node-open-geocoder": "^4.0.1",
+    "opencv4nodejs": "^5.6.0",
     "ping": "^0.3.0",
     "quasar": "^1.0.0",
     "read-excel-file": "^4.0.7",
+    "request": "^2.79.0",
     "rn-fetch-blob": "^0.12.0",
     "sharp": "^0.26.1",
     "swiper": "^6.1.2",
@@ -40,14 +42,15 @@
     "webcam-easy": "^1.0.5"
   },
   "devDependencies": {
-    "@quasar/app": "^2.0.1",
+    "@quasar/app": "^2.1.8",
     "@quasar/quasar-app-extension-qmarkdown": "^1.0.29",
     "@types/file-saver": "^2.0.1",
     "devtron": "^1.4.0",
     "electron": "^9.1.0",
     "electron-debug": "^3.1.0",
     "electron-devtools-installer": "^3.1.1",
-    "electron-packager": "^14.2.1"
+    "electron-packager": "^14.2.1",
+    "node-loader": "^1.0.2"
   },
   "browserslist": [
     "last 10 Chrome versions",
